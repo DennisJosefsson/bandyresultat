@@ -6,6 +6,11 @@ class Season extends Model {}
 
 Season.init(
   {
+    seasonId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     year: {
       type: DataTypes.STRING,
       allowNull: false,

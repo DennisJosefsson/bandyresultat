@@ -1,4 +1,5 @@
-const { sequelize } = require('./utils/db')
+const { sequelize } = require('./db')
+const { Umzug, SequelizeStorage } = require('umzug')
 
 const seederConf = {
   migrations: {
@@ -21,3 +22,5 @@ const rollbackSeeder = async () => {
   const seeder = new Umzug(seederConf)
   await seeder.down()
 }
+
+module.exports = { runSeeder, rollbackSeeder }

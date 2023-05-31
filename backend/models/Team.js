@@ -6,6 +6,11 @@ class Team extends Model {}
 
 Team.init(
   {
+    teamId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,

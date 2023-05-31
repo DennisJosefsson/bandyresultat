@@ -8,6 +8,7 @@ const connectToDb = async () => {
   try {
     await sequelize.authenticate()
     await runMigrations()
+    await runSeeder()
     console.log('Connected to the database')
   } catch (error) {
     console.log(error)
@@ -37,6 +38,28 @@ const rollbackMigration = async () => {
   await sequelize.authenticate()
   const migrator = new Umzug(migrationConf)
   await migrator.down()
+}
+
+const seederConf = {
+  migrations: {
+    glob: 'seeders/*.js',
+  },
+  storage: new SequelizeStorage({ sequelize, tableName: 'seeders' }),
+  context: sequelize.getQueryInterface(),
+  logger: console,
+}
+
+const runSeeder = async () => {
+  const seeder = new Umzug(seederConf)
+  const seeders = await seeder.up()
+  console.log('Seeders up to date', {
+    files: seeders.map((seed) => seed.name),
+  })
+}
+const rollbackSeeder = async () => {
+  await sequelize.authenticate()
+  const seeder = new Umzug(seederConf)
+  await seeder.down()
 }
 
 module.exports = { connectToDb, sequelize, rollbackMigration }

@@ -7,6 +7,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "migration:down": "node utils/rollback.js",
+    "seeder:up": "node utils/runSeeder.js",
+    "seeder:down": "node utils/runRollbackSeeder.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Dennis Josefsson",

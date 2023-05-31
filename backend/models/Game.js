@@ -6,6 +6,19 @@ class Game extends Model {}
 
 Game.init(
   {
+    gameId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    homeTeamId: {
+      type: DataTypes.INTEGER,
+      references: { model: 'teams', key: 'teamId' },
+    },
+    awayTeamId: {
+      type: DataTypes.INTEGER,
+      references: { model: 'teams', key: 'teamId' },
+    },
     result: {
       type: DataTypes.STRING,
     },
