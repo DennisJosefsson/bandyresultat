@@ -37,7 +37,7 @@ class ElitserienPipeline:
     def process_item(self, item, spider):
         adapter = ItemAdapter(item)
         
-        team_id_keys = ['homeTeamId', 'awayTeamId']
+        team_id_keys = ['home_team_id', 'away_team_id']
         for key in team_id_keys:
             team = adapter.get(key)
             adapter[key] = teamIds[team]

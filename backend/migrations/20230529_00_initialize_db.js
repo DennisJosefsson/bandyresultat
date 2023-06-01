@@ -3,14 +3,14 @@ const { DataTypes } = require('sequelize')
 module.exports = {
   up: async ({ context: queryInterface }) => {
     await queryInterface.createTable('seasons', {
-      id: {
+      season_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
       year: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       women: {
@@ -18,17 +18,17 @@ module.exports = {
         defaultValue: false,
       },
       created_at: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.DATE,
       },
       updated_at: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.DATE,
       },
     })
 
     await queryInterface.createTable('teams', {
-      id: {
+      team_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -46,10 +46,18 @@ module.exports = {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      created_at: {
+        allowNull: true,
+        type: DataTypes.DATE,
+      },
+      updated_at: {
+        allowNull: true,
+        type: DataTypes.DATE,
+      },
     })
 
     await queryInterface.createTable('games', {
-      id: {
+      game_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         autoIncrement: true,
@@ -109,11 +117,11 @@ module.exports = {
         defaultValue: 'regular',
       },
       created_at: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.DATE,
       },
       updated_at: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.DATE,
       },
     })

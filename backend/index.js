@@ -7,12 +7,14 @@ const mainRouter = require('./controllers/main')
 const teamRouter = require('./controllers/teams')
 const seasonsRouter = require('./controllers/seasons')
 const gamesRouter = require('./controllers/games')
+const tablesRouter = require('./controllers/tables')
 
 app.use(express.json())
 app.use('/', mainRouter)
 app.use('/api/teams', teamRouter)
 app.use('/api/seasons', seasonsRouter)
 app.use('/api/games', gamesRouter)
+app.use('/api/tables', tablesRouter)
 
 const start = async () => {
   await connectToDb()

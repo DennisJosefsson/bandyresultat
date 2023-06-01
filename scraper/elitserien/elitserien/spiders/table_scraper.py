@@ -30,7 +30,7 @@ class TableSpider(scrapy.Spider):
             parts = game.split('-')
             
             game_items['date'] = datetime.strptime(date, '%d %B %Y').date()
-            game_items['home_team_d'] = ' '.join(''.join(parts[0]).split(' ')[3:])
+            game_items['home_team_id'] = ' '.join(''.join(parts[0]).split(' ')[3:])
             game_items['away_team_id'] = ' '.join(''.join(parts[1]).split(' ')[0:-1])
             game_items['result'] = parts[1].split(' ')[-1] + '-' + parts[2].split(' ')[0]
             game_items['home_goal'] = int(parts[1].split(' ')[-1])
