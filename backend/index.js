@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 const app = express()
 const { PORT } = require('./utils/config')
 const { connectToDb } = require('./utils/db')
@@ -9,6 +10,7 @@ const seasonsRouter = require('./controllers/seasons')
 const gamesRouter = require('./controllers/games')
 const tablesRouter = require('./controllers/tables')
 
+app.use(cors())
 app.use(express.json())
 app.use('/', mainRouter)
 app.use('/api/teams', teamRouter)

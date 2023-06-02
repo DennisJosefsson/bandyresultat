@@ -4,4 +4,5 @@
 | 2023-05-31 | 2 hours | Seeded initial data, added route    |
 | 2023-06-01 | 5 hours | More data, more routes, wasted time |
 |            |         | solving a problem with associations |
-|            |         |                                     |
+| 2023-06-02 | 4 hours | Initialized react app, with routes  |
+|            |         | Added more routes to backend        |

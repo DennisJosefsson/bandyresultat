@@ -17,7 +17,7 @@ router.get('/:seasonId/men', async (req, res) => {
       { model: Season, attributes: ['year'] },
     ],
   })
-
+  console.log(new Date())
   res.json(table)
 })
 
@@ -39,6 +39,23 @@ router.get('/:seasonId/women', async (req, res) => {
       { model: Team, attributes: ['name', 'teamId'] },
     ],
   })
+  res.json(table)
+})
+
+router.get('/:tableId', async (req, res) => {
+  const table = await Table.findByPk(req.params.tableId, {
+    attributes: {
+      exclude: ['qualification', 'createdAt', 'updatedAt'],
+    },
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'teamId'],
+      },
+      { model: Season, attributes: ['year'] },
+    ],
+  })
+  console.log(new Date())
   res.json(table)
 })
 

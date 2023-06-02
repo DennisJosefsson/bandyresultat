@@ -13,4 +13,16 @@ router.get('/', async (req, res) => {
   res.json(games)
 })
 
+router.get('/:gameId', async (req, res) => {
+  const game = await Game.findByPk(req.params.gameId, {
+    attributes: ['date', 'result'],
+    include: [
+      { model: Team, attributes: ['name'], as: 'homeTeam' },
+      { model: Team, attributes: ['name'], as: 'awayTeam' },
+      { model: Season, attributes: ['year'] },
+    ],
+  })
+  res.json(game)
+})
+
 module.exports = router
