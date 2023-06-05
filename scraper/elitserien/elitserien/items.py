@@ -16,6 +16,13 @@ class GameItems(scrapy.Item):
     home_team_id = scrapy.Field()
     away_team_id = scrapy.Field()
     result = scrapy.Field()
+    halftime_result = scrapy.Field()
+    halftime_home_goal = scrapy.Field()
+    halftime_away_goal = scrapy.Field()
     home_goal = scrapy.Field()
     away_goal = scrapy.Field()
     season_id = scrapy.Field()
+    category = scrapy.Field()
+    group = scrapy.Field()
+    playoff = scrapy.Field()
+    

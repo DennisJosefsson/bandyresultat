@@ -1,0 +1,8 @@
+module.exports = {
+  up: async ({ context: queryInterface }) => {
+    await queryInterface.bulkInsert('games')
+  },
+  down: async ({ context: queryInterface }) => {
+    await queryInterface.bulkDelete('games')
+  },
+}

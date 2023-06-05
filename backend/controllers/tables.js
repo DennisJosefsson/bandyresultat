@@ -18,7 +18,11 @@ router.get('/:seasonId/men', async (req, res) => {
     ],
   })
   console.log(new Date())
-  res.json(table)
+  if (!table) {
+    throw new Error('No such table in the database')
+  } else {
+    res.json(table)
+  }
 })
 
 router.get('/:seasonId/women', async (req, res) => {
@@ -39,7 +43,11 @@ router.get('/:seasonId/women', async (req, res) => {
       { model: Team, attributes: ['name', 'teamId'] },
     ],
   })
-  res.json(table)
+  if (!table) {
+    throw new Error('No such table in the database')
+  } else {
+    res.json(table)
+  }
 })
 
 router.get('/:tableId', async (req, res) => {
@@ -56,7 +64,37 @@ router.get('/:tableId', async (req, res) => {
     ],
   })
   console.log(new Date())
+  if (!table) {
+    throw new Error('No such table in the database')
+  } else {
+    res.json(table)
+  }
+})
+
+router.post('/', async (req, res, next) => {
+  const table = await Table.create(req.body)
   res.json(table)
+})
+
+router.delete('/:tableId', async (req, res, next) => {
+  const table = await Table.findByPk(req.params.tableId)
+  if (!table) {
+    throw new Error('No such table in the database')
+  } else {
+    await table.destroy()
+    res.json({ message: 'table deleted' })
+  }
+})
+
+router.put('/:tableId', async (req, res, next) => {
+  const table = await Table.findByPk(req.params.tableId)
+  if (!table) {
+    throw new Error('No such table in the database')
+  } else {
+    table.set(req.body)
+    await table.save()
+    res.json(table)
+  }
 })
 
 module.exports = router

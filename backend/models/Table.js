@@ -60,6 +60,17 @@ Table.init(
       type: DataTypes.INTEGER,
       defaultValue: false,
     },
+    group: {
+      type: DataTypes.ENUM(
+        'elitserien',
+        'allsvenskan',
+        'norr',
+        'syd',
+        'KvalA',
+        'KvalB'
+      ),
+      defaultValue: 'elitserien',
+    },
   },
   {
     sequelize,

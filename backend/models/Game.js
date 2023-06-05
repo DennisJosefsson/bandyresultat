@@ -22,10 +22,19 @@ Game.init(
     result: {
       type: DataTypes.STRING,
     },
+    halftimeResult: {
+      type: DataTypes.STRING,
+    },
     homeGoal: {
       type: DataTypes.INTEGER,
     },
     awayGoal: {
+      type: DataTypes.INTEGER,
+    },
+    halftimeHomeGoal: {
+      type: DataTypes.INTEGER,
+    },
+    halftimeAwayGoal: {
       type: DataTypes.INTEGER,
     },
     date: {
@@ -34,9 +43,49 @@ Game.init(
     round: {
       type: DataTypes.INTEGER,
     },
-    class: {
-      type: DataTypes.STRING,
+    category: {
+      type: DataTypes.ENUM([
+        'regular',
+        'qualification',
+        'eight',
+        'quarter',
+        'semi',
+        'final',
+      ]),
       defaultValue: 'regular',
+    },
+    group: {
+      type: DataTypes.ENUM([
+        'elitserien',
+        'allsvenskan',
+        'norr',
+        'syd',
+        'KvalA',
+        'KvalB',
+        'E1',
+        'E2',
+        'Q1',
+        'Q2',
+        'Q3',
+        'Q4',
+        'S1',
+        'S2',
+        'final',
+      ]),
+      defaultValue: 'elitserien',
+    },
+
+    playoff: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    extraTime: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    penalties: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     women: {
       type: DataTypes.BOOLEAN,

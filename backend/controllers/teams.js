@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { Team, Table, Season } = require('../models')
+const { Team, Table, Season, TeamSeason } = require('../models')
 
 router.get('/', async (req, res) => {
   const teams = await Team.findAll()
@@ -9,12 +9,50 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:teamId', async (req, res) => {
-  const teams = await Team.findByPk(req.params.teamId, {
-    include: { model: Table },
+  const team = await Team.findByPk(req.params.teamId, {
+    include: {
+      model: Season,
+      attributes: ['year', 'seasonId'],
+      through: {
+        attributes: [],
+      },
+    },
   })
 
   console.log('teams request', new Date())
-  res.json(teams)
+  if (!team) {
+    throw new Error('No such team in the database')
+  } else {
+    team.set(req.body)
+    await team.save()
+    res.json(team)
+  }
+})
+
+router.post('/', async (req, res, next) => {
+  const team = await Team.create(req.body)
+  res.json(team)
+})
+
+router.delete('/:teamId', async (req, res, next) => {
+  const team = await Team.findByPk(req.params.teamId)
+  if (!team) {
+    throw new Error('No such team in the database')
+  } else {
+    await team.destroy()
+    res.json({ message: 'team deleted' })
+  }
+})
+
+router.put('/:teamId', async (req, res, next) => {
+  const team = await Team.findByPk(req.params.teamId)
+  if (!team) {
+    throw new Error('No such team in the database')
+  } else {
+    team.set(req.body)
+    await team.save()
+    res.json(team)
+  }
 })
 
 module.exports = router
