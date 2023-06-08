@@ -2,11 +2,11 @@ const { Model, DataTypes } = require('sequelize')
 
 const { sequelize } = require('../utils/db')
 
-class TeamSeason extends Model {}
+class TableSeason extends Model {}
 
-TeamSeason.init(
+TableSeason.init(
   {
-    teamseasonId: {
+    tableseasonId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -15,24 +15,17 @@ TeamSeason.init(
       type: DataTypes.INTEGER,
       references: { model: 'seasons', key: 'seasonId' },
     },
-    teamId: {
-      type: DataTypes.INTEGER,
-      references: { model: 'teams', key: 'teamId' },
-    },
     tableId: {
       type: DataTypes.INTEGER,
-      references: { model: 'teams', key: 'tableId' },
-    },
-    qualification: {
-      type: DataTypes.BOOLEAN,
+      references: { model: 'tables', key: 'tableId' },
     },
   },
   {
     sequelize,
     underscored: true,
     timestamps: false,
-    modelName: 'teamseason',
+    modelName: 'tableseason',
   }
 )
 
-module.exports = TeamSeason
+module.exports = TableSeason

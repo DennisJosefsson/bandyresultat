@@ -1,39 +1,19 @@
 const router = require('express').Router()
 
-const { Season, Table, Team } = require('../models')
+const { Season, Table, Team, Metadata } = require('../models')
 
-router.get('/men', async (req, res, next) => {
-  const seasons = await Season.findAll({ where: { women: false } })
-  res.json(seasons)
-})
-
-router.get('/women', async (req, res, next) => {
-  const seasons = await Season.findAll({ where: { women: true } })
+router.get('', async (req, res, next) => {
+  const seasons = await Season.findAll({
+    include: { model: Metadata, attributes: ['metadataId'] },
+    order: [['seasonId', 'DESC']],
+  })
   res.json(seasons)
 })
 
 router.get('/:seasonId', async (req, res, next) => {
   const season = await Season.findByPk(req.params.seasonId, {
     attributes: { exclude: ['createdAt', 'updatedAt'] },
-    include: {
-      model: Table,
-      attributes: {
-        exclude: [
-          'createdAt',
-          'updatedAt',
-          'qualification',
-          'tableId',
-          'teamId',
-          'seasonId',
-        ],
-      },
-      include: {
-        model: Team,
-        attributes: {
-          exclude: ['createdAt', 'updatedAt', 'teamId'],
-        },
-      },
-    },
+    include: [{ model: Team }, { model: Table }, { model: Metadata }],
   })
   if (!season) {
     throw new Error('No such season in the database')

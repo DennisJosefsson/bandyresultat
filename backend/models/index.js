@@ -4,6 +4,7 @@ const Game = require('./Game')
 const Table = require('./Table')
 const Metadata = require('./Metadata')
 const TeamSeason = require('./TeamSeason')
+const TableSeason = require('./TeamSeason')
 
 Season.hasMany(Game, { foreignKey: 'seasonId' })
 Game.belongsTo(Season, { foreignKey: 'seasonId' })
@@ -20,11 +21,11 @@ Table.belongsTo(Team, { foreignKey: 'teamId' })
 Team.belongsToMany(Season, { through: TeamSeason, foreignKey: 'teamId' })
 Season.belongsToMany(Team, { through: TeamSeason, foreignKey: 'seasonId' })
 
-Season.hasMany(Table, { foreignKey: 'seasonId' })
-Table.belongsTo(Season, { foreignKey: 'seasonId' })
+Table.belongsToMany(Season, { through: TableSeason, foreignKey: 'tableId' })
+Season.belongsToMany(Table, { through: TableSeason, foreignKey: 'seasonId' })
 
-Season.hasOne(Metadata)
-Metadata.belongsTo(Season)
+Season.hasOne(Metadata, { foreignKey: 'seasonId' })
+Metadata.belongsTo(Season, { foreignKey: 'seasonId' })
 
 module.exports = {
   Team,
@@ -33,4 +34,5 @@ module.exports = {
   Table,
   Metadata,
   TeamSeason,
+  TableSeason,
 }

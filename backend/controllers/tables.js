@@ -2,32 +2,9 @@ const router = require('express').Router()
 
 const { Table, Season, Team } = require('../models')
 
-router.get('/:seasonId/men', async (req, res) => {
+router.get('/:seasonId', async (req, res) => {
   const table = await Table.findAll({
-    where: { seasonId: req.params.seasonId, women: false },
-    order: [['position', 'asc']],
-    attributes: {
-      exclude: ['qualification', 'createdAt', 'updatedAt'],
-    },
-    include: [
-      {
-        model: Team,
-        attributes: ['name', 'teamId'],
-      },
-      { model: Season, attributes: ['year'] },
-    ],
-  })
-  console.log(new Date())
-  if (!table) {
-    throw new Error('No such table in the database')
-  } else {
-    res.json(table)
-  }
-})
-
-router.get('/:seasonId/women', async (req, res) => {
-  const table = await Table.findAll({
-    where: { seasonId: req.params.seasonId, women: true },
+    where: { seasonId: req.params.seasonId },
     attributes: {
       exclude: [
         'seasonId',
@@ -35,33 +12,13 @@ router.get('/:seasonId/women', async (req, res) => {
         'createdAt',
         'updatedAt',
         'tableId',
-        'teamId',
       ],
     },
-    include: [
-      { model: Season, attributes: ['year', 'seasonId'] },
-      { model: Team, attributes: ['name', 'teamId'] },
-    ],
-  })
-  if (!table) {
-    throw new Error('No such table in the database')
-  } else {
-    res.json(table)
-  }
-})
-
-router.get('/:tableId', async (req, res) => {
-  const table = await Table.findByPk(req.params.tableId, {
-    attributes: {
-      exclude: ['qualification', 'createdAt', 'updatedAt'],
+    include: {
+      model: Team,
+      attributes: { exclude: ['women', 'createdAt', 'updatedAt'] },
     },
-    include: [
-      {
-        model: Team,
-        attributes: ['name', 'teamId'],
-      },
-      { model: Season, attributes: ['year'] },
-    ],
+    order: [['position', 'ASC']],
   })
   console.log(new Date())
   if (!table) {

@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query'
-import { getTeams } from '../../requests/requests'
+import { getTeams } from '../../requests/teams'
 
 const Team = () => {
   const { data, isLoading, error } = useQuery('teams', getTeams)

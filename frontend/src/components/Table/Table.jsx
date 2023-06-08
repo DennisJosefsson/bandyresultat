@@ -1,13 +1,10 @@
-import { useParams } from 'react-router-dom'
 import { useQuery } from 'react-query'
-import { getTable } from '../requests/requests'
+import { getSingleSeasonTable } from '../../requests/tables'
 
 const Table = () => {
-  const tableId = useParams().tableId
-  const gender = 'men'
-
-  const { data, isLoading, error } = useQuery(['table', tableId, gender], () =>
-    getTable(tableId, gender)
+  const seasonId = 108
+  const { data, isLoading, error } = useQuery(['table', seasonId], () =>
+    getSingleSeasonTable(seasonId)
   )
 
   if (isLoading) {
@@ -23,7 +20,7 @@ const Table = () => {
   return (
     <>
       <div>
-        {tableId}
+        {seasonId}
         <ul>
           {table.map((team) => {
             return (
