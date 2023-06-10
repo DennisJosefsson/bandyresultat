@@ -57,7 +57,7 @@ Table.init(
       allowNull: false,
     },
     qualification: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
     group: {

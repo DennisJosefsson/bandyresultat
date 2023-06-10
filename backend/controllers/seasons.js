@@ -1,6 +1,6 @@
 const router = require('express').Router()
 
-const { Season, Table, Team, Metadata } = require('../models')
+const { Season, Table, Team, Metadata, TeamSeason } = require('../models')
 
 router.get('', async (req, res, next) => {
   const seasons = await Season.findAll({
@@ -25,6 +25,15 @@ router.get('/:seasonId', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   const season = await Season.create(req.body)
   res.json(season)
+})
+
+router.post('/teamseason', async (req, res, next) => {
+  const seasonId = req.body.seasonId
+  const teamSeasons = req.body.formState.map((teamId) => {
+    return { teamId, seasonId }
+  })
+  const teamSeasonData = await TeamSeason.bulkCreate(teamSeasons)
+  res.json(teamSeasonData)
 })
 
 router.delete('/:seasonId', async (req, res, next) => {

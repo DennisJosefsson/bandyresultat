@@ -30,6 +30,7 @@ router.get('/:teamId', async (req, res) => {
 })
 
 router.post('/', async (req, res, next) => {
+  console.log(req.body)
   const team = await Team.create(req.body)
   res.json(team)
 })
