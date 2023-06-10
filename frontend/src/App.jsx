@@ -8,7 +8,6 @@ import Teams from './components/Team/Teams'
 import Table from './components/Table/Table'
 import Season from './components/Season/Season'
 import Seasons from './components/Season/Seasons'
-import MetadataForm from './components/Metadata/MetadataForm2'
 
 const App = () => {
   return (
@@ -24,7 +23,6 @@ const App = () => {
               <Route path="/seasons" element={<Seasons />} />
               <Route path="/tables/:seasonId" element={<Table />} />
               <Route path="/tables" element={<Table />} />
-              <Route path="/metadataform" element={<MetadataForm />} />
               <Route path="*" element={<Home />} />
             </Routes>
           </section>

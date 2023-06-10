@@ -18,6 +18,10 @@ export const postSeason = async (season) => {
   return await seasonsApi.post('/', season)
 }
 
+export const postTeamSeason = async ({ formState, seasonId }) => {
+  return await seasonsApi.post('/teamseason', { formState, seasonId })
+}
+
 export const updateSeason = async (season) => {
   return await seasonsApi.put(`/${season.seasonId}`, season)
 }

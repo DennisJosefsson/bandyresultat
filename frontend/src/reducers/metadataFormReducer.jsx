@@ -2,12 +2,7 @@ const metadataFormReducer = (state, action) => {
   switch (action.type) {
     case 'INPUT':
       return { ...state, [action.field]: action.payload }
-    // case 'INPUT TEAM':
-    //   return {
-    //     ...state,
-    //     winnerId: action.payload.teamId,
-    //     winnerName: action.payload.name,
-    //   }
+
     case 'TOGGLE NORTHSOUTH':
       return {
         ...state,

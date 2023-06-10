@@ -14,8 +14,9 @@ export const getSingleTeam = async ({ teamId }) => {
   return response.data
 }
 
-export const postTeam = async (team) => {
-  return await teamsApi.post('/', team)
+export const postTeam = async ({ formState }) => {
+  console.log('logging from request', formState)
+  return await teamsApi.post('/', formState)
 }
 
 export const updateTeam = async (team) => {

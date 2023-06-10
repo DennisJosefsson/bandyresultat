@@ -25,9 +25,6 @@ const Header = () => {
             <Link to="/tables" className="hover:opacity-90">
               Tabeller
             </Link>
-            <Link to="/metadataform" className="hover:opacity-90">
-              Metadataformulär
-            </Link>
           </nav>
         </div>
       </section>
