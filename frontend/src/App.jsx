@@ -8,6 +8,7 @@ import Teams from './components/Team/Teams'
 import Table from './components/Table/Table'
 import Season from './components/Season/Season'
 import Seasons from './components/Season/Seasons'
+import Games from './components/Game/Games'
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
               <Route path="/seasons" element={<Seasons />} />
               <Route path="/tables/:seasonId" element={<Table />} />
               <Route path="/tables" element={<Table />} />
+              <Route path="/games/:seasonId" element={<Games />} />
               <Route path="*" element={<Home />} />
             </Routes>
           </section>

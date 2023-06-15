@@ -11,6 +11,10 @@ Game.init(
       primaryKey: true,
       autoIncrement: true,
     },
+    seasonId: {
+      type: DataTypes.INTEGER,
+      references: { model: 'seasons', key: 'seasonId' },
+    },
     homeTeamId: {
       type: DataTypes.INTEGER,
       references: { model: 'teams', key: 'teamId' },

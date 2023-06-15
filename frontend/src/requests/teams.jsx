@@ -15,7 +15,6 @@ export const getSingleTeam = async ({ teamId }) => {
 }
 
 export const postTeam = async ({ formState }) => {
-  console.log('logging from request', formState)
   return await teamsApi.post('/', formState)
 }
 

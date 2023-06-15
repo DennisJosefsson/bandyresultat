@@ -14,3 +14,6 @@
 | 2023-06-08 | 5 hours | Fixed some database model bugs,       |
 |            |         | added components and form to frontend |
 | 2023-06-10 | 5 hours | More components, more forms           |
+| 2023-06-15 |         | Have gathered most of the data that   |
+|            |         | can't be scraped, no real code added  |
+|            |         | other than some minor things.         |

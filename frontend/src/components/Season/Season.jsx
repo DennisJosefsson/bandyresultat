@@ -1,14 +1,18 @@
 import { useQuery, useMutation } from 'react-query'
 import { getSingleSeason } from '../../requests/seasons'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { useState } from 'react'
 import Spinner from '../utilitycomponents/spinner'
 import MetadataForm from '../Metadata/MetadataForm'
 import TableForm from '../Table/TableForm'
 import TeamSeasonForm from './TeamSeasonForm'
+import GameForm from '../Game/GameForm'
 import { postMetadata } from '../../requests/metadata'
 import { postTable } from '../../requests/tables'
 import { postTeamSeason } from '../../requests/seasons'
+import { postGame } from '../../requests/games'
+
+import { LeftArrow, RightArrow } from '../utilitycomponents/icons'
 
 const Season = () => {
   const seasonId = parseInt(useParams().seasonId)
@@ -16,6 +20,7 @@ const Season = () => {
   const [showMetadataModal, setShowMetadataModal] = useState(false)
   const [showTableModal, setShowTableModal] = useState(false)
   const [showTeamSeasonModal, setShowTeamSeasonModal] = useState(false)
+  const [showAddGameModal, setShowAddGameModal] = useState(false)
 
   const metadataMutation = useMutation({
     mutationFn: postMetadata,
@@ -25,6 +30,10 @@ const Season = () => {
   })
   const teamSeasonMutation = useMutation({
     mutationFn: postTeamSeason,
+  })
+
+  const postGameMutation = useMutation({
+    mutationFn: postGame,
   })
 
   const { data, isLoading, error } = useQuery(['singleSeason', seasonId], () =>
@@ -39,6 +48,7 @@ const Season = () => {
   }
 
   const season = data
+  console.log(season)
 
   return (
     <div className="flex flex-row">
@@ -69,9 +79,19 @@ const Season = () => {
       </div> */}
       <div>
         <div className="w-full">
-          <h2 className="leading-4 text-center text-base font-bold mb-4">
-            Säsong {season.year} {season.women ? 'Damer' : 'Herrar'}
-          </h2>
+          <div className="flex flex-row justify-evenly">
+            {seasonId - 1 === 1 ? null : (
+              <Link to={`/season/${seasonId - 1}`}>
+                <LeftArrow />
+              </Link>
+            )}
+            <h2 className="leading-4 text-center text-base font-bold mb-4">
+              Säsong {season.year} {season.women ? 'Damer' : 'Herrar'}
+            </h2>
+            <Link to={`/season/${seasonId + 1}`}>
+              <RightArrow />
+            </Link>
+          </div>
           {season.metadatum ? (
             <div className="text-sm text-gray-500 ml-3">
               <p>{season.metadatum.name}</p>
@@ -184,6 +204,29 @@ const Season = () => {
               />
             </>
           ) : null}
+          <p>
+            <button onClick={() => setShowAddGameModal(true)}>
+              Lägg till Match
+            </button>
+          </p>
+          {showAddGameModal ? (
+            <>
+              <GameForm
+                teams={season.teams}
+                seasonId={seasonId}
+                mutation={postGameMutation}
+                setShowModal={setShowAddGameModal}
+              />
+            </>
+          ) : null}
+          <p>
+            <Link
+              to={`/games/${seasonId}`}
+              state={{ seasonId: seasonId, teams: season.teams }}
+            >
+              Visa matcherna.
+            </Link>
+          </p>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { useReducer } from 'react'
+import { useReducer, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { getTeams } from '../../requests/teams'
 import teamSeasonFormReducer from '../../reducers/teamSeasonFormReducer'
@@ -7,7 +7,7 @@ import { Plus, Minus } from '../utilitycomponents/icons'
 
 const TeamSeasonForm = ({ seasonId, mutation, setShowModal }) => {
   const initState = []
-
+  const [teamFilter, setTeamFilter] = useState('')
   const [formState, dispatch] = useReducer(teamSeasonFormReducer, initState)
   const queryClient = useQueryClient()
   const { data, isLoading, error } = useQuery('teams', getTeams)
@@ -21,7 +21,10 @@ const TeamSeasonForm = ({ seasonId, mutation, setShowModal }) => {
   }
 
   const teamSelection = data.map((team) => {
-    return { value: team.teamId, label: team.name }
+    return {
+      value: team.teamId,
+      label: team.women ? `${team.name} - D` : team.name,
+    }
   })
 
   const handleSubmit = (event) => {
@@ -52,8 +55,8 @@ const TeamSeasonForm = ({ seasonId, mutation, setShowModal }) => {
 
   return (
     <>
-      <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative w-[1024px] my-6 mx-auto">
+      <div className="justify-center items-center flex overflow-x-hidden fixed overflow-y-auto inset-0 z-50 outline-none focus:outline-none">
+        <div className="relative h-[540px] w-[1024px] my-6 mx-auto">
           {/*content*/}
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             {/*header*/}
@@ -67,31 +70,43 @@ const TeamSeasonForm = ({ seasonId, mutation, setShowModal }) => {
                   ×
                 </span>
               </button>
+              <form>
+                <input
+                  className="rounded"
+                  type="text"
+                  placeholder="Filter"
+                  value={teamFilter}
+                  name="teamFilter"
+                  onChange={(event) => setTeamFilter(event.target.value)}
+                />
+              </form>
             </div>
             {/*body*/}
-            <div>
-              <div className="flex flex-col w-[1024px] flex-auto p-5 px-16 justify-start">
+            <div className="">
+              <div className="backdrop:flex flex-col w-[1024px] flex-auto p-5 px-16 justify-start">
                 <div className="p-1 flex flex-row">
                   <div className="w-3/4">
-                    <div className="grid grid-cols-3 gap-4">
-                      {teamSelection.map((team) => {
-                        return (
-                          <div
-                            key={team.value}
-                            className="flex flex-row text-sm font-medium text-gray-900"
-                          >
-                            <div className="w-32">{team.label}</div>
-                            <div>
-                              <button onClick={() => addTeam(team.value)}>
-                                <Plus />
-                              </button>{' '}
-                              <button onClick={() => removeTeam(team.value)}>
-                                <Minus />
-                              </button>
+                    <div className="grid grid-cols-3 gap-2">
+                      {teamSelection
+                        .filter((team) => team.label.includes(teamFilter))
+                        .map((team) => {
+                          return (
+                            <div
+                              key={team.value}
+                              className="flex flex-row text-xs font-medium text-gray-900"
+                            >
+                              <div className="w-32">{team.label}</div>
+                              <div>
+                                <button onClick={() => addTeam(team.value)}>
+                                  <Plus />
+                                </button>{' '}
+                                <button onClick={() => removeTeam(team.value)}>
+                                  <Minus />
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                        )
-                      })}
+                          )
+                        })}
                     </div>
                   </div>
                   <div>

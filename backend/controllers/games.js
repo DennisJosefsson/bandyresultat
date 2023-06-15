@@ -3,11 +3,24 @@ const { Game, Team, Season } = require('../models')
 
 router.get('/', async (req, res, next) => {
   const games = await Game.findAll({
-    attributes: ['date', 'result', 'halftime_result'],
+    attributes: [
+      'gameId',
+      'date',
+      'result',
+      'halftimeResult',
+      'homeGoal',
+      'awayGoal',
+      'halftimeHomeGoal',
+      'halftimeAwayGoal',
+      'category',
+      'group',
+      'women',
+      'playoff',
+    ],
     include: [
-      { model: Team, attributes: ['name'], as: 'homeTeam' },
-      { model: Team, attributes: ['name'], as: 'awayTeam' },
-      { model: Season, attributes: ['year'] },
+      { model: Team, attributes: ['name', 'teamId'], as: 'homeTeam' },
+      { model: Team, attributes: ['name', 'teamId'], as: 'awayTeam' },
+      { model: Season, attributes: ['year', 'seasonId'] },
     ],
   })
   if (!games) {
@@ -17,14 +30,28 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.get('/playoff/:seasonId', async (req, res, next) => {
+router.get('/season/:seasonId', async (req, res, next) => {
+  console.log(req.params.seasonId)
   const games = await Game.findAll({
-    where: { seasonId: req.params.seasonId, playoff: true },
-    attributes: ['date', 'result', 'halftime_result'],
+    where: { seasonId: req.params.seasonId },
+    attributes: [
+      'gameId',
+      'date',
+      'result',
+      'halftimeResult',
+      'homeGoal',
+      'awayGoal',
+      'halftimeHomeGoal',
+      'halftimeAwayGoal',
+      'category',
+      'group',
+      'women',
+      'playoff',
+    ],
     include: [
-      { model: Team, attributes: ['name'], as: 'homeTeam' },
-      { model: Team, attributes: ['name'], as: 'awayTeam' },
-      { model: Season, attributes: ['year'] },
+      { model: Team, attributes: ['name', 'teamId'], as: 'homeTeam' },
+      { model: Team, attributes: ['name', 'teamId'], as: 'awayTeam' },
+      { model: Season, attributes: ['year', 'seasonId'] },
     ],
   })
 
@@ -52,7 +79,8 @@ router.get('/:gameId', async (req, res, next) => {
 })
 
 router.post('/', async (req, res, next) => {
-  const game = await Game.create(req.body)
+  const [game, created] = await Game.upsert(req.body)
+  console.log(created)
   res.json(game)
 })
 

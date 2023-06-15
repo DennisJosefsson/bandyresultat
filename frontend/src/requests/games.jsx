@@ -9,8 +9,8 @@ export const getGames = async () => {
   return response.data
 }
 
-export const getSeasonGames = async ({ seasonId }) => {
-  const response = await gamesApi.get(`/playoff/${seasonId}`)
+export const getSeasonGames = async (seasonId) => {
+  const response = await gamesApi.get(`/season/${seasonId}`)
   return response.data
 }
 
@@ -19,8 +19,8 @@ export const getSingleGame = async ({ gameId }) => {
   return response.data
 }
 
-export const postGame = async (game) => {
-  return await gamesApi.post('/', game)
+export const postGame = async ({ formState }) => {
+  return await gamesApi.post('/', formState)
 }
 
 export const updateGame = async (game) => {
