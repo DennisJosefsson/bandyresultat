@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 import Home from './components/Home'
 import Header from './components/Header'
+import Footer from './components/Footer'
 
 import Team from './components/Team/Team'
 import Teams from './components/Team/Teams'
@@ -13,22 +14,21 @@ import Games from './components/Game/Games'
 const App = () => {
   return (
     <Router>
-      <div className="min-h-screen radial-blue">
+      <div className="bg-[#dceff5] text-[#011d29]">
         <Header />
-        <main className="max-w-4xl mx-auto bg-slate-50 rounded-xl">
-          <section className="flex flex-col-reverse justify-center sm:flex-row p-6 items-center gap-8 mb-12 mt-6 scroll-mt-40">
-            <Routes>
-              <Route path="/teams/:teamId" element={<Team />} />
-              <Route path="/teams" element={<Teams />} />
-              <Route path="/season/:seasonId" element={<Season />} />
-              <Route path="/seasons" element={<Seasons />} />
-              <Route path="/tables/:seasonId" element={<Table />} />
-              <Route path="/tables" element={<Table />} />
-              <Route path="/games/:seasonId" element={<Games />} />
-              <Route path="*" element={<Home />} />
-            </Routes>
-          </section>
+        <main>
+          <Routes>
+            <Route path="/teams/:teamId" element={<Team />} />
+            <Route path="/teams" element={<Teams />} />
+            <Route path="/season/:seasonId" element={<Season />} />
+            <Route path="/seasons" element={<Seasons />} />
+            <Route path="/tables/:seasonId" element={<Table />} />
+            <Route path="/tables" element={<Table />} />
+            <Route path="/games/:seasonId" element={<Games />} />
+            <Route path="*" element={<Home />} />
+          </Routes>
         </main>
+        <Footer />
       </div>
     </Router>
   )

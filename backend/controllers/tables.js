@@ -1,6 +1,40 @@
 const router = require('express').Router()
+const { sequelize } = require('../utils/db')
+const { Op } = require('sequelize')
+const { Table, Season, Team, TeamGame } = require('../models')
 
-const { Table, Season, Team } = require('../models')
+router.get('/maraton', async (req, res) => {
+  const maratonTabell = await TeamGame.findAll({
+    where: { category: 'regular' },
+    attributes: [
+      'team',
+      [sequelize.fn('count', sequelize.col('team_game_id')), 'total_games'],
+      [sequelize.fn('sum', sequelize.col('points')), 'total_points'],
+      [
+        sequelize.fn('sum', sequelize.col('goals_scored')),
+        'total_goals_scored',
+      ],
+      [
+        sequelize.fn('sum', sequelize.col('goals_conceded')),
+        'total_goals_conceded',
+      ],
+      [
+        sequelize.fn('sum', sequelize.col('goal_difference')),
+        'total_goal_difference',
+      ],
+      [sequelize.literal(`(count(*) filter (where win))`), 'total_wins'],
+      [sequelize.literal(`(count(*) filter (where draw))`), 'total_draws'],
+      [sequelize.literal(`(count(*) filter (where lost))`), 'total_lost'],
+    ],
+    group: ['team'],
+    order: [
+      ['total_points', 'DESC'],
+      ['total_goal_difference', 'DESC'],
+      ['total_goals_scored', 'DESC'],
+    ],
+  })
+  res.json(maratonTabell)
+})
 
 router.get('/:seasonId', async (req, res) => {
   const table = await Table.findAll({

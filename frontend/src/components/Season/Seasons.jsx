@@ -5,20 +5,20 @@ import { Link } from 'react-router-dom'
 const Seasons = () => {
   const { data, isLoading, error } = useQuery('allSeasons', getSeasons)
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div className="max-w-6xl mx-auto">Loading...</div>
   }
 
   if (error) {
-    return <div>There was an error</div>
+    return <div className="max-w-6xl mx-auto">There was an error</div>
   }
 
   const seasons = data
 
   return (
-    <div className="flex flex-row space-x-12">
+    <div className="max-w-6xl mx-auto">
       <div>
         <h2>Herrar</h2>
-        <ul className="grid grid-cols-4 gap-4">
+        <ul>
           {seasons.map((season) => {
             if (!season.women) {
               return (
@@ -32,7 +32,7 @@ const Seasons = () => {
       </div>
       <div>
         <h2>Damer</h2>
-        <ul className="grid grid-cols-4 gap-4">
+        <ul>
           {seasons.map((season) => {
             if (season.women) {
               return (

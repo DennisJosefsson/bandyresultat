@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const { Game, Team, Season } = require('../models')
+const { sequelize } = require('../utils/db')
 
 router.get('/', async (req, res, next) => {
   const games = await Game.findAll({
@@ -52,6 +53,20 @@ router.get('/season/:seasonId', async (req, res, next) => {
       { model: Team, attributes: ['name', 'teamId'], as: 'homeTeam' },
       { model: Team, attributes: ['name', 'teamId'], as: 'awayTeam' },
       { model: Season, attributes: ['year', 'seasonId'] },
+    ],
+    group: [
+      'date',
+      'game.game_id',
+      'homeTeam.name',
+      'homeTeam.team_id',
+      'awayTeam.name',
+      'awayTeam.team_id',
+      'season.year',
+      'season.season_id',
+    ],
+    order: [
+      ['date', 'ASC'],
+      ['group', 'ASC'],
     ],
   })
 

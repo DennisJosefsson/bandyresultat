@@ -8,17 +8,17 @@ const Table = () => {
   )
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div className="max-w-6xl mx-auto">Loading...</div>
   }
 
   if (error) {
-    return <div>There was an error</div>
+    return <div className="max-w-6xl mx-auto">There was an error</div>
   }
 
   const table = data
 
   return (
-    <>
+    <div className="max-w-6xl mx-auto">
       <div>
         {seasonId}
         <ul>
@@ -31,7 +31,7 @@ const Table = () => {
           })}
         </ul>
       </div>
-    </>
+    </div>
   )
 }
 

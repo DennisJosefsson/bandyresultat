@@ -48,7 +48,6 @@ const initEdit = (gameData, seasonId) => {
 }
 
 const GameForm = ({ seasonId, teams, mutation, setShowModal, gameData }) => {
-  console.log('Gamedata:', gameData)
   const teamSelection = teams.map((team) => {
     return { value: team.teamId, label: team.name }
   })
@@ -58,10 +57,10 @@ const GameForm = ({ seasonId, teams, mutation, setShowModal, gameData }) => {
     // { value: 'allsvenskan', label: 'Allsvenskan' },
     // { value: 'norr', label: 'Norr' },
     // { value: 'syd', label: 'Syd' },
-    // { value: 'KvalA', label: 'Kvalgrupp A' },
+    { value: 'KvalA', label: 'Kvalgrupp A' },
     // { value: 'KvalB', label: 'Kvalgrupp B' },
-    // { value: 'E1', label: 'Åttondel 1' },
-    // { value: 'E2', label: 'Åttondel 2' },
+    { value: 'E1', label: 'Åttondel 1' },
+    { value: 'E2', label: 'Åttondel 2' },
     { value: 'Q1', label: 'Kvartsfinal 1' },
     { value: 'Q2', label: 'Kvartsfinal 2' },
     { value: 'Q3', label: 'Kvartsfinal 3' },
@@ -83,6 +82,8 @@ const GameForm = ({ seasonId, teams, mutation, setShowModal, gameData }) => {
     // { value: 'AvdB', label: 'Avdelning B' },
     // { value: 'AvdC', label: 'Avdelning C' },
     // { value: 'AvdD', label: 'Avdelning D' },
+    // { value: 'SlutspelA', label: 'Slutspelsgrupp A' },
+    // { value: 'SlutspelB', label: 'Slutspelsgrupp B' },
   ]
 
   const categorySelection = [

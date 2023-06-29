@@ -2,7 +2,7 @@
 
 const { TeamGame, Game } = require('../models')
 
-// const season = XX
+const season = 117
 
 const addTeamGame = async () => {
   // await sequelize.authenticate()
@@ -54,6 +54,7 @@ const homeTeam = (game) => {
 
   return {
     gameId,
+    seasonId: season,
     team: homeTeamId,
     opponent: awayTeamId,
     goalsScored: homeGoal,
@@ -106,6 +107,7 @@ const awayTeam = (game) => {
 
   return {
     gameId,
+    seasonId: season,
     team: awayTeamId,
     opponent: homeTeamId,
     goalsScored: awayGoal,

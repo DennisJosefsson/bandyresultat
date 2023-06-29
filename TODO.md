@@ -44,3 +44,6 @@ Scrape data
 - Games
 - men
 - women
+
+Leta reda på Katrineholm-Karlsborg 7-7. 1999-01-22, halvtidsresultat
+Leta reda på tre matcher som saknas 2007/08: Sandviken, Västerås, Vetlanda, 2xBroberg, Falun

@@ -22,6 +22,10 @@ TeamGame.init(
       type: DataTypes.INTEGER,
       references: { model: 'teams', key: 'teamId' },
     },
+    seasonId: {
+      type: DataTypes.INTEGER,
+      references: { model: 'seasons', key: 'seasonId' },
+    },
     goalsScored: {
       type: DataTypes.INTEGER,
     },
@@ -48,6 +52,10 @@ TeamGame.init(
     },
     playoff: {
       type: DataTypes.BOOLEAN,
+    },
+    mix: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     women: {
       type: DataTypes.BOOLEAN,

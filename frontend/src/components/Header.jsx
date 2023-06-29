@@ -2,9 +2,11 @@ import { Link } from 'react-router-dom'
 
 const Header = () => {
   return (
-    <header className="bg-sky-400 text-white sticky top-0 z-10">
-      <section className="max-w-4xl mx-auto p-4 flex justify-between items-center">
-        <h1 className="text-3xl font-medium">Bandyresultat</h1>
+    <header className="py-6 z-10 font-poppins">
+      <section className="max-w-6xl mx-auto flex justify-between items-center">
+        <h1 className="text-4xl font-bold tracking-[0.4rem] uppercase">
+          Bandyresultat
+        </h1>
         <div>
           <button
             id="mobile-open-button"
@@ -12,7 +14,10 @@ const Header = () => {
           >
             &#9776;
           </button>
-          <nav className="hidden sm:block space-x-8 text-xl" aria-label="main">
+          <nav
+            className="hidden sm:block space-x-8 text-xl font-bold"
+            aria-label="main"
+          >
             <Link to="/" className="hover:opacity-90">
               Hem
             </Link>
@@ -23,11 +28,12 @@ const Header = () => {
               Lag
             </Link>
             <Link to="/tables" className="hover:opacity-90">
-              Tabeller
+              Maratontabeller
             </Link>
           </nav>
         </div>
       </section>
+      <hr className="w-[1152px] mx-auto h-px my-2 bg-[#011d29] border-0 dark:bg-gray-700" />
     </header>
   )
 }

@@ -14,17 +14,21 @@ const Teams = () => {
   })
 
   if (isLoading) {
-    return <Spinner />
+    return (
+      <div className="max-w-6xl mx-auto">
+        <Spinner />
+      </div>
+    )
   }
 
   if (error) {
-    return <div>There was an error</div>
+    return <div className="max-w-6xl mx-auto"> There was an error</div>
   }
 
   const teams = data
   return (
-    <div className="flex flex-row">
-      <div className="w-48 p-5">
+    <div className="max-w-6xl mx-auto">
+      <div>
         <h2>Herrar</h2>
         {teams.map((team) => {
           if (!team.women) {
@@ -32,7 +36,7 @@ const Teams = () => {
           }
         })}
       </div>
-      <div className="w-48 p-5">
+      <div>
         <h2>Damer</h2>
         {teams.map((team) => {
           if (team.women) {
