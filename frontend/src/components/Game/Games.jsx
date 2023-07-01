@@ -88,6 +88,7 @@ const Games = () => {
       games: semiGroups[group],
     }
   })
+
   const quarterGroups = unsortedQuarterGames.reduce((groups, game) => {
     if (!groups[game.group]) {
       groups[game.group] = []
@@ -122,7 +123,7 @@ const Games = () => {
       <div>
         <form>
           <input
-            className="rounded border-[#011d29] focus:border-[#011d29]"
+            className="border-[#011d29] focus:border-[#011d29]"
             type="text"
             placeholder="Filter"
             value={teamFilter}
@@ -140,14 +141,14 @@ const Games = () => {
                 return (
                   <div
                     key={game.gameId}
-                    className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] rounded flex flex-row justify-between"
+                    className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] flex flex-row justify-between"
                   >
-                    <div className="w-52">{game.homeTeam.name}</div>
-                    <div className="w-4"> - </div>
-                    <div className="w-52">{game.awayTeam.name}</div>
-                    <div className="w-4 text-right">{game.homeGoal}</div>
-                    <div className="w-1">-</div>
-                    <div className="w-4 text-justify">{game.awayGoal}</div>
+                    <span className="w-52">{game.homeTeam.name}</span>
+                    <span className="w-4"> - </span>
+                    <span className="w-52">{game.awayTeam.name}</span>
+                    <span className="w-4 text-right">{game.homeGoal}</span>
+                    <span className="w-1">-</span>
+                    <span className="w-4 text-justify">{game.awayGoal}</span>
                   </div>
                 )
               })}
@@ -167,18 +168,18 @@ const Games = () => {
                         return (
                           <div
                             key={game.gameId}
-                            className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] rounded flex flex-row justify-between"
+                            className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] flex flex-row justify-between"
                           >
-                            <div className="w-52">{game.homeTeam.name}</div>
-                            <div className="w-4"> - </div>
-                            <div className="w-52">{game.awayTeam.name}</div>
-                            <div className="w-4 text-right">
+                            <span className="w-52">{game.homeTeam.name}</span>
+                            <span className="w-4"> - </span>
+                            <span className="w-52">{game.awayTeam.name}</span>
+                            <span className="w-4 text-right">
                               {game.homeGoal}
-                            </div>
-                            <div className="w-1">-</div>
-                            <div className="w-4 text-justify">
+                            </span>
+                            <span className="w-1">-</span>
+                            <span className="w-4 text-justify">
                               {game.awayGoal}
-                            </div>
+                            </span>
                           </div>
                         )
                       })}
@@ -202,18 +203,18 @@ const Games = () => {
                         return (
                           <div
                             key={game.gameId}
-                            className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] rounded flex flex-row justify-between"
+                            className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] flex flex-row justify-between"
                           >
-                            <div className="w-52">{game.homeTeam.name}</div>
-                            <div className="w-4"> - </div>
-                            <div className="w-52">{game.awayTeam.name}</div>
-                            <div className="w-4 text-right">
+                            <span className="w-52">{game.homeTeam.name}</span>
+                            <span className="w-4"> - </span>
+                            <span className="w-52">{game.awayTeam.name}</span>
+                            <span className="w-4 text-right">
                               {game.homeGoal}
-                            </div>
-                            <div className="w-1">-</div>
-                            <div className="w-4 text-justify">
+                            </span>
+                            <span className="w-1">-</span>
+                            <span className="w-4 text-justify">
                               {game.awayGoal}
-                            </div>
+                            </span>
                           </div>
                         )
                       })}
@@ -237,18 +238,18 @@ const Games = () => {
                         return (
                           <div
                             key={game.gameId}
-                            className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] rounded flex flex-row justify-between"
+                            className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] flex flex-row justify-between"
                           >
-                            <div className="w-52">{game.homeTeam.name}</div>
-                            <div className="w-4"> - </div>
-                            <div className="w-52">{game.awayTeam.name}</div>
-                            <div className="w-4 text-right">
+                            <span className="w-52">{game.homeTeam.name}</span>
+                            <span className="w-4"> - </span>
+                            <span className="w-52">{game.awayTeam.name}</span>
+                            <span className="w-4 text-right">
                               {game.homeGoal}
-                            </div>
-                            <div className="w-1">-</div>
-                            <div className="w-4 text-justify">
+                            </span>
+                            <span className="w-1">-</span>
+                            <span className="w-4 text-justify">
                               {game.awayGoal}
-                            </div>
+                            </span>
                           </div>
                         )
                       })}
@@ -272,7 +273,7 @@ const Games = () => {
                         return (
                           <div
                             key={game.gameId}
-                            className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] rounded flex flex-row justify-between"
+                            className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] flex flex-row justify-between"
                           >
                             <div className="w-52">{game.homeTeam.name}</div>
                             <div className="w-4"> - </div>
@@ -307,18 +308,18 @@ const Games = () => {
                         return (
                           <div
                             key={game.gameId}
-                            className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] rounded flex flex-row justify-between"
+                            className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] flex flex-row justify-between"
                           >
-                            <div className="w-52">{game.homeTeam.name}</div>
-                            <div className="w-4"> - </div>
-                            <div className="w-52">{game.awayTeam.name}</div>
-                            <div className="w-4 text-right">
+                            <span className="w-52">{game.homeTeam.name}</span>
+                            <span className="w-4"> - </span>
+                            <span className="w-52">{game.awayTeam.name}</span>
+                            <span className="w-4 text-right">
                               {game.homeGoal}
-                            </div>
-                            <div className="w-1">-</div>
-                            <div className="w-4 text-justify">
+                            </span>
+                            <span className="w-1">-</span>
+                            <span className="w-4 text-justify">
                               {game.awayGoal}
-                            </div>
+                            </span>
                           </div>
                         )
                       })}

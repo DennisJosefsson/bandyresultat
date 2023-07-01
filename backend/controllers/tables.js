@@ -26,7 +26,20 @@ router.get('/maraton', async (req, res) => {
       [sequelize.literal(`(count(*) filter (where draw))`), 'total_draws'],
       [sequelize.literal(`(count(*) filter (where lost))`), 'total_lost'],
     ],
-    group: ['team'],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+    ],
+    group: [
+      'team',
+      'lag.name',
+      'lag.team_id',
+      'lag.casual_name',
+      'lag.short_name',
+    ],
     order: [
       ['total_points', 'DESC'],
       ['total_goal_difference', 'DESC'],
@@ -37,28 +50,58 @@ router.get('/maraton', async (req, res) => {
 })
 
 router.get('/:seasonId', async (req, res) => {
-  const table = await Table.findAll({
+  const tabell = await TeamGame.findAll({
     where: { seasonId: req.params.seasonId },
-    attributes: {
-      exclude: [
-        'seasonId',
-        'qualification',
-        'createdAt',
-        'updatedAt',
-        'tableId',
+    attributes: [
+      'team',
+      'group',
+      'category',
+      [sequelize.fn('count', sequelize.col('team_game_id')), 'total_games'],
+      [sequelize.fn('sum', sequelize.col('points')), 'total_points'],
+      [
+        sequelize.fn('sum', sequelize.col('goals_scored')),
+        'total_goals_scored',
       ],
-    },
-    include: {
-      model: Team,
-      attributes: { exclude: ['women', 'createdAt', 'updatedAt'] },
-    },
-    order: [['position', 'ASC']],
+      [
+        sequelize.fn('sum', sequelize.col('goals_conceded')),
+        'total_goals_conceded',
+      ],
+      [
+        sequelize.fn('sum', sequelize.col('goal_difference')),
+        'total_goal_difference',
+      ],
+      [sequelize.literal(`(count(*) filter (where win))`), 'total_wins'],
+      [sequelize.literal(`(count(*) filter (where draw))`), 'total_draws'],
+      [sequelize.literal(`(count(*) filter (where lost))`), 'total_lost'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+    ],
+    group: [
+      'group',
+      'team',
+      'lag.name',
+      'lag.team_id',
+      'lag.casual_name',
+      'lag.short_name',
+      'category',
+    ],
+    order: [
+      ['group', 'DESC'],
+      ['total_points', 'DESC'],
+      ['total_goal_difference', 'DESC'],
+      ['total_goals_scored', 'DESC'],
+    ],
   })
-  console.log(new Date())
-  if (!table) {
+
+  if (!tabell) {
     throw new Error('No such table in the database')
   } else {
-    res.json(table)
+    res.json(tabell)
   }
 })
 

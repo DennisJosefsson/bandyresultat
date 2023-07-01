@@ -19,6 +19,12 @@ Team.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    casualName: {
+      type: DataTypes.STRING,
+    },
+    shortName: {
+      type: DataTypes.STRING,
+    },
     women: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,

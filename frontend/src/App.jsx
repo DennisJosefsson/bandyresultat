@@ -14,7 +14,7 @@ import Games from './components/Game/Games'
 const App = () => {
   return (
     <Router>
-      <div className="bg-[#dceff5] text-[#011d29]">
+      <div className="bg-[#f4f5f5] text-[#011d29]">
         <Header />
         <main>
           <Routes>

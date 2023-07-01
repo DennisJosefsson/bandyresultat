@@ -19,8 +19,16 @@ router.get('/', async (req, res, next) => {
       'playoff',
     ],
     include: [
-      { model: Team, attributes: ['name', 'teamId'], as: 'homeTeam' },
-      { model: Team, attributes: ['name', 'teamId'], as: 'awayTeam' },
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'homeTeam',
+      },
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'awayTeam',
+      },
       { model: Season, attributes: ['year', 'seasonId'] },
     ],
   })
@@ -50,23 +58,21 @@ router.get('/season/:seasonId', async (req, res, next) => {
       'playoff',
     ],
     include: [
-      { model: Team, attributes: ['name', 'teamId'], as: 'homeTeam' },
-      { model: Team, attributes: ['name', 'teamId'], as: 'awayTeam' },
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'homeTeam',
+      },
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'awayTeam',
+      },
       { model: Season, attributes: ['year', 'seasonId'] },
     ],
-    group: [
-      'date',
-      'game.game_id',
-      'homeTeam.name',
-      'homeTeam.team_id',
-      'awayTeam.name',
-      'awayTeam.team_id',
-      'season.year',
-      'season.season_id',
-    ],
     order: [
-      ['date', 'ASC'],
       ['group', 'ASC'],
+      ['date', 'ASC'],
     ],
   })
 
@@ -81,8 +87,16 @@ router.get('/:gameId', async (req, res, next) => {
   const game = await Game.findByPk(req.params.gameId, {
     attributes: ['date', 'result'],
     include: [
-      { model: Team, attributes: ['name'], as: 'homeTeam' },
-      { model: Team, attributes: ['name'], as: 'awayTeam' },
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'homeTeam',
+      },
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'awayTeam',
+      },
       { model: Season, attributes: ['year'] },
     ],
   })
