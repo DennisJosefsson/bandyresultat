@@ -3,7 +3,8 @@ import { getSeasonGames } from '../../requests/games'
 import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import Spinner from '../utilitycomponents/spinner'
-import { groupConstant } from '../utilitycomponents/constants'
+import GamesList from './GamesList'
+import { gameSortFunction } from '../utilitycomponents/sortFunction'
 
 const Games = () => {
   const location = useLocation()
@@ -28,7 +29,7 @@ const Games = () => {
       game.awayTeam.name.toLowerCase().includes(teamFilter.toLowerCase())
   )
 
-  const finalGames = games.filter((game) => game.category === 'final')
+  const unsortedFinalGames = games.filter((game) => game.category === 'final')
   const unsortedSemiGames = games.filter((game) => game.category === 'semi')
   const unsortedQuarterGames = games.filter(
     (game) => game.category === 'quarter'
@@ -41,82 +42,12 @@ const Games = () => {
     (game) => game.category === 'qualification'
   )
 
-  const dates = unsortedRegularGames.reduce((dates, game) => {
-    if (!dates[game.date]) {
-      dates[game.date] = []
-    }
-    dates[game.date].push(game)
-    return dates
-  }, {})
-
-  const regularGames = Object.keys(dates).map((date) => {
-    return {
-      date,
-      games: dates[date],
-    }
-  })
-
-  const qualificationDates = unsortedQualificationGames.reduce(
-    (dates, game) => {
-      if (!dates[game.date]) {
-        dates[game.date] = []
-      }
-      dates[game.date].push(game)
-      return dates
-    },
-    {}
-  )
-
-  const qualificationGames = Object.keys(qualificationDates).map((date) => {
-    return {
-      date,
-      games: qualificationDates[date],
-    }
-  })
-
-  const semiGroups = unsortedSemiGames.reduce((groups, game) => {
-    if (!groups[game.group]) {
-      groups[game.group] = []
-    }
-    groups[game.group].push(game)
-    return groups
-  }, {})
-
-  const semiGames = Object.keys(semiGroups).map((group) => {
-    return {
-      group,
-      games: semiGroups[group],
-    }
-  })
-
-  const quarterGroups = unsortedQuarterGames.reduce((groups, game) => {
-    if (!groups[game.group]) {
-      groups[game.group] = []
-    }
-    groups[game.group].push(game)
-    return groups
-  }, {})
-
-  const quarterGames = Object.keys(quarterGroups).map((group) => {
-    return {
-      group,
-      games: quarterGroups[group],
-    }
-  })
-  const eightGroups = unsortedEightGames.reduce((groups, game) => {
-    if (!groups[game.group]) {
-      groups[game.group] = []
-    }
-    groups[game.group].push(game)
-    return groups
-  }, {})
-
-  const eightGames = Object.keys(eightGroups).map((group) => {
-    return {
-      group,
-      games: eightGroups[group],
-    }
-  })
+  const finalGames = gameSortFunction(unsortedFinalGames)
+  const semiGames = gameSortFunction(unsortedSemiGames)
+  const quarterGames = gameSortFunction(unsortedQuarterGames)
+  const eightGames = gameSortFunction(unsortedEightGames)
+  const regularGames = gameSortFunction(unsortedRegularGames)
+  const qualificationGames = gameSortFunction(unsortedQualificationGames)
 
   return (
     <div className="max-w-6xl mx-auto font-inter text-[#011d29] flex flex-row-reverse justify-between">
@@ -134,201 +65,23 @@ const Games = () => {
       </div>
       <div>
         {finalGames.length > 0 && (
-          <div>
-            <h1 className="font-inter text-2xl">Final</h1>
-            <div>
-              {finalGames.map((game) => {
-                return (
-                  <div
-                    key={game.gameId}
-                    className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] flex flex-row justify-between"
-                  >
-                    <span className="w-52">{game.homeTeam.name}</span>
-                    <span className="w-4"> - </span>
-                    <span className="w-52">{game.awayTeam.name}</span>
-                    <span className="w-4 text-right">{game.homeGoal}</span>
-                    <span className="w-1">-</span>
-                    <span className="w-4 text-justify">{game.awayGoal}</span>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
+          <GamesList gamesArray={finalGames} title={'Final'} />
         )}
         {semiGames.length > 0 && (
-          <div>
-            <h1 className="font-inter text-2xl">Semifinal</h1>
-            <div>
-              {semiGames.map((group) => {
-                return (
-                  <div key={group.group}>
-                    <h3>{groupConstant[group.group]}</h3>
-                    <div>
-                      {group.games.map((game) => {
-                        return (
-                          <div
-                            key={game.gameId}
-                            className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] flex flex-row justify-between"
-                          >
-                            <span className="w-52">{game.homeTeam.name}</span>
-                            <span className="w-4"> - </span>
-                            <span className="w-52">{game.awayTeam.name}</span>
-                            <span className="w-4 text-right">
-                              {game.homeGoal}
-                            </span>
-                            <span className="w-1">-</span>
-                            <span className="w-4 text-justify">
-                              {game.awayGoal}
-                            </span>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
+          <GamesList gamesArray={semiGames} title={'Semifinaler'} />
         )}
         {quarterGames.length > 0 && (
-          <div>
-            <h1 className="font-inter text-2xl">Kvartsfinal</h1>
-            <div>
-              {quarterGames.map((group) => {
-                return (
-                  <div key={group.group}>
-                    <h3>{groupConstant[group.group]}</h3>
-                    <div>
-                      {group.games.map((game) => {
-                        return (
-                          <div
-                            key={game.gameId}
-                            className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] flex flex-row justify-between"
-                          >
-                            <span className="w-52">{game.homeTeam.name}</span>
-                            <span className="w-4"> - </span>
-                            <span className="w-52">{game.awayTeam.name}</span>
-                            <span className="w-4 text-right">
-                              {game.homeGoal}
-                            </span>
-                            <span className="w-1">-</span>
-                            <span className="w-4 text-justify">
-                              {game.awayGoal}
-                            </span>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
+          <GamesList gamesArray={quarterGames} title={'Kvartsfinaler'} />
         )}
         {eightGames.length > 0 && (
-          <div>
-            <h1 className="font-inter text-2xl">Åttondelsfinal</h1>
-            <div>
-              {eightGames.map((group) => {
-                return (
-                  <div key={group.group}>
-                    <h3>{groupConstant[group.group]}</h3>
-                    <div>
-                      {group.games.map((game) => {
-                        return (
-                          <div
-                            key={game.gameId}
-                            className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] flex flex-row justify-between"
-                          >
-                            <span className="w-52">{game.homeTeam.name}</span>
-                            <span className="w-4"> - </span>
-                            <span className="w-52">{game.awayTeam.name}</span>
-                            <span className="w-4 text-right">
-                              {game.homeGoal}
-                            </span>
-                            <span className="w-1">-</span>
-                            <span className="w-4 text-justify">
-                              {game.awayGoal}
-                            </span>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
+          <GamesList gamesArray={eightGames} title={'Åttondelsfinaler'} />
         )}
         {regularGames.length > 0 && (
-          <div>
-            <h1 className="font-inter text-2xl">Grundserie</h1>
-            <div>
-              {regularGames.map((date) => {
-                return (
-                  <div key={date.date}>
-                    <h3>{date.date}</h3>
-                    <div>
-                      {date.games.map((game) => {
-                        return (
-                          <div
-                            key={game.gameId}
-                            className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] flex flex-row justify-between"
-                          >
-                            <div className="w-52">{game.homeTeam.name}</div>
-                            <div className="w-4"> - </div>
-                            <div className="w-52">{game.awayTeam.name}</div>
-                            <div className="w-4 text-right">
-                              {game.homeGoal}
-                            </div>
-                            <div className="w-1">-</div>
-                            <div className="w-4 text-justify">
-                              {game.awayGoal}
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
+          <GamesList gamesArray={regularGames} title={'Grundseriematcher'} />
         )}
+
         {qualificationGames.length > 0 && (
-          <div>
-            <h1 className="font-inter text-2xl">Kvalmatcher</h1>
-            <div>
-              {qualificationGames.map((date) => {
-                return (
-                  <div key={date.date}>
-                    <h3>{date.date}</h3>
-                    <div>
-                      {date.games.map((game) => {
-                        return (
-                          <div
-                            key={game.gameId}
-                            className="bg-slate-300 px-2 py-1 mb-2 w-[36rem] flex flex-row justify-between"
-                          >
-                            <span className="w-52">{game.homeTeam.name}</span>
-                            <span className="w-4"> - </span>
-                            <span className="w-52">{game.awayTeam.name}</span>
-                            <span className="w-4 text-right">
-                              {game.homeGoal}
-                            </span>
-                            <span className="w-1">-</span>
-                            <span className="w-4 text-justify">
-                              {game.awayGoal}
-                            </span>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
+          <GamesList gamesArray={qualificationGames} title={'Kvalmatcher'} />
         )}
       </div>
     </div>
