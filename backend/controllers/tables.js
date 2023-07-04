@@ -49,8 +49,9 @@ router.get('/maraton', async (req, res) => {
   res.json(maratonTabell)
 })
 
-router.get('/compare', async (req, res) => {
-  const array = [1, 5, 8]
+router.post('/compare', async (req, res) => {
+  console.log(new Date())
+  const array = req.body
   const tabeller = await TeamGame.findAll({
     where: {
       team: {
@@ -88,6 +89,11 @@ router.get('/compare', async (req, res) => {
         attributes: ['name', 'teamId', 'casualName', 'shortName'],
         as: 'lag',
       },
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'opp',
+      },
     ],
     group: [
       'team',
@@ -97,8 +103,13 @@ router.get('/compare', async (req, res) => {
       'lag.team_id',
       'lag.casual_name',
       'lag.short_name',
+      'opp.name',
+      'opp.team_id',
+      'opp.casual_name',
+      'opp.short_name',
     ],
     order: [
+      ['team', 'DESC'],
       ['total_points', 'DESC'],
       ['total_goal_difference', 'DESC'],
       ['total_goals_scored', 'DESC'],

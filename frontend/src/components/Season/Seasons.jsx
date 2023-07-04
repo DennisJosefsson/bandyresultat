@@ -37,9 +37,7 @@ const Seasons = () => {
             if (season.women) {
               return (
                 <li key={season.seasonId}>
-                  <Link to="/season" state={{ seasonId: season.id }}>
-                    {season.year}
-                  </Link>
+                  <Link to={`/season/${season.seasonId}`}>{season.year}</Link>
                 </li>
               )
             }

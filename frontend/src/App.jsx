@@ -10,11 +10,12 @@ import Table from './components/Table/Table'
 import Season from './components/Season/Season'
 import Seasons from './components/Season/Seasons'
 import Games from './components/Game/Games'
+import Compare from './components/Compare/Compare'
 
 const App = () => {
   return (
     <Router>
-      <div className="bg-[#f4f5f5] text-[#011d29]">
+      <div className="bg-[#f4f5f5] text-[#011d29] min-h-screen">
         <Header />
         <main>
           <Routes>
@@ -25,6 +26,7 @@ const App = () => {
             <Route path="/tables/:seasonId" element={<Table />} />
             <Route path="/tables" element={<Table />} />
             <Route path="/games/:seasonId" element={<Games />} />
+            <Route path="/compare" element={<Compare />} />
             <Route path="*" element={<Home />} />
           </Routes>
         </main>

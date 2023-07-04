@@ -48,12 +48,11 @@ scraped_data = []
 #     }
 
 
-seasonId = 117
-outputfile = '202223.json'
+seasonId = 158
+outputfile = 'dam201112.json'
 
 
-urls = [ "https://www.elitrapport.se/api/games.php?pgsid=11829&season=2022"
-        
+urls = [ "https://www.elitrapport.se/api/games.php?pgsid=116&season=2011"
       ]
 
 for url in urls: 
@@ -62,7 +61,9 @@ for url in urls:
     games = json.loads(game_data)
     for game in games:
         game_items = {}
-        if game['Serie'] == 'Elitserien Herr Träningsmatcher':
+        if game['Serie'] == 'Kval till damallsvenskan':
+             continue
+        if game['Serie'] == 'Elitserien Dam Träningsmatcher':
              continue
         game_items['date'] = game['Date'].split(' ')[0]
         game_items['homeTeamId'] = teamIds[game['HomeID']]
@@ -71,27 +72,40 @@ for url in urls:
         game_items['homeGoal'] = int(game['HomeGoals'])
         game_items['awayGoal'] = int(game['AwayGoals'])
         game_items['seasonId'] = seasonId
-        if game['Serie'] == 'Elitserien Herr': 
+        game_items['women'] = True
+        if game['Serie'] == 'Damallsvenskan': 
             game_items['category'] = 'regular'
-            game_items['group'] = 'elitserien'
+            game_items['group'] = 'allsvenskan'
             game_items['playoff'] = False
-        if game['Serie'] == 'Elitserien Herr Kval': 
-            game_items['category'] = 'qualification'
-            game_items['group'] = 'KvalA'
+        if game['Serie'] == 'Damallsvenskan Norra': 
+            game_items['category'] = 'regular'
+            game_items['group'] = 'DamAllsvNorrForts'
             game_items['playoff'] = False
-        if game['Serie'] == 'Elitserien Herr Åttondel': 
-            game_items['category'] = 'eight'
-            game_items['group'] = 'E1'
-            game_items['playoff'] = True
-        if game['Serie'] == 'Elitserien Herr Kvart': 
+        if game['Serie'] == 'Damallsvenskan Södra': 
+            game_items['category'] = 'regular'
+            game_items['group'] = 'DamAllsvSydForts'
+            game_items['playoff'] = False
+        # if game['Serie'] == 'Damallsvenskan Norra': 
+        #     game_items['category'] = 'regular'
+        #     game_items['group'] = 'DamAllsvNorr'
+        #     game_items['playoff'] = False
+        # if game['Serie'] == 'Damallsvenskan Södra': 
+        #     game_items['category'] = 'regular'
+        #     game_items['group'] = 'DamAllsvSyd'
+        #     game_items['playoff'] = False
+        # if game['Serie'] == 'Damallsvenskan Mitt': 
+        #     game_items['category'] = 'regular'
+        #     game_items['group'] = 'DamAllsvMitt'
+        #     game_items['playoff'] = False
+        if game['Serie'] == 'Kvartsfinal, Dam': 
             game_items['category'] = 'quarter'
             game_items['group'] = 'Q1'
             game_items['playoff'] = True
-        if game['Serie'] == 'Elitserien Herr Semi': 
+        if game['Serie'] == 'Semifinal, Dam': 
             game_items['category'] = 'semi'
             game_items['group'] = 'S1'
             game_items['playoff'] = True
-        if game['Serie'] == 'Elitserien Herr Final': 
+        if game['Serie'] == 'Final, Dam': 
             game_items['category'] = 'final'
             game_items['group'] = 'final'
             game_items['playoff'] = True

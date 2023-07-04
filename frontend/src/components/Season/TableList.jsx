@@ -20,7 +20,7 @@ const TableList = ({ tableArray }) => {
                     <th scope="col" className="w-8 px-1 py-2 text-center">
                       Pos
                     </th>
-                    <th scope="col" className="w-72 px-1 py-2 text-left">
+                    <th scope="col" className="w-56 px-1 py-2 text-left">
                       Lag
                     </th>
                     <th scope="col" className="w-8 px-1 py-2 text-right">
@@ -35,13 +35,13 @@ const TableList = ({ tableArray }) => {
                     <th scope="col" className="w-8 px-1 py-2 text-right">
                       F
                     </th>
-                    <th scope="col" className="w-8 px-1 py-2 text-right">
+                    <th scope="col" className="w-12 px-1 py-2 text-right">
                       GM
                     </th>
-                    <th scope="col" className="w-8 px-1 py-2 text-right">
+                    <th scope="col" className="w-12 px-1 py-2 text-right">
                       IM
                     </th>
-                    <th scope="col" className="w-8 px-1 py-2 text-right">
+                    <th scope="col" className="w-12 px-1 py-2 text-right">
                       MS
                     </th>
                     <th scope="col" className="w-8 px-1 py-2 text-right">
@@ -58,28 +58,28 @@ const TableList = ({ tableArray }) => {
                       >
                         <td className="px-1 py-2 text-center">{index + 1}</td>
                         <td className="px-1 py-2">{team.lag.name}</td>
-                        <td className="px-1 py-2 text-right">
+                        <td className="px-1 py-2 text-right tabular-nums">
                           {team.total_games}
                         </td>
-                        <td className="px-1 py-2 text-right">
+                        <td className="px-1 py-2 text-right tabular-nums">
                           {team.total_wins}
                         </td>
-                        <td className="px-1 py-2 text-right">
+                        <td className="px-1 py-2 text-right tabular-nums">
                           {team.total_draws}
                         </td>
-                        <td className="px-1 py-2 text-right">
+                        <td className="px-1 py-2 text-right tabular-nums">
                           {team.total_lost}
                         </td>
-                        <td className="px-1 py-2 text-right">
+                        <td className="px-1 py-2 text-right tabular-nums">
                           {team.total_goals_scored}
                         </td>
-                        <td className="px-1 py-2 text-right">
+                        <td className="px-1 py-2 text-right tabular-nums">
                           {team.total_goals_conceded}
                         </td>
-                        <td className="px-1 py-2 text-right">
+                        <td className="px-1 py-2 text-right tabular-nums">
                           {team.total_goal_difference}
                         </td>
-                        <td className="px-1 py-2 p text-right">
+                        <td className="px-1 py-2 p text-right tabular-nums">
                           {team.total_points}
                         </td>
                       </tr>

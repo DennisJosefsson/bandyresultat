@@ -1,14 +1,14 @@
 import { useReducer, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { getTeams } from '../../requests/teams'
-import teamSeasonFormReducer from '../../reducers/teamSeasonFormReducer'
+import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
 import Spinner from '../utilitycomponents/spinner'
 import { Plus, Minus } from '../utilitycomponents/icons'
 
 const TeamSeasonForm = ({ seasonId, mutation, setShowModal }) => {
   const initState = []
   const [teamFilter, setTeamFilter] = useState('')
-  const [formState, dispatch] = useReducer(teamSeasonFormReducer, initState)
+  const [formState, dispatch] = useReducer(teamArrayFormReducer, initState)
   const queryClient = useQueryClient()
   const { data, isLoading, error } = useQuery('teams', getTeams)
 

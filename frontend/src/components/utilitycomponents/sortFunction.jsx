@@ -66,3 +66,30 @@ export const tableSortFunction = (gamesArray) => {
     }
   })
 }
+
+export const compareSortFunction = (compareArray) => {
+  const sortCategories = compareArray.reduce((categories, team) => {
+    if (!categories[team.category]) {
+      categories[team.category] = []
+    }
+    categories[team.category].push(team)
+    return categories
+  }, {})
+
+  const sortedCategories = Object.keys(sortCategories).map((category) => {
+    return {
+      category,
+      teams: sortCategories[category],
+    }
+  })
+
+  return sortedCategories.sort((a, b) => {
+    if (sortOrder.indexOf(a.group) > sortOrder.indexOf(b.group)) {
+      return 1
+    }
+
+    if (sortOrder.indexOf(a.group) < sortOrder.indexOf(b.group)) {
+      return -1
+    }
+  })
+}

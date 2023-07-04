@@ -9,6 +9,10 @@ export const maratonTabell = async () => {
   return response.data
 }
 
+export const compareTeams = async ({ teamArray }) => {
+  return await tablesApi.post('/compare', teamArray)
+}
+
 export const getSingleSeasonTable = async (seasonId) => {
   const response = await tablesApi.get(`/${seasonId}`)
   return response.data

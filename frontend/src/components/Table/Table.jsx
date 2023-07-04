@@ -18,7 +18,7 @@ const Table = () => {
     <div className="max-w-6xl mx-auto font-inter text-[#011d29]">
       <table className="table-auto w-[52rem]">
         <thead>
-          <tr>
+          <tr key={'header'}>
             <th scope="col" className="px-1 py-2 text-center">
               Pos
             </th>
@@ -57,20 +57,30 @@ const Table = () => {
               <tr key={team.teamId} className="odd:bg-slate-300 rounded">
                 <td className="px-1 py-2 text-center">{index + 1}</td>
                 <td className="px-1 py-2 ">{team.lag.name}</td>
-                <td className="px-1 py-2 text-right">{team.total_games}</td>
-                <td className="px-1 py-2 text-right">{team.total_wins}</td>
-                <td className="px-1 py-2 text-right">{team.total_draws}</td>
-                <td className="px-1 py-2 text-right">{team.total_lost}</td>
-                <td className="px-1 py-2 text-right">
+                <td className="px-1 py-2 text-right tabular-nums">
+                  {team.total_games}
+                </td>
+                <td className="px-1 py-2 text-right tabular-nums">
+                  {team.total_wins}
+                </td>
+                <td className="px-1 py-2 text-right tabular-nums">
+                  {team.total_draws}
+                </td>
+                <td className="px-1 py-2 text-right tabular-nums">
+                  {team.total_lost}
+                </td>
+                <td className="px-1 py-2 text-right tabular-nums">
                   {team.total_goals_scored}
                 </td>
-                <td className="px-1 py-2 text-right">
+                <td className="px-1 py-2 text-right tabular-nums">
                   {team.total_goals_conceded}
                 </td>
-                <td className="px-1 py-2 text-right">
+                <td className="px-1 py-2 text-right tabular-nums">
                   {team.total_goal_difference}
                 </td>
-                <td className="px-1 py-2 p text-right">{team.total_points}</td>
+                <td className="px-1 py-2 p text-right tabular-nums">
+                  {team.total_points}
+                </td>
               </tr>
             )
           })}

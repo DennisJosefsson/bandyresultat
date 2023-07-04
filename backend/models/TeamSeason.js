@@ -26,6 +26,10 @@ TeamSeason.init(
     qualification: {
       type: DataTypes.BOOLEAN,
     },
+    women: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     sequelize,

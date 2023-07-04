@@ -1,8 +1,29 @@
 const router = require('express').Router()
+const { Op, Model } = require('sequelize')
+const { sequelize } = require('../utils/db')
 const { Team, Table, Season, TeamSeason } = require('../models')
 
 router.get('/', async (req, res) => {
-  const teams = await Team.findAll()
+  const teams = await Team.findAll({
+    order: [['casualName', 'ASC']],
+  })
+
+  console.log('teams request', new Date())
+  res.json(teams)
+})
+
+router.get('/latest', async (req, res) => {
+  let women = false
+  const teams = await TeamSeason.findAll({
+    where: {
+      seasonId: [
+        sequelize.literal(
+          `SELECT MAX("season_id") FROM "teamseasons" WHERE "women" = $women`
+        ),
+      ],
+    },
+    bind: { women },
+  })
 
   console.log('teams request', new Date())
   res.json(teams)

@@ -2,11 +2,13 @@
 
 const { TeamGame, Game } = require('../models')
 
-const season = 117
+const season = 158
 
 const addTeamGame = async () => {
   // await sequelize.authenticate()
-  const allGames = await Game.findAll({ where: { seasonId: season } })
+  const allGames = await Game.findAll({
+    where: { seasonId: season },
+  })
 
   const homeGames = allGames.map((game) => homeTeam(game))
   const awayGames = allGames.map((game) => awayTeam(game))

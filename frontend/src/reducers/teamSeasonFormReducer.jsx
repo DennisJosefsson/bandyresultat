@@ -1,4 +1,4 @@
-const teamSeasonFormReducer = (state, action) => {
+const teamArrayFormReducer = (state, action) => {
   switch (action.type) {
     case 'ADD TEAM':
       if (state.includes(action.payload)) {
@@ -16,4 +16,4 @@ const teamSeasonFormReducer = (state, action) => {
   }
 }
 
-export default teamSeasonFormReducer
+export default teamArrayFormReducer
