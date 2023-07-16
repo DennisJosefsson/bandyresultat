@@ -8,13 +8,13 @@ const initAdd = (seasonId) => {
     homeTeamId: '',
     awayTeamId: '',
     result: '',
-    halftimeResult: null,
-    homeGoal: null,
-    awayGoal: null,
-    halftimeHomeGoal: null,
-    halftimeAwayGoal: null,
-    date: null,
-    round: null,
+    halftimeResult: undefined,
+    homeGoal: undefined,
+    awayGoal: undefined,
+    halftimeHomeGoal: undefined,
+    halftimeAwayGoal: undefined,
+    date: undefined,
+    round: undefined,
     category: 'regular',
     group: 'elitserien',
     playoff: false,
@@ -24,10 +24,10 @@ const initAdd = (seasonId) => {
   }
 }
 
-const initEdit = (gameData, seasonId) => {
+const initEdit = (gameData) => {
   return {
     gameId: gameData.gameId,
-    seasonId: seasonId,
+    seasonId: gameData.seasonId,
     homeTeamId: gameData.homeTeam.teamId,
     awayTeamId: gameData.awayTeam.teamId,
     result: gameData.result,
@@ -47,8 +47,14 @@ const initEdit = (gameData, seasonId) => {
   }
 }
 
-const GameForm = ({ seasonId, teams, mutation, setShowModal, gameData }) => {
-  const teamSelection = teams.map((team) => {
+const GameForm = ({
+  season,
+  mutation,
+  setShowModal,
+  gameData,
+  setGameData,
+}) => {
+  const teamSelection = season[0].teams.map((team) => {
     return { value: team.teamId, label: team.name }
   })
 
@@ -97,7 +103,7 @@ const GameForm = ({ seasonId, teams, mutation, setShowModal, gameData }) => {
 
   const [formState, dispatch] = useReducer(
     gameFormReducer,
-    gameData ? initEdit(gameData, seasonId) : initAdd(seasonId)
+    gameData ? initEdit(gameData) : initAdd(season.seasonId)
   )
 
   const handleSubmit = (event) => {
@@ -109,7 +115,7 @@ const GameForm = ({ seasonId, teams, mutation, setShowModal, gameData }) => {
       formState.halftimeAwayGoal = formState.halftimeResult.split('-')[1]
     }
     mutation.mutate({ formState })
-
+    setGameData(null)
     setShowModal(false)
   }
 
@@ -247,23 +253,7 @@ const GameForm = ({ seasonId, teams, mutation, setShowModal, gameData }) => {
                         </div>
                       </label>
                     </div>
-                    <div className="p-1">
-                      <label
-                        htmlFor="round"
-                        className="flex flex-row text-sm font-medium text-gray-900"
-                      >
-                        <div className="w-32">Omgång:</div>
-                        <div>
-                          <input
-                            className="w-16 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
-                            type="number"
-                            name="round"
-                            value={formState.round}
-                            onChange={(event) => handleChange(event)}
-                          />
-                        </div>
-                      </label>
-                    </div>
+
                     <div className="p-1">
                       <label
                         htmlFor="category"
@@ -407,7 +397,10 @@ const GameForm = ({ seasonId, teams, mutation, setShowModal, gameData }) => {
               <button
                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
-                onClick={() => setShowModal(false)}
+                onClick={() => {
+                  setGameData(null)
+                  setShowModal(false)
+                }}
               >
                 Stäng
               </button>

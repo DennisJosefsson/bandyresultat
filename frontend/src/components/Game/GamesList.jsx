@@ -1,6 +1,6 @@
 import { groupConstant } from '../utilitycomponents/constants'
 
-const GamesList = ({ gamesArray, title }) => {
+const GamesList = ({ gamesArray, title, setShowModal, setGameData }) => {
   return (
     <div className="mb-6">
       <h1 className="font-inter text-2xl">{title}</h1>
@@ -32,6 +32,15 @@ const GamesList = ({ gamesArray, title }) => {
                               <span className="w-1">-</span>
                               <span className="w-4 text-justify">
                                 {game.awayGoal}
+                              </span>
+                              <span
+                                className="cursor-pointer"
+                                onClick={() => {
+                                  setGameData(game)
+                                  setShowModal(true)
+                                }}
+                              >
+                                [Ändra]
                               </span>
                             </div>
                           )

@@ -17,32 +17,24 @@ const Seasons = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <div>
-        <h2>Herrar</h2>
-        <ul>
+        <h2>Säsonger</h2>
+        <div className="grid grid-cols-4 gap-2">
           {seasons.map((season) => {
+            const seasonYear =
+              parseInt(season.year.split('/')[1]) >= 1964
+                ? season.year.split('/')[1]
+                : season.year
             if (!season.women) {
               return (
-                <li key={season.seasonId}>
-                  <Link to={`/season/${season.seasonId}`}>{season.year}</Link>
-                </li>
+                <div key={season.seasonId}>
+                  {season.year}:{' '}
+                  <Link to={`/season/${seasonYear}`}>Tabeller</Link> -{' '}
+                  <Link to={`/season/${seasonYear}`}>Matcher</Link>
+                </div>
               )
             }
           })}
-        </ul>
-      </div>
-      <div>
-        <h2>Damer</h2>
-        <ul>
-          {seasons.map((season) => {
-            if (season.women) {
-              return (
-                <li key={season.seasonId}>
-                  <Link to={`/season/${season.seasonId}`}>{season.year}</Link>
-                </li>
-              )
-            }
-          })}
-        </ul>
+        </div>
       </div>
     </div>
   )

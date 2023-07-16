@@ -41,12 +41,6 @@ const Teams = () => {
     if (event.key === 'Enter') {
       event.preventDefault()
     }
-
-    // 👇️ access input value from state
-    // console.log(message);
-
-    // 👇️ access input value from event object
-    // console.log(event.target.value)
   }
 
   const handleChange = (event, teamId) => {
@@ -68,7 +62,7 @@ const Teams = () => {
   )
   return (
     <div className="max-w-6xl min-h-screen mx-auto flex flex-row-reverse justify-between font-inter text-[#011d29]">
-      <div className="w-56">
+      <div className="w-64">
         <form className="mb-6">
           <input
             className="border-[#011d29] focus:border-[#011d29]"
@@ -80,15 +74,17 @@ const Teams = () => {
             onKeyDown={handleKeyDown}
           />
         </form>
-        <p className="text-sm mb-4">
-          Filtrera antal lag genom att skriva i textfältet.
-        </p>
-        <p className="text-sm mb-4">
-          Klicka på lagnamn för att se information om det laget.
-        </p>
-        <p className="text-sm mb-4">
-          Klicka i rutan för att välja ut lag att jämföra.
-        </p>
+        <div className="text-left">
+          <p className="text-sm mb-4">
+            Filtrera antal lag genom att skriva i textfältet.
+          </p>
+          <p className="text-sm mb-4">
+            Klicka på lagnamn för att se information om det laget.
+          </p>
+          <p className="text-sm mb-4">
+            Klicka i rutan för att välja ut lag att jämföra.
+          </p>
+        </div>
         <div>
           {formState.length > 0 && <h3 className="underline">Valda lag</h3>}
 
@@ -130,7 +126,7 @@ const Teams = () => {
       <div className="flex flex-row justify-between w-[50rem]">
         <div className="w-[24rem]">
           <h2 className="text-center font-bold text-xl mb-6">Herrar</h2>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2 text-[14px]">
             {teams.map((team) => {
               if (!team.women) {
                 return (
@@ -138,7 +134,7 @@ const Teams = () => {
                     key={team.teamId}
                     className="w-48 flex flex-row items-center"
                   >
-                    <div className="w-32">{team.casualName}</div>
+                    <div className="w-36">{team.casualName}</div>
                     <div className="w-12 pl-4">
                       <input
                         type="checkbox"
@@ -154,7 +150,7 @@ const Teams = () => {
         </div>
         <div className="w-[24rem]">
           <h2 className="text-center font-bold text-xl mb-6">Damer</h2>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2 text-[14px]">
             {teams.map((team) => {
               if (team.women) {
                 return (
@@ -162,7 +158,7 @@ const Teams = () => {
                     key={team.teamId}
                     className="w-48 flex flex-row items-center"
                   >
-                    <div className="w-32">{team.casualName}</div>
+                    <div className="w-36">{team.casualName}</div>
                     <div className="w-12 pl-4">
                       <input type="checkbox" name="" id="" />
                     </div>

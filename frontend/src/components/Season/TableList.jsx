@@ -53,7 +53,7 @@ const TableList = ({ tableArray }) => {
                   {group.tables.map((team, index) => {
                     return (
                       <tr
-                        key={team.teamId}
+                        key={`${team.teamId}-${index}`}
                         className="odd:bg-slate-300 rounded"
                       >
                         <td className="px-1 py-2 text-center">{index + 1}</td>

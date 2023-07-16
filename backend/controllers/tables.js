@@ -119,11 +119,16 @@ router.post('/compare', async (req, res) => {
 })
 
 router.get('/:seasonId', async (req, res) => {
+  const seasonName =
+    req.params.seasonId < 1964
+      ? req.params.seasonId
+      : `${Number(req.params.seasonId) - 1}/${req.params.seasonId}`
   const tabell = await TeamGame.findAll({
-    where: { seasonId: req.params.seasonId },
+    // where: { seasonId: req.params.seasonId },
     attributes: [
       'team',
       'group',
+      'women',
       'category',
       [sequelize.fn('count', sequelize.col('team_game_id')), 'total_games'],
       [sequelize.fn('sum', sequelize.col('points')), 'total_points'],
@@ -149,6 +154,11 @@ router.get('/:seasonId', async (req, res) => {
         attributes: ['name', 'teamId', 'casualName', 'shortName'],
         as: 'lag',
       },
+      {
+        model: Season,
+        attributes: ['seasonId', 'year'],
+        where: { year: { [Op.eq]: seasonName } },
+      },
     ],
     group: [
       'group',
@@ -158,6 +168,9 @@ router.get('/:seasonId', async (req, res) => {
       'lag.casual_name',
       'lag.short_name',
       'category',
+      'season.season_id',
+      'season.year',
+      'teamgame.women',
     ],
     order: [
       ['group', 'DESC'],

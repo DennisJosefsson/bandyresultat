@@ -11,7 +11,15 @@ router.get('', async (req, res, next) => {
 })
 
 router.get('/:seasonId', async (req, res, next) => {
-  const season = await Season.findByPk(req.params.seasonId, {
+  const seasonName =
+    req.params.seasonId < 1964
+      ? req.params.seasonId
+      : `${Number(req.params.seasonId) - 1}/${req.params.seasonId}`
+
+  console.log(seasonName)
+
+  const season = await Season.findAll({
+    where: { year: seasonName },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
     include: [{ model: Team }, { model: Table }, { model: Metadata }],
   })

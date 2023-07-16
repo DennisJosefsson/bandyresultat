@@ -19,6 +19,8 @@ export const groupConstant = {
   AllsvSyd: 'Allsvenskan Södra',
   Div1Syd: 'Division 1 Södra',
   Div1Norr: 'Division 1 Norra',
+  Div1Ost: 'Division 1 Östra',
+  Div1Vast: 'Division 1 Västra',
   Div1Central: 'Division 1 Central',
   Div1NorrA: 'Division 1 Norra A',
   Div1NorrB: 'Division 1 Norra B',
@@ -44,6 +46,8 @@ export const groupConstant = {
   DamAllsvMitt: 'Damallsvenskan Mitt',
   DamAllsvNorrForts: 'Damallsvenskan Norra Fortsättningsserie',
   DamAllsvSydForts: 'Damallsvenskan Södra Fortsättningsserie',
+  ElitNorr: 'Elitserien Norra',
+  ElitSyd: 'Elitserien Södra',
 }
 
 export const sortOrder = [
@@ -62,6 +66,8 @@ export const sortOrder = [
   'ElitA',
   'ElitB',
   'DamElit',
+  'ElitNorr',
+  'ElitSyd',
   'allsvenskan',
   'AllsvNorr',
   'AllsvSyd',
@@ -72,6 +78,8 @@ export const sortOrder = [
   'DamAllsvSyd',
   'Div1Norr',
   'Div1Central',
+  'Div1Ost',
+  'Div1Vast',
   'Div1Syd',
   'AvdA',
   'AvdB',

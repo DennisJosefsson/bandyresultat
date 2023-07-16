@@ -57,6 +57,10 @@ TeamGame.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    homeGame: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     women: {
       type: DataTypes.BOOLEAN,
     },

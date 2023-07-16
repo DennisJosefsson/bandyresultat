@@ -2,7 +2,7 @@
 
 const { TeamGame, Game } = require('../models')
 
-const season = 158
+const season = 136
 
 const addTeamGame = async () => {
   // await sequelize.authenticate()

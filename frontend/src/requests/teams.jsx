@@ -9,7 +9,8 @@ export const getTeams = async () => {
   return response.data
 }
 
-export const getSingleTeam = async ({ teamId }) => {
+export const getSingleTeam = async (teamId) => {
+  console.log(teamId)
   const response = await teamsApi.get(`/${teamId}`)
   return response.data
 }
