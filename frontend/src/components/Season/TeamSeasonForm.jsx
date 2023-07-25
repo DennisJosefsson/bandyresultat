@@ -1,26 +1,16 @@
 import { useReducer, useState } from 'react'
-import { useQuery, useQueryClient } from 'react-query'
-import { getTeams } from '../../requests/teams'
+import { useQueryClient } from 'react-query'
 import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
-import Spinner from '../utilitycomponents/spinner'
+
 import { Plus, Minus } from '../utilitycomponents/icons'
 
-const TeamSeasonForm = ({ seasonId, mutation, setShowModal }) => {
+const TeamSeasonForm = ({ season, mutation, setShowModal, teams }) => {
   const initState = []
   const [teamFilter, setTeamFilter] = useState('')
   const [formState, dispatch] = useReducer(teamArrayFormReducer, initState)
   const queryClient = useQueryClient()
-  const { data, isLoading, error } = useQuery('teams', getTeams)
 
-  if (isLoading) {
-    return <Spinner />
-  }
-
-  if (error) {
-    return <div>There was an error</div>
-  }
-
-  const teamSelection = data.map((team) => {
+  const teamSelection = teams.map((team) => {
     return {
       value: team.teamId,
       label: team.women ? `${team.name} - D` : team.name,
@@ -30,7 +20,7 @@ const TeamSeasonForm = ({ seasonId, mutation, setShowModal }) => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    mutation.mutate({ formState, seasonId })
+    mutation.mutate({ formState, season })
     queryClient.invalidateQueries({ queryKey: ['singleSeason'] })
     setShowModal(false)
   }

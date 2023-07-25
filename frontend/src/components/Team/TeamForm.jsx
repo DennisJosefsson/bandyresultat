@@ -5,6 +5,8 @@ import teamFormReducer from '../../reducers/teamFormReducer'
 const initState = {
   city: '',
   name: '',
+  casualName: '',
+  shortName: '',
   women: false,
 }
 
@@ -67,7 +69,40 @@ const TeamForm = ({ mutation, setShowModal }) => {
                       </div>
                     </label>
                   </div>
-
+                  <div className="p-1">
+                    <label
+                      htmlFor="casualName"
+                      className="flex flex-row text-sm font-medium text-gray-900"
+                    >
+                      <div className="w-32">Vanligt namn:</div>
+                      <div>
+                        <input
+                          className="w-72 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+                          type="text"
+                          name="casualName"
+                          value={formState.casualName}
+                          onChange={(event) => handleChange(event)}
+                        />
+                      </div>
+                    </label>
+                  </div>
+                  <div className="p-1">
+                    <label
+                      htmlFor="shortName"
+                      className="flex flex-row text-sm font-medium text-gray-900"
+                    >
+                      <div className="w-32">Förkortning:</div>
+                      <div>
+                        <input
+                          className="w-72 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+                          type="text"
+                          name="shortName"
+                          value={formState.shortName}
+                          onChange={(event) => handleChange(event)}
+                        />
+                      </div>
+                    </label>
+                  </div>
                   <div className="p-1">
                     <label
                       htmlFor="city"

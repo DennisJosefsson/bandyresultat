@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const { sequelize } = require('../utils/db')
-const { Op } = require('sequelize')
+const { Op, QueryTypes } = require('sequelize')
 const { Table, Season, Team, TeamGame } = require('../models')
 
 router.get('/maraton', async (req, res) => {
@@ -29,7 +29,7 @@ router.get('/maraton', async (req, res) => {
     include: [
       {
         model: Team,
-        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        attributes: ['name', 'teamId', 'casualName', 'shortName', 'women'],
         as: 'lag',
       },
     ],
@@ -39,6 +39,7 @@ router.get('/maraton', async (req, res) => {
       'lag.team_id',
       'lag.casual_name',
       'lag.short_name',
+      'lag.women',
     ],
     order: [
       ['total_points', 'DESC'],
@@ -180,10 +181,70 @@ router.get('/:seasonId', async (req, res) => {
     ],
   })
 
+  const roundByRoundTables = await sequelize.query(
+    `with win_draw_lost_values as (
+select 
+	team,
+	case when win = true then 1 else 0 end as win_var,
+	case when draw = true then 1 else 0 end as draw_var,
+	case when lost = true then 1 else 0 end as lost_var,
+	win,
+	draw,
+	lost,
+	"date",
+	points,
+	goals_scored,
+	goals_conceded,
+	goal_difference,
+  "group",
+	"year",
+	teamgames.women as womens_table
+from teamgames
+join seasons on teamgames.season_id = seasons.season_id
+where "year" = $season_name and category = 'regular'),
+
+round_selection as (
+select 
+	team,
+	win,
+	"date",
+	womens_table,
+  "group",
+	sum(win_var) over (partition by team order by date) sum_wins,
+	sum(draw_var) over (partition by team order by date) sum_draws,
+	sum(lost_var) over (partition by team order by date) sum_lost,
+	sum(goals_scored) over (partition by team order by date) sum_goals_scored,
+	sum(goals_conceded) over (partition by team order by date) sum_goals_conc,
+	sum(points) over (partition by team order by date) sum_points,
+	sum(goal_difference) over (partition by team order by date) sum_gd,
+	row_number() over (partition by team order by date) round
+from win_draw_lost_values)
+
+select 
+	team,
+  casual_name,
+	womens_table,
+	sum_wins,
+	sum_draws,
+	sum_lost,
+	sum_goals_scored,
+	sum_goals_conc,
+	sum_points,
+	sum_gd,
+	round,
+  "group",
+	rank() over (partition by womens_table, "group", round order by sum_points desc, sum_gd desc, sum_goals_scored desc, team) "rank_position"
+from round_selection
+join teams
+on teams.team_id = round_selection.team
+order by team, round asc;`,
+    { bind: { season_name: seasonName }, type: QueryTypes.SELECT }
+  )
+
   if (!tabell) {
     throw new Error('No such table in the database')
   } else {
-    res.json(tabell)
+    res.json({ tabell, roundByRoundTables })
   }
 })
 

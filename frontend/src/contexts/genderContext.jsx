@@ -1,6 +1,5 @@
-import { createContext, useReducer } from 'react'
-
-export const GenderContext = createContext(false)
+import { useReducer } from 'react'
+import { GenderContext } from './contexts'
 
 const genderReducer = (state, action) => {
   switch (action.type) {

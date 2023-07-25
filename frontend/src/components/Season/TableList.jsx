@@ -14,7 +14,7 @@ const TableList = ({ tableArray }) => {
               </h2>
             )}
             <div>
-              <table className="table-fixed w-[36rem]">
+              <table className="table-fixed w-[40rem]">
                 <thead>
                   <tr>
                     <th scope="col" className="w-8 px-1 py-2 text-center">

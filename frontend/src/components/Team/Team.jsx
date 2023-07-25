@@ -2,8 +2,11 @@ import { useQuery } from 'react-query'
 import { getSingleTeam } from '../../requests/teams'
 import { useParams } from 'react-router-dom'
 import Spinner from '../utilitycomponents/spinner'
-
+import dayjs from 'dayjs'
+import 'dayjs/locale/sv'
 import TeamTable from './TeamTable'
+
+dayjs.locale('sv')
 
 const Team = () => {
   const teamId = parseInt(useParams().teamId)
@@ -13,7 +16,7 @@ const Team = () => {
   )
   if (isLoading) {
     return (
-      <div className="max-w-6xl min-h-screen mx-auto font-inter text-[#011d29]">
+      <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29]">
         <Spinner />
       </div>
     )
@@ -21,13 +24,14 @@ const Team = () => {
 
   if (error) {
     return (
-      <div className="max-w-6xl min-h-screen mx-auto font-inter text-[#011d29]">
+      <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29]">
         There was an error
       </div>
     )
   }
 
   const teams = data
+  console.log(teams)
 
   const seasons = teams.team.seasonteam.filter(
     (season) =>
@@ -59,7 +63,7 @@ const Team = () => {
   )
 
   return (
-    <div className="max-w-6xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col">
+    <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col">
       <div>
         <h1 className="text-center text-2xl font-bold mb-4">
           {teams.team.name}
@@ -95,8 +99,9 @@ const Team = () => {
                     className="text-base mb-3"
                     key={`${streak.start_date}-${index}`}
                   >
-                    Mellan {streak.start_date} och {streak.end_date} spelade
-                    laget {streak.game_count} matcher utan att förlora.
+                    Mellan {dayjs(streak.start_date).format('D MMMM YYYY')} och{' '}
+                    {dayjs(streak.end_date).format('D MMMM YYYY')} spelade laget{' '}
+                    {streak.game_count} matcher utan att förlora.
                   </p>
                 )
               })}
@@ -110,7 +115,8 @@ const Team = () => {
                     className="text-base mb-3"
                     key={`${streak.start_date}-${index}`}
                   >
-                    Mellan {streak.start_date} och {streak.end_date} vann laget{' '}
+                    Mellan {dayjs(streak.start_date).format('D MMMM YYYY')} och{' '}
+                    {dayjs(streak.end_date).format('D MMMM YYYY')} vann laget{' '}
                     {streak.game_count} matcher i rad.
                   </p>
                 )
@@ -125,8 +131,9 @@ const Team = () => {
                     className="text-base mb-3"
                     key={`${streak.start_date}-${index}`}
                   >
-                    Mellan {streak.start_date} och {streak.end_date} spelade
-                    laget oavgjort {streak.game_count} matcher på raken.
+                    Mellan {dayjs(streak.start_date).format('D MMMM YYYY')} och{' '}
+                    {dayjs(streak.end_date).format('D MMMM YYYY')} spelade laget
+                    oavgjort {streak.game_count} matcher på raken.
                   </p>
                 )
               })}
@@ -140,8 +147,9 @@ const Team = () => {
                     className="text-base mb-3"
                     key={`${streak.start_date}-${index}`}
                   >
-                    Mellan {streak.start_date} och {streak.end_date} spelade
-                    laget {streak.game_count} matcher och förlorade alla.
+                    Mellan {dayjs(streak.start_date).format('D MMMM YYYY')} och{' '}
+                    {dayjs(streak.end_date).format('D MMMM YYYY')} spelade laget{' '}
+                    {streak.game_count} matcher och förlorade alla.
                   </p>
                 )
               })}
@@ -155,8 +163,9 @@ const Team = () => {
                     className="text-base mb-3"
                     key={`${streak.start_date}-${index}`}
                   >
-                    Mellan {streak.start_date} och {streak.end_date} spelade
-                    laget {streak.game_count} matcher utan att vinna.
+                    Mellan {dayjs(streak.start_date).format('D MMMM YYYY')} och{' '}
+                    {dayjs(streak.end_date).format('D MMMM YYYY')} spelade laget{' '}
+                    {streak.game_count} matcher utan att vinna.
                   </p>
                 )
               })}

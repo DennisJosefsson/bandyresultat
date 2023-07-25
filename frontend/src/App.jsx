@@ -11,6 +11,7 @@ import Season from './components/Season/Season'
 import Seasons from './components/Season/Seasons'
 import Games from './components/Game/Games'
 import Compare from './components/Compare/Compare'
+import Dashboard from './components/Dashboard/Dashboard'
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
             <Route path="/tables" element={<Table />} />
             <Route path="/games/:seasonId" element={<Games />} />
             <Route path="/compare" element={<Compare />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="*" element={<Home />} />
           </Routes>
         </main>

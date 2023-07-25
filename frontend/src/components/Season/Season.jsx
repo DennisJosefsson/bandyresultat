@@ -1,12 +1,14 @@
 import { useQuery } from 'react-query'
 import { getSingleSeason } from '../../requests/seasons'
 import { getSingleSeasonTable } from '../../requests/tables'
-import { useParams, Link } from 'react-router-dom'
-import { useContext } from 'react'
-import { GenderContext } from '../../contexts/genderContext'
+import { useParams, Link, useLocation } from 'react-router-dom'
+import { useContext, useState, useEffect } from 'react'
+import { GenderContext } from '../../contexts/contexts'
+import { sortOrder, groupConstant } from '../utilitycomponents/constants'
 import Spinner from '../utilitycomponents/spinner'
 
 import TableList from './TableList'
+import RoundForRound from './RoundForRound'
 
 import { tableSortFunction } from '../utilitycomponents/sortFunction'
 import { LeftArrow, RightArrow } from '../utilitycomponents/icons'
@@ -14,7 +16,16 @@ import { LeftArrow, RightArrow } from '../utilitycomponents/icons'
 const Season = () => {
   const seasonId = parseInt(useParams().seasonId)
   const { women, dispatch } = useContext(GenderContext)
-
+  const [grupp, setGrupp] = useState('')
+  const [roundForRound, setRoundForRound] = useState(false)
+  const [round, setRound] = useState(1)
+  const location = useLocation()
+  useEffect(() => {
+    if (location.state && location.state.resetRound) {
+      setRound(1)
+      setRoundForRound(false)
+    }
+  }, [location])
   const {
     data: season,
     isLoading,
@@ -43,8 +54,12 @@ const Season = () => {
     )
   }
 
-  const tables = data.filter((table) => table.women === women)
-
+  const tables = data.tabell.filter((table) => table.women === women)
+  const roundByRoundTables = data.roundByRoundTables.filter(
+    (table) => table.womens_table === women
+  )
+  const groups = new Set(roundByRoundTables.map((team) => team.group))
+  const groupsArray = Array.from(groups)
   const final = tables.filter((table) => table.category === 'final')
   const unsortedSemiTables = tables.filter((table) => table.category === 'semi')
   const unsortedQuarterTables = tables.filter(
@@ -67,24 +82,28 @@ const Season = () => {
   const qualificationTables = tableSortFunction(unsortedQualificationTables)
 
   return (
-    <div className="max-w-6xl mx-auto font-inter text-[#011d29] flex flex-col">
+    <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col">
       <div className="flex flex-row justify-between">
-        <div className="flex flex-row justify-evenly w-[52rem]">
+        <div className="flex flex-row justify-evenly w-[72rem]">
           {seasonId - 1 === 1906 ? null : (
-            <Link to={`/season/${seasonId - 1}`}>
+            <Link to={`/season/${seasonId - 1}`} state={{ resetRound: true }}>
               <LeftArrow />
             </Link>
           )}
           <h2 className="leading-4 text-center text-2xl font-bold mb-4">
             Säsong {season[0].year} {women ? 'Damer' : 'Herrar'}
           </h2>
-          <Link to={`/season/${seasonId + 1}`}>
+          <Link to={`/season/${seasonId + 1}`} state={{ resetRound: true }}>
             <RightArrow />
           </Link>
         </div>
         <div>
           <div
-            onClick={() => dispatch({ type: 'TOGGLE' })}
+            onClick={() => {
+              setRound(1)
+              setRoundForRound(false)
+              dispatch({ type: 'TOGGLE' })
+            }}
             className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center"
           >
             {women ? 'Herrar' : 'Damer'}
@@ -126,9 +145,9 @@ const Season = () => {
               <h5 className="text-bold text-sm text-right">Semi</h5>
             )}
             <div className="flex flex-row justify-around mb-6">
-              {semiTables.map((group) => {
+              {semiTables.map((group, index) => {
                 return (
-                  <div key={group.group} className="gap-2 m-2">
+                  <div key={`${group.group}-${index}`} className="gap-2 m-2">
                     <table className="table-fixed w-32">
                       <thead>
                         <tr className="text-[0.5rem]">
@@ -202,19 +221,21 @@ const Season = () => {
                           </th>
                         </tr>
                       </thead>
-                      {group.tables.map((team) => {
-                        return (
-                          <tr key={team.teamId}>
-                            <td className="p-1">{team.lag.shortName}</td>
-                            <td className="p-1 text-center">
-                              {team.total_points}
-                            </td>
-                            <td className="p-1 text-right">
-                              {team.total_goal_difference}
-                            </td>
-                          </tr>
-                        )
-                      })}
+                      <tbody>
+                        {group.tables.map((team) => {
+                          return (
+                            <tr key={team.teamId}>
+                              <td className="p-1">{team.lag.shortName}</td>
+                              <td className="p-1 text-center">
+                                {team.total_points}
+                              </td>
+                              <td className="p-1 text-right">
+                                {team.total_goal_difference}
+                              </td>
+                            </tr>
+                          )
+                        })}
+                      </tbody>
                     </table>
                   </div>
                 )
@@ -224,11 +245,85 @@ const Season = () => {
         </div>
         <div>
           <div className=" w-[36rem]">
-            {regularTables.length > 0 && (
-              <TableList tableArray={regularTables} />
+            <div
+              onClick={() => {
+                setGrupp(
+                  groupsArray.sort((a, b) => {
+                    if (sortOrder.indexOf(a) > sortOrder.indexOf(b)) {
+                      return 1
+                    }
+
+                    if (sortOrder.indexOf(a) < sortOrder.indexOf(b)) {
+                      return -1
+                    }
+                  })[0]
+                )
+                setRound(1)
+                setRoundForRound(!roundForRound)
+              }}
+              className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center w-[40rem]"
+            >
+              {roundForRound ? 'Visa tabeller' : 'Visa utveckling'}
+            </div>
+            {!roundForRound && (
+              <div>
+                {regularTables.length > 0 && (
+                  <TableList tableArray={regularTables} />
+                )}
+                {qualificationTables.length > 0 && (
+                  <TableList tableArray={qualificationTables} />
+                )}
+              </div>
             )}
-            {qualificationTables.length > 0 && (
-              <TableList tableArray={qualificationTables} />
+            {roundForRound && groupsArray.length > 1 && (
+              <div>
+                <div className="flex flex-row justify-between">
+                  {groupsArray
+                    .sort((a, b) => {
+                      if (sortOrder.indexOf(a) > sortOrder.indexOf(b)) {
+                        return 1
+                      }
+
+                      if (sortOrder.indexOf(a) < sortOrder.indexOf(b)) {
+                        return -1
+                      }
+                    })
+                    .map((group) => {
+                      return (
+                        <div
+                          key={group}
+                          onClick={() => {
+                            setRound(1)
+                            setGrupp(group)
+                          }}
+                          className={
+                            grupp === group
+                              ? 'cursor-pointer rounded-md mt-3 px-2 py-1 bg-slate-200 text-[#011d29] text-center w-30 border-[#011d29]'
+                              : 'cursor-pointer rounded-md mt-3 px-2 py-1 bg-slate-200 text-[#011d29] text-center w-30'
+                          }
+                        >
+                          {groupConstant[group]}
+                        </div>
+                      )
+                    })}
+                </div>
+                <RoundForRound
+                  array={roundByRoundTables.filter(
+                    (table) => table.group === grupp
+                  )}
+                  round={round}
+                  setRound={setRound}
+                />
+              </div>
+            )}
+            {roundForRound && groupsArray.length === 1 && (
+              <div>
+                <RoundForRound
+                  array={roundByRoundTables}
+                  round={round}
+                  setRound={setRound}
+                />
+              </div>
             )}
           </div>
         </div>

@@ -2,7 +2,7 @@ const router = require('express').Router()
 
 const { Season, Table, Team, Metadata, TeamSeason } = require('../models')
 
-router.get('', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   const seasons = await Season.findAll({
     include: { model: Metadata, attributes: ['metadataId'] },
     order: [['seasonId', 'DESC']],

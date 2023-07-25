@@ -1,6 +1,13 @@
 import { groupConstant } from '../utilitycomponents/constants'
+import { useContext } from 'react'
+import { UserContext } from '../../contexts/contexts'
+import dayjs from 'dayjs'
+import 'dayjs/locale/sv'
+
+dayjs.locale('sv')
 
 const GamesList = ({ gamesArray, title, setShowModal, setGameData }) => {
+  const { user } = useContext(UserContext)
   return (
     <div className="mb-6">
       <h1 className="font-inter text-2xl">{title}</h1>
@@ -15,7 +22,7 @@ const GamesList = ({ gamesArray, title, setShowModal, setGameData }) => {
                 {group.dates.map((date) => {
                   return (
                     <div key={date.date}>
-                      <h3>{date.date}</h3>
+                      <h3>{dayjs(date.date).format('D MMMM YYYY')}</h3>
                       <div>
                         {date.games.map((game) => {
                           return (
@@ -33,15 +40,17 @@ const GamesList = ({ gamesArray, title, setShowModal, setGameData }) => {
                               <span className="w-4 text-justify">
                                 {game.awayGoal}
                               </span>
-                              <span
-                                className="cursor-pointer"
-                                onClick={() => {
-                                  setGameData(game)
-                                  setShowModal(true)
-                                }}
-                              >
-                                [Ändra]
-                              </span>
+                              {user && (
+                                <span
+                                  className="cursor-pointer"
+                                  onClick={() => {
+                                    setGameData(game)
+                                    setShowModal(true)
+                                  }}
+                                >
+                                  [Ändra]
+                                </span>
+                              )}
                             </div>
                           )
                         })}

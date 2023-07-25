@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 const Header = () => {
   return (
     <header className="py-6 z-10 font-poppins">
-      <section className="max-w-6xl mx-auto flex justify-between items-center">
+      <section className="max-w-7xl mx-auto flex justify-between items-center">
         <h1 className="text-4xl font-bold tracking-[0.4rem] uppercase">
           Bandyresultat
         </h1>
@@ -33,7 +33,7 @@ const Header = () => {
           </nav>
         </div>
       </section>
-      <hr className="w-[1152px] mx-auto h-px my-2 bg-[#011d29] border-0 dark:bg-gray-700" />
+      <hr className="w-[1280px] mx-auto h-px my-2 bg-[#011d29] border-0 dark:bg-gray-700" />
     </header>
   )
 }

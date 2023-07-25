@@ -26,3 +26,5 @@
 |             |          | like finding streaks, and comparing     |
 |             |          | teams. First version of site is more or |
 |             |          | less ready for production.              |
+| 2023-07-25  | 4 hours  | Implemented login using Google OAuth2,  |
+|             |          | restriced routes                        |

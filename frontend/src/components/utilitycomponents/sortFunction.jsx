@@ -93,3 +93,22 @@ export const compareSortFunction = (compareArray) => {
     }
   })
 }
+
+export const roundForRoundSortFunction = (gamesArray) => {
+  const sortTeams = gamesArray.reduce((teams, game) => {
+    if (!teams[game.casual_name]) {
+      teams[game.casual_name] = []
+    }
+    teams[game.casual_name].push(game)
+    return teams
+  }, {})
+
+  const sortedTeams = Object.keys(sortTeams).map((team) => {
+    return {
+      team,
+      games: sortTeams[team],
+    }
+  })
+
+  return sortedTeams
+}

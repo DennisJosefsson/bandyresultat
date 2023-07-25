@@ -28,7 +28,7 @@ const Compare = () => {
   const compareData = compareSortFunction(data.data)
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-7xl min-h-screen mx-auto">
       <div className="mb-6">
         {compareData.map((category, index) => {
           return (

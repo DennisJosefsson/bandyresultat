@@ -3,18 +3,20 @@ select
 	team,
 	win, 
 	"date",
-	case when win = true then 1 else 0 end win_value,
-	case when draw = true then 1 else 0 end draw_value,
-	case when lost = true then 1 else 0 end lost_value
+	points,
+	goal_difference,
+	"year",
+	teamgames.women as womens_table
 from teamgames
-where season_id = 108 and category = 'regular')
+join seasons on teamgames.season_id = seasons.season_id
+where "year" = '2008/09' and category = 'regular')
 
 select 
 	team,
 	win,
 	"date",
-	sum(win_value) over (partition by team order by date) sum_wins,
-	sum(draw_value) over (partition by team order by date) sum_draws,
-	sum(lost_value) over (partition by team order by date) sum_lost,
+	womens_table,
+	sum(points) over (partition by team order by date) sum_points,
+	sum(goal_difference) over (partition by team order by date) sum_gd,
 	row_number() over (partition by team order by date)
 from win_draw_lost_values;

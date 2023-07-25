@@ -1,18 +1,20 @@
 import { useQuery, useMutation } from 'react-query'
-import { useState, useReducer } from 'react'
+import { useState, useReducer, useContext } from 'react'
 import { getTeams, postTeam } from '../../requests/teams'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
+import { GenderContext } from '../../contexts/contexts'
 import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
 import Spinner from '../utilitycomponents/spinner'
 import TeamForm from './TeamForm'
 
 const Teams = () => {
   const navigate = useNavigate()
+  const { women, dispatch: genderDispatch } = useContext(GenderContext)
   const [showTeamFormModal, setShowTeamFormModal] = useState(false)
   const [teamFilter, setTeamFilter] = useState('')
   const initState = []
 
-  const [formState, dispatch] = useReducer(teamArrayFormReducer, initState)
+  const [formState, teamDispatch] = useReducer(teamArrayFormReducer, initState)
 
   const { data, isLoading, error } = useQuery(['teams'], getTeams)
 
@@ -45,24 +47,37 @@ const Teams = () => {
 
   const handleChange = (event, teamId) => {
     if (event.target.checked) {
-      dispatch({
+      teamDispatch({
         type: 'ADD TEAM',
         payload: Number(teamId),
       })
     } else {
-      dispatch({
+      teamDispatch({
         type: 'REMOVE TEAM',
         payload: Number(teamId),
       })
     }
   }
 
-  const teams = data.filter((team) =>
-    team.name.toLowerCase().includes(teamFilter.toLowerCase())
-  )
+  const teams = data
+    .filter((team) => team.women === women)
+    .filter((team) =>
+      team.name.toLowerCase().includes(teamFilter.toLowerCase())
+    )
   return (
-    <div className="max-w-6xl min-h-screen mx-auto flex flex-row-reverse justify-between font-inter text-[#011d29]">
+    <div className="max-w-7xl min-h-screen mx-auto flex flex-row-reverse justify-between font-inter text-[#011d29]">
       <div className="w-64">
+        <div>
+          <div
+            onClick={() => {
+              teamDispatch({ type: 'CLEAR' })
+              genderDispatch({ type: 'TOGGLE' })
+            }}
+            className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center"
+          >
+            {women ? 'Herrar' : 'Damer'}
+          </div>
+        </div>
         <form className="mb-6">
           <input
             className="border-[#011d29] focus:border-[#011d29]"
@@ -124,47 +139,29 @@ const Teams = () => {
         ) : null}
       </div>
       <div className="flex flex-row justify-between w-[50rem]">
-        <div className="w-[24rem]">
-          <h2 className="text-center font-bold text-xl mb-6">Herrar</h2>
-          <div className="grid grid-cols-2 gap-2 text-[14px]">
+        <div className="w-[48rem]">
+          <h2 className="text-center font-bold text-xl mb-6">
+            {women ? 'Damer' : 'Herrar'}
+          </h2>
+          <div className="grid grid-cols-4 gap-2 text-[14px]">
             {teams.map((team) => {
-              if (!team.women) {
-                return (
-                  <div
-                    key={team.teamId}
-                    className="w-48 flex flex-row items-center"
-                  >
-                    <div className="w-36">{team.casualName}</div>
-                    <div className="w-12 pl-4">
-                      <input
-                        type="checkbox"
-                        id={team.teamId}
-                        onChange={(event) => handleChange(event, team.teamId)}
-                      />
-                    </div>
+              return (
+                <div
+                  key={team.teamId}
+                  className="w-48 flex flex-row items-center"
+                >
+                  <div className="w-36">
+                    <Link to={`/teams/${team.teamId}`}>{team.casualName}</Link>
                   </div>
-                )
-              }
-            })}
-          </div>
-        </div>
-        <div className="w-[24rem]">
-          <h2 className="text-center font-bold text-xl mb-6">Damer</h2>
-          <div className="grid grid-cols-2 gap-2 text-[14px]">
-            {teams.map((team) => {
-              if (team.women) {
-                return (
-                  <div
-                    key={team.teamId}
-                    className="w-48 flex flex-row items-center"
-                  >
-                    <div className="w-36">{team.casualName}</div>
-                    <div className="w-12 pl-4">
-                      <input type="checkbox" name="" id="" />
-                    </div>
+                  <div className="w-12 pl-4">
+                    <input
+                      type="checkbox"
+                      id={team.teamId}
+                      onChange={(event) => handleChange(event, team.teamId)}
+                    />
                   </div>
-                )
-              }
+                </div>
+              )
             })}
           </div>
         </div>

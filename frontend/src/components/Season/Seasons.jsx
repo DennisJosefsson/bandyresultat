@@ -5,17 +5,17 @@ import { Link } from 'react-router-dom'
 const Seasons = () => {
   const { data, isLoading, error } = useQuery('allSeasons', getSeasons)
   if (isLoading) {
-    return <div className="max-w-6xl mx-auto">Loading...</div>
+    return <div className="max-w-7xl mx-auto">Loading...</div>
   }
 
   if (error) {
-    return <div className="max-w-6xl mx-auto">There was an error</div>
+    return <div className="max-w-7xl mx-auto">There was an error</div>
   }
 
   const seasons = data
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-7xl min-h-screen mx-auto">
       <div>
         <h2>Säsonger</h2>
         <div className="grid grid-cols-4 gap-2">
@@ -29,7 +29,7 @@ const Seasons = () => {
                 <div key={season.seasonId}>
                   {season.year}:{' '}
                   <Link to={`/season/${seasonYear}`}>Tabeller</Link> -{' '}
-                  <Link to={`/season/${seasonYear}`}>Matcher</Link>
+                  <Link to={`/games/${seasonYear}`}>Matcher</Link>
                 </div>
               )
             }
