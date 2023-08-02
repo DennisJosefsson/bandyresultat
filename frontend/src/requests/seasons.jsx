@@ -18,8 +18,8 @@ export const postSeason = async (season) => {
   return await seasonsApi.post('/', season)
 }
 
-export const postTeamSeason = async ({ formState, seasonId }) => {
-  return await seasonsApi.post('/teamseason', { formState, seasonId })
+export const postTeamSeason = async ({ formState, seasonId, women }) => {
+  return await seasonsApi.post('/teamseason', { formState, seasonId, women })
 }
 
 export const updateSeason = async (season) => {

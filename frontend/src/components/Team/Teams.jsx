@@ -24,14 +24,18 @@ const Teams = () => {
 
   if (isLoading) {
     return (
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto content-center min-h-screen">
         <Spinner />
       </div>
     )
   }
 
   if (error) {
-    return <div className="max-w-6xl mx-auto"> There was an error</div>
+    return (
+      <div className="max-w-7xl mx-auto content-center min-h-screen">
+        There was an error
+      </div>
+    )
   }
 
   const handleSubmit = (event) => {
@@ -64,6 +68,8 @@ const Teams = () => {
     .filter((team) =>
       team.name.toLowerCase().includes(teamFilter.toLowerCase())
     )
+
+  const unFilteredTeams = data
   return (
     <div className="max-w-7xl min-h-screen mx-auto flex flex-row-reverse justify-between font-inter text-[#011d29]">
       <div className="w-64">
@@ -73,7 +79,7 @@ const Teams = () => {
               teamDispatch({ type: 'CLEAR' })
               genderDispatch({ type: 'TOGGLE' })
             }}
-            className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center"
+            className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center mb-6"
           >
             {women ? 'Herrar' : 'Damer'}
           </div>
@@ -85,7 +91,11 @@ const Teams = () => {
             placeholder="Filter"
             value={teamFilter}
             name="teamFilter"
-            onChange={(event) => setTeamFilter(event.target.value)}
+            onChange={(event) =>
+              setTeamFilter(
+                event.target.value.replace(/[^a-z0-9\u00C0-\u017F]/gi, '')
+              )
+            }
             onKeyDown={handleKeyDown}
           />
         </form>
@@ -106,7 +116,10 @@ const Teams = () => {
           {formState.map((teamId) => {
             return (
               <div key={teamId} className="text-base">
-                {teams.find((team) => team.teamId === teamId).casualName}
+                {
+                  unFilteredTeams.find((team) => team.teamId === teamId)
+                    .casualName
+                }
               </div>
             )
           })}
@@ -140,24 +153,25 @@ const Teams = () => {
       </div>
       <div className="flex flex-row justify-between w-[50rem]">
         <div className="w-[48rem]">
-          <h2 className="text-center font-bold text-xl mb-6">
+          <h2 className="text-center font-bold text-2xl mb-6">
             {women ? 'Damer' : 'Herrar'}
           </h2>
-          <div className="grid grid-cols-4 gap-2 text-[14px]">
+          <div className="grid grid-cols-4 gap-8 text-[14px]">
             {teams.map((team) => {
               return (
                 <div
                   key={team.teamId}
-                  className="w-48 flex flex-row items-center"
+                  className="w-44 flex flex-row items-center rounded border-2 shadow px-2 py-1"
                 >
-                  <div className="w-36">
-                    <Link to={`/teams/${team.teamId}`}>{team.casualName}</Link>
-                  </div>
-                  <div className="w-12 pl-4">
+                  <Link to={`/teams/${team.teamId}`}>
+                    <div className="w-32">{team.casualName}</div>
+                  </Link>
+                  <div className="w-6 pl-4 pr-4">
                     <input
                       type="checkbox"
                       id={team.teamId}
                       onChange={(event) => handleChange(event, team.teamId)}
+                      className="border-[#011d29] focus:border-[#011d29] text-[#011d29] focus:ring-[#011d29]"
                     />
                   </div>
                 </div>

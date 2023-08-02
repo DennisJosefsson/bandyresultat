@@ -5,20 +5,22 @@ import { Link } from 'react-router-dom'
 const Seasons = () => {
   const { data, isLoading, error } = useQuery('allSeasons', getSeasons)
   if (isLoading) {
-    return <div className="max-w-7xl mx-auto">Loading...</div>
+    return <div className="max-w-7xl min-h-screen mx-auto">Loading...</div>
   }
 
   if (error) {
-    return <div className="max-w-7xl mx-auto">There was an error</div>
+    return (
+      <div className="max-w-7xl min-h-screen mx-auto">There was an error</div>
+    )
   }
 
   const seasons = data
 
   return (
     <div className="max-w-7xl min-h-screen mx-auto">
-      <div>
-        <h2>Säsonger</h2>
-        <div className="grid grid-cols-4 gap-2">
+      <div className="self-center">
+        <h1 className="text-center text-2xl font-bold mb-4">Säsonger</h1>
+        <div className="grid grid-cols-4 gap-2 justify-between ml-20">
           {seasons.map((season) => {
             const seasonYear =
               parseInt(season.year.split('/')[1]) >= 1964
@@ -28,8 +30,16 @@ const Seasons = () => {
               return (
                 <div key={season.seasonId}>
                   {season.year}:{' '}
-                  <Link to={`/season/${seasonYear}`}>Tabeller</Link> -{' '}
-                  <Link to={`/games/${seasonYear}`}>Matcher</Link>
+                  <Link
+                    to={`/season/${seasonYear}`}
+                    className="hover:font-bold"
+                  >
+                    Tabeller
+                  </Link>{' '}
+                  -{' '}
+                  <Link to={`/games/${seasonYear}`} className="hover:font-bold">
+                    Matcher
+                  </Link>
                 </div>
               )
             }

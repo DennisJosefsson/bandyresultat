@@ -1,7 +1,8 @@
 const router = require('express').Router()
 const { sequelize } = require('../utils/db')
 const { Op, QueryTypes } = require('sequelize')
-const { Table, Season, Team, TeamGame } = require('../models')
+const { Table, Season, Team, TeamGame, Game } = require('../models')
+const { authControl } = require('../utils/middleware')
 
 router.get('/maraton', async (req, res) => {
   const maratonTabell = await TeamGame.findAll({
@@ -53,6 +54,7 @@ router.get('/maraton', async (req, res) => {
 router.post('/compare', async (req, res) => {
   console.log(new Date())
   const array = req.body
+  console.log(array)
   const tabeller = await TeamGame.findAll({
     where: {
       team: {
@@ -116,7 +118,125 @@ router.post('/compare', async (req, res) => {
       ['total_goals_scored', 'DESC'],
     ],
   })
-  res.json(tabeller)
+  const compareAllGames = await TeamGame.findAll({
+    where: {
+      team: {
+        [Op.in]: array,
+      },
+      opponent: {
+        [Op.in]: array,
+      },
+    },
+    attributes: [
+      'team',
+      'opponent',
+      [sequelize.fn('count', sequelize.col('team_game_id')), 'total_games'],
+      [sequelize.fn('sum', sequelize.col('points')), 'total_points'],
+      [
+        sequelize.fn('sum', sequelize.col('goals_scored')),
+        'total_goals_scored',
+      ],
+      [
+        sequelize.fn('sum', sequelize.col('goals_conceded')),
+        'total_goals_conceded',
+      ],
+      [
+        sequelize.fn('sum', sequelize.col('goal_difference')),
+        'total_goal_difference',
+      ],
+      [sequelize.literal(`(count(*) filter (where win))`), 'total_wins'],
+      [sequelize.literal(`(count(*) filter (where draw))`), 'total_draws'],
+      [sequelize.literal(`(count(*) filter (where lost))`), 'total_lost'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'opp',
+      },
+    ],
+    group: [
+      'team',
+      'opponent',
+      'lag.name',
+      'lag.team_id',
+      'lag.casual_name',
+      'lag.short_name',
+      'opp.name',
+      'opp.team_id',
+      'opp.casual_name',
+      'opp.short_name',
+    ],
+    order: [
+      ['team', 'DESC'],
+      ['total_points', 'DESC'],
+      ['total_goal_difference', 'DESC'],
+      ['total_goals_scored', 'DESC'],
+    ],
+  })
+
+  const golds = await sequelize.query(
+    `
+  select count(distinct season_id) as guld, team, casual_name
+from teamgames
+join teams on teamgames.team = teams.team_id
+where team = any($team_array) and category = 'final' and win = true
+group by casual_name,team;
+  `,
+    { bind: { team_array: array }, type: QueryTypes.SELECT }
+  )
+
+  const playoffs = await sequelize.query(
+    `
+  select count(distinct season_id) as playoffs, team, casual_name
+from teamgames
+join teams on teamgames.team = teams.team_id
+where team = any($team_array) and category = any(array['quarter','semi','final']) and season_id >= 26
+group by casual_name, team;
+  `,
+    { bind: { team_array: array }, type: QueryTypes.SELECT }
+  )
+
+  const seasons = await sequelize.query(
+    `
+  select count(distinct season_id) as seasons, team, casual_name
+from teamgames
+join teams on teamgames.team = teams.team_id
+where team = any($team_array) and season_id >= 26
+group by casual_name, team;
+  `,
+    { bind: { team_array: array }, type: QueryTypes.SELECT }
+  )
+
+  const firstAndLatestGames = await sequelize.query(
+    `
+ with first_games as (select game_id, home_team_id, away_team_id, "date", result,
+rank() over (partition by home_team_id, away_team_id order by "date" asc) ranked_first_games,
+rank() over (partition by home_team_id, away_team_id order by "date" desc) ranked_last_games
+from games
+where home_team_id = any($team_array) and away_team_id = any($team_array))
+
+select game_id, "date", result, home.casual_name as home_name, away.casual_name as away_name, ranked_first_games, ranked_last_games from first_games 
+join teams as home on first_games.home_team_id = home.team_id
+join teams as away on first_games.away_team_id = away.team_id
+where ranked_first_games = 1 or ranked_last_games = 1;
+ `,
+    { bind: { team_array: array }, type: QueryTypes.SELECT }
+  )
+
+  res.json({
+    tabeller,
+    compareAllGames,
+    golds,
+    playoffs,
+    seasons,
+    firstAndLatestGames,
+  })
 })
 
 router.get('/:seasonId', async (req, res) => {
@@ -248,12 +368,12 @@ order by team, round asc;`,
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', authControl, async (req, res, next) => {
   const table = await Table.create(req.body)
   res.json(table)
 })
 
-router.delete('/:tableId', async (req, res, next) => {
+router.delete('/:tableId', authControl, async (req, res, next) => {
   const table = await Table.findByPk(req.params.tableId)
   if (!table) {
     throw new Error('No such table in the database')
@@ -263,7 +383,7 @@ router.delete('/:tableId', async (req, res, next) => {
   }
 })
 
-router.put('/:tableId', async (req, res, next) => {
+router.put('/:tableId', authControl, async (req, res, next) => {
   const table = await Table.findByPk(req.params.tableId)
   if (!table) {
     throw new Error('No such table in the database')

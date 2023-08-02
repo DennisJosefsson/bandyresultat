@@ -23,7 +23,7 @@ const Dashboard = () => {
   const [showMetadataModal, setShowMetadataModal] = useState(false)
   const [showTeamSeasonModal, setShowTeamSeasonModal] = useState(false)
   const [showNewTeamFormModal, setShowNewTeamFormModal] = useState(false)
-  const [season, setSeason] = useState('')
+  const [seasonId, setSeasonId] = useState('')
   const [seasonFilter, setSeasonFilter] = useState('')
 
   const metadataMutation = useMutation({
@@ -82,10 +82,10 @@ const Dashboard = () => {
             <>
               <MetadataForm
                 teams={teamsArray}
-                season={season}
+                seasonId={seasonId}
                 women={women}
                 name={
-                  seasons.filter((season) => season.seasonId === season).year
+                  seasons.find((season) => season.seasonId === seasonId).year
                 }
                 mutation={metadataMutation}
                 setShowModal={setShowMetadataModal}
@@ -102,8 +102,8 @@ const Dashboard = () => {
             <>
               <TeamSeasonForm
                 teams={teamsArray}
-                season={season}
-                wome={women}
+                seasonId={seasonId}
+                women={women}
                 mutation={teamSeasonMutation}
                 setShowModal={setShowTeamSeasonModal}
               />
@@ -132,7 +132,7 @@ const Dashboard = () => {
                       <div>
                         <input
                           type="checkbox"
-                          onChange={() => setSeason(season.seasonId)}
+                          onChange={() => setSeasonId(season.seasonId)}
                         />
                       </div>
                     </div>

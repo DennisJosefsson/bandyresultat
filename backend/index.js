@@ -1,7 +1,8 @@
+require('dotenv').config()
 const express = require('express')
 require('express-async-errors')
 const cors = require('cors')
-
+const cookieParser = require('cookie-parser')
 const app = express()
 const { PORT } = require('./utils/config')
 const { connectToDb } = require('./utils/db')
@@ -16,8 +17,15 @@ const tablesRouter = require('./controllers/tables')
 const metadataRouter = require('./controllers/metadata')
 const loginRouter = require('./controllers/login')
 
-app.use(cors())
+app.use(cors({ origin: true, credentials: true }))
 app.use(express.json())
+app.use((req, res, next) => {
+  res.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups')
+  next()
+})
+app.use(cookieParser())
+
+app.use(express.static('dist'))
 
 app.use('/', mainRouter)
 app.use('/api/teams', teamRouter)

@@ -10,7 +10,6 @@ export const getTeams = async () => {
 }
 
 export const getSingleTeam = async (teamId) => {
-  console.log(teamId)
   const response = await teamsApi.get(`/${teamId}`)
   return response.data
 }

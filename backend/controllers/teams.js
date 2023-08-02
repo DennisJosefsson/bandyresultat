@@ -2,6 +2,7 @@ const router = require('express').Router()
 const { Op, QueryTypes } = require('sequelize')
 const { sequelize } = require('../utils/db')
 const { Team, Table, Season, TeamSeason, TeamGame } = require('../models')
+const { authControl } = require('../utils/middleware')
 
 router.get('/', async (req, res) => {
   const teams = await Team.findAll({
@@ -361,6 +362,55 @@ limit 3;
     { bind: { teamId: req.params.teamId }, type: QueryTypes.SELECT }
   )
 
+  const playoffStreak = await sequelize.query(
+    `with season_order as (select 
+dense_rank() over (order by "year") row_num,
+season_id,
+"year"
+from seasons
+where season_id >= 26),
+
+playoff_seasons as (
+select distinct season_id from teamgames
+where team = $teamId and category in ('quarter', 'semi', 'final')
+),
+
+selected_rows as (select 
+row_num,
+row_number() over (order by row_num) row_playoff, 
+"year"
+from season_order
+join playoff_seasons on season_order.season_id = playoff_seasons.season_id),
+
+grouped_playoffs as (select
+row_num - row_playoff as grouped,
+"year"
+from selected_rows),
+
+group_array as (
+select
+	mode() within group (order by grouped) as max_count, 
+	array_agg("year" order by "year") as years
+from grouped_playoffs
+group by grouped)
+
+select 
+array_length(years, 1) as streak_length,
+years[1] as start_year,
+years[array_upper(years,1)] as end_year 
+from group_array
+where array_length(years, 1) > 6
+order by streak_length desc, start_year asc;`,
+    { bind: { teamId: req.params.teamId }, type: QueryTypes.SELECT }
+  )
+
+  const playoffCount = await sequelize.query(
+    `select count(distinct season_id) as playoff_count
+from teamgames
+where team = $teamId and "category" = any(array['quarter', 'semi', 'final']) and season_id >= 26;`,
+    { bind: { teamId: req.params.teamId }, type: QueryTypes.SELECT }
+  )
+
   console.log('teams request', new Date())
   if (!team) {
     throw new Error('No such team in the database')
@@ -374,17 +424,19 @@ limit 3;
       drawStreak,
       losingStreak,
       finalsAndWins,
+      playoffStreak,
+      playoffCount,
     })
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', authControl, async (req, res, next) => {
   console.log(req.body)
   const team = await Team.create(req.body)
   res.json(team)
 })
 
-router.delete('/:teamId', async (req, res, next) => {
+router.delete('/:teamId', authControl, async (req, res, next) => {
   const team = await Team.findByPk(req.params.teamId)
   if (!team) {
     throw new Error('No such team in the database')
@@ -394,7 +446,7 @@ router.delete('/:teamId', async (req, res, next) => {
   }
 })
 
-router.put('/:teamId', async (req, res, next) => {
+router.put('/:teamId', authControl, async (req, res, next) => {
   const team = await Team.findByPk(req.params.teamId)
   if (!team) {
     throw new Error('No such team in the database')

@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const { authControl } = require('../utils/middleware')
 
 const { Season, Table, Team, Metadata, TeamSeason } = require('../models')
 
@@ -30,21 +31,22 @@ router.get('/:seasonId', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', authControl, async (req, res, next) => {
   const season = await Season.create(req.body)
   res.json(season)
 })
 
-router.post('/teamseason', async (req, res, next) => {
+router.post('/teamseason', authControl, async (req, res, next) => {
   const seasonId = req.body.seasonId
+  const women = req.body.women
   const teamSeasons = req.body.formState.map((teamId) => {
-    return { teamId, seasonId }
+    return { teamId, seasonId, women }
   })
   const teamSeasonData = await TeamSeason.bulkCreate(teamSeasons)
   res.json(teamSeasonData)
 })
 
-router.delete('/:seasonId', async (req, res, next) => {
+router.delete('/:seasonId', authControl, async (req, res, next) => {
   const season = await Season.findByPk(req.params.seasonId)
   if (!season) {
     throw new Error('No such season in the database')
@@ -54,7 +56,7 @@ router.delete('/:seasonId', async (req, res, next) => {
   }
 })
 
-router.put('/:seasonId', async (req, res, next) => {
+router.put('/:seasonId', authControl, async (req, res, next) => {
   const season = await Season.findByPk(req.params.seasonId)
   if (!season) {
     throw new Error('No such season in the database')

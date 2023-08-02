@@ -2,6 +2,7 @@ const router = require('express').Router()
 const { Game, Team, Season, TeamGame } = require('../models')
 const { sequelize } = require('../utils/db')
 const { Op, QueryTypes } = require('sequelize')
+const { authControl } = require('../utils/middleware')
 
 router.get('/', async (req, res, next) => {
   const games = await Game.findAll({
@@ -330,21 +331,6 @@ router.get('/season/:seasonId', async (req, res, next) => {
       ? req.params.seasonId
       : `${Number(req.params.seasonId) - 1}/${req.params.seasonId}`
   const games = await Game.findAll({
-    // where: { seasonId: req.params.seasonId },
-    // attributes: [
-    //   'gameId',
-    //   'date',
-    //   'result',
-    //   'halftimeResult',
-    //   'homeGoal',
-    //   'awayGoal',
-    //   'halftimeHomeGoal',
-    //   'halftimeAwayGoal',
-    //   'category',
-    //   'group',
-    //   'women',
-    //   'playoff',
-    // ],
     include: [
       {
         model: Team,
@@ -918,13 +904,13 @@ router.get('/:gameId', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', authControl, async (req, res, next) => {
   const [game, created] = await Game.upsert(req.body)
   console.log(created)
   res.json(game)
 })
 
-router.delete('/:gameId', async (req, res, next) => {
+router.delete('/:gameId', authControl, async (req, res, next) => {
   const game = await Game.findByPk(req.params.gameId)
   if (!game) {
     throw new Error('No such game in the database')
@@ -934,7 +920,7 @@ router.delete('/:gameId', async (req, res, next) => {
   }
 })
 
-router.put('/:gameId', async (req, res, next) => {
+router.put('/:gameId', authControl, async (req, res, next) => {
   const game = await Game.findByPk(req.params.gameId)
   if (!game) {
     throw new Error('No such game in the database')

@@ -1,5 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom'
+import { useContext } from 'react'
 import Home from './components/Home'
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -12,8 +17,20 @@ import Seasons from './components/Season/Seasons'
 import Games from './components/Game/Games'
 import Compare from './components/Compare/Compare'
 import Dashboard from './components/Dashboard/Dashboard'
+import About from './components/About/About'
+
+import { UserContext } from './contexts/contexts'
+
+const ProtectedRoute = ({ user, children }) => {
+  if (!user) {
+    return <Navigate to="/" replace />
+  }
+
+  return children
+}
 
 const App = () => {
+  const { user } = useContext(UserContext)
   return (
     <Router>
       <div className="bg-[#f4f5f5] text-[#011d29] min-h-screen">
@@ -28,7 +45,15 @@ const App = () => {
             <Route path="/tables" element={<Table />} />
             <Route path="/games/:seasonId" element={<Games />} />
             <Route path="/compare" element={<Compare />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute user={user}>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/about" element={<About />} />
             <Route path="*" element={<Home />} />
           </Routes>
         </main>

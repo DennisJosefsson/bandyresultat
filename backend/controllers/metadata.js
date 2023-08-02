@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const { authControl } = require('../utils/middleware')
 
 const { Metadata, Season } = require('../models')
 
@@ -15,12 +16,12 @@ router.get('/:seasonId', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', authControl, async (req, res, next) => {
   const metadata = await Metadata.create(req.body)
   res.json(metadata)
 })
 
-router.delete('/:metadataId', async (req, res, next) => {
+router.delete('/:metadataId', authControl, async (req, res, next) => {
   const metadata = await Metadata.findByPk(req.params.metadataId)
   if (!metadata) {
     throw new Error('No such metadata in the database')
@@ -30,7 +31,7 @@ router.delete('/:metadataId', async (req, res, next) => {
   }
 })
 
-router.put('/:metadataId', async (req, res, next) => {
+router.put('/:metadataId', authControl, async (req, res, next) => {
   const metadata = await Metadata.findByPk(req.params.metadataId)
   if (!metadata) {
     throw new Error('No such metadata in the database')

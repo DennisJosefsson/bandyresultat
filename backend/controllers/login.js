@@ -1,20 +1,31 @@
 const router = require('express').Router()
-const { OAuth2Client } = require('google-auth-library')
+const axios = require('axios')
 const { User } = require('../models')
+const jwt = require('jsonwebtoken')
+const dayjs = require('dayjs')
+
+const jwtSecret = process.env.JWT_SECRET
 
 router.post('/', async (req, res) => {
-  const client = new OAuth2Client(req.body.clientId)
+  console.log(req.body)
+  const baseUrl = 'https://www.googleapis.com/oauth2/v3/userinfo?access_token='
 
-  const ticket = await client.verifyIdToken({
-    idToken: req.body.credential,
-    audience: req.body.clientId,
-  })
-  const loginEmail = ticket.getPayload().email
+  const response = await axios.get(`${baseUrl}${req.body.access_token}`)
+  const loginEmail = response.data.email
   const user = await User.findOne({ where: { email: loginEmail } })
   if (!user) {
     res.json({ success: false, message: 'User does not exist' })
   } else {
-    res.json({ success: true, message: 'Logged in' })
+    const token = jwt.sign(user.toJSON(), jwtSecret)
+
+    res
+      .cookie('bandykaka', token, {
+        httpOnly: true,
+        sameSite: true,
+        secure: true,
+        expires: dayjs().add(1, 'days').toDate(),
+      })
+      .json({ success: true, message: 'Logged in' })
   }
 })
 

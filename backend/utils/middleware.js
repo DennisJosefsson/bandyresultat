@@ -1,7 +1,34 @@
-const errorHandler = (error, req, res, next) => {
-  console.log(error)
+const jwt = require('jsonwebtoken')
+const jwtSecret = process.env.JWT_SECRET
 
+const errorHandler = (error, req, res, next) => {
+  if (error.message === 'Unauthorized') {
+    res.status(403).json({ error: 'Unauthorized' })
+  }
+
+  if (
+    error.name === 'JsonWebTokenError' &&
+    error.message === 'jwt must be provided'
+  ) {
+    res.status(403).json({ error: 'Unauthorized' })
+  }
   next(error)
 }
 
-module.exports = { errorHandler }
+const authControl = (req, res, next) => {
+  try {
+    const token = req.cookies.bandykaka
+
+    const decodedToken = jwt.verify(token, jwtSecret)
+
+    if (!decodedToken.admin) {
+      throw new Error({ message: 'Unauthorized' })
+    }
+    console.log('authorized')
+    next()
+  } catch (error) {
+    next(error)
+  }
+}
+
+module.exports = { errorHandler, authControl }

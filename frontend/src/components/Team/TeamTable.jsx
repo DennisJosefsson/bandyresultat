@@ -15,7 +15,7 @@ const TeamTable = ({ tableArray }) => {
       {sortedTables.map((category, index) => {
         return (
           <div key={category.category} className="mb-6">
-            <h2 className="text-bold text-xl">
+            <h2 className="font-bold text-xl">
               {groupConstant[category.category]}
             </h2>
 

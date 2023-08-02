@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom'
+import { useContext } from 'react'
+import { UserContext } from '../contexts/contexts'
 
 const Header = () => {
+  const { user } = useContext(UserContext)
   return (
     <header className="py-6 z-10 font-poppins">
       <section className="max-w-7xl mx-auto flex justify-between items-center">
         <h1 className="text-4xl font-bold tracking-[0.4rem] uppercase">
-          Bandyresultat
+          <Link to="/">Bandyresultat</Link>
         </h1>
         <div>
           <button
@@ -18,9 +21,6 @@ const Header = () => {
             className="hidden sm:block space-x-8 text-xl font-bold"
             aria-label="main"
           >
-            <Link to="/" className="hover:opacity-90">
-              Hem
-            </Link>
             <Link to="/seasons" className="hover:opacity-90">
               Säsonger
             </Link>
@@ -29,6 +29,14 @@ const Header = () => {
             </Link>
             <Link to="/tables" className="hover:opacity-90">
               Maratontabeller
+            </Link>
+            {user && (
+              <Link to="/dashboard" className="hover:opacity-90">
+                Dashboard
+              </Link>
+            )}
+            <Link to="/about" className="hover:opacity-90">
+              Om sidan
             </Link>
           </nav>
         </div>

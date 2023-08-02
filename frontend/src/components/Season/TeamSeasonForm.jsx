@@ -4,7 +4,7 @@ import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
 
 import { Plus, Minus } from '../utilitycomponents/icons'
 
-const TeamSeasonForm = ({ season, mutation, setShowModal, teams }) => {
+const TeamSeasonForm = ({ seasonId, mutation, setShowModal, teams, women }) => {
   const initState = []
   const [teamFilter, setTeamFilter] = useState('')
   const [formState, dispatch] = useReducer(teamArrayFormReducer, initState)
@@ -20,7 +20,7 @@ const TeamSeasonForm = ({ season, mutation, setShowModal, teams }) => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    mutation.mutate({ formState, season })
+    mutation.mutate({ formState, seasonId, women })
     queryClient.invalidateQueries({ queryKey: ['singleSeason'] })
     setShowModal(false)
   }

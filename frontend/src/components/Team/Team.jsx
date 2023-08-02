@@ -31,7 +31,6 @@ const Team = () => {
   }
 
   const teams = data
-  console.log(teams)
 
   const seasons = teams.team.seasonteam.filter(
     (season) =>
@@ -62,6 +61,9 @@ const Team = () => {
     (streak) => streak.game_count > 5
   )
 
+  const playoffStreak = teams.playoffStreak
+  const playoffCount = Number(teams.playoffCount[0].playoff_count)
+
   return (
     <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col">
       <div>
@@ -69,12 +71,24 @@ const Team = () => {
           {teams.team.name}
         </h1>
       </div>
-      <div className="flex flex-row-reverse  justify-between">
-        <div className="w-[36rem]">
-          <p className="text-base mb-3">
-            {teams.team.name} från {teams.team.city} har spelat {seasons.length}{' '}
-            säsonger i högsta serien. Första säsongen var{' '}
-            {seasons[seasons.length - 1].year} och senaste {seasons[0].year}.{' '}
+      <div className="flex flex-row-reverse justify-between">
+        <div className="w-[30rem]">
+          <h2 className="font-bold text-2xl text-right">Kuriosa</h2>
+          <p className="text-sm mb-3">
+            {seasons.length === 1 && (
+              <span>
+                {teams.team.name} från {teams.team.city} har spelat en säsong i
+                högsta serien, det var {seasons[0].year}.
+              </span>
+            )}
+            {seasons.length > 1 && (
+              <span>
+                {teams.team.name} från {teams.team.city} har spelat{' '}
+                {seasons.length} säsonger i högsta serien. Första säsongen var{' '}
+                {seasons[seasons.length - 1].year} och senaste {seasons[0].year}
+                .{' '}
+              </span>
+            )}
             {qualificationSeasons.length === 1
               ? `${teams.team.casualName} har kvalat till högsta serien, mot motstånd från den högre serien, vid ett tillfälle.`
               : ''}{' '}
@@ -82,8 +96,8 @@ const Team = () => {
               ? `${teams.team.casualName} har kvalat till högsta serien, mot motstånd från den högre serien, vid ${qualificationSeasons.length} tillfällen.`
               : ''}
           </p>
-          {finals > 0 && (
-            <p className="text-base mb-3">
+          {finals > 0 && golds > 0 && (
+            <p className="text-sm mb-3">
               {teams.team.casualName} har spelat {finals} finalmatcher och
               vunnit{' '}
               {golds === 1
@@ -91,12 +105,47 @@ const Team = () => {
                 : `${golds} gånger (${winString.slice(2)}).`}
             </p>
           )}
+          {finals > 0 && golds === 0 && (
+            <p className="text-sm mb-3">
+              {teams.team.casualName} har spelat{' '}
+              {finals === 1 ? 'en finalmatch' : `${finals} finalmatcher`} men
+              har aldrig vunnit.
+            </p>
+          )}
+          {playoffCount > 0 && (
+            <p className="text-sm mb-3">
+              Laget har kvalificerat sig för slutspel{' '}
+              {playoffCount === 1 ? 'en gång.' : `${playoffCount} gånger.`}
+            </p>
+          )}
+          {playoffCount === 0 && (
+            <p className="text-sm mb-3">
+              Laget har inte kvalificerat sig för slutspel genom seriespel.
+            </p>
+          )}
+          {playoffStreak.length > 0 && (
+            <span>
+              {playoffStreak.map((streak, index) => {
+                return (
+                  <p
+                    className="text-sm mb-3"
+                    key={`${streak.start_year}-${index}`}
+                  >
+                    {teams.team.casualName} spelade slutspel{' '}
+                    {streak.streak_length} år på raken mellan{' '}
+                    {streak.start_year} och {streak.end_year}.
+                  </p>
+                )
+              })}
+            </span>
+          )}
           {unbeatenStreak.length > 0 && (
             <span>
+              <h4 className="font-bold text-xl text-right">Obesegrade</h4>
               {unbeatenStreak.map((streak, index) => {
                 return (
                   <p
-                    className="text-base mb-3"
+                    className="text-sm mb-3"
                     key={`${streak.start_date}-${index}`}
                   >
                     Mellan {dayjs(streak.start_date).format('D MMMM YYYY')} och{' '}
@@ -109,10 +158,11 @@ const Team = () => {
           )}
           {winStreak.length > 0 && (
             <span>
+              <h4 className="font-bold text-xl text-right">Vinster i rad</h4>
               {winStreak.map((streak, index) => {
                 return (
                   <p
-                    className="text-base mb-3"
+                    className="text-sm mb-3"
                     key={`${streak.start_date}-${index}`}
                   >
                     Mellan {dayjs(streak.start_date).format('D MMMM YYYY')} och{' '}
@@ -125,10 +175,13 @@ const Team = () => {
           )}
           {drawStreak.length > 0 && (
             <span>
+              <h4 className="font-bold text-xl text-right">
+                Oavgjorda matcher
+              </h4>
               {drawStreak.map((streak, index) => {
                 return (
                   <p
-                    className="text-base mb-3"
+                    className="text-sm mb-3"
                     key={`${streak.start_date}-${index}`}
                   >
                     Mellan {dayjs(streak.start_date).format('D MMMM YYYY')} och{' '}
@@ -141,10 +194,11 @@ const Team = () => {
           )}
           {losingStreak.length > 0 && (
             <span>
+              <h4 className="font-bold text-xl text-right">Förlustsvit</h4>
               {losingStreak.map((streak, index) => {
                 return (
                   <p
-                    className="text-base mb-3"
+                    className="text-sm mb-3"
                     key={`${streak.start_date}-${index}`}
                   >
                     Mellan {dayjs(streak.start_date).format('D MMMM YYYY')} och{' '}
@@ -157,10 +211,13 @@ const Team = () => {
           )}
           {noWinStreak.length > 0 && (
             <span>
+              <h4 className="font-bold text-xl text-right">
+                Matcher i rad utan vinst
+              </h4>
               {noWinStreak.map((streak, index) => {
                 return (
                   <p
-                    className="text-base mb-3"
+                    className="text-sm mb-3"
                     key={`${streak.start_date}-${index}`}
                   >
                     Mellan {dayjs(streak.start_date).format('D MMMM YYYY')} och{' '}
@@ -173,6 +230,7 @@ const Team = () => {
           )}
         </div>
         <div>
+          <h2 className="font-bold text-2xl">Tabeller</h2>
           <TeamTable tableArray={teams.tabeller} />
         </div>
       </div>
