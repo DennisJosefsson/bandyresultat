@@ -1,7 +1,15 @@
 import axios from 'axios'
+import { baseUrl, mobileBaseUrl } from './config'
+
+const backendUrl =
+  import.meta.env.MODE === 'mobile'
+    ? mobileBaseUrl
+    : baseUrl
+    ? 'https://bandyresultat.se'
+    : 'http://localhost:3001'
 
 const gamesApi = axios.create({
-  baseURL: 'http://localhost:3001/api/games',
+  baseURL: `${backendUrl}/api/games`,
 })
 
 export const getGames = async () => {

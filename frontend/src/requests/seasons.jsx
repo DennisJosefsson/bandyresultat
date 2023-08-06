@@ -1,7 +1,15 @@
 import axios from 'axios'
+import { baseUrl, mobileBaseUrl } from './config'
+
+const backendUrl =
+  import.meta.env.MODE === 'mobile'
+    ? mobileBaseUrl
+    : baseUrl
+    ? 'https://bandyresultat.se'
+    : 'http://localhost:3001'
 
 const seasonsApi = axios.create({
-  baseURL: 'http://localhost:3001/api/seasons',
+  baseURL: `${backendUrl}/api/seasons`,
 })
 
 export const getSeasons = async () => {

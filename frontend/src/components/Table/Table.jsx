@@ -3,16 +3,26 @@ import { useContext } from 'react'
 import { maratonTabell } from '../../requests/tables'
 import { GenderContext } from '../../contexts/contexts'
 
+import Spinner from '../utilitycomponents/spinner'
+
 const Table = () => {
   const { women, dispatch } = useContext(GenderContext)
   const { data, isLoading, error } = useQuery('maratonTabell', maratonTabell)
 
   if (isLoading) {
-    return <div className="max-w-6xl mx-auto">Loading...</div>
+    return (
+      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+        <Spinner />
+      </div>
+    )
   }
 
   if (error) {
-    return <div className="max-w-6xl mx-auto">There was an error</div>
+    return (
+      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+        Något gick fel.
+      </div>
+    )
   }
 
   const tabell = data.filter((table) => table.lag.women === women)

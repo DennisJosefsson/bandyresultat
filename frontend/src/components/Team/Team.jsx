@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query'
 import { getSingleTeam } from '../../requests/teams'
 import { useParams } from 'react-router-dom'
+import { useEffect } from 'react'
 import Spinner from '../utilitycomponents/spinner'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
@@ -10,13 +11,16 @@ dayjs.locale('sv')
 
 const Team = () => {
   const teamId = parseInt(useParams().teamId)
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+  }, [])
 
   const { data, isLoading, error } = useQuery(['teams', teamId], () =>
     getSingleTeam(teamId)
   )
   if (isLoading) {
     return (
-      <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29]">
+      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
         <Spinner />
       </div>
     )
@@ -24,8 +28,8 @@ const Team = () => {
 
   if (error) {
     return (
-      <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29]">
-        There was an error
+      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+        Något gick fel.
       </div>
     )
   }
@@ -98,10 +102,11 @@ const Team = () => {
           </p>
           {finals > 0 && golds > 0 && (
             <p className="text-sm mb-3">
-              {teams.team.casualName} har spelat {finals} finalmatcher och
+              {teams.team.casualName} har spelat{' '}
+              {finals === 1 ? 'en finalmatch' : `${finals} finalmatcher`} och
               vunnit{' '}
               {golds === 1
-                ? `1 gång (${winString.slice(2)}).`
+                ? `en gång (${winString.slice(2)}).`
                 : `${golds} gånger (${winString.slice(2)}).`}
             </p>
           )}

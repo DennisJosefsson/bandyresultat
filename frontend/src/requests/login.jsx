@@ -1,11 +1,24 @@
 import axios from 'axios'
+import { baseUrl, mobileBaseUrl } from './config'
+
+const backendUrl =
+  import.meta.env.MODE === 'mobile'
+    ? mobileBaseUrl
+    : baseUrl
+    ? 'https://bandyresultat.se'
+    : 'http://localhost:3001'
 
 const loginApi = axios.create({
-  baseURL: 'http://localhost:3001/api/login',
+  baseURL: `${backendUrl}/api/login`,
 })
 
-export const getLogin = async (access_token) => {
-  const response = await loginApi.post('/', { access_token })
+export const logout = async () => {
+  const response = await loginApi.get('/logout')
+  return response.data
+}
+
+export const getLogin = async (userName, password) => {
+  const response = await loginApi.post('/', { userName, password })
   return response.data
 }
 

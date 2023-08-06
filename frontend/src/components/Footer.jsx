@@ -1,18 +1,21 @@
-import { useGoogleLogin } from '@react-oauth/google'
-import { getLogin } from '../requests/login'
-import { useContext } from 'react'
+import { getLogin, logout } from '../requests/login'
+import { useContext, useState } from 'react'
 import { UserContext } from '../contexts/contexts'
+import LoginForm from './LoginForm/LoginForm'
 
 const Footer = () => {
   const { user, dispatch } = useContext(UserContext)
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => handleResponse(codeResponse),
-  })
+  const [userName, setUserName] = useState('')
+  const [password, setPassword] = useState('')
+  const [showLoginModal, setShowLoginModal] = useState(false)
 
-  const handleResponse = async ({ access_token }) => {
-    const response = await getLogin(access_token)
+  const handleResponse = async (event) => {
+    event.preventDefault()
+    setShowLoginModal(false)
+    const response = await getLogin(userName, password)
     if (response.success && user === false) {
       dispatch({ type: 'LOGIN' })
+      window.alert('Inloggad.')
     } else if (user === true) {
       window.alert('Redan inloggad.')
     } else {
@@ -20,29 +23,49 @@ const Footer = () => {
     }
   }
 
-  const handleLogout = () => {
-    dispatch({ type: 'LOGOUT' })
+  const loggaUt = async () => {
+    const response = await logout()
+    if (response.success) {
+      dispatch({ type: 'LOGOUT' })
+      window.alert('Utloggad.')
+    } else {
+      window.alert('Något gick fel.')
+    }
   }
 
   return (
-    <footer className="bg-[#93B8C1] h-[12rem] mt-16 flex justify-end font-inter text-[#011d29]">
-      <div>
-        {user ? (
-          <div
-            onClick={() => handleLogout()}
-            className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center w-32 h-8 mt-4 mr-2"
-          >
-            Logga ut
-          </div>
-        ) : (
-          <div
-            onClick={() => login()}
-            className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center w-32 h-8 mt-4 mr-2"
-          >
-            Logga in
-          </div>
-        )}
+    <footer className="bg-[#93B8C1] h-[12rem] mt-16 font-inter text-[#011d29]">
+      <div className="max-w-7xl mx-auto flex justify-end ">
+        <div className="pt-2">
+          {!user ? (
+            <div
+              onClick={() => setShowLoginModal(true)}
+              className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center"
+            >
+              Logga in
+            </div>
+          ) : (
+            <div
+              onClick={() => loggaUt()}
+              className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center"
+            >
+              Logga ut
+            </div>
+          )}
+        </div>
       </div>
+      {showLoginModal ? (
+        <>
+          <LoginForm
+            userName={userName}
+            setUserName={setUserName}
+            password={password}
+            setPassword={setPassword}
+            setShowModal={setShowLoginModal}
+            handleResponse={handleResponse}
+          />
+        </>
+      ) : null}
     </footer>
   )
 }

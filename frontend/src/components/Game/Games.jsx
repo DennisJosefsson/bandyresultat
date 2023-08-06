@@ -45,11 +45,19 @@ const Games = () => {
   }
 
   if (isLoading || isSeasonLoading) {
-    return <Spinner />
+    return (
+      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+        <Spinner />
+      </div>
+    )
   }
 
   if (error || seasonError) {
-    return <div>There was an error</div>
+    return (
+      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+        Något gick fel.
+      </div>
+    )
   }
 
   const games = data.games
@@ -98,6 +106,37 @@ const Games = () => {
   const qualificationGames = gameSortFunction(unsortedQualificationGames)
 
   const genderSeason = season.filter((indSeason) => indSeason.women === women)
+
+  if (women && seasonId < 1973) {
+    return (
+      <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col">
+        <div className="flex flex-row justify-end">
+          <div>
+            <div
+              onClick={() => {
+                dispatch({ type: 'TOGGLE' })
+              }}
+              className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center"
+            >
+              {women ? 'Herrar' : 'Damer'}
+            </div>
+            <div className="text-right mt-2 mb-4">
+              <Link to={`/games/${seasonId}`}>[Matcher]</Link>
+            </div>
+          </div>
+        </div>
+        <div className="grid place-items-center mx-auto font-inter text-[#011d29]">
+          <p>
+            Första säsongen för damernas högsta serie var{' '}
+            <Link to="/games/1973" className="font-bold">
+              1972/73
+            </Link>
+            .
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col">
@@ -217,7 +256,11 @@ const Games = () => {
                         key={`${game.datum}-${game.sum_goals}`}
                         className="text-sm mb-3"
                       >
-                        {dayjs(game.datum).format('D MMMM YYYY')}:{' '}
+                        {game.datum && (
+                          <span>
+                            {dayjs(game.datum).format('D MMMM YYYY')}:
+                          </span>
+                        )}{' '}
                         {game.sum_goals} mål mellan {game.home_name} och{' '}
                         {game.away_name} i en match som slutade {game.resultat}
                       </p>
@@ -233,7 +276,11 @@ const Games = () => {
                         key={`${game.datum}-${game.sum_goals}`}
                         className="text-sm mb-3"
                       >
-                        {dayjs(game.datum).format('D MMMM YYYY')}:{' '}
+                        {game.datum && (
+                          <span>
+                            {dayjs(game.datum).format('D MMMM YYYY')}:
+                          </span>
+                        )}{' '}
                         {game.sum_goals} mål mellan {game.home_name} och{' '}
                         {game.away_name}, slutresultat {game.resultat}
                       </p>
@@ -252,9 +299,13 @@ const Games = () => {
                         key={`${game.datum}-${game.sum_goals}`}
                         className="text-sm mb-3"
                       >
-                        {dayjs(game.datum).format('D MMMM YYYY')}:{' '}
+                        {game.datum && (
+                          <span>
+                            {dayjs(game.datum).format('D MMMM YYYY')}:
+                          </span>
+                        )}{' '}
                         {game.sum_goals} mål mellan {game.home_name} och{' '}
-                        {game.away_name}, slutesultat {game.resultat}
+                        {game.away_name}, slutresultat {game.resultat}
                       </p>
                     )
                   })}
@@ -268,7 +319,11 @@ const Games = () => {
                         key={`${game.datum}-${game.sum_goals}`}
                         className="text-sm mb-3"
                       >
-                        {dayjs(game.datum).format('D MMMM YYYY')}:{' '}
+                        {game.datum && (
+                          <span>
+                            {dayjs(game.datum).format('D MMMM YYYY')}:
+                          </span>
+                        )}{' '}
                         {game.sum_goals} mål mellan {game.home_name} och{' '}
                         {game.away_name} i en match som slutade {game.resultat}
                       </p>
@@ -287,7 +342,11 @@ const Games = () => {
                         key={`${game.datum}-${game.sum_goals}`}
                         className="text-sm mb-3"
                       >
-                        {dayjs(game.datum).format('D MMMM YYYY')}:{' '}
+                        {game.datum && (
+                          <span>
+                            {dayjs(game.datum).format('D MMMM YYYY')}:
+                          </span>
+                        )}{' '}
                         {game.goal_difference} mål mellan {game.home_name} och{' '}
                         {game.away_name}, matchen slutade {game.resultat}.
                       </p>
@@ -303,7 +362,11 @@ const Games = () => {
                         key={`${game.datum}-${game.sum_goals}`}
                         className="text-sm mb-3"
                       >
-                        {dayjs(game.datum).format('D MMMM YYYY')}:{' '}
+                        {game.datum && (
+                          <span>
+                            {dayjs(game.datum).format('D MMMM YYYY')}:
+                          </span>
+                        )}{' '}
                         {game.goal_difference} mål mellan {game.home_name} och{' '}
                         {game.away_name}, matchen slutade {game.resultat}.
                       </p>

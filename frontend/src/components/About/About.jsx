@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import kalenderbitare from '../../assets/kalenderbitare.PNG'
 
 const About = () => {
@@ -8,10 +9,13 @@ const About = () => {
         <div className="w-1/2">
           <p className="text-base mb-2 text-justify">
             Vi har väl alla någon gång undrat hur det var, den där bandyvintern
-            1967/68 när Katrineholm vann SM-guld. När de slogs mot Hälleforsnäs
-            och Örebro i södra serien, och hade sällskap av Värmbol. Kokade
-            Närke och västra Sörmland av bandyeufori? Kunde man gå ut utan att
-            få en tackling av Håkan Spångberg?
+            <Link to="/season/1969" className="pl-1 font-bold">
+              1968/69
+            </Link>{' '}
+            när Katrineholm vann SM-guld. När de slogs mot Hälleforsnäs och
+            Örebro i södra serien, och hade sällskap av Värmbol. Kokade Närke
+            och västra Sörmland av bandyeufori? Kunde man gå ut utan att få en
+            tackling av Håkan Spångberg?
           </p>
           <p className="text-base mb-2 text-justify">
             Sådant får man inte nödvändigtvis reda på här. Däremot kan man hitta

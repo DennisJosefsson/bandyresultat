@@ -412,6 +412,7 @@ where team = $teamId and "category" = any(array['quarter', 'semi', 'final']) and
   )
 
   console.log('teams request', new Date())
+  console.log(req.cookies)
   if (!team) {
     throw new Error('No such team in the database')
   } else {

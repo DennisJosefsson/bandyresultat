@@ -1,13 +1,18 @@
 const Home = () => {
   return (
-    <div className="max-w-7xl min-h-screen mx-auto flex flex-row">
+    <div className="max-w-7xl mx-auto flex flex-row justify-between">
       <div className="my-20 flex flex-col font-inter">
         <div className="mb-6">
-          <h1 className="text-4xl">Ett stycke bandyhistoria</h1>
+          <h1 className="text-base font-bold pl-2 sm:text-4xl">
+            Ett stycke bandyhistoria
+          </h1>
         </div>
-        <div className="w-[400px]">
-          <h2 className="text-xl">
+        <div className="w-[200px] pl-2 lg:w-[400px]">
+          <h2 className="text-sm sm:text-xl mb-4">
             Samlade resultat från de högsta serierna - 1907 och framåt
+          </h2>
+          <h2 className="text-sm lg:hidden">
+            Men tyvärr finns det ingen version som passar för mindre skärmar.
           </h2>
         </div>
       </div>

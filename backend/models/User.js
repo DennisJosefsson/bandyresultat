@@ -1,7 +1,7 @@
 const { Model, DataTypes } = require('sequelize')
 
 const { sequelize } = require('../utils/db')
-
+const useBcrypt = require('sequelize-bcrypt')
 class User extends Model {}
 
 User.init(
@@ -23,6 +23,10 @@ User.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
     sequelize,
@@ -31,5 +35,11 @@ User.init(
     modelName: 'users',
   }
 )
+
+useBcrypt(User, {
+  field: 'password',
+  rounds: 12,
+  compare: 'authenticate',
+})
 
 module.exports = User

@@ -26,6 +26,11 @@ const Season = () => {
       setRoundForRound(false)
     }
   }, [location])
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+  }, [])
+
   const {
     data: season,
     isLoading,
@@ -40,7 +45,7 @@ const Season = () => {
   )
   if (isLoading || isTableLoading) {
     return (
-      <div className="max-w-6xl min-h-screen mx-auto font-inter text-[#011d29]">
+      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
         <Spinner />
       </div>
     )
@@ -48,8 +53,8 @@ const Season = () => {
 
   if (error || tableError) {
     return (
-      <div className="max-w-6xl min-h-screen mx-auto font-inter text-[#011d29]">
-        There was an error
+      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+        Något gick fel.
       </div>
     )
   }
@@ -80,6 +85,39 @@ const Season = () => {
   const eightTables = tableSortFunction(unsortedEightTables)
   const regularTables = tableSortFunction(unsortedRegularTables)
   const qualificationTables = tableSortFunction(unsortedQualificationTables)
+
+  if (women && seasonId < 1973) {
+    return (
+      <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col">
+        <div className="flex flex-row justify-end">
+          <div>
+            <div
+              onClick={() => {
+                setRound(1)
+                setRoundForRound(false)
+                dispatch({ type: 'TOGGLE' })
+              }}
+              className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center"
+            >
+              {women ? 'Herrar' : 'Damer'}
+            </div>
+            <div className="text-right mt-2 mb-4">
+              <Link to={`/games/${seasonId}`}>[Matcher]</Link>
+            </div>
+          </div>
+        </div>
+        <div className="grid place-items-center mx-auto font-inter text-[#011d29]">
+          <p>
+            Första säsongen för damernas högsta serie var{' '}
+            <Link to="/season/1973" className="font-bold">
+              1972/73
+            </Link>
+            .
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col">
@@ -114,6 +152,17 @@ const Season = () => {
         </div>
       </div>
       <div className="flex flex-row-reverse justify-between">
+        {women && seasonId < 1973 && (
+          <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+            <p>
+              Första säsongen för damernas högsta serie var{' '}
+              <Link to="/season/1973" className="font-bold">
+                1972/73
+              </Link>
+              .
+            </p>
+          </div>
+        )}
         <div className="m-0 justify-self-center text-base">
           <h2 className="text-bold text-xl text-right">Slutspel</h2>
 
@@ -210,7 +259,7 @@ const Season = () => {
                   <div key={group.group}>
                     <table className="table-fixed w-30">
                       <thead>
-                        <tr className="text-[0.5rem]">
+                        <tr key="header-row" className="text-[0.5rem]">
                           <th scope="col" className="w-16 p-1"></th>
                           <th scope="col" className="w-6 p-1">
                             P
@@ -277,7 +326,7 @@ const Season = () => {
             )}
             {roundForRound && groupsArray.length > 1 && (
               <div>
-                <div className="flex flex-row justify-between">
+                <div className="flex flex-row justify-between w-[40rem]">
                   {groupsArray
                     .sort((a, b) => {
                       if (sortOrder.indexOf(a) > sortOrder.indexOf(b)) {

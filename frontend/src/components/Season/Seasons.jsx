@@ -1,16 +1,23 @@
 import { useQuery } from 'react-query'
 import { getSeasons } from '../../requests/seasons'
 import { Link } from 'react-router-dom'
+import Spinner from '../utilitycomponents/spinner'
 
 const Seasons = () => {
   const { data, isLoading, error } = useQuery('allSeasons', getSeasons)
   if (isLoading) {
-    return <div className="max-w-7xl min-h-screen mx-auto">Loading...</div>
+    return (
+      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+        <Spinner />
+      </div>
+    )
   }
 
   if (error) {
     return (
-      <div className="max-w-7xl min-h-screen mx-auto">There was an error</div>
+      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+        Något gick fel.
+      </div>
     )
   }
 

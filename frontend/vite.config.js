@@ -6,8 +6,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
     headers: { 'Cross-Origin-Opener-Policy': 'same-origin-allow-popups' },
-    host: 'localhost',
-    port: 3002,
   },
   assetsInclude: ['**/*.PNG'],
 })

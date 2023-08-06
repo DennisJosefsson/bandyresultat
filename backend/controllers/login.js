@@ -1,31 +1,37 @@
 const router = require('express').Router()
-const axios = require('axios')
 const { User } = require('../models')
 const jwt = require('jsonwebtoken')
 const dayjs = require('dayjs')
 
 const jwtSecret = process.env.JWT_SECRET
 
-router.post('/', async (req, res) => {
-  console.log(req.body)
-  const baseUrl = 'https://www.googleapis.com/oauth2/v3/userinfo?access_token='
+router.get('/logout', (req, res) => {
+  console.log(req.cookies)
+  console.log('logga ut')
+  res.clearCookie('bandykaka')
+  res.json({ success: true, message: 'Tillbakakaka' })
+})
 
-  const response = await axios.get(`${baseUrl}${req.body.access_token}`)
-  const loginEmail = response.data.email
-  const user = await User.findOne({ where: { email: loginEmail } })
+router.post('/', async (req, res) => {
+  const user = await User.findOne({ where: { userName: req.body.userName } })
   if (!user) {
     res.json({ success: false, message: 'User does not exist' })
   } else {
-    const token = jwt.sign(user.toJSON(), jwtSecret)
+    if (user.authenticate(req.body.password)) {
+      const userForToken = { user: user.userName, admin: user.admin }
+      const token = jwt.sign(userForToken, jwtSecret)
 
-    res
-      .cookie('bandykaka', token, {
+      res.cookie('bandykaka', token, {
         httpOnly: true,
         sameSite: true,
         secure: true,
         expires: dayjs().add(1, 'days').toDate(),
       })
-      .json({ success: true, message: 'Logged in' })
+
+      res.json({ success: true, message: 'Logged in' })
+    } else {
+      res.json({ success: false, message: 'Wrong password' })
+    }
   }
 })
 

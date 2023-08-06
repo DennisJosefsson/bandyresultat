@@ -33,7 +33,7 @@ const App = () => {
   const { user } = useContext(UserContext)
   return (
     <Router>
-      <div className="bg-[#f4f5f5] text-[#011d29] min-h-screen">
+      <div className="bg-[#f4f5f5] text-[#011d29] lg:min-h-screen">
         <Header />
         <main>
           <Routes>

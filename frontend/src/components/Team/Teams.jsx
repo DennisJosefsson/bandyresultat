@@ -24,7 +24,7 @@ const Teams = () => {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto content-center min-h-screen">
+      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
         <Spinner />
       </div>
     )
@@ -32,8 +32,8 @@ const Teams = () => {
 
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto content-center min-h-screen">
-        There was an error
+      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+        <Spinner />
       </div>
     )
   }
