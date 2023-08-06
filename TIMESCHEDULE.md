@@ -29,3 +29,7 @@
 | 2023-07-25  | 4 hours   | Implemented login using Google OAuth2,  |
 |             |           | restriced routes frontend               |
 | 2023-08-02  | 2.5 hours | Retricted routes backend, cookie auth.  |
+| 2023-08-06  | 2 hours   | Couldn't get google login to work with  |
+|             |           | webserver, ssl certificate issue,       |
+|             |           | implemented basic user login with       |
+|             |           | username and hashed password in db.     |
