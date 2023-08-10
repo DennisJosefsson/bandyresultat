@@ -33,3 +33,5 @@
 |             |           | webserver, ssl certificate issue,       |
 |             |           | implemented basic user login with       |
 |             |           | username and hashed password in db.     |
+| 2023-08-09  |           | Officially deployed                     |
+|             |           | https://bandyresultat.se                |

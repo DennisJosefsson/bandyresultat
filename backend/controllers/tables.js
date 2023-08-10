@@ -52,9 +52,8 @@ router.get('/maraton', async (req, res) => {
 })
 
 router.post('/compare', async (req, res) => {
-  console.log(new Date())
   const array = req.body
-  console.log(array)
+
   const tabeller = await TeamGame.findAll({
     where: {
       team: {
@@ -196,7 +195,7 @@ group by casual_name,team;
   select count(distinct season_id) as playoffs, team, casual_name
 from teamgames
 join teams on teamgames.team = teams.team_id
-where team = any($team_array) and category = any(array['quarter','semi','final']) and season_id >= 26
+where team = any($team_array) and category = any(array['quarter','semi','final']) and season_id >= 25
 group by casual_name, team;
   `,
     { bind: { team_array: array }, type: QueryTypes.SELECT }
@@ -207,7 +206,7 @@ group by casual_name, team;
   select count(distinct season_id) as seasons, team, casual_name
 from teamgames
 join teams on teamgames.team = teams.team_id
-where team = any($team_array) and season_id >= 26
+where team = any($team_array) and season_id >= 25
 group by casual_name, team;
   `,
     { bind: { team_array: array }, type: QueryTypes.SELECT }

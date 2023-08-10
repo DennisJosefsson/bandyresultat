@@ -24,7 +24,7 @@ const Seasons = () => {
   const seasons = data
 
   return (
-    <div className="max-w-7xl min-h-screen mx-auto">
+    <div className="max-w-7xl min-h-screen mx-auto  mb-2">
       <div className="self-center">
         <h1 className="text-center text-2xl font-bold mb-4">Säsonger</h1>
         <div className="grid grid-cols-4 gap-2 justify-between ml-20">

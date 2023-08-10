@@ -4,3 +4,10 @@ The goal of this project is to launch a site that gathers all the results from t
 
 The project consists of three parts: A backend based on node.js, express and PostgreSQL, a React frontend, and a web-scraper (programming language TBD, probably Python).
 
+# Finished site
+
+https://bandyresultat.se
+
+# Notes
+
+The available online data weren't uniform enough to use a web scraper. Instead I relied on entering data manually and having python scripts that read strings stored in list.

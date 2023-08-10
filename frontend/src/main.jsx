@@ -16,7 +16,7 @@ const queryClient = new QueryClient({
   },
 })
 
-console.log(import.meta.env.MODE)
+console.log('BK allez allez.')
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -1,12 +1,13 @@
 import { useQuery } from 'react-query'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { maratonTabell } from '../../requests/tables'
 import { GenderContext } from '../../contexts/contexts'
-
+import MaratonHelpModal from './MaratonHelp'
 import Spinner from '../utilitycomponents/spinner'
 
 const Table = () => {
   const { women, dispatch } = useContext(GenderContext)
+  const [showHelpModal, setShowHelpModal] = useState(false)
   const { data, isLoading, error } = useQuery('maratonTabell', maratonTabell)
 
   if (isLoading) {
@@ -30,11 +31,21 @@ const Table = () => {
   return (
     <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-row-reverse justify-between">
       <div>
-        <div
-          onClick={() => dispatch({ type: 'TOGGLE' })}
-          className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center"
-        >
-          {women ? 'Herrar' : 'Damer'}
+        <div>
+          <div
+            onClick={() => dispatch({ type: 'TOGGLE' })}
+            className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center mb-6"
+          >
+            {women ? 'Herrar' : 'Damer'}
+          </div>
+        </div>
+        <div>
+          <div
+            onClick={() => setShowHelpModal(true)}
+            className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center mb-6"
+          >
+            Hjälp/Info
+          </div>
         </div>
       </div>
       <div>
@@ -112,6 +123,11 @@ const Table = () => {
           </tbody>
         </table>
       </div>
+      {showHelpModal ? (
+        <>
+          <MaratonHelpModal setShowModal={setShowHelpModal} />
+        </>
+      ) : null}
     </div>
   )
 }

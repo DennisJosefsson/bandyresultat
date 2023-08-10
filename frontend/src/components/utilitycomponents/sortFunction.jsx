@@ -155,3 +155,18 @@ export const compareAllTeamData = (allDataArray) => {
     return -1
   })
 }
+
+export const filterOpposition = (array) => {
+  let tempArray = []
+
+  const callback = (item) => {
+    if (tempArray.includes(item.lag.casualName + item.opp.casualName)) {
+      return false
+    } else {
+      tempArray.push(item.opp.casualName + item.lag.casualName)
+      return true
+    }
+  }
+
+  return array.filter(callback)
+}

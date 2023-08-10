@@ -2,15 +2,18 @@ import { useQuery, useMutation } from 'react-query'
 import { useState, useReducer, useContext } from 'react'
 import { getTeams, postTeam } from '../../requests/teams'
 import { useNavigate, Link } from 'react-router-dom'
-import { GenderContext } from '../../contexts/contexts'
+import { GenderContext, UserContext } from '../../contexts/contexts'
 import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
 import Spinner from '../utilitycomponents/spinner'
 import TeamForm from './TeamForm'
+import TeamsListHelpModal from './TeamsListHelpModal'
 
 const Teams = () => {
   const navigate = useNavigate()
   const { women, dispatch: genderDispatch } = useContext(GenderContext)
+  const { user } = useContext(UserContext)
   const [showTeamFormModal, setShowTeamFormModal] = useState(false)
+  const [showHelpModal, setShowHelpModal] = useState(false)
   const [teamFilter, setTeamFilter] = useState('')
   const initState = []
 
@@ -84,6 +87,14 @@ const Teams = () => {
             {women ? 'Herrar' : 'Damer'}
           </div>
         </div>
+        <div>
+          <div
+            onClick={() => setShowHelpModal(true)}
+            className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center mb-6"
+          >
+            Hjälp/Info
+          </div>
+        </div>
         <form className="mb-6">
           <input
             className="border-[#011d29] focus:border-[#011d29]"
@@ -99,19 +110,13 @@ const Teams = () => {
             onKeyDown={handleKeyDown}
           />
         </form>
-        <div className="text-left">
-          <p className="text-sm mb-4">
-            Filtrera antal lag genom att skriva i textfältet.
-          </p>
-          <p className="text-sm mb-4">
-            Klicka på lagnamn för att se information om det laget.
-          </p>
-          <p className="text-sm mb-4">
-            Klicka i rutan för att välja ut lag att jämföra.
-          </p>
-        </div>
+
         <div>
-          {formState.length > 0 && <h3 className="underline">Valda lag</h3>}
+          {formState.length > 0 && (
+            <h3 className="font-bold underline underline-offset-2">
+              Valda lag
+            </h3>
+          )}
 
           {formState.map((teamId) => {
             return (
@@ -132,22 +137,31 @@ const Teams = () => {
             </button>
           )}
           {formState.length > 4 ? (
-            <h4 className="text-red-600 mt-6">Välj max 4 lag</h4>
+            <h4 className="text-red-600 font-bold mt-6 uppercase">
+              Välj max 4 lag
+            </h4>
           ) : (
             ''
           )}
         </div>
-        <p className="text-sm">
-          <button onClick={() => setShowTeamFormModal(true)}>
-            Lägg till lag
-          </button>
-        </p>
+        {user && (
+          <p className="text-sm">
+            <button onClick={() => setShowTeamFormModal(true)}>
+              Lägg till lag
+            </button>
+          </p>
+        )}
         {showTeamFormModal ? (
           <>
             <TeamForm
               mutation={teamFormMutation}
               setShowModal={setShowTeamFormModal}
             />
+          </>
+        ) : null}
+        {showHelpModal ? (
+          <>
+            <TeamsListHelpModal setShowModal={setShowHelpModal} />
           </>
         ) : null}
       </div>

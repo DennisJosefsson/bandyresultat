@@ -33,9 +33,9 @@ const App = () => {
   const { user } = useContext(UserContext)
   return (
     <Router>
-      <div className="bg-[#f4f5f5] text-[#011d29] lg:min-h-screen">
+      <div className="flex flex-col bg-[#f4f5f5] text-[#011d29] lg:min-h-screen">
         <Header />
-        <main>
+        <main className="mb-4">
           <Routes>
             <Route path="/teams/:teamId" element={<Team />} />
             <Route path="/teams" element={<Teams />} />

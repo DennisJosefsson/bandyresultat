@@ -44,8 +44,25 @@ const About = () => {
             Jag som står bakom det här heter Dennis Josefsson, och jag kommer
             från Vetlanda. Det hade förmodligen inte blivit något av detta om
             det inte funnits föregångare som förenklat datainsamlingen och stått
-            för inspiration. Då tänker jag förstås närmast på Jimbobandy och
-            Bandysidan.
+            för inspiration. Då tänker jag förstås närmast på{' '}
+            <a
+              href="https://web.archive.org/web/20150222174940/http://www.jimbobandy.nu/"
+              className="font-semibold"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Jimbobandy
+            </a>{' '}
+            och{' '}
+            <a
+              href="http://www.bandysidan.nu/"
+              className="font-semibold"
+              target="_blank"
+              rel="noreferrer"
+            >
+              bandysidan.nu
+            </a>
+            .
           </p>
         </div>
         <div className="w-2/5">
@@ -55,13 +72,20 @@ const About = () => {
             Jag kan inte lova något, men det är ju så att det går att ta reda på
             annan statistik än den som presenteras här. Så har du en specifik
             fråga så är det bara att kontakta mig, på{' '}
-            <a href="https://twitter.com/_DennisJ_" className="font-semibold">
+            <a
+              href="https://twitter.com/_DennisJ_"
+              className="font-semibold"
+              target="_blank"
+              rel="noreferrer"
+            >
               Twitter
             </a>{' '}
             (så länge det finns) eller via mail (
             <a
               href="mailto:dennis.josefsson@gmail.com"
               className="font-semibold"
+              target="_blank"
+              rel="noreferrer"
             >
               dennis.josefsson@gmail.com
             </a>

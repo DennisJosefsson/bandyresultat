@@ -34,8 +34,8 @@ const Footer = () => {
   }
 
   return (
-    <footer className="bg-[#93B8C1] h-[12rem] mt-16 font-inter text-[#011d29]">
-      <div className="max-w-7xl mx-auto flex justify-end ">
+    <footer className="bg-[#93B8C1] mt-auto h-[8rem] font-inter text-[#011d29]">
+      <div className="max-w-7xl mx-auto flex flex-row justify-end">
         <div className="pt-2">
           {!user ? (
             <div

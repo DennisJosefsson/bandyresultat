@@ -19,10 +19,12 @@ const GamesList = ({ gamesArray, title, setShowModal, setGameData }) => {
                 {gamesArray.length > 1 ? `${groupConstant[group.group]}` : ''}
               </h3>
               <div>
-                {group.dates.map((date) => {
+                {group.dates.map((date, index) => {
                   return (
-                    <div key={date.date}>
-                      <h3>{dayjs(date.date).format('D MMMM YYYY')}</h3>
+                    <div key={`${date.date}-${index}`}>
+                      {date.date !== 'null' && (
+                        <h3>{dayjs(date.date).format('D MMMM YYYY')}</h3>
+                      )}
                       <div>
                         {date.games.map((game) => {
                           return (

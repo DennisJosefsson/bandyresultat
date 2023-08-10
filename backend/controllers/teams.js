@@ -9,7 +9,6 @@ router.get('/', async (req, res) => {
     order: [['casualName', 'ASC']],
   })
 
-  console.log('teams request', new Date())
   res.json(teams)
 })
 
@@ -26,12 +25,10 @@ router.get('/latest', async (req, res) => {
     bind: { women },
   })
 
-  console.log('teams request', new Date())
   res.json(teams)
 })
 
 router.get('/:teamId', async (req, res) => {
-  console.log(req.params.teamId)
   const team = await Team.findByPk(req.params.teamId, {
     include: {
       model: Season,
@@ -368,7 +365,7 @@ dense_rank() over (order by "year") row_num,
 season_id,
 "year"
 from seasons
-where season_id >= 26),
+where season_id >= 25),
 
 playoff_seasons as (
 select distinct season_id from teamgames
@@ -407,12 +404,10 @@ order by streak_length desc, start_year asc;`,
   const playoffCount = await sequelize.query(
     `select count(distinct season_id) as playoff_count
 from teamgames
-where team = $teamId and "category" = any(array['quarter', 'semi', 'final']) and season_id >= 26;`,
+where team = $teamId and "category" = any(array['quarter', 'semi', 'final']) and season_id >= 25;`,
     { bind: { teamId: req.params.teamId }, type: QueryTypes.SELECT }
   )
 
-  console.log('teams request', new Date())
-  console.log(req.cookies)
   if (!team) {
     throw new Error('No such team in the database')
   } else {
@@ -432,7 +427,6 @@ where team = $teamId and "category" = any(array['quarter', 'semi', 'final']) and
 })
 
 router.post('/', authControl, async (req, res, next) => {
-  console.log(req.body)
   const team = await Team.create(req.body)
   res.json(team)
 })

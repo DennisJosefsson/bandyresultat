@@ -24,8 +24,8 @@ app.use((req, res, next) => {
   next()
 })
 app.use(cookieParser())
-// const frontend = path.join(__dirname, 'dist')
-// app.use('/', express.static(frontend))
+const frontend = path.join(__dirname, 'dist')
+app.use('/', express.static(frontend))
 
 app.use('/api/teams', teamRouter)
 app.use('/api/seasons', seasonsRouter)
@@ -34,9 +34,9 @@ app.use('/api/tables', tablesRouter)
 app.use('/api/metadata', metadataRouter)
 app.use('/api/login', loginRouter)
 
-// app.use((req, res, next) => {
-//   res.sendFile(path.join(frontend, 'index.html'))
-// })
+app.use((req, res, next) => {
+  res.sendFile(path.join(frontend, 'index.html'))
+})
 
 app.use(errorHandler)
 
