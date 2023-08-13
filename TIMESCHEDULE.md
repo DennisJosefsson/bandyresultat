@@ -35,3 +35,5 @@
 |             |           | username and hashed password in db.     |
 | 2023-08-09  |           | Officially deployed                     |
 |             |           | https://bandyresultat.se                |
+| 2023-08-09  | 6 hours   | Improved H2H comparisons,               |
+|             |           | implemented permalinks for H2H          |

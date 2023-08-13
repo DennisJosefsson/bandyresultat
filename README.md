@@ -8,6 +8,13 @@ The project consists of three parts: A backend based on node.js, express and Pos
 
 https://bandyresultat.se
 
+# Features
+
+1. Tables and list of games for individual seasons, and statistics.
+2. Tables for individual teams, statistics such as win streaks (calculated by SQL queries)
+3. H2H comparisons between 2-4 teams. Either based on all games and seasons, or the user can pick a specific range of seasons and/or specific categories (regular season, playoff stages, qualification).
+4. Table for all seasons combined.
+
 # Notes
 
 The available online data weren't uniform enough to use a web scraper. Instead I relied on entering data manually and having python scripts that read strings stored in list.
