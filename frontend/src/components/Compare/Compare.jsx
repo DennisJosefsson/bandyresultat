@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import { compareTeams } from '../../requests/tables'
 import {
@@ -16,11 +16,14 @@ import 'dayjs/locale/sv'
 dayjs.locale('sv')
 
 const Compare = () => {
+  const navigate = useNavigate()
   const location = useLocation()
-  const teamArray = location.state
+  const { compObject } = location.state
   const [showHelpModal, setShowHelpModal] = useState(false)
-  const { data, isLoading, error } = useQuery(['compareTeams', teamArray], () =>
-    compareTeams(teamArray)
+  const [isCopied, setIsCopied] = useState(false)
+  const { data, isLoading, error } = useQuery(
+    ['compareTeams', compObject],
+    () => compareTeams(compObject)
   )
 
   if (isLoading) {
@@ -39,9 +42,27 @@ const Compare = () => {
     )
   }
 
+  const copyText = async (url) => {
+    if ('clipboard' in navigator) {
+      return await navigator.clipboard.writeText(url)
+    } else {
+      return document.execCommand('copy', true, url)
+    }
+  }
+
+  const handleCopyClick = () => {
+    copyText(compareLink)
+      .then(() => {
+        setIsCopied(true)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
   const categoryData = compareSortFunction(data.data.tabeller)
   const allData =
-    teamArray.teamArray.length === 2
+    compObject.teamArray.length === 2
       ? data.data.compareAllGames
       : compareAllTeamData(data.data.compareAllGames)
 
@@ -54,13 +75,28 @@ const Compare = () => {
   const latestGames = data.data.firstAndLatestGames.filter(
     (game) => game.ranked_last_games === '1'
   )
+  const compareLink = `https://bandyresultat/link/${data.data.link[0].linkName}`
 
   return (
     <div className="max-w-7xl min-h-screen font-inter text-[#011d29] mx-auto flex flex-col">
       <div className="flex flex-row justify-end">
         <div
+          onClick={() =>
+            navigate('/teams', { state: { compObject: compObject } })
+          }
+          className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center mb-6 mr-4"
+        >
+          Ändra sökning
+        </div>
+        <div
+          className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center mb-6 mr-4"
+          onClick={handleCopyClick}
+        >
+          {isCopied ? 'Länk kopierad!' : 'Kopiera länk till sökning'}
+        </div>
+        <div
           onClick={() => setShowHelpModal(true)}
-          className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center mb-6 w-28"
+          className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center mb-6"
         >
           Hjälp/Info
         </div>
@@ -75,7 +111,7 @@ const Compare = () => {
         )}
         {allData.length > 0 && (
           <div>
-            {teamArray.teamArray.length > 2 && (
+            {compObject.teamArray.length > 2 && (
               <div>
                 <h2 className="text-2xl font-bold mb-2">Inbördes möten</h2>
                 <div>
@@ -267,7 +303,7 @@ const Compare = () => {
                 </div>
               </div>
             )}
-            {teamArray.teamArray.length === 2 && (
+            {compObject.teamArray.length === 2 && (
               <div>
                 <h2 className="text-2xl font-bold mb-2">Inbördes möten</h2>
                 <div>

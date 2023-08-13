@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const { sequelize } = require('../utils/db')
 const { Op, QueryTypes } = require('sequelize')
-const { Table, Season, Team, TeamGame, Game } = require('../models')
+const { Table, Season, Team, TeamGame, Game, Link } = require('../models')
 const { authControl } = require('../utils/middleware')
 
 router.get('/maraton', async (req, res) => {
@@ -52,16 +52,24 @@ router.get('/maraton', async (req, res) => {
 })
 
 router.post('/compare', async (req, res) => {
-  const array = req.body
+  const { teamArray, categoryArray, startSeason, endSeason } = req.body
+  const searchString = JSON.stringify(req.body)
 
   const tabeller = await TeamGame.findAll({
     where: {
       team: {
-        [Op.in]: array,
+        [Op.in]: teamArray,
       },
       opponent: {
-        [Op.in]: array,
+        [Op.in]: teamArray,
       },
+      category: {
+        [Op.any]: categoryArray,
+      },
+      [Op.and]: [
+        { seasonId: { [Op.gte]: startSeason } },
+        { seasonId: { [Op.lte]: endSeason } },
+      ],
     },
     attributes: [
       'team',
@@ -120,11 +128,18 @@ router.post('/compare', async (req, res) => {
   const compareAllGames = await TeamGame.findAll({
     where: {
       team: {
-        [Op.in]: array,
+        [Op.in]: teamArray,
       },
       opponent: {
-        [Op.in]: array,
+        [Op.in]: teamArray,
       },
+      category: {
+        [Op.any]: categoryArray,
+      },
+      [Op.and]: [
+        { seasonId: { [Op.gte]: startSeason } },
+        { seasonId: { [Op.lte]: endSeason } },
+      ],
     },
     attributes: [
       'team',
@@ -187,7 +202,7 @@ join teams on teamgames.team = teams.team_id
 where team = any($team_array) and category = 'final' and win = true
 group by casual_name,team;
   `,
-    { bind: { team_array: array }, type: QueryTypes.SELECT }
+    { bind: { team_array: teamArray }, type: QueryTypes.SELECT }
   )
 
   const playoffs = await sequelize.query(
@@ -198,7 +213,7 @@ join teams on teamgames.team = teams.team_id
 where team = any($team_array) and category = any(array['quarter','semi','final']) and season_id >= 25
 group by casual_name, team;
   `,
-    { bind: { team_array: array }, type: QueryTypes.SELECT }
+    { bind: { team_array: teamArray }, type: QueryTypes.SELECT }
   )
 
   const seasons = await sequelize.query(
@@ -209,7 +224,7 @@ join teams on teamgames.team = teams.team_id
 where team = any($team_array) and season_id >= 25
 group by casual_name, team;
   `,
-    { bind: { team_array: array }, type: QueryTypes.SELECT }
+    { bind: { team_array: teamArray }, type: QueryTypes.SELECT }
   )
 
   const firstAndLatestGames = await sequelize.query(
@@ -225,8 +240,12 @@ join teams as home on first_games.home_team_id = home.team_id
 join teams as away on first_games.away_team_id = away.team_id
 where ranked_first_games = 1 or ranked_last_games = 1;
  `,
-    { bind: { team_array: array }, type: QueryTypes.SELECT }
+    { bind: { team_array: teamArray }, type: QueryTypes.SELECT }
   )
+
+  const link = await Link.findOrCreate({
+    where: { searchString: searchString },
+  })
 
   res.json({
     tabeller,
@@ -235,6 +254,7 @@ where ranked_first_games = 1 or ranked_last_games = 1;
     playoffs,
     seasons,
     firstAndLatestGames,
+    link,
   })
 })
 

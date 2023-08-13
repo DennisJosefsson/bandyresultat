@@ -16,6 +16,7 @@ const gamesRouter = require('./controllers/games')
 const tablesRouter = require('./controllers/tables')
 const metadataRouter = require('./controllers/metadata')
 const loginRouter = require('./controllers/login')
+const linkRouter = require('./controllers/link')
 
 app.use(cors({ credentials: true }))
 app.use(express.json())
@@ -24,8 +25,8 @@ app.use((req, res, next) => {
   next()
 })
 app.use(cookieParser())
-const frontend = path.join(__dirname, 'dist')
-app.use('/', express.static(frontend))
+// const frontend = path.join(__dirname, 'dist')
+// app.use('/', express.static(frontend))
 
 app.use('/api/teams', teamRouter)
 app.use('/api/seasons', seasonsRouter)
@@ -33,10 +34,11 @@ app.use('/api/games', gamesRouter)
 app.use('/api/tables', tablesRouter)
 app.use('/api/metadata', metadataRouter)
 app.use('/api/login', loginRouter)
+app.use('/api/links', linkRouter)
 
-app.use((req, res, next) => {
-  res.sendFile(path.join(frontend, 'index.html'))
-})
+// app.use((req, res, next) => {
+//   res.sendFile(path.join(frontend, 'index.html'))
+// })
 
 app.use(errorHandler)
 
