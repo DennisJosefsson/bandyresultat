@@ -75,11 +75,17 @@ const Compare = () => {
   const latestGames = data.data.firstAndLatestGames.filter(
     (game) => game.ranked_last_games === '1'
   )
-  const compareLink = `https://bandyresultat/link/${data.data.link[0].linkName}`
+  const compareLink = `https://bandyresultat.se/link/${data.data.link[0].linkName}`
 
   return (
     <div className="max-w-7xl min-h-screen font-inter text-[#011d29] mx-auto flex flex-col">
       <div className="flex flex-row justify-end">
+        <div
+          className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center mb-6 mr-4"
+          onClick={handleCopyClick}
+        >
+          {isCopied ? 'Länk kopierad!' : 'Kopiera länk till sökning'}
+        </div>
         <div
           onClick={() =>
             navigate('/teams', { state: { compObject: compObject } })
@@ -87,12 +93,6 @@ const Compare = () => {
           className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center mb-6 mr-4"
         >
           Ändra sökning
-        </div>
-        <div
-          className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center mb-6 mr-4"
-          onClick={handleCopyClick}
-        >
-          {isCopied ? 'Länk kopierad!' : 'Kopiera länk till sökning'}
         </div>
         <div
           onClick={() => setShowHelpModal(true)}
