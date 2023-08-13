@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 const { ELEPHANTSQL_URL } = require('./config')
 const { Umzug, SequelizeStorage } = require('umzug')
 
-const sequelize = new Sequelize(ELEPHANTSQL_URL)
+const sequelize = new Sequelize(ELEPHANTSQL_URL, { logging: false })
 
 const connectToDb = async () => {
   try {

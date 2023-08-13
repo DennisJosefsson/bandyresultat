@@ -7,6 +7,7 @@ const TeamSeason = require('./TeamSeason')
 const TableSeason = require('./TeamSeason')
 const TeamGame = require('./TeamGame')
 const User = require('./User')
+const Link = require('./Link')
 
 Season.hasMany(Game, { foreignKey: 'seasonId' })
 Game.belongsTo(Season, { foreignKey: 'seasonId' })
@@ -52,4 +53,5 @@ module.exports = {
   TableSeason,
   TeamGame,
   User,
+  Link,
 }

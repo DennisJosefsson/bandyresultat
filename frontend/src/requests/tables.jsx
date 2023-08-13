@@ -1,12 +1,7 @@
 import axios from 'axios'
 import { baseUrl, mobileBaseUrl } from './config'
 
-const backendUrl =
-  import.meta.env.MODE === 'mobile'
-    ? mobileBaseUrl
-    : baseUrl
-    ? 'https://bandyresultat.se'
-    : 'http://localhost:3001'
+const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
 
 const tablesApi = axios.create({
   baseURL: `${backendUrl}/api/tables`,
@@ -17,8 +12,8 @@ export const maratonTabell = async () => {
   return response.data
 }
 
-export const compareTeams = async ({ teamArray }) => {
-  return await tablesApi.post('/compare', teamArray)
+export const compareTeams = async (compObject) => {
+  return await tablesApi.post('/compare', compObject)
 }
 
 export const getSingleSeasonTable = async (seasonId) => {

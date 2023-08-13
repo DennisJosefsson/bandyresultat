@@ -18,6 +18,7 @@ import Games from './components/Game/Games'
 import Compare from './components/Compare/Compare'
 import Dashboard from './components/Dashboard/Dashboard'
 import About from './components/About/About'
+import Link from './components/Link/Link'
 
 import { UserContext } from './contexts/contexts'
 
@@ -44,6 +45,7 @@ const App = () => {
             <Route path="/tables/:seasonId" element={<Table />} />
             <Route path="/tables" element={<Table />} />
             <Route path="/games/:seasonId" element={<Games />} />
+            <Route path="/link/:linkName" element={<Link />} />
             <Route path="/compare" element={<Compare />} />
             <Route
               path="/dashboard"
