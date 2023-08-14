@@ -257,7 +257,11 @@ const Games = () => {
                   placeholder="Filter"
                   value={teamFilter}
                   name="teamFilter"
-                  onChange={(event) => setTeamFilter(event.target.value)}
+                  onChange={(event) =>
+                    setTeamFilter(
+                      event.target.value.replace(/[^a-z0-9\u00C0-\u017F]/gi, '')
+                    )
+                  }
                   onKeyDown={handleKeyDown}
                 />
               </form>
