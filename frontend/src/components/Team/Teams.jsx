@@ -10,7 +10,6 @@ import Spinner from '../utilitycomponents/spinner'
 import TeamForm from './TeamForm'
 import TeamsListHelpModal from './TeamsListHelpModal'
 import SearchSelectionModal from './SearchSelectionModal'
-import ErrorToast from '../utilitycomponents/ErrorToast'
 
 const Teams = () => {
   const navigate = useNavigate()
@@ -23,7 +22,7 @@ const Teams = () => {
   const [showSearchSelectionModal, setShowSearchSelectionModal] =
     useState(false)
   const [teamFilter, setTeamFilter] = useState('')
-  const [valueError, setValueError] = useState('')
+  const [valueError, setValueError] = useState({ error: false })
   const initState = location.state
     ? location.state.compObject
     : {
@@ -180,20 +179,72 @@ const Teams = () => {
           />
         </form>
       </div>
-      <div className="w-full flex flex-row justify-start items-center pt-2 text-xs lg:text-xl">
-        {formState.teamArray.length > 0 && (
-          <h3 className="font-bold mx-2">Valda lag:</h3>
+      <div className="w-full flex flex-row justify-start items-center pt-2 text-xs lg:text-xl h-10 my-2">
+        <div>
+          {formState.teamArray.length < 5 && !valueError.error && (
+            <h3 className="font-bold mx-2">Valda lag:</h3>
+          )}
+        </div>
+        {formState.teamArray.length < 5 && !valueError.error && (
+          <div className="flex flex-row justify-start items-center text-xs lg:text-xl">
+            {formState.teamArray.map((teamId) => {
+              return (
+                <div
+                  key={teamId}
+                  className="bg-slate-300 rounded-md lg:rounded-0 px-1 py-0.5 text-center mr-3 lg:px-2 lg:py-1"
+                >
+                  {
+                    unFilteredTeams.find((team) => team.teamId === teamId)
+                      .shortName
+                  }
+                </div>
+              )
+            })}
+          </div>
         )}
-        {formState.teamArray.map((teamId) => {
-          return (
+
+        {formState.teamArray.length > 4 &&
+          formState.categoryArray.length > 0 && (
             <div
-              key={teamId}
-              className="bg-slate-300 rounded-md lg:rounded-0 px-1 py-0.5 text-center mr-3 lg:px-2 lg:py-1"
+              className="w-1/3 mb-1 rounded-lg bg-[#FED7AA] px-1 py-0.5 lg:px-2 lg:py-1 font-bold text-xs lg:text-xl text-warning-800  text-center mr-2"
+              role="alert"
             >
-              {unFilteredTeams.find((team) => team.teamId === teamId).shortName}
+              Välj max 4 lag.
             </div>
-          )
-        })}
+          )}
+
+        {valueError.error && (
+          <div
+            className="flex flex-row justify-between items-center mb-1 rounded-lg bg-[#FED7AA] px-1 py-0.5 lg:px-2 lg:py-1 font-bold text-xs lg:text-xl text-warning-800 text-center mr-2"
+            role="alert"
+          >
+            <div>{valueError.message}</div>
+            <div>
+              <button
+                type="button"
+                className="ml-auto box-content rounded-none border-none p-1 text-warning-900 opacity-50 hover:text-warning-900 hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+                data-te-alert-dismiss
+                aria-label="Close"
+                onClick={() => setValueError(false)}
+              >
+                <span className="w-[1em] focus:opacity-100 disabled:pointer-events-none disabled:select-none disabled:opacity-25 [&.disabled]:pointer-events-none [&.disabled]:select-none [&.disabled]:opacity-25">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="h-6 w-6"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
       <div className=" flex flex-row-reverse justify-between">
         <div className="w-1/4 pt-2 mr-1 flex flex-col md:flex-row-reverse">
@@ -234,10 +285,6 @@ const Teams = () => {
               )}
           </div>
 
-          {formState.teamArray.length > 4 && (
-            <ErrorToast errortext="Välj max 4 lag" />
-          )}
-          {valueError.error && <ErrorToast errortext={valueError.message} />}
           {user && (
             <p className="text-sm">
               <button onClick={() => setShowTeamFormModal(true)}>

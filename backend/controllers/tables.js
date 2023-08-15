@@ -362,6 +362,7 @@ from win_draw_lost_values)
 select 
 	team,
   casual_name,
+  short_name,
 	womens_table,
 	sum_wins,
 	sum_draws,

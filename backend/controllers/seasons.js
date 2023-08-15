@@ -17,8 +17,6 @@ router.get('/:seasonId', async (req, res, next) => {
       ? req.params.seasonId
       : `${Number(req.params.seasonId) - 1}/${req.params.seasonId}`
 
-  console.log(seasonName)
-
   const season = await Season.findAll({
     where: { year: seasonName },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
