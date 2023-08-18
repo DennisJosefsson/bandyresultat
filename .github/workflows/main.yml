@@ -2,11 +2,11 @@ name: Health Check Bandyresultat
 
 on:
   schedule:
-     - cron: '* /1 * * *'
+     - cron: '0 * * * *'
   
   push:
     branches:
-      - master
+      - main
 jobs:
   Health-check-bandyresultat:
     runs-on: ubuntu-latest
