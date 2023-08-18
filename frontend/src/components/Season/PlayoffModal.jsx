@@ -42,7 +42,7 @@ const SeasonHelpModal = ({
                 <div className="self-center mb-2 xl:mb-6">
                   <table className="table-fixed w-24 xl:w-32">
                     <thead>
-                      <tr className="text-[0.5rem]">
+                      <tr key="header" className="text-[0.5rem]">
                         <th scope="col" className="w-20 xl:w-22 p-1 mx-1"></th>
                         <th
                           scope="col"

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 
 const TableList = ({ tableArray }) => {
   const [width, setWidth] = useState(window.innerWidth)
-  const breakpoint = 1280
+  const breakpoint = 576
 
   useEffect(() => {
     const handleWindowResize = () => setWidth(window.innerWidth)
@@ -27,7 +27,7 @@ const TableList = ({ tableArray }) => {
               </h2>
             )}
             <div>
-              <table className="w-full text-xs xl:text-base">
+              <table className="w-full text-xs md:text-sm xl:text-base px-1">
                 <thead>
                   <tr>
                     <th
@@ -86,7 +86,7 @@ const TableList = ({ tableArray }) => {
                     </th>
                     <th
                       scope="col"
-                      className="xl:w-8 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
+                      className="xl:w-8 py-1 px-1 xl:py-2 text-right"
                     >
                       P
                     </th>
@@ -129,7 +129,7 @@ const TableList = ({ tableArray }) => {
                         <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
                           {team.total_goal_difference}
                         </td>
-                        <td className="px-0.5 py-1 xl:px-1 xl:py-2 p text-right tabular-nums">
+                        <td className="py-1 px-1 xl:py-2 p text-right tabular-nums">
                           {team.total_points}
                         </td>
                       </tr>

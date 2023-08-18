@@ -1,10 +1,11 @@
 import axios from 'axios'
-import { baseUrl, mobileBaseUrl } from './config'
+import { baseUrl, mobileBaseUrl, header } from './config'
 
 const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
 
 const teamsApi = axios.create({
   baseURL: `${backendUrl}/api/teams`,
+  headers: header,
 })
 
 export const getTeams = async () => {

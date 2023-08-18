@@ -6,16 +6,16 @@ const Header = () => {
   const { user } = useContext(UserContext)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   return (
-    <header className="pt-6 z-10 font-poppins">
+    <header className="pt-6 z-10 font-poppins text-[#011d29]">
       <section className="max-w-7xl mx-auto flex justify-between items-center">
-        <h1 className="text-base font-bold uppercase pl-2 tracking-[0.2rem] md:text-2xl lg:text-4xl ">
+        <h1 className="text-base font-bold uppercase pl-4 xl:pl-0 tracking-[0.2rem] md:text-2xl lg:text-4xl ">
           <Link to="/">Bandyresultat</Link>
         </h1>
         <div>
           <nav>
             <div className="lg:hidden">
               <div
-                className="px-8"
+                className="pr-4"
                 onClick={() => setIsMenuOpen((current) => !current)}
               >
                 <svg viewBox="0 0 24 24" width="24" height="24">
@@ -26,15 +26,15 @@ const Header = () => {
               </div>
               <div className={isMenuOpen ? 'showMenuNav' : 'hideMenuNav'}>
                 <div
-                  className="absolute top-0 right-0 px-8 py-8"
+                  className="absolute top-0 right-0 px-3 py-4"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <svg
-                    className="h-8 w-8 text-gray-600"
+                    className="h-8 w-8 text-[#011d29]"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="2"
+                    strokeWidth="3"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
@@ -88,10 +88,7 @@ const Header = () => {
                 </ul>
               </div>
             </div>
-            <div
-              className="hidden lg:block lg: pr-2 xl:pr-0 space-x-8 text-xl font-bold"
-              aria-label="main"
-            >
+            <div className="hidden lg:block lg: pr-2 xl:pr-0 space-x-8 text-xl font-bold">
               <Link to="/seasons" className="hover:opacity-90">
                 Säsonger
               </Link>

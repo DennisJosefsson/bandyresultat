@@ -100,7 +100,7 @@ const Season = () => {
                 setRoundForRound(false)
                 dispatch({ type: 'TOGGLE' })
               }}
-              className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center"
+              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
             >
               {women ? 'Herrar' : 'Damer'}
             </div>
@@ -157,7 +157,7 @@ const Season = () => {
         )}
         {seasonId < 2024 && (
           <div>
-            <div className="flex flex-col-reverse justify-start xl:flex-row xl:justify-between gap-2 mr-1 md:mr-2 xl:mr-0">
+            <div className="flex flex-col-reverse justify-start xl:flex-row xl:justify-between gap-2 pr-2 md:mr-4 xl:mr-0">
               <Link to={`/games/${seasonId}`}>
                 <div className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6">
                   Matcher
@@ -229,7 +229,7 @@ const Season = () => {
                       >
                         <table className="table-fixed w-32">
                           <thead>
-                            <tr className="text-[0.5rem]">
+                            <tr className="text-[0.5rem]" key="semi-tablehead">
                               <th scope="col" className="w-22 p-1 mx-1"></th>
                               <th
                                 scope="col"
@@ -261,7 +261,10 @@ const Season = () => {
                       <div key={group.group}>
                         <table className="table-fixed w-32">
                           <thead>
-                            <tr className="text-[0.5rem]">
+                            <tr
+                              className="text-[0.5rem]"
+                              key="quarter-tablehead"
+                            >
                               <th scope="col" className="w-22 p-1 mx-1"></th>
                               <th
                                 scope="col"
@@ -293,7 +296,10 @@ const Season = () => {
                       <div key={group.group}>
                         <table className="table-fixed w-30">
                           <thead>
-                            <tr key="header-row" className="text-[0.5rem]">
+                            <tr
+                              key="eight-table-head"
+                              className="text-[0.5rem]"
+                            >
                               <th scope="col" className="w-16 p-1"></th>
                               <th scope="col" className="w-6 p-1">
                                 P

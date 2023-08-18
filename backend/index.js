@@ -8,7 +8,7 @@ const app = express()
 const { PORT } = require('./utils/config')
 const { connectToDb } = require('./utils/db')
 
-const { errorHandler } = require('./utils/middleware')
+const { errorHandler, APIRestrictMiddleware } = require('./utils/middleware')
 
 const teamRouter = require('./controllers/teams')
 const seasonsRouter = require('./controllers/seasons')
@@ -17,6 +17,7 @@ const tablesRouter = require('./controllers/tables')
 const metadataRouter = require('./controllers/metadata')
 const loginRouter = require('./controllers/login')
 const linkRouter = require('./controllers/link')
+const mainRouter = require('./controllers/main')
 
 app.use(cors({ credentials: true }))
 app.use(express.json())
@@ -27,6 +28,9 @@ app.use((req, res, next) => {
 app.use(cookieParser())
 // const frontend = path.join(__dirname, 'dist')
 // app.use('/', express.static(frontend))
+
+app.use('/api/healthCheck', mainRouter)
+app.use(APIRestrictMiddleware)
 
 app.use('/api/teams', teamRouter)
 app.use('/api/seasons', seasonsRouter)

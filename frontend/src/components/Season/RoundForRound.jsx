@@ -10,7 +10,7 @@ import {
 
 const RoundForRound = ({ array, round, setRound }) => {
   const [width, setWidth] = useState(window.innerWidth)
-  const breakpoint = 1280
+  const breakpoint = 576
 
   useEffect(() => {
     const handleWindowResize = () => setWidth(window.innerWidth)
@@ -49,7 +49,7 @@ const RoundForRound = ({ array, round, setRound }) => {
           <RightArrow />
         </div>
       </div>
-      <table className="w-full text-xs md:text-sm lg:text-base">
+      <table className="w-full text-xs md:text-sm lg:text-base px-1">
         <thead>
           <tr>
             <th
@@ -110,10 +110,7 @@ const RoundForRound = ({ array, round, setRound }) => {
             >
               MS
             </th>
-            <th
-              scope="col"
-              className="w-4 xl:w-8 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
-            >
+            <th scope="col" className="w-4 xl:w-8 py-1 px-1 xl:py-2 text-right">
               P
             </th>
           </tr>
@@ -213,7 +210,7 @@ const RoundForRound = ({ array, round, setRound }) => {
                       ? `${team.games[round - 1].sum_gd}`
                       : `${team.games.at(-1).sum_gd}`}
                   </td>
-                  <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
+                  <td className="py-1 px-1 xl:py-2 text-right tabular-nums">
                     {round <= team.games.length
                       ? `${team.games[round - 1].sum_points}`
                       : `${team.games.at(-1).sum_points}`}

@@ -6,7 +6,7 @@ const { authControl } = require('../utils/middleware')
 
 router.get('/', async (req, res) => {
   const teams = await Team.findAll({
-    order: [['casualName', 'ASC']],
+    order: [[sequelize.literal(`casual_name collate "se-SE-x-icu"`), 'ASC']],
   })
 
   res.json(teams)

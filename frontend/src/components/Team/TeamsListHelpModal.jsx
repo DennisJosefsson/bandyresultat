@@ -48,6 +48,13 @@ const TeamsListHelpModal = ({ setShowModal }) => {
                   max 4 lag går det att klicka på &quot;Jämför&quot; för att
                   komma vidare.
                 </p>
+                <p className="text-sm mb-4">
+                  Vill man ändra sökurvalet så ger knappen &quot;Sökval&quot;
+                  möjligheten att ändra matchkategori och säsong.
+                  Grundinställningen är en sökning där alla säsonger ingår, vill
+                  man söka på ett specifikt år så måste man för närvarande ange
+                  samma säsong som första och sista.
+                </p>
               </div>
             </div>
             {/*footer*/}

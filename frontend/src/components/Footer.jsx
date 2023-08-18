@@ -40,14 +40,14 @@ const Footer = () => {
           {!user ? (
             <div
               onClick={() => setShowLoginModal(true)}
-              className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center"
+              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 mr-2 xl:mr-0"
             >
               Logga in
             </div>
           ) : (
             <div
               onClick={() => loggaUt()}
-              className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center"
+              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 mr-2 xl:mr-0"
             >
               Logga ut
             </div>

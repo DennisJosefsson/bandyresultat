@@ -33,6 +33,19 @@ const CompareHelpModal = ({ setShowModal }) => {
             <div className="font-inter text-[#011d29] p-5">
               <div className="text-left">
                 <p className="text-sm mb-4">
+                  Knappen &quot;Länk&quot; kopierar en permanent länk till
+                  aktuell sökning. Observera att länken är unik utifrån
+                  sökkriterie, dvs. ändrar man tex. säsongsval så ändras också
+                  länken.
+                </p>
+                <p className="text-sm mb-4">
+                  Vill man ändra sökurvalet så tar knappen &quot;Ändra&quot; dig
+                  tillbaka till laglistan, och där knappen &quot;Sökval&quot;
+                  ger möjligheten att ändra matchkategori och säsong. Du kan
+                  också lägga till eller ta bort lag direkt från listan, valda
+                  lag är förbockade.
+                </p>
+                <p className="text-sm mb-4">
                   Första och senaste matcherna är de datum då lagen möttes på
                   respektive hemmaplan.
                 </p>

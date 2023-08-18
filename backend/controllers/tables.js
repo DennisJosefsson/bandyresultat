@@ -55,6 +55,10 @@ router.post('/compare', async (req, res) => {
   const { teamArray, categoryArray, startSeason, endSeason } = req.body
   const searchString = JSON.stringify(req.body)
 
+  const seasonNames = await Season.findAll({
+    where: { seasonId: { [Op.in]: [startSeason, endSeason] } },
+  })
+
   const tabeller = await TeamGame.findAll({
     where: {
       team: {
@@ -255,6 +259,7 @@ where ranked_first_games = 1 or ranked_last_games = 1;
     seasons,
     firstAndLatestGames,
     link,
+    seasonNames,
   })
 })
 
