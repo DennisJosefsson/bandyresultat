@@ -1,10 +1,11 @@
 import axios from 'axios'
-import { baseUrl, mobileBaseUrl } from './config'
+import { baseUrl, mobileBaseUrl, header } from './config'
 
 const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
 
 const metadataApi = axios.create({
   baseURL: `${backendUrl}/api/metadata`,
+  headers: header,
 })
 
 export const getMetadata = async () => {

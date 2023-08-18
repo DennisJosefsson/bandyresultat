@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { roundForRoundSortFunction } from '../utilitycomponents/sortFunction'
 import { groupConstant } from '../utilitycomponents/constants'
 import {
@@ -8,11 +9,20 @@ import {
 } from '../utilitycomponents/icons'
 
 const RoundForRound = ({ array, round, setRound }) => {
+  const [width, setWidth] = useState(window.innerWidth)
+  const breakpoint = 576
+
+  useEffect(() => {
+    const handleWindowResize = () => setWidth(window.innerWidth)
+    window.addEventListener('resize', handleWindowResize)
+
+    return () => window.removeEventListener('resize', handleWindowResize)
+  }, [])
   const gameArray = roundForRoundSortFunction(array)
 
   return (
     <div>
-      <div className="flex flex-row justify-between items-center w-[40rem]">
+      <div className="flex flex-row justify-between items-center w-full">
         <div
           onClick={() => round > 1 && setRound(round - 1)}
           className={
@@ -39,38 +49,68 @@ const RoundForRound = ({ array, round, setRound }) => {
           <RightArrow />
         </div>
       </div>
-      <table className="w-[40rem]">
+      <table className="w-full text-xs md:text-sm lg:text-base px-1">
         <thead>
           <tr>
-            <th scope="col" className="w-8 px-1 py-2 text-center">
+            <th
+              scope="col"
+              className="w-4 xl:w-8 px-0.5 py-1 xl:px-1 xl:py-2 text-center"
+            >
               Pos
             </th>
-            <th scope="col" className="w-48 px-1 py-2 text-left">
+            <th
+              scope="col"
+              className="w-24 xl:w-48 px-0.5 py-1 xl:px-1 xl:py-2 text-left"
+            >
               Lag
             </th>
-            <th scope="col" className="w-8 px-1 py-2"></th>
-            <th scope="col" className="w-8 px-1 py-2 text-right">
+            <th
+              scope="col"
+              className="w-4 xl:w-8 px-0.5 py-1 xl:px-1 xl:py-2"
+            ></th>
+            <th
+              scope="col"
+              className="w-4 xl:w-8 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
+            >
               M
             </th>
-            <th scope="col" className="w-8 px-1 py-2 text-right">
+            <th
+              scope="col"
+              className="w-4 xl:w-8 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
+            >
               V
             </th>
-            <th scope="col" className="w-8 px-1 py-2 text-right">
+            <th
+              scope="col"
+              className="w-4 xl:w-8 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
+            >
               O
             </th>
-            <th scope="col" className="w-8 px-1 py-2 text-right">
+            <th
+              scope="col"
+              className="w-4 xl:w-8 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
+            >
               F
             </th>
-            <th scope="col" className="w-12 px-1 py-2 text-right">
+            <th
+              scope="col"
+              className="w-6 xl:w-12 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
+            >
               GM
             </th>
-            <th scope="col" className="w-12 px-1 py-2 text-right">
+            <th
+              scope="col"
+              className="w-6 xl:w-12 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
+            >
               IM
             </th>
-            <th scope="col" className="w-12 px-1 py-2 text-right">
+            <th
+              scope="col"
+              className="w-6 xl:w-12 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
+            >
               MS
             </th>
-            <th scope="col" className="w-8 px-3 py-2 text-right">
+            <th scope="col" className="w-4 xl:w-8 py-1 px-1 xl:py-2 text-right">
               P
             </th>
           </tr>
@@ -92,16 +132,25 @@ const RoundForRound = ({ array, round, setRound }) => {
                   key={`${team.team}-${index}`}
                   className="odd:bg-slate-300 rounded"
                 >
-                  <td className="px-1 py-2 text-center">
+                  <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-center">
                     {round <= team.games.length
                       ? `${team.games[round - 1].rank_position}`
                       : `${team.games.at(-1).rank_position}`}
                   </td>
-                  <td className="px-1 py-2">
-                    {round <= team.games.length
-                      ? `${team.games[round - 1].casual_name}`
-                      : `${team.games.at(-1).casual_name}`}
-                  </td>
+                  {width >= breakpoint && (
+                    <td className="px-0.5 py-1 xl:px-1 xl:py-2">
+                      {round <= team.games.length
+                        ? `${team.games[round - 1].casual_name}`
+                        : `${team.games.at(-1).casual_name}`}
+                    </td>
+                  )}
+                  {width < breakpoint && (
+                    <td className="px-0.5 py-1 xl:px-1 xl:py-2">
+                      {round <= team.games.length
+                        ? `${team.games[round - 1].short_name}`
+                        : `${team.games.at(-1).short_name}`}
+                    </td>
+                  )}
                   <td className="opacity-30">
                     {round <= team.games.length &&
                       round > 1 &&
@@ -126,42 +175,42 @@ const RoundForRound = ({ array, round, setRound }) => {
                         <SmallArrowDownRight />
                       )}
                   </td>
-                  <td className="px-1 py-2 text-right tabular-nums">
+                  <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
                     {round <= team.games.length
                       ? `${team.games[round - 1].round}`
                       : `${team.games.at(-1).round}`}
                   </td>
-                  <td className="px-1 py-2 text-right tabular-nums">
+                  <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
                     {round <= team.games.length
                       ? `${team.games[round - 1].sum_wins}`
                       : `${team.games.at(-1).sum_wins}`}
                   </td>
-                  <td className="px-1 py-2 text-right tabular-nums">
+                  <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
                     {round <= team.games.length
                       ? `${team.games[round - 1].sum_draws}`
                       : `${team.games.at(-1).sum_draws}`}
                   </td>
-                  <td className="px-1 py-2 text-right tabular-nums">
+                  <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
                     {round <= team.games.length
                       ? `${team.games[round - 1].sum_lost}`
                       : `${team.games.at(-1).sum_lost}`}
                   </td>
-                  <td className="px-1 py-2 text-right tabular-nums">
+                  <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
                     {round <= team.games.length
                       ? `${team.games[round - 1].sum_goals_scored}`
                       : `${team.games.at(-1).sum_goals_scored}`}
                   </td>
-                  <td className="px-1 py-2 text-right tabular-nums">
+                  <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
                     {round <= team.games.length
                       ? `${team.games[round - 1].sum_goals_conc}`
                       : `${team.games.at(-1).sum_goals_conc}`}
                   </td>
-                  <td className="px-1 py-2 text-right tabular-nums">
+                  <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
                     {round <= team.games.length
                       ? `${team.games[round - 1].sum_gd}`
                       : `${team.games.at(-1).sum_gd}`}
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums">
+                  <td className="py-1 px-1 xl:py-2 text-right tabular-nums">
                     {round <= team.games.length
                       ? `${team.games[round - 1].sum_points}`
                       : `${team.games.at(-1).sum_points}`}

@@ -1,10 +1,11 @@
 import axios from 'axios'
-import { baseUrl, mobileBaseUrl } from './config'
+import { baseUrl, mobileBaseUrl, header } from './config'
 
 const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
 
 const loginApi = axios.create({
   baseURL: `${backendUrl}/api/login`,
+  headers: header,
 })
 
 export const logout = async () => {

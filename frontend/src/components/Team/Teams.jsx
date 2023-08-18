@@ -4,50 +4,12 @@ import { getTeams, postTeam } from '../../requests/teams'
 import { getSeasons } from '../../requests/seasons'
 import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { GenderContext, UserContext } from '../../contexts/contexts'
-import Select from 'react-select'
+
 import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
 import Spinner from '../utilitycomponents/spinner'
 import TeamForm from './TeamForm'
 import TeamsListHelpModal from './TeamsListHelpModal'
-import ErrorToast from '../utilitycomponents/ErrorToast'
-
-const selectStyles = {
-  option: (defaultStyles, state) => ({
-    ...defaultStyles,
-    color: state.isSelected ? '#fff' : '#011d29',
-    backgroundColor: state.isSelected ? '#011d29' : '#fff',
-  }),
-  control: (defaultStyles) => ({
-    ...defaultStyles,
-    backgroundColor: '#fff',
-    color: '#011d29',
-    padding: '2px',
-    border: 'solid 1px',
-    borderColor: '#011d29',
-    borderRadius: 'none',
-    boxShadow: 'none',
-    width: '16rem',
-    outline: 'none',
-  }),
-  singleValue: (defaultStyles) => ({ ...defaultStyles, color: '#011d29' }),
-  placeholder: (defaultStyles) => ({ ...defaultStyles, color: '#011d29' }),
-  indicatorSeparator: (defaultStyles) => ({
-    ...defaultStyles,
-    color: '#011d29',
-  }),
-  dropdownIndicator: (defaultStyles) => ({
-    ...defaultStyles,
-    color: '#011d29',
-  }),
-  input: (defaultStyles) => ({
-    ...defaultStyles,
-    'input:focus': {
-      boxShadow: 'none',
-      borderColor: '#011d29',
-    },
-  }),
-  container: (defaultStyles) => ({ ...defaultStyles, marginBottom: '6px' }),
-}
+import SearchSelectionModal from './SearchSelectionModal'
 
 const Teams = () => {
   const navigate = useNavigate()
@@ -57,8 +19,10 @@ const Teams = () => {
   const { user } = useContext(UserContext)
   const [showTeamFormModal, setShowTeamFormModal] = useState(false)
   const [showHelpModal, setShowHelpModal] = useState(false)
+  const [showSearchSelectionModal, setShowSearchSelectionModal] =
+    useState(false)
   const [teamFilter, setTeamFilter] = useState('')
-  const [valueError, setValueError] = useState('')
+  const [valueError, setValueError] = useState({ error: false })
   const initState = location.state
     ? location.state.compObject
     : {
@@ -197,30 +161,11 @@ const Teams = () => {
   const unFilteredTeams = data
 
   return (
-    <div className="max-w-7xl min-h-screen mx-auto flex flex-row-reverse justify-between font-inter text-[#011d29]">
-      <div className="w-64">
-        <div>
-          <div
-            onClick={() => {
-              compareDispatch({ type: 'CLEAR TEAMS' })
-              genderDispatch({ type: 'TOGGLE' })
-            }}
-            className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center mb-6"
-          >
-            {women ? 'Herrar' : 'Damer'}
-          </div>
-        </div>
-        <div>
-          <div
-            onClick={() => setShowHelpModal(true)}
-            className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center mb-6"
-          >
-            Hjälp/Info
-          </div>
-        </div>
-        <form className="mb-6">
+    <div className="max-w-7xl min-h-screen px-1 lg:px-0 mb-2 mx-auto font-inter text-[#011d29]">
+      <div className="w-full">
+        <form>
           <input
-            className="border-[#011d29] focus:border-[#011d29] w-[16rem] text-[#011d29]"
+            className="w-full border-[#011d29] focus:border-[#011d29] text-[#011d29]"
             type="text"
             placeholder="Filter"
             value={teamFilter}
@@ -233,204 +178,171 @@ const Teams = () => {
             onKeyDown={handleKeyDown}
           />
         </form>
-
-        <div>
-          {formState.teamArray.length > 0 && (
-            <fieldset className="mb-2 flex flex-col  self-start">
-              <legend className="font-bold underline underline-offset-2 mb-2">
-                Matchkategorier
-              </legend>
-              <div className="mb-1 flex items-center">
-                <input
-                  className="border-[#011d29] focus:border-[#011d29] text-[#011d29] focus:ring-0 content-center"
-                  type="checkbox"
-                  id="final"
-                  name="final"
-                  value="final"
-                  checked={formState.categoryArray.indexOf('final') > -1}
-                  onChange={(event) => handleCategoryArrayChange(event)}
-                />
-                <label htmlFor="final" className="pl-2">
-                  Final
-                </label>
-              </div>
-              <div className="mb-1 flex items-center">
-                <input
-                  className="border-[#011d29] focus:border-[#011d29] text-[#011d29] focus:ring-0"
-                  type="checkbox"
-                  id="semi"
-                  name="semi"
-                  value="semi"
-                  checked={formState.categoryArray.indexOf('semi') > -1}
-                  onChange={(event) => handleCategoryArrayChange(event)}
-                />
-                <label htmlFor="semi" className="pl-2">
-                  Semifinal
-                </label>
-              </div>
-              <div className="mb-1 flex items-center">
-                <input
-                  className="border-[#011d29] focus:border-[#011d29] text-[#011d29] focus:ring-0"
-                  type="checkbox"
-                  id="quarter"
-                  name="quarter"
-                  value="quarter"
-                  checked={formState.categoryArray.indexOf('quarter') > -1}
-                  onChange={(event) => handleCategoryArrayChange(event)}
-                />
-                <label htmlFor="quarter" className="pl-2">
-                  Kvartsfinal
-                </label>
-              </div>
-              <div className="mb-1 flex items-center">
-                <input
-                  className="border-[#011d29] focus:border-[#011d29] text-[#011d29] focus:ring-0"
-                  type="checkbox"
-                  id="eight"
-                  name="eight"
-                  value="eight"
-                  checked={formState.categoryArray.indexOf('eight') > -1}
-                  onChange={(event) => handleCategoryArrayChange(event)}
-                />
-                <label htmlFor="eight" className="pl-2">
-                  Åttondelsfinal
-                </label>
-              </div>
-              <div className="mb-1 flex items-center">
-                <input
-                  className="border-[#011d29] focus:border-[#011d29] text-[#011d29] focus:ring-0"
-                  type="checkbox"
-                  id="regular"
-                  name="regular"
-                  value="regular"
-                  checked={formState.categoryArray.indexOf('regular') > -1}
-                  onChange={(event) => handleCategoryArrayChange(event)}
-                />
-                <label htmlFor="regular" className="pl-2">
-                  Grundserie
-                </label>
-              </div>
-              <div className="mb-1 flex items-center">
-                <input
-                  className="border-[#011d29] focus:border-[#011d29] text-[#011d29] focus:ring-0"
-                  type="checkbox"
-                  id="qualification"
-                  name="qualification"
-                  value="qualification"
-                  checked={
-                    formState.categoryArray.indexOf('qualification') > -1
-                  }
-                  onChange={(event) => handleCategoryArrayChange(event)}
-                />
-                <label htmlFor="qualification" className="pl-2">
-                  Kval
-                </label>
-              </div>
-            </fieldset>
-          )}
-          {formState.teamArray.length > 0 && (
-            <Select
-              placeholder={`Från ${startOptions[0].label}...`}
-              value={startOptions.find(
-                (season) => season.value === formState.startSeason
-              )}
-              options={startOptions}
-              onChange={handleStartSeasonChange}
-              styles={selectStyles}
-              noOptionsMessage={() => 'Inga val'}
-            />
-          )}
-          {formState.teamArray.length > 0 && (
-            <Select
-              placeholder={`...till ${endOptions[0].label}.`}
-              value={endOptions.find(
-                (season) => season.value === formState.endSeason
-              )}
-              options={endOptions}
-              onChange={handleEndSeasonChange}
-              styles={selectStyles}
-              noOptionsMessage={() => 'Inga val'}
-            />
-          )}
-          {formState.teamArray.length > 0 && (
-            <h3 className="font-bold underline underline-offset-2">
-              Valda lag
-            </h3>
-          )}
-          {formState.teamArray.map((teamId) => {
-            return (
-              <div key={teamId} className="text-base">
-                {
-                  unFilteredTeams.find((team) => team.teamId === teamId)
-                    .casualName
-                }
-              </div>
-            )
-          })}
-          {formState.teamArray.length > 1 && formState.teamArray.length < 5 && (
-            <button
-              onClick={handleSubmit}
-              className="bg-[#011d29] text-white px-4 py-1 rounded mt-6"
-            >
-              Jämför
-            </button>
-          )}
-          {formState.teamArray.length > 4 && (
-            <ErrorToast errortext="Välj max 4 lag" />
-          )}
-          {valueError.error && <ErrorToast errortext={valueError.message} />}
-        </div>
-        {user && (
-          <p className="text-sm">
-            <button onClick={() => setShowTeamFormModal(true)}>
-              Lägg till lag
-            </button>
-          </p>
-        )}
-        {showTeamFormModal ? (
-          <>
-            <TeamForm
-              mutation={teamFormMutation}
-              setShowModal={setShowTeamFormModal}
-            />
-          </>
-        ) : null}
-        {showHelpModal ? (
-          <>
-            <TeamsListHelpModal setShowModal={setShowHelpModal} />
-          </>
-        ) : null}
       </div>
-      <div className="flex flex-row justify-between w-[50rem]">
-        <div className="w-[48rem]">
-          <h2 className="text-center font-bold text-2xl mb-6">
-            {women ? 'Damer' : 'Herrar'}
-          </h2>
-          <div className="grid grid-cols-4 gap-8 text-[14px]">
-            {teams.map((team) => {
+      <div className="w-full flex flex-row justify-start items-center pt-2 text-xs lg:text-xl h-10 my-2">
+        <div>
+          {formState.teamArray.length < 5 && !valueError.error && (
+            <h3 className="font-bold mx-2">Valda lag:</h3>
+          )}
+        </div>
+        {formState.teamArray.length < 5 && !valueError.error && (
+          <div className="flex flex-row justify-start items-center text-xs lg:text-xl">
+            {formState.teamArray.map((teamId) => {
               return (
                 <div
-                  key={team.teamId}
-                  className="w-44 flex flex-row items-center rounded border-2 shadow px-2 py-1"
+                  key={teamId}
+                  className="bg-slate-300 rounded-md lg:rounded-0 px-1 py-0.5 text-center mr-3 lg:px-2 lg:py-1"
                 >
-                  <Link to={`/teams/${team.teamId}`}>
-                    <div className="w-32">{team.casualName}</div>
-                  </Link>
-                  <div className="w-6 pl-4 pr-4">
-                    <input
-                      type="checkbox"
-                      id={team.teamId}
-                      checked={formState.teamArray.includes(team.teamId)}
-                      onChange={(event) =>
-                        handleTeamArrayChange(event, team.teamId)
-                      }
-                      className="border-[#011d29] focus:border-[#011d29] text-[#011d29] focus:ring-0"
-                    />
-                  </div>
+                  {
+                    unFilteredTeams.find((team) => team.teamId === teamId)
+                      .shortName
+                  }
                 </div>
               )
             })}
           </div>
+        )}
+
+        {formState.teamArray.length > 4 &&
+          formState.categoryArray.length > 0 && (
+            <div
+              className="w-1/3 mb-1 rounded-lg bg-[#FED7AA] px-1 py-0.5 lg:px-2 lg:py-1 font-bold text-xs lg:text-xl text-warning-800  text-center mr-2"
+              role="alert"
+            >
+              Välj max 4 lag.
+            </div>
+          )}
+
+        {valueError.error && (
+          <div
+            className="flex flex-row justify-between items-center mb-1 rounded-lg bg-[#FED7AA] px-1 py-0.5 lg:px-2 lg:py-1 font-bold text-xs lg:text-xl text-warning-800 text-center mr-2"
+            role="alert"
+          >
+            <div>{valueError.message}</div>
+            <div>
+              <button
+                type="button"
+                className="ml-auto box-content rounded-none border-none p-1 text-warning-900 opacity-50 hover:text-warning-900 hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+                data-te-alert-dismiss
+                aria-label="Close"
+                onClick={() => setValueError(false)}
+              >
+                <span className="w-[1em] focus:opacity-100 disabled:pointer-events-none disabled:select-none disabled:opacity-25 [&.disabled]:pointer-events-none [&.disabled]:select-none [&.disabled]:opacity-25">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="h-6 w-6"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+      <div className=" flex flex-row-reverse justify-between">
+        <div className="w-1/4 pt-2 mr-1 flex flex-col md:flex-row-reverse">
+          <div className="flex flex-col items-end w-full lg:w-3/4 pr-0.5 lg:p-0 float-right">
+            <div
+              onClick={() => {
+                compareDispatch({ type: 'CLEAR TEAMS' })
+                genderDispatch({ type: 'TOGGLE' })
+              }}
+              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
+            >
+              {women ? 'Herrar' : 'Damer'}
+            </div>
+            <div
+              onClick={() => setShowHelpModal(true)}
+              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
+            >
+              Hjälp/Info
+            </div>
+            <div>
+              {formState.teamArray.length > 1 && (
+                <div
+                  onClick={() => setShowSearchSelectionModal(true)}
+                  className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
+                >
+                  Sökval
+                </div>
+              )}
+            </div>
+            {formState.teamArray.length > 1 &&
+              formState.teamArray.length < 5 && (
+                <div
+                  onClick={handleSubmit}
+                  className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
+                >
+                  Jämför
+                </div>
+              )}
+          </div>
+
+          {user && (
+            <p className="text-sm">
+              <button onClick={() => setShowTeamFormModal(true)}>
+                Lägg till lag
+              </button>
+            </p>
+          )}
+          {showTeamFormModal ? (
+            <>
+              <TeamForm
+                mutation={teamFormMutation}
+                setShowModal={setShowTeamFormModal}
+              />
+            </>
+          ) : null}
+          {showHelpModal ? (
+            <>
+              <TeamsListHelpModal setShowModal={setShowHelpModal} />
+            </>
+          ) : null}
+          {showSearchSelectionModal ? (
+            <>
+              <SearchSelectionModal
+                setShowModal={setShowSearchSelectionModal}
+                formState={formState}
+                handleCategoryArrayChange={handleCategoryArrayChange}
+                handleEndSeasonChange={handleEndSeasonChange}
+                handleStartSeasonChange={handleStartSeasonChange}
+                endOptions={endOptions}
+                startOptions={startOptions}
+              />
+            </>
+          ) : null}
+        </div>
+        <div className="w-2/3 grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 justify-between pt-2">
+          {teams.map((team) => {
+            return (
+              <div
+                key={team.teamId}
+                className="flex flex-row justify-between items-center text-[1.125rem] bg-white px-2 py-1"
+              >
+                <Link to={`/teams/${team.teamId}`}>
+                  <div className="w-32">{team.casualName}</div>
+                </Link>
+                <div className="w-6 pl-4 pr-4">
+                  <input
+                    type="checkbox"
+                    id={team.teamId}
+                    checked={formState.teamArray.includes(team.teamId)}
+                    onChange={(event) =>
+                      handleTeamArrayChange(event, team.teamId)
+                    }
+                    className="border-[#011d29] focus:border-[#011d29] text-[#011d29] focus:ring-0"
+                  />
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>

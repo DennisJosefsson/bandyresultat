@@ -15,36 +15,60 @@ const TeamTable = ({ tableArray }) => {
       {sortedTables.map((category, index) => {
         return (
           <div key={category.category} className="mb-6">
-            <h2 className="font-bold text-xl">
+            <h2 className="font-bold text-base md:text-xl">
               {groupConstant[category.category]}
             </h2>
 
             <div>
-              <table className="table-fixed w-[30rem]">
+              <table className="table-fixed w-full md:w-[30rem] text-sm md:text-base">
                 <thead>
                   <tr>
-                    <th scope="col" className="w-8 px-1 py-2 text-right">
+                    <th
+                      scope="col"
+                      className="w-4 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                    >
                       M
                     </th>
-                    <th scope="col" className="w-8 px-1 py-2 text-right">
+                    <th
+                      scope="col"
+                      className="w-4 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                    >
                       V
                     </th>
-                    <th scope="col" className="w-8 px-1 py-2 text-right">
+                    <th
+                      scope="col"
+                      className="w-4 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                    >
                       O
                     </th>
-                    <th scope="col" className="w-8 px-1 py-2 text-right">
+                    <th
+                      scope="col"
+                      className="w-4 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                    >
                       F
                     </th>
-                    <th scope="col" className="w-12 px-1 py-2 text-right">
+                    <th
+                      scope="col"
+                      className="w-6 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                    >
                       GM
                     </th>
-                    <th scope="col" className="w-12 px-1 py-2 text-right">
+                    <th
+                      scope="col"
+                      className="w-6 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                    >
                       IM
                     </th>
-                    <th scope="col" className="w-12 px-1 py-2 text-right">
+                    <th
+                      scope="col"
+                      className="w-6 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                    >
                       MS
                     </th>
-                    <th scope="col" className="w-8 px-1 py-2 text-right">
+                    <th
+                      scope="col"
+                      className="w-4 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                    >
                       P
                     </th>
                   </tr>

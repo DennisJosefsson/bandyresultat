@@ -31,4 +31,12 @@ const authControl = (req, res, next) => {
   }
 }
 
-module.exports = { errorHandler, authControl }
+const APIRestrictMiddleware = (req, res, next) => {
+  if (req.headers['authorization'] === 'true') {
+    next()
+  } else {
+    res.status(403).json({ error: true, message: 'Unauthorized' })
+  }
+}
+
+module.exports = { errorHandler, authControl, APIRestrictMiddleware }

@@ -7,6 +7,7 @@ import { GenderContext } from '../../contexts/contexts'
 import { sortOrder, groupConstant } from '../utilitycomponents/constants'
 import Spinner from '../utilitycomponents/spinner'
 import SeasonHelpModal from './SeasonHelpModal'
+import PlayoffModal from './PlayoffModal'
 import TableList from './TableList'
 import RoundForRound from './RoundForRound'
 
@@ -19,6 +20,7 @@ const Season = () => {
   const [grupp, setGrupp] = useState('')
   const [roundForRound, setRoundForRound] = useState(false)
   const [showHelpModal, setShowHelpModal] = useState(false)
+  const [showPlayoffModal, setShowPlayoffModal] = useState(false)
   const [round, setRound] = useState(1)
   const location = useLocation()
   useEffect(() => {
@@ -98,14 +100,14 @@ const Season = () => {
                 setRoundForRound(false)
                 dispatch({ type: 'TOGGLE' })
               }}
-              className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center"
+              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
             >
               {women ? 'Herrar' : 'Damer'}
             </div>
           </div>
         </div>
         <div className="grid place-items-center mx-auto font-inter text-[#011d29]">
-          <p>
+          <p className="p-16 text-center">
             Första säsongen för damernas högsta serie var{' '}
             <Link to="/season/1973" className="font-bold">
               1972/73
@@ -118,15 +120,15 @@ const Season = () => {
   }
 
   return (
-    <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col">
+    <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col mt-2">
       <div className="flex flex-row justify-between">
-        <div className="flex flex-row justify-evenly w-[72rem] mb-4">
+        <div className="w-full flex flex-row items-center justify-evenly mb-4">
           {seasonId - 1 === 1906 ? null : (
             <Link to={`/season/${seasonId - 1}`} state={{ resetRound: true }}>
               <LeftArrow />
             </Link>
           )}
-          <h2 className="leading-4 text-center text-2xl font-bold mb-4">
+          <h2 className="leading-4 text-center text-base sm:text-xl lg:text-2xl font-bold">
             Säsong {season[0].year} {women ? 'Damer' : 'Herrar'}
           </h2>
           {seasonId + 1 === 2025 ? null : (
@@ -155,35 +157,41 @@ const Season = () => {
         )}
         {seasonId < 2024 && (
           <div>
-            <div className="flex flex-row justify-between gap-2 mb-6">
+            <div className="flex flex-col-reverse justify-start xl:flex-row xl:justify-between gap-2 pr-2 md:mr-4 xl:mr-0">
               <Link to={`/games/${seasonId}`}>
-                <div className="w-32 h-8 rounded-md px-2 py-1 bg-[#011d29] text-white text-center">
+                <div className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6">
                   Matcher
                 </div>
               </Link>
-
+              <div
+                onClick={() => setShowPlayoffModal(true)}
+                className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 xl:hidden"
+              >
+                Slutspel
+              </div>
               <div
                 onClick={() => setShowHelpModal(true)}
-                className="w-32 h-8 cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center"
+                className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
               >
                 Hjälp/Info
               </div>
+
               <div
                 onClick={() => {
                   setRound(1)
                   setRoundForRound(false)
                   dispatch({ type: 'TOGGLE' })
                 }}
-                className="w-32 h-8 cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center"
+                className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
               >
                 {women ? 'Herrar' : 'Damer'}
               </div>
             </div>
-            <div className="m-0 justify-self-center text-base">
-              <h2 className="text-bold text-xl text-right">Slutspel</h2>
+            <div className="hidden m-0 justify-self-center text-base xl:contents">
+              <h2 className="font-bold text-xl text-right">Slutspel</h2>
 
               <div className="w-[36rem] flex flex-col">
-                <h5 className="text-bold text-sm text-right">Final</h5>
+                <h5 className="font-bold text-sm text-right">Final</h5>
                 <div className="self-center mb-6">
                   <table className="table-fixed w-32">
                     <thead>
@@ -210,7 +218,7 @@ const Season = () => {
                   </table>
                 </div>
                 {semiTables.length > 0 && (
-                  <h5 className="text-bold text-sm text-right">Semi</h5>
+                  <h5 className="font-bold text-sm text-right">Semi</h5>
                 )}
                 <div className="flex flex-row justify-around mb-6">
                   {semiTables.map((group, index) => {
@@ -221,7 +229,7 @@ const Season = () => {
                       >
                         <table className="table-fixed w-32">
                           <thead>
-                            <tr className="text-[0.5rem]">
+                            <tr className="text-[0.5rem]" key="semi-tablehead">
                               <th scope="col" className="w-22 p-1 mx-1"></th>
                               <th
                                 scope="col"
@@ -245,7 +253,7 @@ const Season = () => {
                   })}
                 </div>
                 {quarterTables.length > 0 && (
-                  <h5 className="text-bold text-sm text-right">Kvart</h5>
+                  <h5 className="font-bold text-sm text-right">Kvart</h5>
                 )}
                 <div className="flex flex-row justify-around mb-6">
                   {quarterTables.map((group) => {
@@ -253,7 +261,10 @@ const Season = () => {
                       <div key={group.group}>
                         <table className="table-fixed w-32">
                           <thead>
-                            <tr className="text-[0.5rem]">
+                            <tr
+                              className="text-[0.5rem]"
+                              key="quarter-tablehead"
+                            >
                               <th scope="col" className="w-22 p-1 mx-1"></th>
                               <th
                                 scope="col"
@@ -277,7 +288,7 @@ const Season = () => {
                   })}
                 </div>
                 {eightTables.length > 0 && (
-                  <h5 className="text-bold text-sm text-right">Åttondel</h5>
+                  <h5 className="font-bold text-sm text-right">Åttondel</h5>
                 )}
                 <div className="flex flex-row justify-around flex-wrap mb-6">
                   {eightTables.map((group) => {
@@ -285,7 +296,10 @@ const Season = () => {
                       <div key={group.group}>
                         <table className="table-fixed w-30">
                           <thead>
-                            <tr key="header-row" className="text-[0.5rem]">
+                            <tr
+                              key="eight-table-head"
+                              className="text-[0.5rem]"
+                            >
                               <th scope="col" className="w-16 p-1"></th>
                               <th scope="col" className="w-6 p-1">
                                 P
@@ -322,12 +336,42 @@ const Season = () => {
         )}
 
         {seasonId < 2024 && (
-          <div>
-            <div className=" w-[36rem]">
-              <div
-                onClick={() => {
-                  setGrupp(
-                    groupsArray.sort((a, b) => {
+          <div className="w-full px-2 xl:px-4 ">
+            <div
+              onClick={() => {
+                setGrupp(
+                  groupsArray.sort((a, b) => {
+                    if (sortOrder.indexOf(a) > sortOrder.indexOf(b)) {
+                      return 1
+                    }
+
+                    if (sortOrder.indexOf(a) < sortOrder.indexOf(b)) {
+                      return -1
+                    }
+                  })[0]
+                )
+                setRound(1)
+                setRoundForRound(!roundForRound)
+              }}
+              className="cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center w-full mb-2 xl:mb-6"
+            >
+              {roundForRound ? 'Visa tabeller' : 'Visa utveckling'}
+            </div>
+            {!roundForRound && (
+              <div>
+                {regularTables.length > 0 && (
+                  <TableList tableArray={regularTables} />
+                )}
+                {qualificationTables.length > 0 && (
+                  <TableList tableArray={qualificationTables} />
+                )}
+              </div>
+            )}
+            {roundForRound && groupsArray.length > 1 && (
+              <div>
+                <div className="flex flex-row justify-between w-full">
+                  {groupsArray
+                    .sort((a, b) => {
                       if (sortOrder.indexOf(a) > sortOrder.indexOf(b)) {
                         return 1
                       }
@@ -335,82 +379,61 @@ const Season = () => {
                       if (sortOrder.indexOf(a) < sortOrder.indexOf(b)) {
                         return -1
                       }
-                    })[0]
-                  )
-                  setRound(1)
-                  setRoundForRound(!roundForRound)
-                }}
-                className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center w-[40rem]"
-              >
-                {roundForRound ? 'Visa tabeller' : 'Visa utveckling'}
+                    })
+                    .map((group) => {
+                      return (
+                        <div
+                          key={group}
+                          onClick={() => {
+                            setRound(1)
+                            setGrupp(group)
+                          }}
+                          className={
+                            grupp === group
+                              ? 'cursor-pointer rounded-md mt-3 px-2 py-1 bg-slate-200 text-[#011d29] text-center w-30 border-[#011d29]'
+                              : 'cursor-pointer rounded-md mt-3 px-2 py-1 bg-slate-200 text-[#011d29] text-center w-30'
+                          }
+                        >
+                          {groupConstant[group]}
+                        </div>
+                      )
+                    })}
+                </div>
+                <RoundForRound
+                  array={roundByRoundTables.filter(
+                    (table) => table.group === grupp
+                  )}
+                  round={round}
+                  setRound={setRound}
+                />
               </div>
-              {!roundForRound && (
-                <div>
-                  {regularTables.length > 0 && (
-                    <TableList tableArray={regularTables} />
-                  )}
-                  {qualificationTables.length > 0 && (
-                    <TableList tableArray={qualificationTables} />
-                  )}
-                </div>
-              )}
-              {roundForRound && groupsArray.length > 1 && (
-                <div>
-                  <div className="flex flex-row justify-between w-[40rem]">
-                    {groupsArray
-                      .sort((a, b) => {
-                        if (sortOrder.indexOf(a) > sortOrder.indexOf(b)) {
-                          return 1
-                        }
-
-                        if (sortOrder.indexOf(a) < sortOrder.indexOf(b)) {
-                          return -1
-                        }
-                      })
-                      .map((group) => {
-                        return (
-                          <div
-                            key={group}
-                            onClick={() => {
-                              setRound(1)
-                              setGrupp(group)
-                            }}
-                            className={
-                              grupp === group
-                                ? 'cursor-pointer rounded-md mt-3 px-2 py-1 bg-slate-200 text-[#011d29] text-center w-30 border-[#011d29]'
-                                : 'cursor-pointer rounded-md mt-3 px-2 py-1 bg-slate-200 text-[#011d29] text-center w-30'
-                            }
-                          >
-                            {groupConstant[group]}
-                          </div>
-                        )
-                      })}
-                  </div>
-                  <RoundForRound
-                    array={roundByRoundTables.filter(
-                      (table) => table.group === grupp
-                    )}
-                    round={round}
-                    setRound={setRound}
-                  />
-                </div>
-              )}
-              {roundForRound && groupsArray.length === 1 && (
-                <div>
-                  <RoundForRound
-                    array={roundByRoundTables}
-                    round={round}
-                    setRound={setRound}
-                  />
-                </div>
-              )}
-            </div>
+            )}
+            {roundForRound && groupsArray.length === 1 && (
+              <div>
+                <RoundForRound
+                  array={roundByRoundTables}
+                  round={round}
+                  setRound={setRound}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>
       {showHelpModal ? (
         <>
           <SeasonHelpModal setShowModal={setShowHelpModal} />
+        </>
+      ) : null}
+      {showPlayoffModal ? (
+        <>
+          <PlayoffModal
+            setShowModal={setShowPlayoffModal}
+            final={final}
+            semiTables={semiTables}
+            quarterTables={quarterTables}
+            eightTables={eightTables}
+          />
         </>
       ) : null}
     </div>
