@@ -1,12 +1,18 @@
 import { Link } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import { UserContext } from '../contexts/contexts'
+import useScrollDirection from './utilitycomponents/useScrollDirection'
 
 const Header = () => {
   const { user } = useContext(UserContext)
+  const scrollDirection = useScrollDirection()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   return (
-    <header className="pt-6 z-10 font-poppins text-[#011d29]">
+    <header
+      className={`sticky ${
+        scrollDirection === 'down' ? '-top-[81px]' : 'top-0'
+      } pt-6 z-10 font-poppins text-[#011d29] bg-[#f4f5f5] h-[81px] transition-all duration-500`}
+    >
       <section className="max-w-7xl mx-auto flex justify-between items-center">
         <h1 className="text-base font-bold uppercase pl-4 xl:pl-0 tracking-[0.2rem] md:text-2xl lg:text-4xl ">
           <Link to="/">Bandyresultat</Link>

@@ -1,12 +1,15 @@
 import { groupConstant } from '../utilitycomponents/constants'
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useState, useEffect, forwardRef } from 'react'
 import { UserContext } from '../../contexts/contexts'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 
 dayjs.locale('sv')
 
-const GamesList = ({ gamesArray, title, setShowModal, setGameData }) => {
+const GamesList = forwardRef(function GamesList(
+  { gamesArray, title, setShowModal, setGameData },
+  ref
+) {
   const { user } = useContext(UserContext)
   const [width, setWidth] = useState(window.innerWidth)
   const breakpoint = 768
@@ -18,7 +21,7 @@ const GamesList = ({ gamesArray, title, setShowModal, setGameData }) => {
     return () => window.removeEventListener('resize', handleWindowResize)
   }, [])
   return (
-    <div className="mb-6 font-inter w-full">
+    <div className="mb-6 font-inter w-full" ref={ref}>
       <h1 className="font-bold text-[1rem] md:text-[1.25rem] xl:text-[1.5rem]">
         {title}
       </h1>
@@ -88,6 +91,6 @@ const GamesList = ({ gamesArray, title, setShowModal, setGameData }) => {
       </div>
     </div>
   )
-}
+})
 
 export default GamesList

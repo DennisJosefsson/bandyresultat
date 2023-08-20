@@ -29,7 +29,7 @@ app.use(cookieParser())
 const frontend = path.join(__dirname, 'dist')
 app.use('/', express.static(frontend))
 
-app.use('/api/healthCheck', mainRouter)
+//app.use('/api/healthCheck', mainRouter)
 app.use(APIRestrictMiddleware)
 
 app.use('/api/teams', teamRouter)

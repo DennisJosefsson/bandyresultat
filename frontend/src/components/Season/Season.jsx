@@ -2,7 +2,7 @@ import { useQuery } from 'react-query'
 import { getSingleSeason } from '../../requests/seasons'
 import { getSingleSeasonTable } from '../../requests/tables'
 import { useParams, Link, useLocation } from 'react-router-dom'
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useState, useEffect, useRef } from 'react'
 import { GenderContext } from '../../contexts/contexts'
 import { sortOrder, groupConstant } from '../utilitycomponents/constants'
 import Spinner from '../utilitycomponents/spinner'
@@ -17,6 +17,8 @@ import { LeftArrow, RightArrow } from '../utilitycomponents/icons'
 const Season = () => {
   const seasonId = parseInt(useParams().seasonId)
   const { women, dispatch } = useContext(GenderContext)
+  const topRef = useRef()
+  const bottomRef = useRef()
   const [grupp, setGrupp] = useState('')
   const [roundForRound, setRoundForRound] = useState(false)
   const [showHelpModal, setShowHelpModal] = useState(false)
@@ -60,6 +62,11 @@ const Season = () => {
         Något gick fel.
       </div>
     )
+  }
+
+  const scrollTo = (event, ref) => {
+    event.preventDefault()
+    window.scrollTo(0, ref.current.offsetTop)
   }
 
   const tables = data.tabell.filter((table) => table.women === women)
@@ -156,7 +163,7 @@ const Season = () => {
           </div>
         )}
         {seasonId < 2024 && (
-          <div>
+          <div ref={topRef}>
             <div className="flex flex-col-reverse justify-start xl:flex-row xl:justify-between gap-2 pr-2 md:mr-4 xl:mr-0">
               <Link to={`/games/${seasonId}`}>
                 <div className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6">
@@ -436,6 +443,23 @@ const Season = () => {
           />
         </>
       ) : null}
+      <div
+        className="sticky bottom-0 flex flex-row gap-2 justify-center bg-[#f4f5f5] z-20 items-center"
+        ref={bottomRef}
+      >
+        <div
+          onClick={(event) => scrollTo(event, topRef)}
+          className="cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#93B8C1] text-[10px] lg:text-sm text-[#011d29] text-center my-2 select-none"
+        >
+          Scrolla upp
+        </div>
+        <div
+          onClick={(event) => scrollTo(event, bottomRef)}
+          className="cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#93B8C1] text-[10px] lg:text-sm text-[#011d29] text-center my-2 select-none"
+        >
+          Scrolla ner
+        </div>
+      </div>
     </div>
   )
 }
