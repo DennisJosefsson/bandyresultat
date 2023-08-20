@@ -29,7 +29,7 @@ app.use(cookieParser())
 const frontend = path.join(__dirname, 'dist')
 app.use('/', express.static(frontend))
 
-app.use('/api/healthCheck', mainRouter)
+//app.use('/api/healthCheck', mainRouter)
 app.use(APIRestrictMiddleware)
 
 app.use('/api/teams', teamRouter)
@@ -49,7 +49,10 @@ app.use(errorHandler)
 const start = async () => {
   await connectToDb()
   app.listen(PORT, () => {
+    console.log('-------------------------------')
     console.log(`Server running on port ${PORT}`)
+    console.log(new Date())
+    console.log('-------------------------------')
   })
 }
 
