@@ -26,10 +26,10 @@ app.use((req, res, next) => {
   next()
 })
 app.use(cookieParser())
-// const frontend = path.join(__dirname, 'dist')
-// app.use('/', express.static(frontend))
+const frontend = path.join(__dirname, 'dist')
+app.use('/', express.static(frontend))
 
-app.use('/api/healthCheck', mainRouter)
+//app.use('/api/healthCheck', mainRouter)
 app.use(APIRestrictMiddleware)
 
 app.use('/api/teams', teamRouter)
@@ -40,16 +40,19 @@ app.use('/api/metadata', metadataRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/links', linkRouter)
 
-// app.use((req, res, next) => {
-//   res.sendFile(path.join(frontend, 'index.html'))
-// })
+app.use((req, res, next) => {
+  res.sendFile(path.join(frontend, 'index.html'))
+})
 
 app.use(errorHandler)
 
 const start = async () => {
   await connectToDb()
   app.listen(PORT, () => {
+    console.log('-------------------------------')
     console.log(`Server running on port ${PORT}`)
+    console.log(new Date())
+    console.log('-------------------------------')
   })
 }
 

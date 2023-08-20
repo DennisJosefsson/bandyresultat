@@ -61,7 +61,8 @@ const Compare = () => {
     }
   }
 
-  const handleCopyClick = () => {
+  const handleCopyClick = (event) => {
+    event.preventDefault()
     copyText(compareLink)
       .then(() => {
         setIsCopied(true)
@@ -115,9 +116,10 @@ const Compare = () => {
       <div className="flex flex-row justify-between ml-2 xl:ml-0">
         {allData.length === 0 && (
           <div>
-            <h2 className="text-base md:text-lg lg:text-xl xl:text-2xl font-bold mb-2 text-center">
-              {teamString} har aldrig mötts.
-            </h2>
+            <p className="font-bold text-base md:text-lg w-[90%] xl:w-[36rem] mb-2 lg:mb-4">
+              Lagen har inte mötts {catString} sedan{' '}
+              {data.data.seasonNames[0].year}.
+            </p>
           </div>
         )}
         {allData.length > 0 && (
@@ -591,8 +593,8 @@ const Compare = () => {
         <div className="flex flex-col-reverse justify-end xl:flex-row xl:justify-end xl:gap-2 mb-2 xl:mb-6">
           {allData.length > 0 && (
             <div
-              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
-              onClick={handleCopyClick}
+              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 select-none"
+              onClick={(event) => handleCopyClick(event)}
             >
               {isCopied ? 'Kopierad!' : 'Länk'}
             </div>
@@ -601,21 +603,21 @@ const Compare = () => {
             onClick={() =>
               navigate('/teams', { state: { compObject: compObject } })
             }
-            className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
+            className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 select-none"
           >
             Ändra
           </div>
 
           <div
             onClick={() => setShowHelpModal(true)}
-            className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
+            className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 select-none"
           >
             Hjälp/Info
           </div>
           {allData.length > 0 && (
             <div
               onClick={() => setShowStatsModal(true)}
-              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 xl:hidden"
+              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 xl:hidden select-none"
             >
               Statistik
             </div>

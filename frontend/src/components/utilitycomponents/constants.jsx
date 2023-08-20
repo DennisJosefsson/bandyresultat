@@ -48,6 +48,8 @@ export const groupConstant = {
   DamAllsvSydForts: 'Damallsvenskan Södra Fortsättningsserie',
   ElitNorr: 'Elitserien Norra',
   ElitSyd: 'Elitserien Södra',
+  top: 'Toppen',
+  bottom: 'Botten',
 }
 
 export const sortOrder = [

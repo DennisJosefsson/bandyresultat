@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from 'react-query'
-import { useState, useReducer, useContext } from 'react'
+import { useState, useReducer, useContext, useRef } from 'react'
 import { getTeams, postTeam } from '../../requests/teams'
 import { getSeasons } from '../../requests/seasons'
 import { useNavigate, Link, useLocation } from 'react-router-dom'
@@ -14,7 +14,8 @@ import SearchSelectionModal from './SearchSelectionModal'
 const Teams = () => {
   const navigate = useNavigate()
   const location = useLocation()
-
+  const topRef = useRef()
+  const bottomRef = useRef()
   const { women, dispatch: genderDispatch } = useContext(GenderContext)
   const { user } = useContext(UserContext)
   const [showTeamFormModal, setShowTeamFormModal] = useState(false)
@@ -142,6 +143,11 @@ const Teams = () => {
     })
   }
 
+  const scrollTo = (event, ref) => {
+    event.preventDefault()
+    window.scrollTo(0, ref.current.offsetTop)
+  }
+
   const teams = data
     .filter((team) => team.women === women)
     .filter((team) =>
@@ -161,7 +167,10 @@ const Teams = () => {
   const unFilteredTeams = data
 
   return (
-    <div className="max-w-7xl min-h-screen px-1 lg:px-0 mb-2 mx-auto font-inter text-[#011d29]">
+    <div
+      ref={topRef}
+      className="max-w-7xl min-h-screen px-1 lg:px-0 mb-2 mx-auto font-inter text-[#011d29]"
+    >
       <div className="w-full">
         <form>
           <input
@@ -246,7 +255,7 @@ const Teams = () => {
           </div>
         )}
       </div>
-      <div className=" flex flex-row-reverse justify-between">
+      <div className=" flex flex-row-reverse justify-between mb-6">
         <div className="w-1/4 pt-2 mr-1 flex flex-col md:flex-row-reverse">
           <div className="flex flex-col items-end w-full lg:w-3/4 pr-0.5 lg:p-0 float-right">
             <div
@@ -315,6 +324,8 @@ const Teams = () => {
                 handleStartSeasonChange={handleStartSeasonChange}
                 endOptions={endOptions}
                 startOptions={startOptions}
+                compareDispatch={compareDispatch}
+                women={women}
               />
             </>
           ) : null}
@@ -343,6 +354,21 @@ const Teams = () => {
               </div>
             )
           })}
+        </div>
+      </div>
+      <div ref={bottomRef}></div>
+      <div className="sticky bottom-0 flex flex-row gap-2 justify-center bg-[#f4f5f5] z-20 items-center">
+        <div
+          onClick={(event) => scrollTo(event, topRef)}
+          className="cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#93B8C1] text-[10px] lg:text-sm text-[#011d29] text-center my-2 select-none"
+        >
+          Scrolla upp
+        </div>
+        <div
+          onClick={(event) => scrollTo(event, bottomRef)}
+          className="cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#93B8C1] text-[10px] lg:text-sm text-[#011d29] text-center my-2 select-none"
+        >
+          Scrolla ner
         </div>
       </div>
     </div>
