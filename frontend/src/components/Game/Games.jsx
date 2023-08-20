@@ -2,7 +2,7 @@ import { useQuery, useMutation } from 'react-query'
 import { getSeasonGames } from '../../requests/games'
 import { getSingleSeason } from '../../requests/seasons'
 import { postGame } from '../../requests/games'
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { GenderContext, UserContext } from '../../contexts/contexts'
 import Spinner from '../utilitycomponents/spinner'
@@ -12,6 +12,7 @@ import GamesHelpModal from './GamesHelpModal'
 import CuriositiesModal from './CuriositiesModal'
 import StatsModal from './StatsModal'
 import { gameSortFunction } from '../utilitycomponents/sortFunction'
+import { sortOrder, groupConstant } from '../utilitycomponents/constants'
 import { LeftArrow, RightArrow } from '../utilitycomponents/icons'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
@@ -22,6 +23,7 @@ const Games = () => {
   const seasonId = parseInt(useParams().seasonId)
   const { women, dispatch } = useContext(GenderContext)
   const { user } = useContext(UserContext)
+  const categoryRefs = useRef({})
 
   const [teamFilter, setTeamFilter] = useState('')
   const [showHelpModal, setShowHelpModal] = useState(false)
@@ -69,6 +71,11 @@ const Games = () => {
         Något gick fel.
       </div>
     )
+  }
+
+  const scrollTo = (event,ref) => {
+    event.preventDefault()
+    window.scrollTo(0, categoryRefs.current[ref].offsetTop)
   }
 
   const games = data.games
@@ -124,6 +131,22 @@ const Games = () => {
     (game) => game.category === 'qualification'
   )
 
+  const categoryArray = [
+    ...new Set(
+      games
+        .map((game) => game.category)
+        .sort((a, b) => {
+          if (sortOrder.indexOf(a) > sortOrder.indexOf(b)) {
+            return 1
+          }
+
+          if (sortOrder.indexOf(a) < sortOrder.indexOf(b)) {
+            return -1
+          }
+        })
+    ),
+  ]
+
   const finalGames = gameSortFunction(unsortedFinalGames)
   const semiGames = gameSortFunction(unsortedSemiGames)
   const quarterGames = gameSortFunction(unsortedQuarterGames)
@@ -164,7 +187,7 @@ const Games = () => {
 
   return (
     <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col">
-      <div className="w-full">
+      <div className="w-full" ref={(el) => (categoryRefs.current['top'] = el)}>
         <form>
           <input
             className="border-[#011d29] focus:border-[#011d29] w-full"
@@ -212,6 +235,7 @@ const Games = () => {
                 title={'Final'}
                 setShowModal={setShowAddGameModal}
                 setGameData={setGameData}
+                ref={(el) => (categoryRefs.current['final'] = el)}
               />
             )}
             {semiGames.length > 0 && (
@@ -220,6 +244,7 @@ const Games = () => {
                 title={'Semifinaler'}
                 setShowModal={setShowAddGameModal}
                 setGameData={setGameData}
+                ref={(el) => (categoryRefs.current['semi'] = el)}
               />
             )}
             {quarterGames.length > 0 && (
@@ -228,6 +253,7 @@ const Games = () => {
                 title={'Kvartsfinaler'}
                 setShowModal={setShowAddGameModal}
                 setGameData={setGameData}
+                ref={(el) => (categoryRefs.current['quarter'] = el)}
               />
             )}
             {eightGames.length > 0 && (
@@ -236,6 +262,7 @@ const Games = () => {
                 title={'Åttondelsfinaler'}
                 setShowModal={setShowAddGameModal}
                 setGameData={setGameData}
+                ref={(el) => (categoryRefs.current['eight'] = el)}
               />
             )}
             {regularGames.length > 0 && (
@@ -244,6 +271,7 @@ const Games = () => {
                 title={'Grundseriematcher'}
                 setShowModal={setShowAddGameModal}
                 setGameData={setGameData}
+                ref={(el) => (categoryRefs.current['regular'] = el)}
               />
             )}
 
@@ -253,6 +281,7 @@ const Games = () => {
                 title={'Kvalmatcher'}
                 setShowModal={setShowAddGameModal}
                 setGameData={setGameData}
+                ref={(el) => (categoryRefs.current['qualification'] = el)}
               />
             )}
             {user && (
@@ -592,6 +621,20 @@ const Games = () => {
           />
         </>
       ) : null}
+      <div ref={(el) => (categoryRefs.current['bottom'] = el)}></div>
+      <div className="sticky bottom-0 flex flex-row gap-2 justify-center bg-[#f4f5f5] z-20 items-center">
+        {categoryArray.map((cat) => {
+          return (
+            <div
+              key={cat}
+              onClick={(event) => scrollTo(event, cat)}
+              className="cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#93B8C1] text-[10px] lg:text-sm text-[#011d29] text-center my-2 select-none"
+            >
+              {groupConstant[cat]}
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

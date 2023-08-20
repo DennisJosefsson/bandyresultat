@@ -46,7 +46,39 @@ const SearchSelectionModal = ({
   startOptions,
   handleEndSeasonChange,
   handleStartSeasonChange,
+  women,
+  compareDispatch,
 }) => {
+  const setElitserien = () => {
+    compareDispatch({
+      type: 'INPUT START',
+      payload: women ? 162 : 102,
+    })
+  }
+
+  const setPlayoff = () => {
+    compareDispatch({
+      type: 'CLEAR CATEGORIES',
+    })
+
+    compareDispatch({
+      type: 'ADD CATEGORY',
+      payload: 'eight',
+    })
+    compareDispatch({
+      type: 'ADD CATEGORY',
+      payload: 'quarter',
+    })
+    compareDispatch({
+      type: 'ADD CATEGORY',
+      payload: 'semi',
+    })
+    compareDispatch({
+      type: 'ADD CATEGORY',
+      payload: 'final',
+    })
+  }
+
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -79,6 +111,20 @@ const SearchSelectionModal = ({
             </div>
             {/*body*/}
             <div className="w-[20rem] font-inter text-[#011d29] p-5">
+              <div className="flex flex-row gap-2 justify-start items-center">
+                <div
+                  onClick={() => setElitserien()}
+                  className="cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-[10px] lg:text-sm text-white text-center my-2 select-none"
+                >
+                  Förval Elitserien
+                </div>
+                <div
+                  onClick={() => setPlayoff()}
+                  className="cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-[10px] lg:text-sm text-white text-center my-2 select-none"
+                >
+                  Förval Slutspel
+                </div>
+              </div>
               <div className="text-left">
                 <fieldset className="mb-2 flex flex-col self-start">
                   <legend className="font-bold underline underline-offset-2 mb-2">
