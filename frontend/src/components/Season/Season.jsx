@@ -443,10 +443,8 @@ const Season = () => {
           />
         </>
       ) : null}
-      <div
-        className="sticky bottom-0 flex flex-row gap-2 justify-center bg-[#f4f5f5] z-20 items-center"
-        ref={bottomRef}
-      >
+      <div ref={bottomRef}></div>
+      <div className="sticky bottom-0 flex flex-row gap-2 justify-center bg-[#f4f5f5] z-20 items-center">
         <div
           onClick={(event) => scrollTo(event, topRef)}
           className="cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#93B8C1] text-[10px] lg:text-sm text-[#011d29] text-center my-2 select-none"
