@@ -32,14 +32,23 @@ const Compare = () => {
 
     return () => window.removeEventListener('resize', handleWindowResize)
   }, [])
+
   const { data, isLoading, error } = useQuery(
     ['compareTeams', compObject],
-    () => compareTeams(compObject)
+    () => compareTeams(compObject),
   )
+
+  if (compObject === null) {
+    return (
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+        Ingen data.
+      </div>
+    )
+  }
 
   if (isLoading) {
     return (
-      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         <Spinner />
       </div>
     )
@@ -47,7 +56,7 @@ const Compare = () => {
 
   if (error) {
     return (
-      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         Något gick fel.
       </div>
     )
@@ -82,15 +91,15 @@ const Compare = () => {
   const playoffs = data.data.playoffs
   const golds = data.data.golds
   const firstGames = data.data.firstAndLatestGames.filter(
-    (game) => game.ranked_first_games === '1'
+    (game) => game.ranked_first_games === '1',
   )
   const latestGames = data.data.firstAndLatestGames.filter(
-    (game) => game.ranked_last_games === '1'
+    (game) => game.ranked_last_games === '1',
   )
   const compareLink = `https://bandyresultat.se/link/${data.data.link[0].linkName}`
 
   const catStringArray = compObject.categoryArray.map(
-    (cat) => groupConstant[cat]
+    (cat) => groupConstant[cat],
   )
 
   let catString
@@ -112,11 +121,11 @@ const Compare = () => {
   const teamString = teamStringArray.join(', ') + ' och ' + lastTeam
 
   return (
-    <div className="max-w-7xl min-h-screen font-inter text-[#011d29] mx-auto flex flex-row justify-between pt-4">
-      <div className="flex flex-row justify-between ml-2 xl:ml-0">
+    <div className="mx-auto flex min-h-screen max-w-7xl flex-row justify-between pt-4 font-inter text-[#011d29]">
+      <div className="ml-2 flex flex-row justify-between xl:ml-0">
         {allData.length === 0 && (
           <div>
-            <p className="font-bold text-base md:text-lg w-[90%] xl:w-[36rem] mb-2 lg:mb-4">
+            <p className="mb-2 w-[90%] text-base font-bold md:text-lg lg:mb-4 xl:w-[36rem]">
               Lagen har inte mötts {catString} mellan{' '}
               {data.data.seasonNames[0].year} och{' '}
               {data.data.seasonNames[1].year}.
@@ -127,71 +136,71 @@ const Compare = () => {
           <div>
             {compObject.teamArray.length > 2 && (
               <div className="w-full">
-                <h2 className="text-base md:text-xl xl:text-2xl font-bold mb-2">
+                <h2 className="mb-2 text-base font-bold md:text-xl xl:text-2xl">
                   Inbördes möten
                 </h2>
-                <p className="font-bold text-xs md:text-sm w-[90%] xl:w-[36rem] mb-2 lg:mb-4">
+                <p className="mb-2 w-[90%] text-xs font-bold md:text-sm lg:mb-4 xl:w-[36rem]">
                   Möten mellan {teamString} {catString}{' '}
                   {compObject.startSeason === compObject.endSeason
                     ? `säsongen ${data.data.seasonNames[0].year}`
                     : `${data.data.seasonNames[0].year}-${data.data.seasonNames[1].year}.`}
                 </p>
                 <div>
-                  <h3 className="text-sm md:text-lg font-bold">Sammanlagt</h3>
-                  <table className="table-fixed text-[10px] md:text-base w-[90%] xl:w-[36rem] mb-6">
+                  <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>
+                  <table className="mb-6 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
                     <thead>
                       <tr key={`tableheadAllgames`}>
                         <th
                           scope="col"
-                          className="md:w-56 px-0.5 py-1 md:px-1 md:py-2 text-left"
+                          className="px-0.5 py-1 text-left md:w-56 md:px-1 md:py-2"
                         >
                           Lag
                         </th>
                         <th
                           scope="col"
-                          className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                         >
                           M
                         </th>
                         <th
                           scope="col"
-                          className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                         >
                           V
                         </th>
                         <th
                           scope="col"
-                          className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                         >
                           O
                         </th>
                         <th
                           scope="col"
-                          className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                         >
                           F
                         </th>
                         <th
                           scope="col"
-                          className="md:w-12 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
                         >
                           GM
                         </th>
                         <th
                           scope="col"
-                          className="md:w-12 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
                         >
                           IM
                         </th>
                         <th
                           scope="col"
-                          className="md:w-12 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
                         >
                           MS
                         </th>
                         <th
                           scope="col"
-                          className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                         >
                           P
                         </th>
@@ -202,35 +211,35 @@ const Compare = () => {
                         return (
                           <tr
                             key={`${team.teamId}-${index}`}
-                            className="odd:bg-slate-300 rounded"
+                            className="rounded odd:bg-slate-300"
                           >
                             <td className="px-0.5 py-1 md:px-1 md:py-2">
                               {width < breakpoint
                                 ? `${team.lag.shortName}`
                                 : `${team.lag.casualName}`}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_games}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_wins}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_draws}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_lost}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_goals_scored}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_goals_conceded}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_goal_difference}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 p text-right tabular-nums">
+                            <td className="p px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_points}
                             </td>
                           </tr>
@@ -240,68 +249,68 @@ const Compare = () => {
                   </table>
                 </div>
                 <div className="mb-6">
-                  <h3 className="text-sm md:text-lg font-bold">Detaljerat</h3>
+                  <h3 className="text-sm font-bold md:text-lg">Detaljerat</h3>
                   {categoryData.map((category, index) => {
                     return (
                       <div key={category.category} className="mb-6">
-                        <h4 className="text-sm md:text-base font-semibold">
+                        <h4 className="text-sm font-semibold md:text-base">
                           {groupConstant[category.category]}
                         </h4>
                         <div>
-                          <table className="table-fixed text-[10px] md:text-base w-[90%] xl:w-[36rem] mb-3">
+                          <table className="mb-3 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
                             <thead>
                               <tr key={`head-${category.category}-${index}`}>
                                 <th
                                   scope="col"
-                                  className="md:w-56 px-0.5 py-1 md:px-1 md:py-2 text-left"
+                                  className="px-0.5 py-1 text-left md:w-56 md:px-1 md:py-2"
                                 >
                                   Lag
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                                 >
                                   M
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                                 >
                                   V
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                                 >
                                   O
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                                 >
                                   F
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-12 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
                                 >
                                   GM
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-12 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
                                 >
                                   IM
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-12 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
                                 >
                                   MS
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                                 >
                                   P
                                 </th>
@@ -313,40 +322,40 @@ const Compare = () => {
                                   return (
                                     <tr
                                       key={`${team.teamId}-${index}`}
-                                      className="odd:bg-slate-300 rounded"
+                                      className="rounded odd:bg-slate-300"
                                     >
                                       <td className="px-0.5 py-1 md:px-1 md:py-2">
                                         {width < breakpoint
                                           ? `${team.lag.shortName}-${team.opp.shortName}`
                                           : `${team.lag.casualName}-${team.opp.casualName}`}
                                       </td>
-                                      <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                                      <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                         {team.total_games}
                                       </td>
-                                      <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                                      <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                         {team.total_wins}
                                       </td>
-                                      <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                                      <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                         {team.total_draws}
                                       </td>
-                                      <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                                      <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                         {team.total_lost}
                                       </td>
-                                      <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                                      <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                         {team.total_goals_scored}
                                       </td>
-                                      <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                                      <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                         {team.total_goals_conceded}
                                       </td>
-                                      <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                                      <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                         {team.total_goal_difference}
                                       </td>
-                                      <td className="px-0.5 py-1 md:px-1 md:py-2 p text-right tabular-nums">
+                                      <td className="p px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                         {team.total_points}
                                       </td>
                                     </tr>
                                   )
-                                }
+                                },
                               )}
                             </tbody>
                           </table>
@@ -359,71 +368,71 @@ const Compare = () => {
             )}
             {compObject.teamArray.length === 2 && (
               <div className="w-full">
-                <h2 className="text-base md:text-xl xl:text-2xl font-bold mb-2">
+                <h2 className="mb-2 text-base font-bold md:text-xl xl:text-2xl">
                   Inbördes möten
                 </h2>
-                <p className="font-bold text-xs md:text-sm w-[90%] xl:w-[36rem] mb-2 lg:mb-4">
+                <p className="mb-2 w-[90%] text-xs font-bold md:text-sm lg:mb-4 xl:w-[36rem]">
                   Möten mellan {teamString} {catString}{' '}
                   {compObject.startSeason === compObject.endSeason
                     ? `säsongen ${data.data.seasonNames[0].year}`
                     : `${data.data.seasonNames[0].year}-${data.data.seasonNames[1].year}.`}
                 </p>
                 <div>
-                  <h3 className="text-sm md:text-lg font-bold">Sammanlagt</h3>
-                  <table className="table-fixed text-[10px] md:text-base w-[90%] xl:w-[36rem] mb-6">
+                  <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>
+                  <table className="mb-6 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
                     <thead>
                       <tr key={`tableheadAllgames`}>
                         <th
                           scope="col"
-                          className="md:w-56 px-0.5 py-1 md:px-1 md:py-2 text-left"
+                          className="px-0.5 py-1 text-left md:w-56 md:px-1 md:py-2"
                         >
                           Lag
                         </th>
                         <th
                           scope="col"
-                          className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                         >
                           M
                         </th>
                         <th
                           scope="col"
-                          className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                         >
                           V
                         </th>
                         <th
                           scope="col"
-                          className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                         >
                           O
                         </th>
                         <th
                           scope="col"
-                          className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                         >
                           F
                         </th>
                         <th
                           scope="col"
-                          className="md:w-12 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
                         >
                           GM
                         </th>
                         <th
                           scope="col"
-                          className="md:w-12 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
                         >
                           IM
                         </th>
                         <th
                           scope="col"
-                          className="md:w-12 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
                         >
                           MS
                         </th>
                         <th
                           scope="col"
-                          className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                         >
                           P
                         </th>
@@ -434,35 +443,35 @@ const Compare = () => {
                         return (
                           <tr
                             key={`${team.teamId}-${index}`}
-                            className="odd:bg-slate-300 rounded"
+                            className="rounded odd:bg-slate-300"
                           >
                             <td className="px-0.5 py-1 md:px-1 md:py-2">
                               {width < breakpoint
                                 ? `${team.lag.shortName}-${team.opp.shortName}`
                                 : `${team.lag.casualName}-${team.opp.casualName}`}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_games}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_wins}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_draws}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_lost}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_goals_scored}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_goals_conceded}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_goal_difference}
                             </td>
-                            <td className="px-0.5 py-1 md:px-1 md:py-2 p text-right tabular-nums">
+                            <td className="p px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                               {team.total_points}
                             </td>
                           </tr>
@@ -472,68 +481,68 @@ const Compare = () => {
                   </table>
                 </div>
                 <div className="mb-6">
-                  <h3 className="text-sm md:text-lg font-bold">Detaljerat</h3>
+                  <h3 className="text-sm font-bold md:text-lg">Detaljerat</h3>
                   {categoryData.map((category, index) => {
                     return (
                       <div key={category.category} className="mb-6">
-                        <h4 className="text-sm md:text-base font-semibold">
+                        <h4 className="text-sm font-semibold md:text-base">
                           {groupConstant[category.category]}
                         </h4>
                         <div>
-                          <table className="table-fixed text-[10px] md:text-base w-[90%] xl:w-[36rem] mb-3">
+                          <table className="mb-3 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
                             <thead>
                               <tr key={`head-${category.category}-${index}`}>
                                 <th
                                   scope="col"
-                                  className="md:w-56 px-0.5 py-1 md:px-1 md:py-2 text-left"
+                                  className="px-0.5 py-1 text-left md:w-56 md:px-1 md:py-2"
                                 >
                                   Lag
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                                 >
                                   M
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                                 >
                                   V
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                                 >
                                   O
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                                 >
                                   F
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-12 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
                                 >
                                   GM
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-12 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
                                 >
                                   IM
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-12 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
                                 >
                                   MS
                                 </th>
                                 <th
                                   scope="col"
-                                  className="md:w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
                                 >
                                   P
                                 </th>
@@ -544,35 +553,35 @@ const Compare = () => {
                                 return (
                                   <tr
                                     key={`${team.teamId}-${index}`}
-                                    className="odd:bg-slate-300 rounded"
+                                    className="rounded odd:bg-slate-300"
                                   >
                                     <td className="px-0.5 py-1 md:px-1 md:py-2">
                                       {width < breakpoint
                                         ? `${team.lag.shortName}-${team.opp.shortName}`
                                         : `${team.lag.casualName}-${team.opp.casualName}`}
                                     </td>
-                                    <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                                    <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                       {team.total_games}
                                     </td>
-                                    <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                                    <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                       {team.total_wins}
                                     </td>
-                                    <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                                    <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                       {team.total_draws}
                                     </td>
-                                    <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                                    <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                       {team.total_lost}
                                     </td>
-                                    <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                                    <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                       {team.total_goals_scored}
                                     </td>
-                                    <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                                    <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                       {team.total_goals_conceded}
                                     </td>
-                                    <td className="px-0.5 py-1 md:px-1 md:py-2 text-right tabular-nums">
+                                    <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                       {team.total_goal_difference}
                                     </td>
-                                    <td className="px-0.5 py-1 md:px-1 md:py-2 p text-right tabular-nums">
+                                    <td className="p px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
                                       {team.total_points}
                                     </td>
                                   </tr>
@@ -591,10 +600,10 @@ const Compare = () => {
         )}
       </div>
       <div className="mr-2 xl:mr-0">
-        <div className="flex flex-col-reverse justify-end xl:flex-row xl:justify-end xl:gap-2 mb-2 xl:mb-6">
+        <div className="mb-2 flex flex-col-reverse justify-end xl:mb-6 xl:flex-row xl:justify-end xl:gap-2">
           {allData.length > 0 && (
             <div
-              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 select-none"
+              className="mb-4 w-[84px] cursor-pointer select-none rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
               onClick={(event) => handleCopyClick(event)}
             >
               {isCopied ? 'Kopierad!' : 'Länk'}
@@ -604,21 +613,21 @@ const Compare = () => {
             onClick={() =>
               navigate('/teams', { state: { compObject: compObject } })
             }
-            className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 select-none"
+            className="mb-4 w-[84px] cursor-pointer select-none rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
           >
             Ändra
           </div>
 
           <div
             onClick={() => setShowHelpModal(true)}
-            className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 select-none"
+            className="mb-4 w-[84px] cursor-pointer select-none rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
           >
             Hjälp/Info
           </div>
           {allData.length > 0 && (
             <div
               onClick={() => setShowStatsModal(true)}
-              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 xl:hidden select-none"
+              className="mb-4 w-[84px] cursor-pointer select-none rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:hidden"
             >
               Statistik
             </div>
@@ -627,7 +636,7 @@ const Compare = () => {
         <div>
           {allData.length > 0 && (
             <div className="hidden xl:contents xl:w-[40rem]">
-              <h2 className="text-2xl font-bold mb-2 text-right">Statistik</h2>
+              <h2 className="mb-2 text-right text-2xl font-bold">Statistik</h2>
               <div className="flex flex-row justify-between gap-2">
                 <div className="w-96">
                   <div>
@@ -654,7 +663,7 @@ const Compare = () => {
                           return (
                             <tr
                               key={game.game_id}
-                              className="odd:bg-slate-300 rounded"
+                              className="rounded odd:bg-slate-300"
                             >
                               <td className="px-1 py-1">
                                 {game.date && (
@@ -697,7 +706,7 @@ const Compare = () => {
                           return (
                             <tr
                               key={game.game_id}
-                              className="odd:bg-slate-300 rounded"
+                              className="rounded odd:bg-slate-300"
                             >
                               <td className="px-1 py-1">
                                 {game.date && (
@@ -719,17 +728,17 @@ const Compare = () => {
                 </div>
                 <div className="w-56">
                   <div className="w-56">
-                    <h3 className="text-lg font-bold text-right">Säsonger</h3>
+                    <h3 className="text-right text-lg font-bold">Säsonger</h3>
                     <table className="mb-3 w-56">
                       <thead>
                         <tr key={`head-seasons`}>
                           <th
                             scope="col"
-                            className="w-32 px-0.5 py-1 md:px-1 md:py-2 text-left"
+                            className="w-32 px-0.5 py-1 text-left md:px-1 md:py-2"
                           ></th>
                           <th
                             scope="col"
-                            className="w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                            className="w-8 px-0.5 py-1 text-right md:px-1 md:py-2"
                           ></th>
                         </tr>
                       </thead>
@@ -738,7 +747,7 @@ const Compare = () => {
                           return (
                             <tr
                               key={team.team}
-                              className="odd:bg-slate-300 rounded"
+                              className="rounded odd:bg-slate-300"
                             >
                               <td className="px-1 py-1">{team.casual_name}</td>
                               <td className="px-1 py-1 text-right">
@@ -751,17 +760,17 @@ const Compare = () => {
                     </table>
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-right">Slutspel</h3>
+                    <h3 className="text-right text-lg font-bold">Slutspel</h3>
                     <table className="mb-3 w-56">
                       <thead>
                         <tr key={`head-playoffs`}>
                           <th
                             scope="col"
-                            className="w-32 px-0.5 py-1 md:px-1 md:py-2 text-left"
+                            className="w-32 px-0.5 py-1 text-left md:px-1 md:py-2"
                           ></th>
                           <th
                             scope="col"
-                            className="w-8 px-0.5 py-1 md:px-1 md:py-2 text-right"
+                            className="w-8 px-0.5 py-1 text-right md:px-1 md:py-2"
                           ></th>
                         </tr>
                       </thead>
@@ -770,7 +779,7 @@ const Compare = () => {
                           return (
                             <tr
                               key={team.team}
-                              className="odd:bg-slate-300 rounded"
+                              className="rounded odd:bg-slate-300"
                             >
                               <td className="px-1 py-1">{team.casual_name}</td>
                               <td className="px-1 py-1 text-right">
@@ -783,7 +792,7 @@ const Compare = () => {
                     </table>
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-right">SM-Guld</h3>
+                    <h3 className="text-right text-lg font-bold">SM-Guld</h3>
                     <table className="mb-3 w-56">
                       <thead>
                         <tr key={`head-golds`}>
@@ -802,7 +811,7 @@ const Compare = () => {
                           return (
                             <tr
                               key={team.team}
-                              className="odd:bg-slate-300 rounded"
+                              className="rounded odd:bg-slate-300"
                             >
                               <td className="px-1 py-1">{team.casual_name}</td>
                               <td className="px-1 py-1 text-right">

@@ -268,8 +268,32 @@ router.get('/:seasonId', async (req, res) => {
     req.params.seasonId < 1964
       ? req.params.seasonId
       : `${Number(req.params.seasonId) - 1}/${req.params.seasonId}`
+
+  const playoffGames = await Game.findAll({
+    where: { playoff: true },
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'homeTeam',
+      },
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'awayTeam',
+      },
+      {
+        model: Season,
+        where: { year: { [Op.eq]: seasonName } },
+        attributes: ['year', 'seasonId'],
+      },
+    ],
+    order: [
+      ['group', 'ASC'],
+      ['date', 'ASC'],
+    ],
+  })
   const tabell = await TeamGame.findAll({
-    // where: { seasonId: req.params.seasonId },
     attributes: [
       'team',
       'group',
@@ -389,7 +413,7 @@ order by team, round asc;`,
   if (!tabell) {
     throw new Error('No such table in the database')
   } else {
-    res.json({ tabell, roundByRoundTables })
+    res.json({ tabell, roundByRoundTables, playoffGames })
   }
 })
 

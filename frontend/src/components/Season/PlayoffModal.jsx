@@ -1,24 +1,65 @@
+import { useState } from 'react'
+import dayjs from 'dayjs'
+import 'dayjs/locale/sv'
+
+dayjs.locale('sv')
+
+const PlayoffSeriesPopup = ({ gameData, setGameData, setShowPlayoffGames }) => {
+  return (
+    <div className="fixed inset-x-2 bottom-40 z-50 flex flex-col items-center rounded border-2 border-[#011d29] bg-white object-center p-1 text-[10px] sm:inset-x-20 sm:text-sm md:inset-x-40">
+      <div>
+        <ul>
+          {gameData.map((game, index) => (
+            <li key={`${game.date}-${index}`}>
+              {game.date !== null && (
+                <span>{dayjs(game.date).format('D MMMM YYYY')}:</span>
+              )}
+              <span> {game.homeTeam.casualName}</span>-
+              <span>{game.awayTeam.casualName}</span> <span>{game.result}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <div
+          onClick={() => {
+            setGameData(null)
+            setShowPlayoffGames(false)
+          }}
+          className="mb-1 mt-2 cursor-pointer bg-slate-200 px-2 py-1 font-bold uppercase text-red-500 outline-none transition-all duration-150 ease-linear focus:outline-none"
+        >
+          Stäng
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const SeasonHelpModal = ({
   setShowModal,
   final,
   semiTables,
   quarterTables,
   eightTables,
+  playoffGames,
 }) => {
+  const [gameData, setGameData] = useState(null)
+  const [showPlayoffGames, setShowPlayoffGames] = useState(false)
+
   return (
     <>
-      <div className="fixed justify-center items-center lg:p-10 flex overflow-x-hidden z-50 outline-none focus:outline-none">
-        <div className="fixed inset-2 w-auto my-3 mx-auto max-w-5xl overflow-y-auto">
+      <div className="fixed z-50 flex items-center justify-center overflow-x-hidden outline-none focus:outline-none lg:p-10">
+        <div className="fixed inset-2 mx-auto my-3 w-auto max-w-5xl overflow-y-auto">
           {/*content*/}
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+          <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
             {/*header*/}
-            <div className="flex items-start justify-between landscape:p1 p-5 border-b border-solid border-slate-200 rounded-t">
-              <h3 className="text-xl xl:text-3xl font-semibold">Slutspel</h3>
+            <div className="landscape:p1 flex items-start justify-between rounded-t border-b border-solid border-slate-200 p-5">
+              <h3 className="text-xl font-semibold xl:text-3xl">Slutspel</h3>
               <button
-                className="p-1 ml-auto bg-transparent border-0 font-inter text-[#011d29] float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                className="float-right ml-auto border-0 bg-transparent p-1 font-inter text-3xl font-semibold leading-none text-[#011d29] outline-none focus:outline-none"
                 onClick={() => setShowModal(false)}
               >
-                <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                <span className="block h-6 w-6 bg-transparent text-2xl text-black outline-none focus:outline-none">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -36,17 +77,17 @@ const SeasonHelpModal = ({
               </button>
             </div>
             {/*body*/}
-            <div className="font-inter text-[#011d29] landscape:p-1 p-5">
-              <div className="w-full xl:w-[36rem] flex flex-col">
-                <h5 className="font-bold text-sm text-right mr-2">Final</h5>
-                <div className="self-center mb-2 xl:mb-6">
-                  <table className="table-fixed w-24 xl:w-32">
+            <div className="relative p-5 font-inter text-[#011d29] landscape:p-1">
+              <div className="flex w-full flex-col xl:w-[36rem]">
+                <h5 className="mr-2 text-right text-sm font-bold">Final</h5>
+                <div className="mb-2 self-center xl:mb-6">
+                  <table className="w-24 table-fixed xl:w-32">
                     <thead>
                       <tr key="header" className="text-[0.5rem]">
-                        <th scope="col" className="w-20 xl:w-22 p-1 mx-1"></th>
+                        <th scope="col" className="xl:w-22 mx-1 w-20 p-1"></th>
                         <th
                           scope="col"
-                          className="w-4 xl:w-8 p-1 mx-1 text-right"
+                          className="mx-1 w-4 p-1 text-right xl:w-8"
                         ></th>
                       </tr>
                     </thead>
@@ -57,7 +98,7 @@ const SeasonHelpModal = ({
                             <td className="text-xs xl:text-lg">
                               {team.lag.casualName}
                             </td>
-                            <td className="text-xs xl:text-lg text-right">
+                            <td className="text-right text-xs xl:text-lg">
                               {team.total_goals_scored}
                             </td>
                           </tr>
@@ -67,25 +108,33 @@ const SeasonHelpModal = ({
                   </table>
                 </div>
                 {semiTables.length > 0 && (
-                  <h5 className="font-bold text-sm text-right mr-2">Semi</h5>
+                  <h5 className="mr-2 text-right text-sm font-bold">Semi</h5>
                 )}
-                <div className="flex flex-row justify-around mb-2 xl:mb-6">
+                <div className="mb-2 flex flex-row justify-around xl:mb-6">
                   {semiTables.map((group, index) => {
                     return (
                       <div
                         key={`${group.group}-${index}`}
-                        className="gap-2 m-2"
+                        className="m-2 cursor-pointer gap-2"
+                        onClick={() => {
+                          setGameData(
+                            playoffGames.filter(
+                              (game) => game.group === group.group,
+                            ),
+                          )
+                          setShowPlayoffGames(true)
+                        }}
                       >
                         <table className="w-24 xl:w-32">
                           <thead>
                             <tr className="text-[0.5rem]">
                               <th
                                 scope="col"
-                                className="w-20 xl:w-22 p-1 mx-1"
+                                className="xl:w-22 mx-1 w-20 p-1"
                               ></th>
                               <th
                                 scope="col"
-                                className="w-4 xl:w-8 p-1 mx-1 text-right"
+                                className="mx-1 w-4 p-1 text-right xl:w-8"
                               ></th>
                             </tr>
                           </thead>
@@ -95,7 +144,7 @@ const SeasonHelpModal = ({
                                 <td className="text-xs xl:text-lg">
                                   {team.lag.casualName}
                                 </td>
-                                <td className="text-xs xl:text-lg text-right">
+                                <td className="text-right text-xs xl:text-lg">
                                   {team.total_wins}
                                 </td>
                               </tr>
@@ -107,35 +156,46 @@ const SeasonHelpModal = ({
                   })}
                 </div>
                 {quarterTables.length > 0 && (
-                  <h5 className="font-bold text-sm text-right mr-2">Kvart</h5>
+                  <h5 className="mr-2 text-right text-sm font-bold">Kvart</h5>
                 )}
-                <div className="flex flex-row justify-around mb-2 xl:mb-6">
+                <div className="mb-2 flex flex-row justify-around xl:mb-6">
                   {quarterTables.map((group) => {
                     return (
-                      <div key={group.group}>
+                      <div
+                        className=" cursor-pointer"
+                        key={group.group}
+                        onClick={() => {
+                          setGameData(
+                            playoffGames.filter(
+                              (game) => game.group === group.group,
+                            ),
+                          )
+                          setShowPlayoffGames(true)
+                        }}
+                      >
                         <table className="w-20 xl:w-32">
                           <thead>
                             <tr className="text-[0.5rem]">
                               <th
                                 scope="col"
-                                className="w-12 xl:w-22 p-1 mx-1"
+                                className="xl:w-22 mx-1 w-12 p-1"
                               ></th>
                               <th
                                 scope="col"
-                                className="w-4 xl:w-8 p-1 mx-1 xl:text-right"
+                                className="mx-1 w-4 p-1 xl:w-8 xl:text-right"
                               ></th>
                             </tr>
                           </thead>
                           {group.tables.map((team) => {
                             return (
                               <tr key={team.teamId}>
-                                <td className="hidden xl:contents text-lg">
+                                <td className="hidden text-lg xl:contents">
                                   {team.lag.casualName}
                                 </td>
-                                <td className="xl:hidden text-xs">
+                                <td className="text-xs xl:hidden">
                                   {team.lag.shortName}
                                 </td>
-                                <td className="text-xs xl:text-lg xl:text-right">
+                                <td className="text-xs xl:text-right xl:text-lg">
                                   {team.total_wins}
                                 </td>
                               </tr>
@@ -147,15 +207,26 @@ const SeasonHelpModal = ({
                   })}
                 </div>
                 {eightTables.length > 0 && (
-                  <h5 className="font-bold text-sm text-right mr-2">
+                  <h5 className="mr-2 text-right text-sm font-bold">
                     Åttondel
                   </h5>
                 )}
-                <div className="grid grid-cols-2 justify-center justify-items-center mb-2 xl:mb-6">
+                <div className="mb-2 grid grid-cols-2 justify-center justify-items-center xl:mb-6">
                   {eightTables.map((group) => {
                     return (
-                      <div key={group.group}>
-                        <table className="table-fixed w-20 xl:w-30">
+                      <div
+                        className="cursor-pointer"
+                        key={group.group}
+                        onClick={() => {
+                          setGameData(
+                            playoffGames.filter(
+                              (game) => game.group === group.group,
+                            ),
+                          )
+                          setShowPlayoffGames(true)
+                        }}
+                      >
+                        <table className="xl:w-30 w-20 table-fixed">
                           <thead>
                             <tr key="header-row" className="text-[0.5rem]">
                               <th scope="col" className="w-16 p-1"></th>
@@ -172,13 +243,13 @@ const SeasonHelpModal = ({
                             {group.tables.map((team) => {
                               return (
                                 <tr key={team.teamId}>
-                                  <td className="text-xs xl:text-lg p-1">
+                                  <td className="p-1 text-xs xl:text-lg">
                                     {team.lag.shortName}
                                   </td>
-                                  <td className="text-xs xl:text-lg p-1 text-center">
+                                  <td className="p-1 text-center text-xs xl:text-lg">
                                     {team.total_points}
                                   </td>
-                                  <td className="text-xs xl:text-lg p-1 text-right">
+                                  <td className="p-1 text-right text-xs xl:text-lg">
                                     {team.total_goal_difference}
                                   </td>
                                 </tr>
@@ -193,9 +264,9 @@ const SeasonHelpModal = ({
               </div>
             </div>
             {/*footer*/}
-            <div className="flex items-center justify-end p-2 border-t border-solid border-slate-200 rounded-b">
+            <div className="flex items-center justify-end rounded-b border-t border-solid border-slate-200 p-2">
               <button
-                className="text-red-500 bg-slate-200 font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                className="mb-1 mr-1 bg-slate-200 px-6 py-2 text-sm font-bold uppercase text-red-500 outline-none transition-all duration-150 ease-linear focus:outline-none"
                 type="button"
                 onClick={() => setShowModal(false)}
               >
@@ -204,8 +275,17 @@ const SeasonHelpModal = ({
             </div>
           </div>
         </div>
+        {showPlayoffGames ? (
+          <>
+            <PlayoffSeriesPopup
+              gameData={gameData}
+              setGameData={setGameData}
+              setShowPlayoffGames={setShowPlayoffGames}
+            />
+          </>
+        ) : null}
       </div>
-      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+      <div className="fixed inset-0 z-40 bg-black opacity-25"></div>
     </>
   )
 }

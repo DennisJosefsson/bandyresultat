@@ -10,6 +10,7 @@ import SeasonHelpModal from './SeasonHelpModal'
 import PlayoffModal from './PlayoffModal'
 import TableList from './TableList'
 import RoundForRound from './RoundForRound'
+import PlayoffSeriesPopup from './PlayoffSeriesPopup'
 
 import { tableSortFunction } from '../utilitycomponents/sortFunction'
 import { LeftArrow, RightArrow } from '../utilitycomponents/icons'
@@ -24,6 +25,9 @@ const Season = () => {
   const [showHelpModal, setShowHelpModal] = useState(false)
   const [showPlayoffModal, setShowPlayoffModal] = useState(false)
   const [round, setRound] = useState(1)
+  const [gameData, setGameData] = useState(null)
+  const [showPlayoffGames, setShowPlayoffGames] = useState(false)
+
   const location = useLocation()
   useEffect(() => {
     if (location.state && location.state.resetRound) {
@@ -46,11 +50,11 @@ const Season = () => {
     isLoading: isTableLoading,
     error: tableError,
   } = useQuery(['singleSeasonTable', seasonId], () =>
-    getSingleSeasonTable(seasonId)
+    getSingleSeasonTable(seasonId),
   )
   if (isLoading || isTableLoading) {
     return (
-      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         <Spinner />
       </div>
     )
@@ -58,7 +62,7 @@ const Season = () => {
 
   if (error || tableError) {
     return (
-      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         Något gick fel.
       </div>
     )
@@ -70,24 +74,27 @@ const Season = () => {
   }
 
   const tables = data.tabell.filter((table) => table.women === women)
+  const playoffGames = data.playoffGames.filter(
+    (table) => table.women === women,
+  )
   const roundByRoundTables = data.roundByRoundTables.filter(
-    (table) => table.womens_table === women
+    (table) => table.womens_table === women,
   )
   const groups = new Set(roundByRoundTables.map((team) => team.group))
   const groupsArray = Array.from(groups)
   const final = tables.filter((table) => table.category === 'final')
   const unsortedSemiTables = tables.filter((table) => table.category === 'semi')
   const unsortedQuarterTables = tables.filter(
-    (table) => table.category === 'quarter'
+    (table) => table.category === 'quarter',
   )
   const unsortedEightTables = tables.filter(
-    (table) => table.category === 'eight'
+    (table) => table.category === 'eight',
   )
   const unsortedRegularTables = tables.filter(
-    (table) => table.category === 'regular'
+    (table) => table.category === 'regular',
   )
   const unsortedQualificationTables = tables.filter(
-    (table) => table.category === 'qualification'
+    (table) => table.category === 'qualification',
   )
 
   const semiTables = tableSortFunction(unsortedSemiTables)
@@ -98,7 +105,7 @@ const Season = () => {
 
   if (women && seasonId < 1973) {
     return (
-      <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col">
+      <div className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
         <div className="flex flex-row justify-end">
           <div>
             <div
@@ -107,13 +114,13 @@ const Season = () => {
                 setRoundForRound(false)
                 dispatch({ type: 'TOGGLE' })
               }}
-              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
+              className="mb-4 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
             >
               {women ? 'Herrar' : 'Damer'}
             </div>
           </div>
         </div>
-        <div className="grid place-items-center mx-auto font-inter text-[#011d29]">
+        <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
           <p className="p-16 text-center">
             Första säsongen för damernas högsta serie var{' '}
             <Link to="/season/1973" className="font-bold">
@@ -127,15 +134,15 @@ const Season = () => {
   }
 
   return (
-    <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col mt-2">
+    <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
       <div className="flex flex-row justify-between">
-        <div className="w-full flex flex-row items-center justify-evenly mb-4">
+        <div className="mb-4 flex w-full flex-row items-center justify-evenly">
           {seasonId - 1 === 1906 ? null : (
             <Link to={`/season/${seasonId - 1}`} state={{ resetRound: true }}>
               <LeftArrow />
             </Link>
           )}
-          <h2 className="leading-4 text-center text-base sm:text-xl lg:text-2xl font-bold">
+          <h2 className="text-center text-base font-bold leading-4 sm:text-xl lg:text-2xl">
             Säsong {season[0].year} {women ? 'Damer' : 'Herrar'}
           </h2>
           {seasonId + 1 === 2025 ? null : (
@@ -147,12 +154,12 @@ const Season = () => {
       </div>
       <div className="flex flex-row-reverse justify-between">
         {seasonId === 2024 && (
-          <div className="grid place-items-center mx-auto font-inter text-[#011d29]">
+          <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
             <p>Inga resultat än.</p>
           </div>
         )}
         {women && seasonId < 1973 && (
-          <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+          <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
             <p>
               Första säsongen för damernas högsta serie var{' '}
               <Link to="/season/1973" className="font-bold">
@@ -164,21 +171,21 @@ const Season = () => {
         )}
         {seasonId < 2024 && (
           <div ref={topRef}>
-            <div className="flex flex-col-reverse justify-start xl:flex-row xl:justify-between gap-2 pr-2 md:mr-4 xl:mr-0">
+            <div className="flex flex-col-reverse justify-start gap-2 pr-2 md:mr-4 xl:mr-0 xl:flex-row xl:justify-between">
               <Link to={`/games/${seasonId}`}>
-                <div className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6">
+                <div className="mb-4 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg">
                   Matcher
                 </div>
               </Link>
               <div
                 onClick={() => setShowPlayoffModal(true)}
-                className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 xl:hidden"
+                className="mb-4 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:hidden"
               >
                 Slutspel
               </div>
               <div
                 onClick={() => setShowHelpModal(true)}
-                className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
+                className="mb-4 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
               >
                 Hjälp/Info
               </div>
@@ -189,24 +196,24 @@ const Season = () => {
                   setRoundForRound(false)
                   dispatch({ type: 'TOGGLE' })
                 }}
-                className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
+                className="mb-4 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
               >
                 {women ? 'Herrar' : 'Damer'}
               </div>
             </div>
-            <div className="hidden m-0 justify-self-center text-base xl:contents">
-              <h2 className="font-bold text-xl text-right">Slutspel</h2>
+            <div className="m-0 hidden justify-self-center text-base xl:contents">
+              <h2 className="text-right text-xl font-bold">Slutspel</h2>
 
-              <div className="w-[36rem] flex flex-col">
-                <h5 className="font-bold text-sm text-right">Final</h5>
-                <div className="self-center mb-6">
-                  <table className="table-fixed w-32">
+              <div className="flex w-[36rem] flex-col">
+                <h5 className="text-right text-sm font-bold">Final</h5>
+                <div className="mb-6 self-center">
+                  <table className="w-32 table-fixed">
                     <thead>
                       <tr className="text-[0.5rem]">
-                        <th scope="col" className="w-22 p-1 mx-1"></th>
+                        <th scope="col" className="w-22 mx-1 p-1"></th>
                         <th
                           scope="col"
-                          className="w-8 p-1 mx-1 text-right"
+                          className="mx-1 w-8 p-1 text-right"
                         ></th>
                       </tr>
                     </thead>
@@ -225,57 +232,92 @@ const Season = () => {
                   </table>
                 </div>
                 {semiTables.length > 0 && (
-                  <h5 className="font-bold text-sm text-right">Semi</h5>
+                  <h5 className="text-right text-sm font-bold">Semi</h5>
                 )}
-                <div className="flex flex-row justify-around mb-6">
+                <div className="mb-6 flex flex-row justify-around">
                   {semiTables.map((group, index) => {
                     return (
                       <div
                         key={`${group.group}-${index}`}
-                        className="gap-2 m-2"
+                        className="m-2 cursor-pointer gap-2 "
+                        onMouseEnter={() => {
+                          setGameData(
+                            playoffGames.filter(
+                              (game) => game.group === group.group,
+                            ),
+                          )
+                          setShowPlayoffGames(true)
+                        }}
+                        onMouseLeave={() => {
+                          setGameData(null)
+                          setShowPlayoffGames(false)
+                        }}
                       >
-                        <table className="table-fixed w-32">
+                        <table
+                          className="w-32 table-fixed"
+                          key={`semi-${Math.random()}`}
+                        >
                           <thead>
-                            <tr className="text-[0.5rem]" key="semi-tablehead">
-                              <th scope="col" className="w-22 p-1 mx-1"></th>
+                            <tr
+                              className="text-[0.5rem]"
+                              key={`semi-tablehead-${Math.random()}`}
+                            >
+                              <th scope="col" className="w-22 mx-1 p-1"></th>
                               <th
                                 scope="col"
-                                className="w-8 p-1 mx-1 text-right"
+                                className="mx-1 w-8 p-1 text-right"
                               ></th>
                             </tr>
                           </thead>
-                          {group.tables.map((team) => {
-                            return (
-                              <tr key={team.teamId}>
-                                <td>{team.lag.casualName}</td>
-                                <td className="text-right">
-                                  {team.total_wins}
-                                </td>
-                              </tr>
-                            )
-                          })}
+                          <tbody>
+                            {group.tables.map((team) => {
+                              return (
+                                <tr key={`${team.teamId}-${Math.random()}`}>
+                                  <td>{team.lag.casualName}</td>
+                                  <td className="text-right">
+                                    {team.total_wins}
+                                  </td>
+                                </tr>
+                              )
+                            })}
+                          </tbody>
                         </table>
                       </div>
                     )
                   })}
                 </div>
                 {quarterTables.length > 0 && (
-                  <h5 className="font-bold text-sm text-right">Kvart</h5>
+                  <h5 className="text-right text-sm font-bold">Kvart</h5>
                 )}
-                <div className="flex flex-row justify-around mb-6">
+                <div className="mb-6 flex flex-row justify-around">
                   {quarterTables.map((group) => {
                     return (
-                      <div key={group.group}>
-                        <table className="table-fixed w-32">
+                      <div
+                        className="cursor-pointer "
+                        key={group.group}
+                        onMouseEnter={() => {
+                          setGameData(
+                            playoffGames.filter(
+                              (game) => game.group === group.group,
+                            ),
+                          )
+                          setShowPlayoffGames(true)
+                        }}
+                        onMouseLeave={() => {
+                          setGameData(null)
+                          setShowPlayoffGames(false)
+                        }}
+                      >
+                        <table className="w-32 table-fixed">
                           <thead>
                             <tr
                               className="text-[0.5rem]"
                               key="quarter-tablehead"
                             >
-                              <th scope="col" className="w-22 p-1 mx-1"></th>
+                              <th scope="col" className="w-22 mx-1 p-1"></th>
                               <th
                                 scope="col"
-                                className="w-8 p-1 mx-1 text-right"
+                                className="mx-1 w-8 p-1 text-right"
                               ></th>
                             </tr>
                           </thead>
@@ -295,13 +337,28 @@ const Season = () => {
                   })}
                 </div>
                 {eightTables.length > 0 && (
-                  <h5 className="font-bold text-sm text-right">Åttondel</h5>
+                  <h5 className="text-right text-sm font-bold">Åttondel</h5>
                 )}
-                <div className="flex flex-row justify-around flex-wrap mb-6">
+                <div className="mb-6 flex flex-row flex-wrap justify-around">
                   {eightTables.map((group) => {
                     return (
-                      <div key={group.group}>
-                        <table className="table-fixed w-30">
+                      <div
+                        className="cursor-pointer"
+                        key={group.group}
+                        onMouseEnter={() => {
+                          setGameData(
+                            playoffGames.filter(
+                              (game) => game.group === group.group,
+                            ),
+                          )
+                          setShowPlayoffGames(true)
+                        }}
+                        onMouseLeave={() => {
+                          setGameData(null)
+                          setShowPlayoffGames(false)
+                        }}
+                      >
+                        <table className="w-30 table-fixed">
                           <thead>
                             <tr
                               key="eight-table-head"
@@ -355,12 +412,12 @@ const Season = () => {
                     if (sortOrder.indexOf(a) < sortOrder.indexOf(b)) {
                       return -1
                     }
-                  })[0]
+                  })[0],
                 )
                 setRound(1)
                 setRoundForRound(!roundForRound)
               }}
-              className="cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center w-full mb-2 xl:mb-6"
+              className="mb-2 w-full cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:px-2 lg:py-1 lg:text-lg xl:mb-6"
             >
               {roundForRound ? 'Visa tabeller' : 'Visa utveckling'}
             </div>
@@ -376,7 +433,7 @@ const Season = () => {
             )}
             {roundForRound && groupsArray.length > 1 && (
               <div>
-                <div className="flex flex-row justify-between w-full">
+                <div className="flex w-full flex-row justify-between">
                   {groupsArray
                     .sort((a, b) => {
                       if (sortOrder.indexOf(a) > sortOrder.indexOf(b)) {
@@ -397,8 +454,8 @@ const Season = () => {
                           }}
                           className={
                             grupp === group
-                              ? 'cursor-pointer rounded-md mt-3 px-2 py-1 bg-slate-200 text-[#011d29] text-center w-30 border-[#011d29]'
-                              : 'cursor-pointer rounded-md mt-3 px-2 py-1 bg-slate-200 text-[#011d29] text-center w-30'
+                              ? 'w-30 mt-3 cursor-pointer rounded-md border-[#011d29] bg-slate-200 px-2 py-1 text-center text-[#011d29]'
+                              : 'w-30 mt-3 cursor-pointer rounded-md bg-slate-200 px-2 py-1 text-center text-[#011d29]'
                           }
                         >
                           {groupConstant[group]}
@@ -408,7 +465,7 @@ const Season = () => {
                 </div>
                 <RoundForRound
                   array={roundByRoundTables.filter(
-                    (table) => table.group === grupp
+                    (table) => table.group === grupp,
                   )}
                   round={round}
                   setRound={setRound}
@@ -440,20 +497,26 @@ const Season = () => {
             semiTables={semiTables}
             quarterTables={quarterTables}
             eightTables={eightTables}
+            playoffGames={playoffGames}
           />
         </>
       ) : null}
+      {showPlayoffGames ? (
+        <>
+          <PlayoffSeriesPopup gameData={gameData} />
+        </>
+      ) : null}
       <div ref={bottomRef}></div>
-      <div className="sticky bottom-0 flex flex-row gap-2 justify-center bg-[#f4f5f5] z-20 items-center">
+      <div className="sticky bottom-0 z-20 flex flex-row items-center justify-center gap-2 bg-[#f4f5f5]">
         <div
           onClick={(event) => scrollTo(event, topRef)}
-          className="cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#93B8C1] text-[10px] lg:text-sm text-[#011d29] text-center my-2 select-none"
+          className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
         >
           Scrolla upp
         </div>
         <div
           onClick={(event) => scrollTo(event, bottomRef)}
-          className="cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#93B8C1] text-[10px] lg:text-sm text-[#011d29] text-center my-2 select-none"
+          className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
         >
           Scrolla ner
         </div>
