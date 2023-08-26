@@ -117,8 +117,9 @@ const Compare = () => {
         {allData.length === 0 && (
           <div>
             <p className="font-bold text-base md:text-lg w-[90%] xl:w-[36rem] mb-2 lg:mb-4">
-              Lagen har inte mötts {catString} sedan{' '}
-              {data.data.seasonNames[0].year}.
+              Lagen har inte mötts {catString} mellan{' '}
+              {data.data.seasonNames[0].year} och{' '}
+              {data.data.seasonNames[1].year}.
             </p>
           </div>
         )}
@@ -133,7 +134,7 @@ const Compare = () => {
                   Möten mellan {teamString} {catString}{' '}
                   {compObject.startSeason === compObject.endSeason
                     ? `säsongen ${data.data.seasonNames[0].year}`
-                    : `mellan ${data.data.seasonNames[0].year} och ${data.data.seasonNames[1].year}.`}
+                    : `${data.data.seasonNames[0].year}-${data.data.seasonNames[1].year}.`}
                 </p>
                 <div>
                   <h3 className="text-sm md:text-lg font-bold">Sammanlagt</h3>
@@ -365,7 +366,7 @@ const Compare = () => {
                   Möten mellan {teamString} {catString}{' '}
                   {compObject.startSeason === compObject.endSeason
                     ? `säsongen ${data.data.seasonNames[0].year}`
-                    : `mellan ${data.data.seasonNames[0].year} och ${data.data.seasonNames[1].year}.`}
+                    : `${data.data.seasonNames[0].year}-${data.data.seasonNames[1].year}.`}
                 </p>
                 <div>
                   <h3 className="text-sm md:text-lg font-bold">Sammanlagt</h3>

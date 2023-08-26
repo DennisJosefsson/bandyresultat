@@ -1,6 +1,6 @@
 const Home = () => {
   return (
-    <div className="max-w-7xl mx-auto flex flex-row justify-between h-[30rem] mb-2">
+    <div className="max-w-7xl mx-auto flex flex-row justify-between h-[25rem] mb-2">
       <div className="my-20 flex flex-col font-inter">
         <div className="mb-6">
           <h1 className="text-base font-bold pl-2 sm:text-4xl">
