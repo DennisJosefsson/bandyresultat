@@ -1,67 +1,69 @@
-import { useQuery, useMutation } from "react-query";
-import { useState, useReducer, useContext, useRef } from "react";
-import { getTeams, postTeam } from "../../requests/teams";
-import { getSeasons } from "../../requests/seasons";
-import { useNavigate, Link, useLocation } from "react-router-dom";
-import { GenderContext, UserContext } from "../../contexts/contexts";
+import { useQuery, useMutation } from 'react-query'
+import { useState, useReducer, useContext, useRef } from 'react'
+import { getTeams, postTeam } from '../../requests/teams'
+import { getSeasons } from '../../requests/seasons'
+import { useNavigate, Link, useLocation } from 'react-router-dom'
+import { GenderContext, UserContext } from '../../contexts/contexts'
 
-import teamArrayFormReducer from "../../reducers/teamSeasonFormReducer";
-import Spinner from "../utilitycomponents/spinner";
-import TeamForm from "./TeamForm";
-import TeamsListHelpModal from "./TeamsListHelpModal";
-import SearchSelectionModal from "./SearchSelectionModal";
+import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
+import Spinner from '../utilitycomponents/spinner'
+import TeamForm from './TeamForm'
+import TeamsListHelpModal from './TeamsListHelpModal'
+import SearchSelectionModal from './SearchSelectionModal'
+import GenderButtonComponent from '../utilitycomponents/GenderButtonComponent'
+import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
 
 const Teams = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const topRef = useRef();
-  const bottomRef = useRef();
-  const { women, dispatch: genderDispatch } = useContext(GenderContext);
-  const { user } = useContext(UserContext);
-  const [showTeamFormModal, setShowTeamFormModal] = useState(false);
-  const [showHelpModal, setShowHelpModal] = useState(false);
+  const navigate = useNavigate()
+  const location = useLocation()
+  const topRef = useRef()
+  const bottomRef = useRef()
+  const { women, dispatch: genderDispatch } = useContext(GenderContext)
+  const { user } = useContext(UserContext)
+  const [showTeamFormModal, setShowTeamFormModal] = useState(false)
+  const [showHelpModal, setShowHelpModal] = useState(false)
   const [showSearchSelectionModal, setShowSearchSelectionModal] =
-    useState(false);
-  const [teamFilter, setTeamFilter] = useState("");
-  const [valueError, setValueError] = useState({ error: false });
+    useState(false)
+  const [teamFilter, setTeamFilter] = useState('')
+  const [valueError, setValueError] = useState({ error: false })
   const initState = location.state
     ? location.state.compObject
     : {
         teamArray: [],
         categoryArray: [
-          "qualification",
-          "regular",
-          "eight",
-          "quarter",
-          "semi",
-          "final",
+          'qualification',
+          'regular',
+          'eight',
+          'quarter',
+          'semi',
+          'final',
         ],
-        startSeason: "",
-        endSeason: "",
-      };
+        startSeason: '',
+        endSeason: '',
+      }
 
   const [formState, compareDispatch] = useReducer(
     teamArrayFormReducer,
     initState,
-  );
+  )
 
-  const { data, isLoading, error } = useQuery(["teams"], getTeams);
+  const { data, isLoading, error } = useQuery(['teams'], getTeams)
   const {
     data: unFilteredSeasons,
     isLoading: isSeasonsLoading,
     error: seasonError,
-  } = useQuery(["seasons"], getSeasons);
+  } = useQuery(['seasons'], getSeasons)
 
   const teamFormMutation = useMutation({
     mutationFn: postTeam,
-  });
+  })
 
   if (isLoading || isSeasonsLoading) {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         <Spinner />
       </div>
-    );
+    )
   }
 
   if (error || seasonError) {
@@ -69,102 +71,102 @@ const Teams = () => {
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         <Spinner />
       </div>
-    );
+    )
   }
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    if (formState.startSeason === "") {
-      formState.startSeason = seasons.pop().seasonId;
+    event.preventDefault()
+    if (formState.startSeason === '') {
+      formState.startSeason = seasons.pop().seasonId
     }
-    if (formState.endSeason === "") {
-      formState.endSeason = seasons.shift().seasonId;
+    if (formState.endSeason === '') {
+      formState.endSeason = seasons.shift().seasonId
     }
     if (formState.endSeason < formState.startSeason) {
       setValueError({
         error: true,
-        message: "Bortre säsongsval lägre än undre val.",
-      });
+        message: 'Bortre säsongsval lägre än undre val.',
+      })
     } else if (formState.categoryArray.length === 0) {
       setValueError({
         error: true,
-        message: "Måste ange minst en matchkategori.",
-      });
+        message: 'Måste ange minst en matchkategori.',
+      })
     } else {
-      navigate("/compare", { state: { compObject: formState } });
+      navigate('/compare', { state: { compObject: formState } })
     }
-  };
+  }
 
   const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
+    if (event.key === 'Enter') {
+      event.preventDefault()
     }
-  };
+  }
 
   const handleTeamArrayChange = (event, teamId) => {
     if (event.target.checked) {
       compareDispatch({
-        type: "ADD TEAM",
+        type: 'ADD TEAM',
         payload: Number(teamId),
-      });
+      })
     } else {
       compareDispatch({
-        type: "REMOVE TEAM",
+        type: 'REMOVE TEAM',
         payload: Number(teamId),
-      });
+      })
     }
-  };
+  }
 
   const handleCategoryArrayChange = (event) => {
     if (event.target.checked) {
       compareDispatch({
-        type: "ADD CATEGORY",
+        type: 'ADD CATEGORY',
         payload: event.target.value,
-      });
+      })
     } else {
       compareDispatch({
-        type: "REMOVE CATEGORY",
+        type: 'REMOVE CATEGORY',
         payload: event.target.value,
-      });
+      })
     }
-  };
+  }
 
   const handleStartSeasonChange = (event) => {
     compareDispatch({
-      type: "INPUT START",
+      type: 'INPUT START',
       payload: event.value,
-    });
-  };
+    })
+  }
 
   const handleEndSeasonChange = (event) => {
     compareDispatch({
-      type: "INPUT END",
+      type: 'INPUT END',
       payload: event.value,
-    });
-  };
+    })
+  }
 
   const scrollTo = (event, ref) => {
-    event.preventDefault();
-    window.scrollTo(0, ref.current.offsetTop);
-  };
+    event.preventDefault()
+    window.scrollTo(0, ref.current.offsetTop)
+  }
 
   const teams = data
     .filter((team) => team.women === women)
     .filter((team) =>
       team.name.toLowerCase().includes(teamFilter.toLowerCase()),
-    );
+    )
 
-  const seasons = unFilteredSeasons.filter((season) => season.women === women);
-  const reversedSeasons = [...seasons].sort((a, b) => a.seasonId - b.seasonId);
+  const seasons = unFilteredSeasons.filter((season) => season.women === women)
+  const reversedSeasons = [...seasons].sort((a, b) => a.seasonId - b.seasonId)
   const startOptions = reversedSeasons.map((season) => {
-    return { label: season.year, value: season.seasonId };
-  });
+    return { label: season.year, value: season.seasonId }
+  })
 
   const endOptions = seasons.map((season) => {
-    return { label: season.year, value: season.seasonId };
-  });
+    return { label: season.year, value: season.seasonId }
+  })
 
-  const unFilteredTeams = data;
+  const unFilteredTeams = data
 
   return (
     <div
@@ -181,7 +183,7 @@ const Teams = () => {
             name="teamFilter"
             onChange={(event) =>
               setTeamFilter(
-                event.target.value.replace(/[^a-z0-9\u00C0-\u017F]/gi, ""),
+                event.target.value.replace(/[^a-z0-9\u00C0-\u017F]/gi, ''),
               )
             }
             onKeyDown={handleKeyDown}
@@ -207,7 +209,7 @@ const Teams = () => {
                       .shortName
                   }
                 </div>
-              );
+              )
             })}
           </div>
         )}
@@ -258,39 +260,30 @@ const Teams = () => {
       <div className=" mb-6 flex flex-row-reverse justify-between">
         <div className="mr-1 flex w-1/4 flex-col pt-2 md:flex-row-reverse">
           <div className="float-right flex w-full flex-col items-end pr-0.5 lg:w-3/4 lg:p-0">
-            <div
-              onClick={() => {
-                compareDispatch({ type: "CLEAR TEAMS" });
-                genderDispatch({ type: "TOGGLE" });
+            <GenderButtonComponent
+              women={women}
+              clickFunctions={() => {
+                compareDispatch({ type: 'CLEAR TEAMS' })
+                genderDispatch({ type: 'TOGGLE' })
               }}
-              className="mb-4 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
-            >
-              {women ? "Herrar" : "Damer"}
-            </div>
-            <div
-              onClick={() => setShowHelpModal(true)}
-              className="mb-4 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
-            >
+            />
+            <ButtonComponent clickFunctions={() => setShowHelpModal(true)}>
               Hjälp/Info
-            </div>
+            </ButtonComponent>
             <div>
               {formState.teamArray.length > 1 && (
-                <div
-                  onClick={() => setShowSearchSelectionModal(true)}
-                  className="mb-4 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
+                <ButtonComponent
+                  clickFunctions={() => setShowSearchSelectionModal(true)}
                 >
                   Sökval
-                </div>
+                </ButtonComponent>
               )}
             </div>
             {formState.teamArray.length > 1 &&
               formState.teamArray.length < 5 && (
-                <div
-                  onClick={handleSubmit}
-                  className="mb-4 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
-                >
+                <ButtonComponent clickFunctions={handleSubmit}>
                   Jämför
-                </div>
+                </ButtonComponent>
               )}
           </div>
 
@@ -352,7 +345,7 @@ const Teams = () => {
                   />
                 </div>
               </div>
-            );
+            )
           })}
         </div>
       </div>
@@ -372,7 +365,7 @@ const Teams = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Teams;
+export default Teams

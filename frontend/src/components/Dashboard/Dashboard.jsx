@@ -6,6 +6,7 @@ import { GenderContext } from '../../contexts/contexts'
 import MetadataForm from '../Metadata/MetadataForm'
 import TeamSeasonForm from '../Season/TeamSeasonForm'
 import TeamForm from '../Team/TeamForm'
+import GenderButtonComponent from '../utilitycomponents/GenderButtonComponent'
 import { getSeasons } from '../../requests/seasons'
 import { getTeams, postTeam } from '../../requests/teams'
 
@@ -39,11 +40,11 @@ const Dashboard = () => {
   const { women, dispatch } = useContext(GenderContext)
 
   if (isSeasonLoading || isTeamsLoading) {
-    return <div className="max-w-7xl mx-auto">Loading...</div>
+    return <div className="mx-auto max-w-7xl">Loading...</div>
   }
 
   if (seasonsError || teamsError) {
-    return <div className="max-w-7xl mx-auto">There was an error</div>
+    return <div className="mx-auto max-w-7xl">There was an error</div>
   }
 
   const filteredSeasons = seasons
@@ -52,18 +53,16 @@ const Dashboard = () => {
   const teamsArray = teams.filter((season) => season.women === women)
 
   return (
-    <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29]">
+    <div className="mx-auto min-h-screen max-w-7xl font-inter text-[#011d29]">
       <h2 className="text-2xl font-bold">
         Dashboard {women ? 'Damer' : 'Herrar'}
       </h2>
       <div className=" flex flex-row-reverse justify-between">
         <div>
-          <div
-            onClick={() => dispatch({ type: 'TOGGLE' })}
-            className="cursor-pointer rounded-md px-2 py-1 bg-[#011d29] text-white text-center"
-          >
-            {women ? 'Herrar' : 'Damer'}
-          </div>
+          <GenderButtonComponent
+            women={women}
+            clickFunctions={() => dispatch({ type: 'TOGGLE' })}
+          />
           <div>
             <input
               type="text"

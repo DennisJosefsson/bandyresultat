@@ -7,6 +7,7 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 import TeamTable from './TeamTable'
 import TeamCuriositiesModal from './TeamCuriositiesModal'
+import { HiddenButtonComponent } from '../utilitycomponents/ButtonComponents'
 
 dayjs.locale('sv')
 
@@ -18,11 +19,11 @@ const Team = () => {
   }, [])
 
   const { data, isLoading, error } = useQuery(['teams', teamId], () =>
-    getSingleTeam(teamId)
+    getSingleTeam(teamId),
   )
   if (isLoading) {
     return (
-      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         <Spinner />
       </div>
     )
@@ -30,7 +31,7 @@ const Team = () => {
 
   if (error) {
     return (
-      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         Något gick fel.
       </div>
     )
@@ -41,11 +42,11 @@ const Team = () => {
   const seasons = teams.team.seasonteam.filter(
     (season) =>
       season.teamseason.qualification === false ||
-      season.teamseason.qualification === null
+      season.teamseason.qualification === null,
   )
 
   const qualificationSeasons = teams.team.seasonteam.filter(
-    (season) => season.teamseason.qualification === true
+    (season) => season.teamseason.qualification === true,
   )
 
   const finals = teams.finalsAndWins.length
@@ -56,40 +57,37 @@ const Team = () => {
     .reduce((str, winYear) => `${str}, ${winYear.date.slice(0, 4)}`, '')
 
   const noWinStreak = teams.noWinStreak.filter(
-    (streak) => streak.game_count > 5
+    (streak) => streak.game_count > 5,
   )
   const unbeatenStreak = teams.unbeatenStreak.filter(
-    (streak) => streak.game_count > 5
+    (streak) => streak.game_count > 5,
   )
   const winStreak = teams.winStreak.filter((streak) => streak.game_count > 5)
   const drawStreak = teams.drawStreak.filter((streak) => streak.game_count > 2)
   const losingStreak = teams.losingStreak.filter(
-    (streak) => streak.game_count > 5
+    (streak) => streak.game_count > 5,
   )
 
   const playoffStreak = teams.playoffStreak
   const playoffCount = Number(teams.playoffCount[0].playoff_count)
 
   return (
-    <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col">
+    <div className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
       <div>
-        <h1 className="text-center text-base md:text-2xl font-bold mb-4">
+        <h1 className="mb-4 text-center text-base font-bold md:text-2xl">
           {teams.team.name}
         </h1>
       </div>
-      <div className="flex flex-row-reverse justify-between mx-2 xl:mx-0">
+      <div className="mx-2 flex flex-row-reverse justify-between xl:mx-0">
         <div className="w-[30rem]">
-          <div className="flex flex-row justify-end items-center xl:hidden">
-            <div
-              onClick={() => setShowTCModal(true)}
-              className="w-[84px] md:w-[128px] h-6 md:h-9 cursor-pointer rounded-md px-1 py-0.5 md:px-2 md:py-1 bg-[#011d29] text-sm md:text-lg text-white text-center mb-4 md:mb-6 xl:hidden"
-            >
+          <div className="flex flex-row items-center justify-end xl:hidden">
+            <HiddenButtonComponent clickFunctions={() => setShowTCModal(true)}>
               Statistik
-            </div>
+            </HiddenButtonComponent>
           </div>
           <div className="hidden xl:contents">
-            <h2 className="font-bold text-2xl text-right">Kuriosa</h2>
-            <p className="text-sm mb-3">
+            <h2 className="text-right text-2xl font-bold">Kuriosa</h2>
+            <p className="mb-3 text-sm">
               {seasons.length === 1 && (
                 <span>
                   {teams.team.name} från {teams.team.city} har spelat en säsong
@@ -112,7 +110,7 @@ const Team = () => {
                 : ''}
             </p>
             {finals > 0 && golds > 0 && (
-              <p className="text-sm mb-3">
+              <p className="mb-3 text-sm">
                 {teams.team.casualName} har spelat{' '}
                 {finals === 1 ? 'en finalmatch' : `${finals} finalmatcher`} och
                 vunnit{' '}
@@ -122,20 +120,20 @@ const Team = () => {
               </p>
             )}
             {finals > 0 && golds === 0 && (
-              <p className="text-sm mb-3">
+              <p className="mb-3 text-sm">
                 {teams.team.casualName} har spelat{' '}
                 {finals === 1 ? 'en finalmatch' : `${finals} finalmatcher`} men
                 har aldrig vunnit.
               </p>
             )}
             {playoffCount > 0 && (
-              <p className="text-sm mb-3">
+              <p className="mb-3 text-sm">
                 Laget har kvalificerat sig för slutspel{' '}
                 {playoffCount === 1 ? 'en gång.' : `${playoffCount} gånger.`}
               </p>
             )}
             {playoffCount === 0 && (
-              <p className="text-sm mb-3">
+              <p className="mb-3 text-sm">
                 Laget har inte kvalificerat sig för slutspel genom seriespel.
               </p>
             )}
@@ -144,7 +142,7 @@ const Team = () => {
                 {playoffStreak.map((streak, index) => {
                   return (
                     <p
-                      className="text-sm mb-3"
+                      className="mb-3 text-sm"
                       key={`${streak.start_year}-${index}`}
                     >
                       {teams.team.casualName} spelade slutspel{' '}
@@ -157,11 +155,11 @@ const Team = () => {
             )}
             {unbeatenStreak.length > 0 && (
               <span>
-                <h4 className="font-bold text-xl text-right">Obesegrade</h4>
+                <h4 className="text-right text-xl font-bold">Obesegrade</h4>
                 {unbeatenStreak.map((streak, index) => {
                   return (
                     <p
-                      className="text-sm mb-3"
+                      className="mb-3 text-sm"
                       key={`${streak.start_date}-${index}`}
                     >
                       Mellan {dayjs(streak.start_date).format('D MMMM YYYY')}{' '}
@@ -174,11 +172,11 @@ const Team = () => {
             )}
             {winStreak.length > 0 && (
               <span>
-                <h4 className="font-bold text-xl text-right">Vinster i rad</h4>
+                <h4 className="text-right text-xl font-bold">Vinster i rad</h4>
                 {winStreak.map((streak, index) => {
                   return (
                     <p
-                      className="text-sm mb-3"
+                      className="mb-3 text-sm"
                       key={`${streak.start_date}-${index}`}
                     >
                       Mellan {dayjs(streak.start_date).format('D MMMM YYYY')}{' '}
@@ -191,13 +189,13 @@ const Team = () => {
             )}
             {drawStreak.length > 0 && (
               <span>
-                <h4 className="font-bold text-xl text-right">
+                <h4 className="text-right text-xl font-bold">
                   Oavgjorda matcher
                 </h4>
                 {drawStreak.map((streak, index) => {
                   return (
                     <p
-                      className="text-sm mb-3"
+                      className="mb-3 text-sm"
                       key={`${streak.start_date}-${index}`}
                     >
                       Mellan {dayjs(streak.start_date).format('D MMMM YYYY')}{' '}
@@ -210,11 +208,11 @@ const Team = () => {
             )}
             {losingStreak.length > 0 && (
               <span>
-                <h4 className="font-bold text-xl text-right">Förlustsvit</h4>
+                <h4 className="text-right text-xl font-bold">Förlustsvit</h4>
                 {losingStreak.map((streak, index) => {
                   return (
                     <p
-                      className="text-sm mb-3"
+                      className="mb-3 text-sm"
                       key={`${streak.start_date}-${index}`}
                     >
                       Mellan {dayjs(streak.start_date).format('D MMMM YYYY')}{' '}
@@ -227,13 +225,13 @@ const Team = () => {
             )}
             {noWinStreak.length > 0 && (
               <span>
-                <h4 className="font-bold text-xl text-right">
+                <h4 className="text-right text-xl font-bold">
                   Matcher i rad utan vinst
                 </h4>
                 {noWinStreak.map((streak, index) => {
                   return (
                     <p
-                      className="text-sm mb-3"
+                      className="mb-3 text-sm"
                       key={`${streak.start_date}-${index}`}
                     >
                       Mellan {dayjs(streak.start_date).format('D MMMM YYYY')}{' '}
@@ -247,7 +245,7 @@ const Team = () => {
           </div>
         </div>
         <div>
-          <h2 className="font-bold text-base md:text-xl">Tabeller</h2>
+          <h2 className="text-base font-bold md:text-xl">Tabeller</h2>
           <TeamTable tableArray={teams.tabeller} />
         </div>
       </div>
