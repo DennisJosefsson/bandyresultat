@@ -64,20 +64,20 @@ const GameForm = ({
     // { value: 'norr', label: 'Norr' },
     // { value: 'syd', label: 'Syd' },
     { value: 'KvalA', label: 'Kvalgrupp A' },
-    // { value: 'KvalB', label: 'Kvalgrupp B' },
-    { value: 'E1', label: 'Åttondel 1' },
-    { value: 'E2', label: 'Åttondel 2' },
-    { value: 'Q1', label: 'Kvartsfinal 1' },
-    { value: 'Q2', label: 'Kvartsfinal 2' },
-    { value: 'Q3', label: 'Kvartsfinal 3' },
+    { value: 'KvalB', label: 'Kvalgrupp B' },
+    //{ value: 'E1', label: 'Åttondel 1' },
+    //{ value: 'E2', label: 'Åttondel 2' },
+    //{ value: 'Q1', label: 'Kvartsfinal 1' },
+    //{ value: 'Q2', label: 'Kvartsfinal 2' },
+    //{ value: 'Q3', label: 'Kvartsfinal 3' },
     { value: 'Q4', label: 'Kvartsfinal 4' },
     { value: 'S1', label: 'Semifinal 1' },
     { value: 'S2', label: 'Semifinal 2' },
     { value: 'final', label: 'Final' },
     // { value: 'sexlagsserie', label: 'Sexlagsserie' },
-    { value: 'Div1Norr', label: 'Division 1 Norr' },
+    //{ value: 'Div1Norr', label: 'Division 1 Norr' },
     // { value: 'Div1Central', label: 'Division 1 Central' },
-    { value: 'Div1Syd', label: 'Division 1 Syd' },
+    //{ value: 'Div1Syd', label: 'Division 1 Syd' },
     // { value: 'Div1SydA', label: 'Division 1 SydA' },
     // { value: 'Div1SydB', label: 'Division 1 SydB' },
     // { value: 'Div1NorrA', label: 'Division 1 NorrA' },
@@ -103,7 +103,7 @@ const GameForm = ({
 
   const [formState, dispatch] = useReducer(
     gameFormReducer,
-    gameData ? initEdit(gameData) : initAdd(season.seasonId)
+    gameData ? initEdit(gameData) : initAdd(season.seasonId),
   )
 
   const handleSubmit = (event) => {
@@ -127,22 +127,20 @@ const GameForm = ({
     })
   }
 
-  console.log(formState)
-
   return (
     <>
-      <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative w-auto my-6 mx-auto max-w-3xl">
+      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
+        <div className="relative mx-auto my-6 w-auto max-w-3xl">
           {/*content*/}
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+          <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
             {/*header*/}
-            <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+            <div className="flex items-start justify-between rounded-t border-b border-solid border-slate-200 p-5">
               <h3 className="text-3xl font-semibold">Matchformulär</h3>
               <button
-                className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                className="float-right ml-auto border-0 bg-transparent p-1 text-3xl font-semibold leading-none text-black opacity-5 outline-none focus:outline-none"
                 onClick={() => setShowModal(false)}
               >
-                <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                <span className="block h-6 w-6 bg-transparent text-2xl text-black opacity-5 outline-none focus:outline-none">
                   ×
                 </span>
               </button>
@@ -150,7 +148,7 @@ const GameForm = ({
             {/*body*/}
             <div>
               <form onSubmit={handleSubmit} id="GameForm">
-                <div className="flex flex-col w-[540px] flex-auto p-5 px-16 justify-start">
+                <div className="flex w-[540px] flex-auto flex-col justify-start p-5 px-16">
                   <div className="p-1">
                     <label
                       htmlFor="homeTeamId"
@@ -159,7 +157,7 @@ const GameForm = ({
                       <div className="w-32">Hemmalag:</div>
                       <div>
                         <select
-                          className="w-72 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+                          className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
                           name="homeTeamId"
                           id="homeTeamId"
                           value={formState.homeTeamId}
@@ -184,7 +182,7 @@ const GameForm = ({
                       <div className="w-32">Bortalag:</div>
                       <div>
                         <select
-                          className="w-72 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+                          className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
                           name="awayTeamId"
                           id="awayTeamId"
                           value={formState.awayTeamId}
@@ -210,7 +208,7 @@ const GameForm = ({
                         <div className="w-32">Slutresultat:</div>
                         <div>
                           <input
-                            className="w-24 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+                            className="w-24 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
                             type="text"
                             name="result"
                             value={formState.result}
@@ -227,7 +225,7 @@ const GameForm = ({
                         <div className="w-32">Halvtidsresultat:</div>
                         <div>
                           <input
-                            className="w-24 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+                            className="w-24 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
                             type="text"
                             name="halftimeResult"
                             value={formState.halftimeResult}
@@ -244,7 +242,7 @@ const GameForm = ({
                         <div className="w-32">Datum:</div>
                         <div>
                           <input
-                            className="w-32 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+                            className="w-32 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
                             type="text"
                             name="date"
                             value={formState.date}
@@ -262,7 +260,7 @@ const GameForm = ({
                         <div className="w-32">Kategori:</div>
                         <div>
                           <select
-                            className="w-72 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+                            className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
                             name="category"
                             id="category"
                             value={formState.category}
@@ -287,7 +285,7 @@ const GameForm = ({
                         <div className="w-32">Grupp:</div>
                         <div>
                           <select
-                            className="w-72 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+                            className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
                             name="group"
                             id="group"
                             value={formState.group}
@@ -393,9 +391,9 @@ const GameForm = ({
               </form>
             </div>
             {/*footer*/}
-            <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+            <div className="flex items-center justify-end rounded-b border-t border-solid border-slate-200 p-6">
               <button
-                className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                className="background-transparent mb-1 mr-1 px-6 py-2 text-sm font-bold uppercase text-red-500 outline-none transition-all duration-150 ease-linear focus:outline-none"
                 type="button"
                 onClick={() => {
                   setGameData(null)
@@ -405,7 +403,7 @@ const GameForm = ({
                 Stäng
               </button>
               <input
-                className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                className="mb-1 mr-1 rounded bg-emerald-500 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:shadow-lg focus:outline-none active:bg-emerald-600"
                 type="submit"
                 form="GameForm"
                 value="Spara"
@@ -414,7 +412,7 @@ const GameForm = ({
           </div>
         </div>
       </div>
-      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+      <div className="fixed inset-0 z-40 bg-black opacity-25"></div>
     </>
   )
 }

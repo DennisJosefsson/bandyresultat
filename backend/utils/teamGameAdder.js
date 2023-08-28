@@ -72,6 +72,7 @@ const homeTeam = (game) => {
     playoff,
     women,
     date,
+    homeGame: true,
   }
 }
 const awayTeam = (game) => {
@@ -125,6 +126,7 @@ const awayTeam = (game) => {
     playoff,
     women,
     date,
+    homeGame: false,
   }
 }
 
