@@ -11,6 +11,11 @@ import GameForm from './GameForm'
 import GamesHelpModal from './GamesHelpModal'
 import CuriositiesModal from './CuriositiesModal'
 import StatsModal from './StatsModal'
+import GenderButtonComponent from '../utilitycomponents/GenderButtonComponent'
+import {
+  ButtonComponent,
+  HiddenButtonComponent,
+} from '../utilitycomponents/ButtonComponents'
 import { gameSortFunction } from '../utilitycomponents/sortFunction'
 import { sortOrder, groupConstant } from '../utilitycomponents/constants'
 import { LeftArrow, RightArrow } from '../utilitycomponents/icons'
@@ -38,7 +43,7 @@ const Games = () => {
 
   const { data, isLoading, error } = useQuery(
     ['singleSeasonGames', seasonId],
-    () => getSeasonGames(seasonId)
+    () => getSeasonGames(seasonId),
   )
 
   const {
@@ -59,7 +64,7 @@ const Games = () => {
 
   if (isLoading || isSeasonLoading) {
     return (
-      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         <Spinner />
       </div>
     )
@@ -67,13 +72,13 @@ const Games = () => {
 
   if (error || seasonError) {
     return (
-      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         Något gick fel.
       </div>
     )
   }
 
-  const scrollTo = (event,ref) => {
+  const scrollTo = (event, ref) => {
     event.preventDefault()
     window.scrollTo(0, categoryRefs.current[ref].offsetTop)
   }
@@ -83,17 +88,17 @@ const Games = () => {
     .filter(
       (game) =>
         game.homeTeam.name.toLowerCase().includes(teamFilter.toLowerCase()) ||
-        game.awayTeam.name.toLowerCase().includes(teamFilter.toLowerCase())
+        game.awayTeam.name.toLowerCase().includes(teamFilter.toLowerCase()),
     )
 
   const unbeatenStreak = data.unbeatenStreak.filter(
-    (table) => table.women === women
+    (table) => table.women === women,
   )
   const winStreak = data.winStreak.filter((table) => table.women === women)
   const drawStreak = data.drawStreak.filter((table) => table.women === women)
   const noWinStreak = data.noWinStreak.filter((table) => table.women === women)
   const losingStreak = data.losingStreak.filter(
-    (table) => table.women === women
+    (table) => table.women === women,
   )
 
   const maxGoalsMen = data.maxGoalsMen
@@ -121,14 +126,14 @@ const Games = () => {
   const unsortedFinalGames = games.filter((game) => game.category === 'final')
   const unsortedSemiGames = games.filter((game) => game.category === 'semi')
   const unsortedQuarterGames = games.filter(
-    (game) => game.category === 'quarter'
+    (game) => game.category === 'quarter',
   )
   const unsortedEightGames = games.filter((game) => game.category === 'eight')
   const unsortedRegularGames = games.filter(
-    (game) => game.category === 'regular'
+    (game) => game.category === 'regular',
   )
   const unsortedQualificationGames = games.filter(
-    (game) => game.category === 'qualification'
+    (game) => game.category === 'qualification',
   )
 
   const categoryArray = [
@@ -143,7 +148,7 @@ const Games = () => {
           if (sortOrder.indexOf(a) < sortOrder.indexOf(b)) {
             return -1
           }
-        })
+        }),
     ),
   ]
 
@@ -158,21 +163,19 @@ const Games = () => {
 
   if (women && seasonId < 1973) {
     return (
-      <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col">
+      <div className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
         <div className="flex flex-row justify-end">
           <div>
-            <div
-              onClick={() => {
+            <GenderButtonComponent
+              women={women}
+              clickFunctions={() => {
                 setTeamFilter('')
                 dispatch({ type: 'TOGGLE' })
               }}
-              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
-            >
-              {women ? 'Herrar' : 'Damer'}
-            </div>
+            />
           </div>
         </div>
-        <div className="grid place-items-center mx-auto font-inter text-[#011d29]">
+        <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
           <p className="p-16 text-center">
             Första säsongen för damernas högsta serie var{' '}
             <Link to="/games/1973" className="font-bold">
@@ -186,18 +189,18 @@ const Games = () => {
   }
 
   return (
-    <div className="max-w-7xl min-h-screen mx-auto font-inter text-[#011d29] flex flex-col">
+    <div className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
       <div className="w-full" ref={(el) => (categoryRefs.current['top'] = el)}>
         <form>
           <input
-            className="border-[#011d29] focus:border-[#011d29] w-full"
+            className="w-full border-[#011d29] focus:border-[#011d29]"
             type="text"
             placeholder="Filter"
             value={teamFilter}
             name="teamFilter"
             onChange={(event) =>
               setTeamFilter(
-                event.target.value.replace(/[^a-z0-9\u00C0-\u017F]/gi, '')
+                event.target.value.replace(/[^a-z0-9\u00C0-\u017F]/gi, ''),
               )
             }
             onKeyDown={handleKeyDown}
@@ -205,13 +208,13 @@ const Games = () => {
         </form>
       </div>
       <div className="flex flex-row justify-between pt-4">
-        <div className="w-full flex flex-row items-center justify-evenly mb-4">
+        <div className="mb-4 flex w-full flex-row items-center justify-evenly">
           {seasonId - 1 === 1906 ? null : (
             <Link to={`/games/${seasonId - 1}`}>
               <LeftArrow />
             </Link>
           )}
-          <h2 className="leading-4 text-center text-base sm:text-xl lg:text-2xl font-bold">
+          <h2 className="text-center text-base font-bold leading-4 sm:text-xl lg:text-2xl">
             Säsong {season[0].year} {women ? 'Damer' : 'Herrar'}
           </h2>
           {seasonId + 1 === 2025 ? null : (
@@ -222,12 +225,12 @@ const Games = () => {
         </div>
       </div>
       {seasonId === 2024 && (
-        <div className="grid place-items-center mx-auto font-inter text-[#011d29]">
+        <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
           <p>Inga resultat än.</p>
         </div>
       )}
       {seasonId < 2024 && (
-        <div className="flex flex-row justify-between mx-1 xl:mx-0">
+        <div className="mx-1 flex flex-row justify-between xl:mx-0">
           <div className="w-full px-2 xl:px-0">
             {finalGames.length > 0 && (
               <GamesList
@@ -286,63 +289,56 @@ const Games = () => {
             )}
             {user && (
               <div>
-                <p>
-                  <button onClick={() => setShowAddGameModal(true)}>
-                    Lägg till Match
-                  </button>
-                </p>
+                <ButtonComponent
+                  clickFunctions={() => setShowAddGameModal(true)}
+                >
+                  Lägg till Match
+                </ButtonComponent>
               </div>
             )}
           </div>
           <div className="flex flex-col justify-start">
-            <div className="flex flex-col-reverse justify-start xl:flex-row xl:justify-end xl:gap-2 mb-2 xl:mb-6">
+            <div className="mb-2 flex flex-col-reverse justify-start xl:mb-6 xl:flex-row xl:justify-end xl:gap-2">
               <Link to={`/season/${seasonId}`}>
-                <div className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6">
+                <ButtonComponent clickFunctions={() => {}}>
                   Tabeller
-                </div>
+                </ButtonComponent>
               </Link>
 
               {streakDataLength > 0 && (
-                <div
-                  onClick={() => setShowCuriositiesModal(true)}
-                  className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 xl:hidden"
+                <HiddenButtonComponent
+                  clickFunctions={() => setShowCuriositiesModal(true)}
                 >
                   Kuriosa
-                </div>
+                </HiddenButtonComponent>
               )}
               {statsLength > 0 && (
-                <div
-                  onClick={() => setShowStatsModal(true)}
-                  className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 xl:hidden"
+                <HiddenButtonComponent
+                  clickFunctions={() => setShowStatsModal(true)}
                 >
                   Statistik
-                </div>
+                </HiddenButtonComponent>
               )}
-              <div
-                onClick={() => setShowHelpModal(true)}
-                className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 xl:hidden"
-              >
+              <ButtonComponent clickFunctions={() => setShowHelpModal(true)}>
                 Hjälp/Info
-              </div>
-              <div
-                onClick={() => {
+              </ButtonComponent>
+              <GenderButtonComponent
+                clickFunctions={() => {
                   setTeamFilter('')
                   dispatch({ type: 'TOGGLE' })
                 }}
-                className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6"
-              >
-                {women ? 'Herrar' : 'Damer'}
-              </div>
+                women={women}
+              />
             </div>
             {(streakDataLength > 0 || statsLength > 0) && (
               <div className="hidden xl:contents">
                 <div>
-                  <h4 className="text-xl mb-2 text-right font-bold">Kuriosa</h4>
+                  <h4 className="mb-2 text-right text-xl font-bold">Kuriosa</h4>
                 </div>
-                <div className="flex flex-row justify-between gap-3 w-[40rem]">
+                <div className="flex w-[40rem] flex-row justify-between gap-3">
                   {statsLength > 0 && (
                     <div className="w-64">
-                      <h6 className="font-bold text-base mb-2">
+                      <h6 className="mb-2 text-base font-bold">
                         Match(er) med flest antal mål:
                       </h6>
                       {!women && (
@@ -351,7 +347,7 @@ const Games = () => {
                             return (
                               <p
                                 key={`${game.datum}-${Math.random()}`}
-                                className="text-sm mb-3"
+                                className="mb-3 text-sm"
                               >
                                 {game.datum && (
                                   <span>
@@ -372,7 +368,7 @@ const Games = () => {
                             return (
                               <p
                                 key={`${game.datum}-${Math.random()}`}
-                                className="text-sm mb-3"
+                                className="mb-3 text-sm"
                               >
                                 {game.datum && (
                                   <span>
@@ -386,7 +382,7 @@ const Games = () => {
                           })}
                         </div>
                       )}
-                      <h6 className="font-bold text-base mb-2">
+                      <h6 className="mb-2 text-base font-bold">
                         Match(er) med minst antal mål:
                       </h6>
                       {!women && (
@@ -395,7 +391,7 @@ const Games = () => {
                             return (
                               <p
                                 key={`${game.datum}-${Math.random()}`}
-                                className="text-sm mb-3"
+                                className="mb-3 text-sm"
                               >
                                 {game.datum && (
                                   <span>
@@ -415,7 +411,7 @@ const Games = () => {
                             return (
                               <p
                                 key={`${game.datum}-${Math.random()}`}
-                                className="text-sm mb-3"
+                                className="mb-3 text-sm"
                               >
                                 {game.datum && (
                                   <span>
@@ -430,7 +426,7 @@ const Games = () => {
                           })}
                         </div>
                       )}
-                      <h6 className="font-bold text-base mb-2">
+                      <h6 className="mb-2 text-base font-bold">
                         Match(er) med störst målskillnad:
                       </h6>
                       {!women && (
@@ -439,7 +435,7 @@ const Games = () => {
                             return (
                               <p
                                 key={`${game.datum}-${Math.random()}`}
-                                className="text-sm mb-3"
+                                className="mb-3 text-sm"
                               >
                                 {game.datum && (
                                   <span>
@@ -460,7 +456,7 @@ const Games = () => {
                             return (
                               <p
                                 key={`${game.datum}-${Math.random()}`}
-                                className="text-sm mb-3"
+                                className="mb-3 text-sm"
                               >
                                 {game.datum && (
                                   <span>
@@ -480,7 +476,7 @@ const Games = () => {
                   {streakDataLength > 0 && (
                     <div className="w-64">
                       {unbeatenStreak.length > 0 && (
-                        <h6 className="font-bold text-base mb-2">
+                        <h6 className="mb-2 text-base font-bold">
                           Matcher i rad utan förlust:
                         </h6>
                       )}
@@ -488,7 +484,7 @@ const Games = () => {
                         return (
                           <p
                             key={`${team.casual_name}-${team.game_count}-${team.start_date}`}
-                            className="text-sm mb-3"
+                            className="mb-3 text-sm"
                           >
                             Mellan{' '}
                             {dayjs(team.start_date).format('D MMMM YYYY')} och{' '}
@@ -499,7 +495,7 @@ const Games = () => {
                         )
                       })}
                       {winStreak.length > 0 && (
-                        <h6 className="font-bold text-base mb-2">
+                        <h6 className="mb-2 text-base font-bold">
                           Matcher i rad med vinst:
                         </h6>
                       )}
@@ -507,7 +503,7 @@ const Games = () => {
                         return (
                           <p
                             key={`${team.casual_name}-${team.game_count}-${team.start_date}`}
-                            className="text-sm mb-3"
+                            className="mb-3 text-sm"
                           >
                             Från {dayjs(team.start_date).format('D MMMM YYYY')}{' '}
                             till {dayjs(team.end_date).format('D MMMM YYYY')}{' '}
@@ -517,7 +513,7 @@ const Games = () => {
                         )
                       })}
                       {drawStreak.length > 0 && (
-                        <h6 className="font-bold text-base mb-2">
+                        <h6 className="mb-2 text-base font-bold">
                           Matcher i rad med oavgjort:
                         </h6>
                       )}
@@ -525,7 +521,7 @@ const Games = () => {
                         return (
                           <p
                             key={`${team.casual_name}-${team.game_count}-${team.start_date}`}
-                            className="text-sm mb-3"
+                            className="mb-3 text-sm"
                           >
                             {team.casual_name} spelade från{' '}
                             {dayjs(team.start_date).format('D MMMM YYYY')} till{' '}
@@ -535,7 +531,7 @@ const Games = () => {
                         )
                       })}
                       {noWinStreak.length > 0 && (
-                        <h6 className="font-bold text-base mb-2">
+                        <h6 className="mb-2 text-base font-bold">
                           Matcher i rad utan vinst:
                         </h6>
                       )}
@@ -543,7 +539,7 @@ const Games = () => {
                         return (
                           <p
                             key={`${team.casual_name}-${team.game_count}-${team.start_date}`}
-                            className="text-sm mb-3"
+                            className="mb-3 text-sm"
                           >
                             {team.casual_name} spelade {team.game_count} matcher
                             utan att vinna mellan{' '}
@@ -553,7 +549,7 @@ const Games = () => {
                         )
                       })}
                       {losingStreak.length > 0 && (
-                        <h6 className="font-bold text-base mb-2">
+                        <h6 className="mb-2 text-base font-bold">
                           Matcher i rad med förlust:
                         </h6>
                       )}
@@ -561,7 +557,7 @@ const Games = () => {
                         return (
                           <p
                             key={`${team.casual_name}-${team.game_count}-${team.start_date}`}
-                            className="text-sm mb-3"
+                            className="mb-3 text-sm"
                           >
                             {team.casual_name} förlorade {team.game_count} raka
                             matcher mellan{' '}
@@ -622,13 +618,13 @@ const Games = () => {
         </>
       ) : null}
       <div ref={(el) => (categoryRefs.current['bottom'] = el)}></div>
-      <div className="sticky bottom-0 flex flex-row gap-2 justify-center bg-[#f4f5f5] z-20 items-center">
+      <div className="sticky bottom-0 z-20 flex flex-row items-center justify-center gap-2 bg-[#f4f5f5]">
         {categoryArray.map((cat) => {
           return (
             <div
               key={cat}
               onClick={(event) => scrollTo(event, cat)}
-              className="cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#93B8C1] text-[10px] lg:text-sm text-[#011d29] text-center my-2 select-none"
+              className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
             >
               {groupConstant[cat]}
             </div>

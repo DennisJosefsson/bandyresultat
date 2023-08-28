@@ -19,6 +19,9 @@ Season.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    seasonStructure: {
+      type: DataTypes.STRING,
+    },
   },
   {
     sequelize,

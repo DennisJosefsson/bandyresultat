@@ -2,6 +2,135 @@
 @tailwind components;
 @tailwind utilities;
 
-.radial-blue {
-  background: radial-gradient(lightyellow, skyblue);
+@layer components {
+  .maraton th {
+    @apply px-1 py-1 text-center md:pr-2 md:text-right xl:py-2 xl:pr-4;
+  }
+
+  .maraton th.pos {
+    @apply px-1 py-1 text-center xl:py-2;
+  }
+
+  .maraton th.team {
+    @apply px-1 py-1 text-left md:w-[20%] xl:py-2;
+  }
+
+  .maraton td {
+    @apply px-1 py-1 text-right tabular-nums xl:py-2;
+  }
+
+  .maraton td.left {
+    @apply px-1 py-1 text-left xl:py-2;
+  }
+
+  .maraton td.center {
+    @apply px-1 py-1 text-center xl:py-2;
+  }
+
+  .season th {
+    @apply px-1 py-1 text-right xl:w-8 xl:py-2;
+  }
+  .season th.pos {
+    @apply px-1 py-1 text-center xl:w-8 xl:py-2;
+  }
+  .season th.team {
+    @apply px-1 py-1 text-left xl:w-56 xl:py-2;
+  }
+
+  .season th.twelve {
+    @apply px-1 py-1 text-right xl:w-12 xl:py-2;
+  }
+
+  .season td {
+    @apply px-1 py-1 text-right tabular-nums xl:py-2;
+  }
+
+  .season td.pos {
+    @apply px-1 py-1 text-center xl:py-2;
+  }
+
+  .season td.team {
+    @apply px-1 py-1 text-left xl:py-2;
+  }
+
+  .roundForRound th {
+    @apply w-4 px-1 py-1 text-right xl:w-8 xl:py-2;
+  }
+
+  .roundForRound th.pos {
+    @apply w-4 px-1 py-1 text-center xl:w-8 xl:py-2;
+  }
+
+  .roundForRound th.team {
+    @apply w-24 px-1 py-1 text-left xl:w-48 xl:py-2;
+  }
+
+  .roundForRound th.dir {
+    @apply w-4 px-1 py-1 xl:w-8 xl:py-2;
+  }
+
+  .roundForRound th.twelve {
+    @apply w-6 
+    px-1 py-1 text-right xl:w-12 xl:py-2;
+  }
+
+  .roundForRound td {
+    @apply px-1 py-1 text-right tabular-nums xl:py-2;
+  }
+  .roundForRound td.pos {
+    @apply px-1 py-1 text-center xl:py-2;
+  }
+  .roundForRound td.team {
+    @apply px-1 py-1 text-left xl:py-2;
+  }
+  .roundForRound td.dir {
+    @apply px-1 py-1 text-left opacity-30 xl:py-2;
+  }
+
+  .compareFirstLast th {
+    @apply px-0.5 py-1 md:px-1 md:py-2;
+  }
+  .compareFirstLast td {
+    @apply px-1 py-1;
+  }
+
+  .compareStats th {
+    @apply px-0.5 py-1 md:px-1 md:py-2;
+  }
+
+  .compareStats td {
+    @apply px-1 py-1;
+  }
+
+  .compareGames th {
+    @apply px-1 py-1 text-right md:w-8 md:py-2;
+  }
+
+  .compareGames th.twelve {
+    @apply px-1 py-1 text-right md:w-12 md:py-2;
+  }
+
+  .compareGames th.team {
+    @apply px-1 py-1 text-left md:w-56 md:py-2;
+  }
+
+  .compareGames td {
+    @apply px-1 py-1 text-right tabular-nums md:py-2;
+  }
+
+  .compareGames td.team {
+    @apply px-1 py-1 text-left md:py-2;
+  }
+
+  .hideMenuNav {
+    @apply hidden;
+  }
+
+  .showMenuNav {
+    @apply absolute left-0 top-0 z-[100] flex h-screen w-full flex-col items-center justify-evenly bg-[#f4f5f5];
+  }
+
+  .header li {
+    @apply my-8 border-b border-gray-400 font-bold uppercase tracking-widest;
+  }
 }

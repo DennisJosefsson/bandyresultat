@@ -14,6 +14,11 @@ import PlayoffSeriesPopup from './PlayoffSeriesPopup'
 
 import { tableSortFunction } from '../utilitycomponents/sortFunction'
 import { LeftArrow, RightArrow } from '../utilitycomponents/icons'
+import GenderButtonComponent from '../utilitycomponents/GenderButtonComponent'
+import {
+  ButtonComponent,
+  HiddenButtonComponent,
+} from '../utilitycomponents/ButtonComponents'
 
 const Season = () => {
   const seasonId = parseInt(useParams().seasonId)
@@ -108,16 +113,14 @@ const Season = () => {
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
         <div className="flex flex-row justify-end">
           <div>
-            <div
-              onClick={() => {
+            <GenderButtonComponent
+              women={women}
+              clickFunctions={() => {
                 setRound(1)
                 setRoundForRound(false)
                 dispatch({ type: 'TOGGLE' })
               }}
-              className="mb-4 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
-            >
-              {women ? 'Herrar' : 'Damer'}
-            </div>
+            />
           </div>
         </div>
         <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
@@ -173,33 +176,28 @@ const Season = () => {
           <div ref={topRef}>
             <div className="flex flex-col-reverse justify-start gap-2 pr-2 md:mr-4 xl:mr-0 xl:flex-row xl:justify-between">
               <Link to={`/games/${seasonId}`}>
-                <div className="mb-4 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg">
+                <ButtonComponent clickFunctions={() => {}}>
                   Matcher
-                </div>
+                </ButtonComponent>
               </Link>
-              <div
-                onClick={() => setShowPlayoffModal(true)}
-                className="mb-4 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:hidden"
+              <HiddenButtonComponent
+                clickFunctions={() => setShowPlayoffModal(true)}
               >
                 Slutspel
-              </div>
-              <div
-                onClick={() => setShowHelpModal(true)}
-                className="mb-4 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
-              >
-                Hjälp/Info
-              </div>
+              </HiddenButtonComponent>
 
-              <div
-                onClick={() => {
+              <ButtonComponent clickFunctions={() => setShowHelpModal(true)}>
+                Hjälp/Info
+              </ButtonComponent>
+
+              <GenderButtonComponent
+                women={women}
+                clickFunctions={() => {
                   setRound(1)
                   setRoundForRound(false)
                   dispatch({ type: 'TOGGLE' })
                 }}
-                className="mb-4 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
-              >
-                {women ? 'Herrar' : 'Damer'}
-              </div>
+              />
             </div>
             <div className="m-0 hidden justify-self-center text-base xl:contents">
               <h2 className="text-right text-xl font-bold">Slutspel</h2>
@@ -321,16 +319,18 @@ const Season = () => {
                               ></th>
                             </tr>
                           </thead>
-                          {group.tables.map((team) => {
-                            return (
-                              <tr key={team.teamId}>
-                                <td>{team.lag.casualName}</td>
-                                <td className="text-right">
-                                  {team.total_wins}
-                                </td>
-                              </tr>
-                            )
-                          })}
+                          <tbody>
+                            {group.tables.map((team, index) => {
+                              return (
+                                <tr key={`${team.teamId}-${index}`}>
+                                  <td>{team.lag.casualName}</td>
+                                  <td className="text-right">
+                                    {team.total_wins}
+                                  </td>
+                                </tr>
+                              )
+                            })}
+                          </tbody>
                         </table>
                       </div>
                     )
@@ -377,7 +377,7 @@ const Season = () => {
                           <tbody>
                             {group.tables.map((team) => {
                               return (
-                                <tr key={team.teamId}>
+                                <tr key={`${team.teamId}-${Math.random()}`}>
                                   <td className="p-1">{team.lag.shortName}</td>
                                   <td className="p-1 text-center">
                                     {team.total_points}
@@ -417,7 +417,7 @@ const Season = () => {
                 setRound(1)
                 setRoundForRound(!roundForRound)
               }}
-              className="mb-2 w-full cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:px-2 lg:py-1 lg:text-lg xl:mb-6"
+              className="mb-2 w-full cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white transition-all duration-150 ease-in-out hover:scale-[1.03] lg:px-2 lg:py-1 lg:text-lg xl:mb-6"
             >
               {roundForRound ? 'Visa tabeller' : 'Visa utveckling'}
             </div>

@@ -11,6 +11,10 @@ import { groupConstant } from '../utilitycomponents/constants'
 import Spinner from '../utilitycomponents/spinner'
 import CompareHelpModal from './CompareHelpModal'
 import StatsModal from './StatsModal'
+import {
+  ButtonComponent,
+  HiddenButtonComponent,
+} from '../utilitycomponents/ButtonComponents'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 
@@ -147,63 +151,26 @@ const Compare = () => {
                 </p>
                 <div>
                   <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>
-                  <table className="mb-6 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
+                  <table className="compareGames mb-6 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
                     <thead>
                       <tr key={`tableheadAllgames`}>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-left md:w-56 md:px-1 md:py-2"
-                        >
+                        <th scope="col" className="team">
                           Lag
                         </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                        >
-                          M
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                        >
-                          V
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                        >
-                          O
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                        >
-                          F
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
-                        >
+                        <th scope="col">M</th>
+                        <th scope="col">V</th>
+                        <th scope="col">O</th>
+                        <th scope="col">F</th>
+                        <th scope="col" className="twelve">
                           GM
                         </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
-                        >
+                        <th scope="col" className="twelve">
                           IM
                         </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
-                        >
+                        <th scope="col" className="twelve">
                           MS
                         </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                        >
-                          P
-                        </th>
+                        <th scope="col">P</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -213,35 +180,19 @@ const Compare = () => {
                             key={`${team.teamId}-${index}`}
                             className="rounded odd:bg-slate-300"
                           >
-                            <td className="px-0.5 py-1 md:px-1 md:py-2">
+                            <td className="team">
                               {width < breakpoint
                                 ? `${team.lag.shortName}`
                                 : `${team.lag.casualName}`}
                             </td>
-                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_games}
-                            </td>
-                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_wins}
-                            </td>
-                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_draws}
-                            </td>
-                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_lost}
-                            </td>
-                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_goals_scored}
-                            </td>
-                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_goals_conceded}
-                            </td>
-                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_goal_difference}
-                            </td>
-                            <td className="p px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_points}
-                            </td>
+                            <td>{team.total_games}</td>
+                            <td>{team.total_wins}</td>
+                            <td>{team.total_draws}</td>
+                            <td>{team.total_lost}</td>
+                            <td>{team.total_goals_scored}</td>
+                            <td>{team.total_goals_conceded}</td>
+                            <td>{team.total_goal_difference}</td>
+                            <td>{team.total_points}</td>
                           </tr>
                         )
                       })}
@@ -257,63 +208,26 @@ const Compare = () => {
                           {groupConstant[category.category]}
                         </h4>
                         <div>
-                          <table className="mb-3 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
+                          <table className="compareGames mb-3 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
                             <thead>
                               <tr key={`head-${category.category}-${index}`}>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-left md:w-56 md:px-1 md:py-2"
-                                >
+                                <th scope="col" className="team">
                                   Lag
                                 </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                                >
-                                  M
-                                </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                                >
-                                  V
-                                </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                                >
-                                  O
-                                </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                                >
-                                  F
-                                </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
-                                >
+                                <th scope="col">M</th>
+                                <th scope="col">V</th>
+                                <th scope="col">O</th>
+                                <th scope="col">F</th>
+                                <th scope="col" className="twelve">
                                   GM
                                 </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
-                                >
+                                <th scope="col" className="twelve">
                                   IM
                                 </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
-                                >
+                                <th scope="col" className="twelve">
                                   MS
                                 </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                                >
-                                  P
-                                </th>
+                                <th scope="col">P</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -324,35 +238,19 @@ const Compare = () => {
                                       key={`${team.teamId}-${index}`}
                                       className="rounded odd:bg-slate-300"
                                     >
-                                      <td className="px-0.5 py-1 md:px-1 md:py-2">
+                                      <td className="team">
                                         {width < breakpoint
                                           ? `${team.lag.shortName}-${team.opp.shortName}`
                                           : `${team.lag.casualName}-${team.opp.casualName}`}
                                       </td>
-                                      <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                        {team.total_games}
-                                      </td>
-                                      <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                        {team.total_wins}
-                                      </td>
-                                      <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                        {team.total_draws}
-                                      </td>
-                                      <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                        {team.total_lost}
-                                      </td>
-                                      <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                        {team.total_goals_scored}
-                                      </td>
-                                      <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                        {team.total_goals_conceded}
-                                      </td>
-                                      <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                        {team.total_goal_difference}
-                                      </td>
-                                      <td className="p px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                        {team.total_points}
-                                      </td>
+                                      <td>{team.total_games}</td>
+                                      <td>{team.total_wins}</td>
+                                      <td>{team.total_draws}</td>
+                                      <td>{team.total_lost}</td>
+                                      <td>{team.total_goals_scored}</td>
+                                      <td>{team.total_goals_conceded}</td>
+                                      <td>{team.total_goal_difference}</td>
+                                      <td>{team.total_points}</td>
                                     </tr>
                                   )
                                 },
@@ -379,63 +277,26 @@ const Compare = () => {
                 </p>
                 <div>
                   <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>
-                  <table className="mb-6 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
+                  <table className="compareGames mb-6 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
                     <thead>
                       <tr key={`tableheadAllgames`}>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-left md:w-56 md:px-1 md:py-2"
-                        >
+                        <th scope="col" className="team">
                           Lag
                         </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                        >
-                          M
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                        >
-                          V
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                        >
-                          O
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                        >
-                          F
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
-                        >
+                        <th scope="col">M</th>
+                        <th scope="col">V</th>
+                        <th scope="col">O</th>
+                        <th scope="col">F</th>
+                        <th scope="col" className="twelve">
                           GM
                         </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
-                        >
+                        <th scope="col" className="twelve">
                           IM
                         </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
-                        >
+                        <th scope="col" className="twelve">
                           MS
                         </th>
-                        <th
-                          scope="col"
-                          className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                        >
-                          P
-                        </th>
+                        <th scope="col">P</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -445,35 +306,19 @@ const Compare = () => {
                             key={`${team.teamId}-${index}`}
                             className="rounded odd:bg-slate-300"
                           >
-                            <td className="px-0.5 py-1 md:px-1 md:py-2">
+                            <td className="team">
                               {width < breakpoint
                                 ? `${team.lag.shortName}-${team.opp.shortName}`
                                 : `${team.lag.casualName}-${team.opp.casualName}`}
                             </td>
-                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_games}
-                            </td>
-                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_wins}
-                            </td>
-                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_draws}
-                            </td>
-                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_lost}
-                            </td>
-                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_goals_scored}
-                            </td>
-                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_goals_conceded}
-                            </td>
-                            <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_goal_difference}
-                            </td>
-                            <td className="p px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                              {team.total_points}
-                            </td>
+                            <td>{team.total_games}</td>
+                            <td>{team.total_wins}</td>
+                            <td>{team.total_draws}</td>
+                            <td>{team.total_lost}</td>
+                            <td>{team.total_goals_scored}</td>
+                            <td>{team.total_goals_conceded}</td>
+                            <td>{team.total_goal_difference}</td>
+                            <td>{team.total_points}</td>
                           </tr>
                         )
                       })}
@@ -489,63 +334,26 @@ const Compare = () => {
                           {groupConstant[category.category]}
                         </h4>
                         <div>
-                          <table className="mb-3 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
+                          <table className="compareGames mb-3 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
                             <thead>
                               <tr key={`head-${category.category}-${index}`}>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-left md:w-56 md:px-1 md:py-2"
-                                >
+                                <th scope="col" className="team">
                                   Lag
                                 </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                                >
-                                  M
-                                </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                                >
-                                  V
-                                </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                                >
-                                  O
-                                </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                                >
-                                  F
-                                </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
-                                >
+                                <th scope="col">M</th>
+                                <th scope="col">V</th>
+                                <th scope="col">O</th>
+                                <th scope="col">F</th>
+                                <th scope="col" className="twelve">
                                   GM
                                 </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
-                                >
+                                <th scope="col" className="twelve">
                                   IM
                                 </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-12 md:px-1 md:py-2"
-                                >
+                                <th scope="col" className="twelve">
                                   MS
                                 </th>
-                                <th
-                                  scope="col"
-                                  className="px-0.5 py-1 text-right md:w-8 md:px-1 md:py-2"
-                                >
-                                  P
-                                </th>
+                                <th scope="col">P</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -555,35 +363,19 @@ const Compare = () => {
                                     key={`${team.teamId}-${index}`}
                                     className="rounded odd:bg-slate-300"
                                   >
-                                    <td className="px-0.5 py-1 md:px-1 md:py-2">
+                                    <td className="team">
                                       {width < breakpoint
                                         ? `${team.lag.shortName}-${team.opp.shortName}`
                                         : `${team.lag.casualName}-${team.opp.casualName}`}
                                     </td>
-                                    <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                      {team.total_games}
-                                    </td>
-                                    <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                      {team.total_wins}
-                                    </td>
-                                    <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                      {team.total_draws}
-                                    </td>
-                                    <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                      {team.total_lost}
-                                    </td>
-                                    <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                      {team.total_goals_scored}
-                                    </td>
-                                    <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                      {team.total_goals_conceded}
-                                    </td>
-                                    <td className="px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                      {team.total_goal_difference}
-                                    </td>
-                                    <td className="p px-0.5 py-1 text-right tabular-nums md:px-1 md:py-2">
-                                      {team.total_points}
-                                    </td>
+                                    <td>{team.total_games}</td>
+                                    <td>{team.total_wins}</td>
+                                    <td>{team.total_draws}</td>
+                                    <td>{team.total_lost}</td>
+                                    <td>{team.total_goals_scored}</td>
+                                    <td>{team.total_goals_conceded}</td>
+                                    <td>{team.total_goal_difference}</td>
+                                    <td>{team.total_points}</td>
                                   </tr>
                                 )
                               })}
@@ -602,35 +394,27 @@ const Compare = () => {
       <div className="mr-2 xl:mr-0">
         <div className="mb-2 flex flex-col-reverse justify-end xl:mb-6 xl:flex-row xl:justify-end xl:gap-2">
           {allData.length > 0 && (
-            <div
-              className="mb-4 w-[84px] cursor-pointer select-none rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
-              onClick={(event) => handleCopyClick(event)}
-            >
-              {isCopied ? 'Kopierad!' : 'Länk'}
-            </div>
+            <ButtonComponent clickFunctions={(event) => handleCopyClick(event)}>
+              {isCopied ? 'Kopierad!' : `Länk: ${compareLink}`}
+            </ButtonComponent>
           )}
-          <div
-            onClick={() =>
+          <ButtonComponent
+            clickFunctions={() =>
               navigate('/teams', { state: { compObject: compObject } })
             }
-            className="mb-4 w-[84px] cursor-pointer select-none rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
           >
             Ändra
-          </div>
+          </ButtonComponent>
 
-          <div
-            onClick={() => setShowHelpModal(true)}
-            className="mb-4 w-[84px] cursor-pointer select-none rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
-          >
+          <ButtonComponent clickFunctions={() => setShowHelpModal(true)}>
             Hjälp/Info
-          </div>
+          </ButtonComponent>
           {allData.length > 0 && (
-            <div
-              onClick={() => setShowStatsModal(true)}
-              className="mb-4 w-[84px] cursor-pointer select-none rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:hidden"
+            <HiddenButtonComponent
+              clickFunctions={() => setShowStatsModal(true)}
             >
               Statistik
-            </div>
+            </HiddenButtonComponent>
           )}
         </div>
         <div>
@@ -641,21 +425,12 @@ const Compare = () => {
                 <div className="w-96">
                   <div>
                     <h3 className="text-lg font-bold">Första matcherna</h3>
-                    <table className="mb-3">
+                    <table className="compareFirstLast mb-3">
                       <thead>
                         <tr key={`head-first-games`}>
-                          <th
-                            scope="col"
-                            className="w-60 px-0.5 py-1 md:px-1 md:py-2"
-                          ></th>
-                          <th
-                            scope="col"
-                            className="w-60 px-0.5 py-1 md:px-1 md:py-2"
-                          ></th>
-                          <th
-                            scope="col"
-                            className="w-16 px-0.5 py-1 md:px-1 md:py-2"
-                          ></th>
+                          <th scope="col" className="w-60"></th>
+                          <th scope="col" className="w-60"></th>
+                          <th scope="col" className="w-16"></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -665,17 +440,17 @@ const Compare = () => {
                               key={game.game_id}
                               className="rounded odd:bg-slate-300"
                             >
-                              <td className="px-1 py-1">
+                              <td>
                                 {game.date && (
                                   <span>
                                     {dayjs(game.date).format('D MMMM YYYY')}:
                                   </span>
                                 )}
                               </td>
-                              <td className="px-1 py-1">
+                              <td>
                                 {game.home_name}-{game.away_name}
                               </td>
-                              <td className="px-1 py-1">{game.result}</td>
+                              <td>{game.result}</td>
                             </tr>
                           )
                         })}
@@ -684,21 +459,12 @@ const Compare = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold">Senaste matcherna</h3>
-                    <table className="mb-3">
+                    <table className="compareFirstLast mb-3">
                       <thead>
                         <tr key={`head-latest-games`}>
-                          <th
-                            scope="col"
-                            className="w-60 px-0.5 py-1 md:px-1 md:py-2"
-                          ></th>
-                          <th
-                            scope="col"
-                            className="w-60 px-0.5 py-1 md:px-1 md:py-2"
-                          ></th>
-                          <th
-                            scope="col"
-                            className="w-16 px-0.5 py-1 md:px-1 md:py-2"
-                          ></th>
+                          <th scope="col" className="w-60"></th>
+                          <th scope="col" className="w-60"></th>
+                          <th scope="col" className="w-16"></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -708,17 +474,17 @@ const Compare = () => {
                               key={game.game_id}
                               className="rounded odd:bg-slate-300"
                             >
-                              <td className="px-1 py-1">
+                              <td>
                                 {game.date && (
                                   <span>
                                     {dayjs(game.date).format('D MMMM YYYY')}:
                                   </span>
                                 )}
                               </td>
-                              <td className="px-1 py-1">
+                              <td>
                                 {game.home_name}-{game.away_name}
                               </td>
-                              <td className="px-1 py-1">{game.result}</td>
+                              <td>{game.result}</td>
                             </tr>
                           )
                         })}
@@ -729,17 +495,11 @@ const Compare = () => {
                 <div className="w-56">
                   <div className="w-56">
                     <h3 className="text-right text-lg font-bold">Säsonger</h3>
-                    <table className="mb-3 w-56">
+                    <table className="compareStats mb-3 w-56">
                       <thead>
                         <tr key={`head-seasons`}>
-                          <th
-                            scope="col"
-                            className="w-32 px-0.5 py-1 text-left md:px-1 md:py-2"
-                          ></th>
-                          <th
-                            scope="col"
-                            className="w-8 px-0.5 py-1 text-right md:px-1 md:py-2"
-                          ></th>
+                          <th scope="col" className="w-32 text-left"></th>
+                          <th scope="col" className="w-8 text-right"></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -749,10 +509,8 @@ const Compare = () => {
                               key={team.team}
                               className="rounded odd:bg-slate-300"
                             >
-                              <td className="px-1 py-1">{team.casual_name}</td>
-                              <td className="px-1 py-1 text-right">
-                                {team.seasons}
-                              </td>
+                              <td>{team.casual_name}</td>
+                              <td className="text-right">{team.seasons}</td>
                             </tr>
                           )
                         })}
@@ -761,17 +519,11 @@ const Compare = () => {
                   </div>
                   <div>
                     <h3 className="text-right text-lg font-bold">Slutspel</h3>
-                    <table className="mb-3 w-56">
+                    <table className="compareStats mb-3 w-56">
                       <thead>
                         <tr key={`head-playoffs`}>
-                          <th
-                            scope="col"
-                            className="w-32 px-0.5 py-1 text-left md:px-1 md:py-2"
-                          ></th>
-                          <th
-                            scope="col"
-                            className="w-8 px-0.5 py-1 text-right md:px-1 md:py-2"
-                          ></th>
+                          <th scope="col" className="w-32 text-left"></th>
+                          <th scope="col" className="w-8 text-right"></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -781,10 +533,8 @@ const Compare = () => {
                               key={team.team}
                               className="rounded odd:bg-slate-300"
                             >
-                              <td className="px-1 py-1">{team.casual_name}</td>
-                              <td className="px-1 py-1 text-right">
-                                {team.playoffs}
-                              </td>
+                              <td>{team.casual_name}</td>
+                              <td className="text-right">{team.playoffs}</td>
                             </tr>
                           )
                         })}
@@ -793,17 +543,11 @@ const Compare = () => {
                   </div>
                   <div>
                     <h3 className="text-right text-lg font-bold">SM-Guld</h3>
-                    <table className="mb-3 w-56">
+                    <table className="compareStats mb-3 w-56">
                       <thead>
                         <tr key={`head-golds`}>
-                          <th
-                            scope="col"
-                            className="w-32 px-0.5 py-1 md:px-1 md:py-2"
-                          ></th>
-                          <th
-                            scope="col"
-                            className="w-8 px-0.5 py-1 md:px-1 md:py-2"
-                          ></th>
+                          <th scope="col" className="w-32"></th>
+                          <th scope="col" className="w-8"></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -813,10 +557,8 @@ const Compare = () => {
                               key={team.team}
                               className="rounded odd:bg-slate-300"
                             >
-                              <td className="px-1 py-1">{team.casual_name}</td>
-                              <td className="px-1 py-1 text-right">
-                                {team.guld}
-                              </td>
+                              <td>{team.casual_name}</td>
+                              <td className="text-right">{team.guld}</td>
                             </tr>
                           )
                         })}

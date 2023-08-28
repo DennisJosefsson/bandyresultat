@@ -18,78 +18,38 @@ const TableList = ({ tableArray }) => {
         return (
           <div key={group.group} className="mb-6">
             {group.group.includes('Kval') && tableArray.length === 1 ? (
-              <h2 className="font-bold text-[0.75rem] lg:text-[1rem] xl:text-xl">
+              <h2 className="text-[0.75rem] font-bold lg:text-[1rem] xl:text-xl">
                 Kvalgrupp
               </h2>
             ) : (
-              <h2 className="font-bold text-sm lg:text-base xl:text-xl">
+              <h2 className="text-sm font-bold lg:text-base xl:text-xl">
                 {groupConstant[group.group]}
               </h2>
             )}
             <div>
-              <table className="w-full text-xs md:text-sm xl:text-base px-1">
+              <table className="w-full px-1 text-xs md:text-sm xl:text-base">
                 <thead>
-                  <tr>
-                    <th
-                      scope="col"
-                      className="xl:w-8 px-0.5 py-1 xl:px-1 xl:py-2 text-center"
-                    >
+                  <tr className="season">
+                    <th scope="col" className="pos">
                       Pos
                     </th>
-                    <th
-                      scope="col"
-                      className="px-0.5 py-1 xl:w-56 xl:px-1 xl:py-2 text-left"
-                    >
+                    <th scope="col" className="team">
                       Lag
                     </th>
-                    <th
-                      scope="col"
-                      className="xl:w-8 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
-                    >
-                      M
-                    </th>
-                    <th
-                      scope="col"
-                      className="xl:w-8 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
-                    >
-                      V
-                    </th>
-                    <th
-                      scope="col"
-                      className="xl:w-8 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
-                    >
-                      O
-                    </th>
-                    <th
-                      scope="col"
-                      className="xl:w-8 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
-                    >
-                      F
-                    </th>
-                    <th
-                      scope="col"
-                      className="xl:w-12 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
-                    >
+                    <th scope="col">M</th>
+                    <th scope="col">V</th>
+                    <th scope="col">O</th>
+                    <th scope="col">F</th>
+                    <th scope="col" className="twelve">
                       GM
                     </th>
-                    <th
-                      scope="col"
-                      className="xl:w-12 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
-                    >
+                    <th scope="col" className="twelve">
                       IM
                     </th>
-                    <th
-                      scope="col"
-                      className="xl:w-12 px-0.5 py-1 xl:px-1 xl:py-2 text-right"
-                    >
+                    <th scope="col" className="twelve">
                       MS
                     </th>
-                    <th
-                      scope="col"
-                      className="xl:w-8 py-1 px-1 xl:py-2 text-right"
-                    >
-                      P
-                    </th>
+                    <th scope="col">P</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -97,41 +57,23 @@ const TableList = ({ tableArray }) => {
                     return (
                       <tr
                         key={`${team.teamId}-${index}`}
-                        className="odd:bg-slate-300 rounded"
+                        className="season rounded odd:bg-slate-300"
                       >
-                        <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-center">
-                          {index + 1}
-                        </td>
-                        <td className="px-1 py-2">
+                        <td className="pos">{index + 1}</td>
+                        <td className="team">
                           {width < breakpoint
                             ? `${team.lag.shortName}`
                             : `${team.lag.name}`}
                         </td>
 
-                        <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
-                          {team.total_games}
-                        </td>
-                        <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
-                          {team.total_wins}
-                        </td>
-                        <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
-                          {team.total_draws}
-                        </td>
-                        <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
-                          {team.total_lost}
-                        </td>
-                        <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
-                          {team.total_goals_scored}
-                        </td>
-                        <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
-                          {team.total_goals_conceded}
-                        </td>
-                        <td className="px-0.5 py-1 xl:px-1 xl:py-2 text-right tabular-nums">
-                          {team.total_goal_difference}
-                        </td>
-                        <td className="py-1 px-1 xl:py-2 p text-right tabular-nums">
-                          {team.total_points}
-                        </td>
+                        <td>{team.total_games}</td>
+                        <td>{team.total_wins}</td>
+                        <td>{team.total_draws}</td>
+                        <td>{team.total_lost}</td>
+                        <td>{team.total_goals_scored}</td>
+                        <td>{team.total_goals_conceded}</td>
+                        <td>{team.total_goal_difference}</td>
+                        <td>{team.total_points}</td>
                       </tr>
                     )
                   })}
