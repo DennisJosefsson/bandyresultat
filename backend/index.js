@@ -30,7 +30,7 @@ const frontend = path.join(__dirname, 'dist')
 app.use('/', express.static(frontend))
 
 app.use('/api/healthCheck', mainRouter)
-app.use(APIRestrictMiddleware)
+//app.use(APIRestrictMiddleware)
 
 app.use('/api/teams', teamRouter)
 app.use('/api/seasons', seasonsRouter)
