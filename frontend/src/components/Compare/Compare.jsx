@@ -124,6 +124,15 @@ const Compare = () => {
   const lastTeam = teamStringArray.pop()
   const teamString = teamStringArray.join(', ') + ' och ' + lastTeam
 
+  const startSeasonName =
+    data.data.seasonNames[0].seasonId < data.data.seasonNames[1].seasonId
+      ? data.data.seasonNames[0].year
+      : data.data.seasonNames[1].year
+  const endSeasonName =
+    data.data.seasonNames[0].seasonId > data.data.seasonNames[1].seasonId
+      ? data.data.seasonNames[0].year
+      : data.data.seasonNames[1].year
+
   return (
     <div className="mx-auto flex min-h-screen max-w-7xl flex-row justify-between pt-4 font-inter text-[#011d29]">
       <div className="ml-2 flex flex-row justify-between xl:ml-0">
@@ -147,7 +156,7 @@ const Compare = () => {
                   Möten mellan {teamString} {catString}{' '}
                   {compObject.startSeason === compObject.endSeason
                     ? `säsongen ${data.data.seasonNames[0].year}`
-                    : `${data.data.seasonNames[0].year}-${data.data.seasonNames[1].year}.`}
+                    : `${startSeasonName}-${endSeasonName}.`}
                 </p>
                 <div>
                   <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>
@@ -273,7 +282,7 @@ const Compare = () => {
                   Möten mellan {teamString} {catString}{' '}
                   {compObject.startSeason === compObject.endSeason
                     ? `säsongen ${data.data.seasonNames[0].year}`
-                    : `${data.data.seasonNames[0].year}-${data.data.seasonNames[1].year}.`}
+                    : `${startSeasonName}-${endSeasonName}.`}
                 </p>
                 <div>
                   <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>

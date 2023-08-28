@@ -417,7 +417,7 @@ const Season = () => {
                 setRound(1)
                 setRoundForRound(!roundForRound)
               }}
-              className="mb-2 w-full cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white transition-all duration-150 ease-in-out hover:scale-[1.03] lg:px-2 lg:py-1 lg:text-lg xl:mb-6"
+              className="mb-2 w-full cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white transition-all duration-150 ease-in-out hover:bg-slate-600 lg:px-2 lg:py-1 lg:text-lg xl:mb-6"
             >
               {roundForRound ? 'Visa tabeller' : 'Visa utveckling'}
             </div>
