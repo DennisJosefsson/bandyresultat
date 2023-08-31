@@ -2,6 +2,7 @@ import { useQuery } from 'react-query'
 import { getSingleTeam } from '../../requests/teams'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+
 import Spinner from '../utilitycomponents/spinner'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'

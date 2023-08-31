@@ -2,6 +2,7 @@ import { useQuery } from 'react-query'
 import { getSeasons } from '../../requests/seasons'
 import { Link } from 'react-router-dom'
 import { useState, useRef } from 'react'
+
 import Spinner from '../utilitycomponents/spinner'
 
 const Seasons = () => {
@@ -11,7 +12,7 @@ const Seasons = () => {
   const { data, isLoading, error } = useQuery('allSeasons', getSeasons)
   if (isLoading) {
     return (
-      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         <Spinner />
       </div>
     )
@@ -19,7 +20,7 @@ const Seasons = () => {
 
   if (error) {
     return (
-      <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         Något gick fel.
       </div>
     )
@@ -40,13 +41,13 @@ const Seasons = () => {
 
   return (
     <div
-      className="max-w-7xl min-h-screen mx-auto mb-2 font-inter text-[#011d29]"
+      className="mx-auto mb-2 min-h-screen max-w-7xl font-inter text-[#011d29]"
       ref={topRef}
     >
       <div className="w-full ">
         <form>
           <input
-            className="border-[#011d29] focus:border-[#011d29] w-full"
+            className="w-full border-[#011d29] focus:border-[#011d29]"
             type="text"
             placeholder="Filter"
             value={seasonFilter}
@@ -60,7 +61,7 @@ const Seasons = () => {
       </div>
 
       <div className="self-center">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 justify-between pt-2">
+        <div className="grid grid-cols-1 justify-between gap-x-8 gap-y-2 pt-2 lg:grid-cols-3">
           {seasons.map((season) => {
             const seasonYear =
               parseInt(season.year.split('/')[1]) >= 1964
@@ -70,21 +71,21 @@ const Seasons = () => {
               return (
                 <div
                   key={season.seasonId}
-                  className="flex flex-row items-center justify-between text-[1.125rem] bg-white px-2 py-1"
+                  className="flex flex-row items-center justify-between bg-white px-2 py-1 text-[1.125rem]"
                 >
-                  <div className="font-semibold w-28">{season.year}</div>
-                  <div className="bg-slate-300 lg:bg-white rounded-md lg:rounded-0 px-2 py-1 xl:p-0 w-1/4 text-center">
+                  <div className="w-28 font-semibold">{season.year}</div>
+                  <div className="lg:rounded-0 w-1/4 rounded-md bg-slate-300 px-2 py-1 text-center lg:bg-white xl:p-0">
                     <Link
                       to={`/season/${seasonYear}`}
-                      className="tabular-nums font-medium lg:font-normal hover:font-bold"
+                      className="font-medium tabular-nums hover:font-bold lg:font-normal"
                     >
                       Tabeller
                     </Link>
                   </div>
-                  <div className="bg-slate-300 lg:bg-white rounded-md px-2 py-1 xl:p-0 w-1/4 text-center">
+                  <div className="w-1/4 rounded-md bg-slate-300 px-2 py-1 text-center lg:bg-white xl:p-0">
                     <Link
                       to={`/games/${seasonYear}`}
-                      className="font-medium lg:font-normal hover:font-bold"
+                      className="font-medium hover:font-bold lg:font-normal"
                     >
                       Matcher
                     </Link>
@@ -96,16 +97,16 @@ const Seasons = () => {
           <div ref={bottomRef}></div>
         </div>
       </div>
-      <div className="sticky bottom-0 flex flex-row gap-2 justify-center bg-[#f4f5f5] z-20 items-center">
+      <div className="sticky bottom-0 z-20 flex flex-row items-center justify-center gap-2 bg-[#f4f5f5]">
         <div
           onClick={(event) => scrollTo(event, topRef)}
-          className="cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#93B8C1] text-[10px] lg:text-sm text-[#011d29] text-center my-2 select-none"
+          className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
         >
           Scrolla upp
         </div>
         <div
           onClick={(event) => scrollTo(event, bottomRef)}
-          className="cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#93B8C1] text-[10px] lg:text-sm text-[#011d29] text-center my-2 select-none"
+          className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
         >
           Scrolla ner
         </div>

@@ -133,4 +133,32 @@
   .header li {
     @apply my-8 border-b border-gray-400 font-bold uppercase tracking-widest;
   }
+
+  .recordCard {
+    @apply mb-1 flex flex-row items-center rounded bg-white p-1 pr-4 text-sm md:mb-2 md:p-2;
+  }
+
+  .recordCard .record1st {
+    @apply flex flex-row;
+  }
+
+  .recordCard .pos {
+    @apply mr-4 w-8 text-right text-2xl font-bold tabular-nums;
+  }
+
+  .recordCard .record1st .name {
+    @apply w-48 font-semibold;
+  }
+
+  .recordCard .record1st .count {
+    @apply w-24 text-right;
+  }
+
+  .recordCard .record2nd {
+    @apply flex flex-row;
+  }
+
+  .recordCard .record2nd .dates {
+    @apply w-64 text-[10px] md:text-xs;
+  }
 }

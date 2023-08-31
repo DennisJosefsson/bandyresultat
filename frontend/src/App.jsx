@@ -5,6 +5,7 @@ import {
   Navigate,
 } from 'react-router-dom'
 import { useContext } from 'react'
+
 import Home from './components/Home'
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -19,6 +20,7 @@ import Compare from './components/Compare/Compare'
 import Dashboard from './components/Dashboard/Dashboard'
 import About from './components/About/About'
 import Link from './components/Link/Link'
+import Record from './components/Record/Record'
 
 import { UserContext } from './contexts/contexts'
 
@@ -47,6 +49,7 @@ const App = () => {
             <Route path="/games/:seasonId" element={<Games />} />
             <Route path="/link/:linkName" element={<Link />} />
             <Route path="/compare" element={<Compare />} />
+            <Route path="/records" element={<Record />} />
             <Route
               path="/dashboard"
               element={

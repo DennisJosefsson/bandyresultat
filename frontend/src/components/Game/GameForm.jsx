@@ -2,25 +2,25 @@ import { useReducer } from 'react'
 
 import gameFormReducer from '../../reducers/gameFormReducer'
 
-const initAdd = (seasonId) => {
+const initAdd = (seasonId, women) => {
   return {
     seasonId: seasonId,
     homeTeamId: '',
     awayTeamId: '',
     result: '',
-    halftimeResult: undefined,
-    homeGoal: undefined,
-    awayGoal: undefined,
-    halftimeHomeGoal: undefined,
-    halftimeAwayGoal: undefined,
-    date: undefined,
-    round: undefined,
+    halftimeResult: '',
+    homeGoal: '',
+    awayGoal: '',
+    halftimeHomeGoal: '',
+    halftimeAwayGoal: '',
+    date: '',
+    round: '',
     category: 'regular',
     group: 'elitserien',
     playoff: false,
     extraTime: false,
     penalties: false,
-    women: false,
+    women: women,
   }
 }
 
@@ -53,6 +53,7 @@ const GameForm = ({
   setShowModal,
   gameData,
   setGameData,
+  women
 }) => {
   const teamSelection = season[0].teams.map((team) => {
     return { value: team.teamId, label: team.name }
@@ -103,7 +104,7 @@ const GameForm = ({
 
   const [formState, dispatch] = useReducer(
     gameFormReducer,
-    gameData ? initEdit(gameData) : initAdd(season.seasonId),
+    gameData ? initEdit(gameData) : initAdd(season.seasonId, women),
   )
 
   const handleSubmit = (event) => {

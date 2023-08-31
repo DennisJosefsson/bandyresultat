@@ -4,7 +4,8 @@ import { getSingleSeasonTable } from '../../requests/tables'
 import { useParams, Link, useLocation } from 'react-router-dom'
 import { useContext, useState, useEffect, useRef } from 'react'
 import { GenderContext } from '../../contexts/contexts'
-import { sortOrder, groupConstant } from '../utilitycomponents/constants'
+
+import { sortOrder } from '../utilitycomponents/constants'
 import Spinner from '../utilitycomponents/spinner'
 import SeasonHelpModal from './SeasonHelpModal'
 import PlayoffModal from './PlayoffModal'
@@ -79,6 +80,7 @@ const Season = () => {
   }
 
   const tables = data.tabell.filter((table) => table.women === women)
+
   const playoffGames = data.playoffGames.filter(
     (table) => table.women === women,
   )
@@ -86,6 +88,7 @@ const Season = () => {
     (table) => table.womens_table === women,
   )
   const groups = new Set(roundByRoundTables.map((team) => team.group))
+  const teams = tables.map((team) => team.lag)
   const groupsArray = Array.from(groups)
   const final = tables.filter((table) => table.category === 'final')
   const unsortedSemiTables = tables.filter((table) => table.category === 'semi')
@@ -107,6 +110,14 @@ const Season = () => {
   const eightTables = tableSortFunction(unsortedEightTables)
   const regularTables = tableSortFunction(unsortedRegularTables)
   const qualificationTables = tableSortFunction(unsortedQualificationTables)
+
+  const seriesInfo = season.find((season) => season.women === women).series
+  const bonusPointsArray = seriesInfo.map((serie) => {
+    return {
+      group: serie.serieGroupCode,
+      bonusPoints: JSON.parse(serie.bonusPoints),
+    }
+  })
 
   if (women && seasonId < 1973) {
     return (
@@ -148,6 +159,7 @@ const Season = () => {
           <h2 className="text-center text-base font-bold leading-4 sm:text-xl lg:text-2xl">
             Säsong {season[0].year} {women ? 'Damer' : 'Herrar'}
           </h2>
+
           {seasonId + 1 === 2025 ? null : (
             <Link to={`/season/${seasonId + 1}`} state={{ resetRound: true }}>
               <RightArrow />
@@ -424,10 +436,18 @@ const Season = () => {
             {!roundForRound && (
               <div>
                 {regularTables.length > 0 && (
-                  <TableList tableArray={regularTables} />
+                  <TableList
+                    tableArray={regularTables}
+                    seriesInfo={seriesInfo}
+                    bonusPoints={bonusPointsArray}
+                  />
                 )}
                 {qualificationTables.length > 0 && (
-                  <TableList tableArray={qualificationTables} />
+                  <TableList
+                    tableArray={qualificationTables}
+                    seriesInfo={seriesInfo}
+                    bonusPoints={bonusPointsArray}
+                  />
                 )}
               </div>
             )}
@@ -458,7 +478,11 @@ const Season = () => {
                               : 'w-30 mt-3 cursor-pointer rounded-md bg-slate-200 px-2 py-1 text-center text-[#011d29]'
                           }
                         >
-                          {groupConstant[group]}
+                          {
+                            seriesInfo.find(
+                              (serie) => serie.serieGroupCode === group,
+                            ).serieName
+                          }
                         </div>
                       )
                     })}
@@ -469,6 +493,9 @@ const Season = () => {
                   )}
                   round={round}
                   setRound={setRound}
+                  seriesInfo={seriesInfo}
+                  teams={teams}
+                  bonusPoints={bonusPointsArray}
                 />
               </div>
             )}
@@ -478,6 +505,9 @@ const Season = () => {
                   array={roundByRoundTables}
                   round={round}
                   setRound={setRound}
+                  seriesInfo={seriesInfo}
+                  teams={teams}
+                  bonusPoints={bonusPointsArray}
                 />
               </div>
             )}

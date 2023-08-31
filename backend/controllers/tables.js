@@ -378,14 +378,14 @@ select
 	"date",
 	womens_table,
   "group",
-	sum(win_var) over (partition by team order by date) sum_wins,
-	sum(draw_var) over (partition by team order by date) sum_draws,
-	sum(lost_var) over (partition by team order by date) sum_lost,
-	sum(goals_scored) over (partition by team order by date) sum_goals_scored,
-	sum(goals_conceded) over (partition by team order by date) sum_goals_conc,
-	sum(points) over (partition by team order by date) sum_points,
-	sum(goal_difference) over (partition by team order by date) sum_gd,
-	row_number() over (partition by team order by date) round
+	sum(win_var) over (partition by team, "group" order by date) sum_wins,
+	sum(draw_var) over (partition by team, "group" order by date) sum_draws,
+	sum(lost_var) over (partition by team, "group" order by date) sum_lost,
+	sum(goals_scored) over (partition by team, "group" order by date) sum_goals_scored,
+	sum(goals_conceded) over (partition by team, "group" order by date) sum_goals_conc,
+	sum(points) over (partition by team, "group" order by date) sum_points,
+	sum(goal_difference) over (partition by team, "group" order by date) sum_gd,
+	row_number() over (partition by team, "group" order by date) round
 from win_draw_lost_values)
 
 select 
@@ -406,7 +406,7 @@ select
 from round_selection
 join teams
 on teams.team_id = round_selection.team
-order by team, round asc;`,
+order by "group",team, round asc;`,
     { bind: { season_name: seasonName }, type: QueryTypes.SELECT }
   )
 

@@ -1,7 +1,14 @@
 const router = require('express').Router()
 const { authControl } = require('../utils/middleware')
 
-const { Season, Table, Team, Metadata, TeamSeason } = require('../models')
+const {
+  Season,
+  Table,
+  Team,
+  Metadata,
+  TeamSeason,
+  Serie,
+} = require('../models')
 
 router.get('/', async (req, res, next) => {
   const seasons = await Season.findAll({
@@ -20,7 +27,12 @@ router.get('/:seasonId', async (req, res, next) => {
   const season = await Season.findAll({
     where: { year: seasonName },
     attributes: { exclude: ['createdAt', 'updatedAt'] },
-    include: [{ model: Team }, { model: Table }, { model: Metadata }],
+    include: [
+      { model: Team },
+      { model: Table },
+      { model: Metadata },
+      { model: Serie },
+    ],
   })
   if (!season) {
     throw new Error('No such season in the database')

@@ -1,9 +1,9 @@
-const gameDataDam198990 = require('../../json/games/dam198990')
+const gameDataMenKval9596 = require('../../json/menkval9596')
 const { Game } = require('../models')
 
 const addGame = async () => {
   try {
-    await Game.bulkCreate(gameDataDam198990)
+    await Game.bulkCreate(gameDataMenKval9596)
   } catch (error) {
     console.log('There was an error: ', error)
   }

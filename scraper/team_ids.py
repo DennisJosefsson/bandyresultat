@@ -56,6 +56,7 @@ teamIds = {
     "Kungälv": 15,
     "153": 15,
     "Frillesås BK":16,
+    "Frillesås": 16,
     "155":16,
     "Nässjö IF":17,
     "Nässjö": 17,
@@ -93,6 +94,7 @@ teamIds = {
     "Skutskärs IF": 64,
     "Skutskär": 64,
     "IF Göta": 57,
+    "KGöta":57,
     "IK Heros": 76,
     "Slottsbrons IF":65,
     "AIK": 29,
@@ -127,6 +129,7 @@ teamIds = {
     "Surte":103,
     "Ale Surte SK": 103,
     "Ale Surte": 103,
+    "Surte": 103,
     "Eskilstuna BS":105,
     "Eskilstuna": 105,
     "Filipstads IF": 100,
@@ -158,6 +161,7 @@ teamIds = {
     "Åby/Tjureda": 25,
     "805":25,
     "Lidköpings AIK": 114,
+    "Lidköping": 114,
     "164":114,
     "VSK Dam": 27,
     "281": 27,
@@ -226,7 +230,17 @@ teamIds = {
     "Genne": 162,
     "Bollnäs Dam": 163,
     "Falun Dam": 117,
-    "Derby Dam": 124
+    "Derby Dam": 124,
+    "Finspång": 78,
+    "Gustavsberg": 166,
+    "Sköndal": 167,
+    "VP": 168,
+    "Målilla": 169,
+    "Helenelund": 170,
+    "Vargön": 171,
+    "Söderfors": 172,
+    "Höjden": 173,
+    "Oxelösund": 174
 
 
     }

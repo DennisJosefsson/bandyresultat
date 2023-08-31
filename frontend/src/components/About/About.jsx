@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
-import kalenderbitare from "../../assets/kalenderbitare.PNG";
+import { Link } from 'react-router-dom'
+
+import kalenderbitare from '../../assets/kalenderbitare.PNG'
 
 const About = () => {
   return (
@@ -14,7 +15,7 @@ const About = () => {
             bandy&shy;vintern
             <Link to="/season/1969" className="pl-1 font-bold">
               1968/69
-            </Link>{" "}
+            </Link>{' '}
             när Katrine&shy;holm vann SM-guld. När de slogs mot
             Hällefors&shy;näs och Örebro i södra serien, och hade säll&shy;skap
             av Värmbol. Kokade Närke och västra Sörmland av bandy&shy;eufori?
@@ -51,7 +52,7 @@ const About = () => {
             från Vetlanda. Det hade för&shy;modligen inte blivit något av detta
             om det inte funnits före&shy;gångare som förenklat
             data&shy;insamlingen och stått för inspiration. Då tänker jag
-            närmast på{" "}
+            närmast på{' '}
             <a
               href="https://web.archive.org/web/20150222174940/http://www.jimbobandy.nu/"
               className="font-semibold"
@@ -59,8 +60,8 @@ const About = () => {
               rel="noreferrer"
             >
               Jimbo&shy;bandy
-            </a>{" "}
-            och{" "}
+            </a>{' '}
+            och{' '}
             <a
               href="http://www.bandysidan.nu/"
               className="font-semibold"
@@ -78,7 +79,7 @@ const About = () => {
           <p className="mb-2 text-justify text-sm md:text-base">
             Jag kan inte lova något, men det är ju så att det går att ta reda på
             annan stati&shy;stik än den som pre&shy;senteras här. Så har du en
-            speci&shy;fik fråga så är det bara att kon&shy;takta mig, på{" "}
+            speci&shy;fik fråga så är det bara att kon&shy;takta mig, på{' '}
             <a
               href="https://twitter.com/_DennisJ_"
               className="font-semibold"
@@ -86,8 +87,8 @@ const About = () => {
               rel="noreferrer"
             >
               Twitter
-            </a>{" "}
-            (så länge det finns) eller via{" "}
+            </a>{' '}
+            (så länge det finns) eller via{' '}
             <a
               href="mailto:dennis@bandyresultat.se"
               className="font-semibold"
@@ -107,7 +108,7 @@ const About = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default About;
+export default About

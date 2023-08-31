@@ -5,6 +5,7 @@ import { postGame } from '../../requests/games'
 import { useState, useContext, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { GenderContext, UserContext } from '../../contexts/contexts'
+
 import Spinner from '../utilitycomponents/spinner'
 import GamesList from './GamesList'
 import GameForm from './GameForm'
@@ -217,6 +218,7 @@ const Games = () => {
           <h2 className="text-center text-base font-bold leading-4 sm:text-xl lg:text-2xl">
             Säsong {season[0].year} {women ? 'Damer' : 'Herrar'}
           </h2>
+
           {seasonId + 1 === 2025 ? null : (
             <Link to={`/games/${seasonId + 1}`}>
               <RightArrow />

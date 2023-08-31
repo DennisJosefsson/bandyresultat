@@ -2,6 +2,8 @@ import { useQuery } from 'react-query'
 import { useContext, useState, useEffect, useRef } from 'react'
 import { maratonTabell } from '../../requests/tables'
 import { GenderContext } from '../../contexts/contexts'
+import { Link } from 'react-router-dom'
+
 import MaratonHelpModal from './MaratonHelp'
 import Spinner from '../utilitycomponents/spinner'
 import GenderButtonComponent from '../utilitycomponents/GenderButtonComponent'
@@ -49,6 +51,7 @@ const Table = () => {
       <h2 className="text-center text-base font-bold leading-4 sm:text-xl lg:text-2xl">
         Maratontabell {women ? 'Damer' : 'Herrar'}
       </h2>
+
       <div className="mx-auto flex min-h-screen max-w-7xl flex-row-reverse justify-between pt-10 font-inter text-[#011d29]">
         <div>
           <div>
@@ -62,6 +65,9 @@ const Table = () => {
               Hjälp/Info
             </ButtonComponent>
           </div>
+          <Link to={`/records`}>
+            <ButtonComponent clickFunctions={() => {}}>Rekord</ButtonComponent>
+          </Link>
         </div>
         <div className="w-full md:w-4/5">
           <table className="w-full table-auto text-[10px] md:text-xs lg:text-base">

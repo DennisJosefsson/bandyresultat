@@ -1,14 +1,9 @@
 import { useState, useEffect } from 'react'
 import { roundForRoundSortFunction } from '../utilitycomponents/sortFunction'
-import { groupConstant } from '../utilitycomponents/constants'
-import {
-  RightArrow,
-  LeftArrow,
-  SmallArrowDownRight,
-  SmallArrowUpRight,
-} from '../utilitycomponents/icons'
 
-const RoundForRound = ({ array, round, setRound }) => {
+import { RightArrow, LeftArrow } from '../utilitycomponents/icons'
+
+const RoundForRound = ({ array, round, setRound, seriesInfo, bonusPoints }) => {
   const [width, setWidth] = useState(window.innerWidth)
   const breakpoint = 576
 
@@ -19,6 +14,25 @@ const RoundForRound = ({ array, round, setRound }) => {
     return () => window.removeEventListener('resize', handleWindowResize)
   }, [])
   const gameArray = roundForRoundSortFunction(array)
+
+  const group = gameArray[0].games[0].group
+  const comment = seriesInfo.find(
+    (serie) => serie.serieGroupCode === group,
+  ).comment
+
+  const calculateBonusPoints = (teamId) => {
+    const bonus = bonusPoints.find((points) => points.group === group)
+    if (bonus.bonusPoints === null) {
+      return 0
+    }
+    const points = bonus.bonusPoints[Number(teamId)]
+
+    if (points === null) {
+      return 0
+    } else {
+      return Number(points)
+    }
+  }
 
   return (
     <div>
@@ -34,7 +48,7 @@ const RoundForRound = ({ array, round, setRound }) => {
           <LeftArrow />
         </div>
         <div className="mt-3 py-1 text-center font-bold">
-          {groupConstant[gameArray[0].games[0].group]}
+          {seriesInfo.find((serie) => serie.serieGroupCode === group).serieName}
         </div>
         <div
           onClick={() =>
@@ -79,9 +93,22 @@ const RoundForRound = ({ array, round, setRound }) => {
           {gameArray
             .sort((teamA, teamB) => {
               if (round <= teamA.games.length && round <= teamB.games.length) {
+                if (
+                  Number(teamB.games[round - 1].sum_points) +
+                    calculateBonusPoints(teamB.games[0].team) ===
+                  Number(teamA.games[round - 1].sum_points) +
+                    calculateBonusPoints(teamA.games[0].team)
+                ) {
+                  return (
+                    teamB.games[round - 1].sum_gd -
+                    teamA.games[round - 1].sum_gd
+                  )
+                }
                 return (
-                  teamA.games[round - 1].rank_position -
-                  teamB.games[round - 1].rank_position
+                  Number(teamB.games[round - 1].sum_points) +
+                  calculateBonusPoints(teamB.games[0].team) -
+                  (Number(teamA.games[round - 1].sum_points) +
+                    calculateBonusPoints(teamA.games[0].team))
                 )
               }
               return
@@ -90,12 +117,19 @@ const RoundForRound = ({ array, round, setRound }) => {
               return (
                 <tr
                   key={`${team.team}-${index}`}
-                  className="roundForRound rounded odd:bg-slate-300"
+                  className={`roundForRound ${
+                    seriesInfo
+                      .find((serie) => serie.serieGroupCode === group)
+                      .serieStructure?.includes(index + 1)
+                      ? 'border-b-2 border-black'
+                      : null
+                  } odd:bg-slate-300`}
                 >
                   <td className="pos">
-                    {round <= team.games.length
+                    {index + 1}
+                    {/* {round <= team.games.length
                       ? `${team.games[round - 1].rank_position}`
-                      : `${team.games.at(-1).rank_position}`}
+                      : `${team.games.at(-1).rank_position}`} */}
                   </td>
                   {width >= breakpoint && (
                     <td className="team">
@@ -112,7 +146,7 @@ const RoundForRound = ({ array, round, setRound }) => {
                     </td>
                   )}
                   <td className="dir">
-                    {round <= team.games.length &&
+                    {/* {round <= team.games.length &&
                       round > 1 &&
                       team.games[round - 1].rank_position <
                         team.games[round - 2].rank_position && (
@@ -133,7 +167,7 @@ const RoundForRound = ({ array, round, setRound }) => {
                       team.games.at(-1).rank_position >
                         team.games.at(-2).rank_position && (
                         <SmallArrowDownRight />
-                      )}
+                      )} */}
                   </td>
                   <td>
                     {round <= team.games.length
@@ -172,14 +206,23 @@ const RoundForRound = ({ array, round, setRound }) => {
                   </td>
                   <td>
                     {round <= team.games.length
-                      ? `${team.games[round - 1].sum_points}`
-                      : `${team.games.at(-1).sum_points}`}
+                      ? `${
+                          Number(team.games[round - 1].sum_points) +
+                          calculateBonusPoints(team.games[0].team)
+                        }`
+                      : `${
+                          Number(team.games.at(-1).sum_points) +
+                          calculateBonusPoints(team.games[0].team)
+                        }`}
                   </td>
                 </tr>
               )
             })}
         </tbody>
       </table>
+      {comment != null && (
+        <p className="bg-white p-1 text-xs font-bold">{comment}</p>
+      )}
     </div>
   )
 }

@@ -1,7 +1,6 @@
-import { groupConstant } from '../utilitycomponents/constants'
 import { useState, useEffect } from 'react'
 
-const TableList = ({ tableArray }) => {
+const TableList = ({ tableArray, seriesInfo, bonusPoints }) => {
   const [width, setWidth] = useState(window.innerWidth)
   const breakpoint = 576
 
@@ -11,6 +10,20 @@ const TableList = ({ tableArray }) => {
 
     return () => window.removeEventListener('resize', handleWindowResize)
   }, [])
+
+  const calculateBonusPoints = (group, teamId) => {
+    const bonus = bonusPoints.find((points) => points.group === group)
+    if (bonus.bonusPoints === null) {
+      return 0
+    }
+    const points = bonus.bonusPoints[Number(teamId)]
+
+    if (points === null) {
+      return 0
+    } else {
+      return Number(points)
+    }
+  }
 
   return (
     <div className="mb-6">
@@ -23,7 +36,11 @@ const TableList = ({ tableArray }) => {
               </h2>
             ) : (
               <h2 className="text-sm font-bold lg:text-base xl:text-xl">
-                {groupConstant[group.group]}
+                {
+                  seriesInfo.find(
+                    (serie) => serie.serieGroupCode === group.group,
+                  ).serieName
+                }
               </h2>
             )}
             <div>
@@ -53,32 +70,77 @@ const TableList = ({ tableArray }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {group.tables.map((team, index) => {
-                    return (
-                      <tr
-                        key={`${team.teamId}-${index}`}
-                        className="season rounded odd:bg-slate-300"
-                      >
-                        <td className="pos">{index + 1}</td>
-                        <td className="team">
-                          {width < breakpoint
-                            ? `${team.lag.shortName}`
-                            : `${team.lag.name}`}
-                        </td>
+                  {group.tables
+                    .sort((teamA, teamB) => {
+                      if (
+                        Number(teamA.total_points) +
+                          Number(
+                            calculateBonusPoints(group.group, teamA.team),
+                          ) ===
+                        Number(teamB.total_points) +
+                          Number(calculateBonusPoints(group.group, teamB.team))
+                      ) {
+                        return (
+                          teamB.total_goal_difference -
+                          teamA.total_goal_difference
+                        )
+                      }
+                      return (
+                        Number(teamB.total_points) +
+                        Number(calculateBonusPoints(group.group, teamB.team)) -
+                        (Number(teamA.total_points) +
+                          Number(calculateBonusPoints(group.group, teamA.team)))
+                      )
+                    })
+                    .map((team, index) => {
+                      return (
+                        <tr
+                          key={`${team.team}-${index}`}
+                          className={`season ${
+                            seriesInfo
+                              .find(
+                                (serie) => serie.serieGroupCode === group.group,
+                              )
+                              .serieStructure?.includes(index + 1)
+                              ? 'border-b-2 border-black'
+                              : null
+                          } odd:bg-slate-300`}
+                        >
+                          <td className="pos">{index + 1}</td>
+                          <td className="team">
+                            {width < breakpoint
+                              ? `${team.lag.shortName}`
+                              : `${team.lag.name}`}
+                          </td>
 
-                        <td>{team.total_games}</td>
-                        <td>{team.total_wins}</td>
-                        <td>{team.total_draws}</td>
-                        <td>{team.total_lost}</td>
-                        <td>{team.total_goals_scored}</td>
-                        <td>{team.total_goals_conceded}</td>
-                        <td>{team.total_goal_difference}</td>
-                        <td>{team.total_points}</td>
-                      </tr>
-                    )
-                  })}
+                          <td>{team.total_games}</td>
+                          <td>{team.total_wins}</td>
+                          <td>{team.total_draws}</td>
+                          <td>{team.total_lost}</td>
+                          <td>{team.total_goals_scored}</td>
+                          <td>{team.total_goals_conceded}</td>
+                          <td>{team.total_goal_difference}</td>
+                          <td>
+                            {Number(team.total_points) +
+                              Number(
+                                calculateBonusPoints(group.group, team.team),
+                              )}
+                          </td>
+                        </tr>
+                      )
+                    })}
                 </tbody>
               </table>
+              {seriesInfo.find((serie) => serie.serieGroupCode === group.group)
+                .comment != null && (
+                <p className="bg-white p-1 text-xs font-bold">
+                  {
+                    seriesInfo.find(
+                      (serie) => serie.serieGroupCode === group.group,
+                    ).comment
+                  }
+                </p>
+              )}
             </div>
           </div>
         )

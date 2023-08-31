@@ -42,24 +42,22 @@ router.get('/', async (req, res, next) => {
 })
 
 router.get('/streaks', async (req, res) => {
-  const losingStreak = await sequelize.query(
+  const menLosingStreak = await sequelize.query(
     `with lost_values as (
 select 
 	team,
 	lost, 
 	"date",
-  women,
-	case when lost = true then 1 else 0 end lost_value
+  case when lost = true then 1 else 0 end lost_value
 from teamgames
-where category != 'qualification'),
+where category != 'qualification' and women = false),
 
 summed_lost_values as (
 select 
 	team,
 	lost,
 	"date",
-  women,
-	sum(lost_value) over (partition by team order by date) sum_losts,
+  sum(lost_value) over (partition by team order by date) sum_losts,
 	row_number() over (partition by team order by date) round
 from lost_values),
 
@@ -68,8 +66,7 @@ select
 	team,
 	lost,
 	"date",
-  women,
-	sum_losts,
+  sum_losts,
 	round - sum_losts as grouped
 from summed_lost_values
 where lost = true),
@@ -77,17 +74,15 @@ where lost = true),
 group_array as (
 select
 	team,
-  women,
-	mode() within group (order by grouped) as max_count, 
+  mode() within group (order by grouped) as max_count, 
 	array_agg(date order by date) as dates
 from grouped_losts
-group by grouped, team, women)
+group by grouped, team)
 
 select
 	team,
 	"name",
-  group_array.women,
-	array_length(dates, 1) as game_count,
+  array_length(dates, 1) as game_count,
 	dates[1] as start_date,
 	dates[array_upper(dates,1)] as end_date
 from group_array
@@ -98,24 +93,73 @@ limit 10;
     { type: QueryTypes.SELECT }
   )
 
-  const drawStreak = await sequelize.query(
+  const womenLosingStreak = await sequelize.query(
+    `with lost_values as (
+select 
+	team,
+	lost, 
+	"date",
+  case when lost = true then 1 else 0 end lost_value
+from teamgames
+where category != 'qualification' and women = true),
+
+summed_lost_values as (
+select 
+	team,
+	lost,
+	"date",
+  sum(lost_value) over (partition by team order by date) sum_losts,
+	row_number() over (partition by team order by date) round
+from lost_values),
+
+grouped_losts as (
+select 
+	team,
+	lost,
+	"date",
+  sum_losts,
+	round - sum_losts as grouped
+from summed_lost_values
+where lost = true),
+
+group_array as (
+select
+	team,
+  mode() within group (order by grouped) as max_count, 
+	array_agg(date order by date) as dates
+from grouped_losts
+group by grouped, team)
+
+select
+	team,
+	"name",
+  array_length(dates, 1) as game_count,
+	dates[1] as start_date,
+	dates[array_upper(dates,1)] as end_date
+from group_array
+join teams on group_array.team = teams.team_id 
+order by game_count desc
+limit 10;
+`,
+    { type: QueryTypes.SELECT }
+  )
+
+  const menDrawStreak = await sequelize.query(
     `with draw_values as (
 select 
 	team,
 	draw, 
 	"date",
-  women,
-	case when draw = true then 1 else 0 end draw_value
+  case when draw = true then 1 else 0 end draw_value
 from teamgames
-where category != 'qualification'),
+where category != 'qualification' and women = false),
 
 summed_draw_values as (
 select 
 	team,
 	draw,
 	"date",
-  women,
-	sum(draw_value) over (partition by team order by date) sum_draws,
+  sum(draw_value) over (partition by team order by date) sum_draws,
 	row_number() over (partition by team order by date) round
 from draw_values),
 
@@ -124,8 +168,7 @@ select
 	team,
 	draw,
 	"date",
-  women,
-	sum_draws,
+  sum_draws,
 	round - sum_draws as grouped
 from summed_draw_values
 where draw = true),
@@ -133,17 +176,15 @@ where draw = true),
 group_array as (
 select
 	team,
-  women,
-	mode() within group (order by grouped) as max_count, 
+  mode() within group (order by grouped) as max_count, 
 	array_agg(date order by date) as dates
 from grouped_draws
-group by grouped, team, women)
+group by grouped, team)
 
 select
 	team,
 	"name",
-  group_array.women,
-	array_length(dates, 1) as game_count,
+  array_length(dates, 1) as game_count,
 	dates[1] as start_date,
 	dates[array_upper(dates,1)] as end_date
 from group_array
@@ -154,24 +195,73 @@ limit 10;
     { type: QueryTypes.SELECT }
   )
 
-  const winStreak = await sequelize.query(
+  const womenDrawStreak = await sequelize.query(
+    `with draw_values as (
+select 
+	team,
+	draw, 
+	"date",
+  case when draw = true then 1 else 0 end draw_value
+from teamgames
+where category != 'qualification' and women = true),
+
+summed_draw_values as (
+select 
+	team,
+	draw,
+	"date",
+  sum(draw_value) over (partition by team order by date) sum_draws,
+	row_number() over (partition by team order by date) round
+from draw_values),
+
+grouped_draws as (
+select 
+	team,
+	draw,
+	"date",
+  sum_draws,
+	round - sum_draws as grouped
+from summed_draw_values
+where draw = true),
+
+group_array as (
+select
+	team,
+  mode() within group (order by grouped) as max_count, 
+	array_agg(date order by date) as dates
+from grouped_draws
+group by grouped, team)
+
+select
+	team,
+	"name",
+  array_length(dates, 1) as game_count,
+	dates[1] as start_date,
+	dates[array_upper(dates,1)] as end_date
+from group_array
+join teams on group_array.team = teams.team_id 
+order by game_count desc
+limit 10;
+`,
+    { type: QueryTypes.SELECT }
+  )
+
+  const menWinStreak = await sequelize.query(
     `with win_values as (
 select 
 	team,
 	win, 
 	"date",
-  women,
-	case when win = true then 1 else 0 end win_value
+  case when win = true then 1 else 0 end win_value
 from teamgames
-where category != 'qualification'),
+where category != 'qualification' and women = false),
 
 summed_win_values as (
 select 
 	team,
 	win,
 	"date",
-  women,
-	sum(win_value) over (partition by team order by date) sum_wins,
+  sum(win_value) over (partition by team order by date) sum_wins,
 	row_number() over (partition by team order by date) round
 from win_values),
 
@@ -180,8 +270,7 @@ select
 	team,
 	win,
 	"date",
-  women,
-	sum_wins,
+  sum_wins,
 	round - sum_wins as grouped
 from summed_win_values
 where win = true),
@@ -189,17 +278,15 @@ where win = true),
 group_array as (
 select
 	team,
-  women,
-	mode() within group (order by grouped) as max_count, 
+  mode() within group (order by grouped) as max_count, 
 	array_agg(date order by date) as dates
 from grouped_wins
-group by grouped, team, women)
+group by grouped, team)
 
 select
 	team,
 	"name",
-  group_array.women,
-	array_length(dates, 1) as game_count,
+  array_length(dates, 1) as game_count,
 	dates[1] as start_date,
 	dates[array_upper(dates,1)] as end_date
 from group_array
@@ -210,24 +297,22 @@ limit 10;
     { type: QueryTypes.SELECT }
   )
 
-  const noWinStreak = await sequelize.query(
+  const womenWinStreak = await sequelize.query(
     `with win_values as (
 select 
 	team,
 	win, 
 	"date",
-  women,
-	case when win = false then 1 else 0 end win_value
+  case when win = true then 1 else 0 end win_value
 from teamgames
-where category != 'qualification'),
+where category != 'qualification' and women = true),
 
 summed_win_values as (
 select 
 	team,
 	win,
 	"date",
-  women,
-	sum(win_value) over (partition by team order by date) sum_wins,
+  sum(win_value) over (partition by team order by date) sum_wins,
 	row_number() over (partition by team order by date) round
 from win_values),
 
@@ -236,8 +321,58 @@ select
 	team,
 	win,
 	"date",
-  women,
-	sum_wins,
+  sum_wins,
+	round - sum_wins as grouped
+from summed_win_values
+where win = true),
+
+group_array as (
+select
+	team,
+  mode() within group (order by grouped) as max_count, 
+	array_agg(date order by date) as dates
+from grouped_wins
+group by grouped, team)
+
+select
+	team,
+	"name",
+  array_length(dates, 1) as game_count,
+	dates[1] as start_date,
+	dates[array_upper(dates,1)] as end_date
+from group_array
+join teams on group_array.team = teams.team_id 
+order by game_count desc
+limit 10;
+`,
+    { type: QueryTypes.SELECT }
+  )
+
+  const menNoWinStreak = await sequelize.query(
+    `with win_values as (
+select 
+	team,
+	win, 
+	"date",
+  case when win = false then 1 else 0 end win_value
+from teamgames
+where category != 'qualification' and women = false),
+
+summed_win_values as (
+select 
+	team,
+	win,
+	"date",
+  sum(win_value) over (partition by team order by date) sum_wins,
+	row_number() over (partition by team order by date) round
+from win_values),
+
+grouped_wins as (
+select 
+	team,
+	win,
+	"date",
+  sum_wins,
 	round - sum_wins as grouped
 from summed_win_values
 where win = false),
@@ -245,17 +380,15 @@ where win = false),
 group_array as (
 select
 	team,
-  women,
-	mode() within group (order by grouped) as max_count, 
+  mode() within group (order by grouped) as max_count, 
 	array_agg(date order by date) as dates
 from grouped_wins
-group by grouped, team, women)
+group by grouped, team)
 
 select
 	team,
 	"name",
-  group_array.women,
-	array_length(dates, 1) as game_count,
+  array_length(dates, 1) as game_count,
 	dates[1] as start_date,
 	dates[array_upper(dates,1)] as end_date
 from group_array
@@ -266,24 +399,73 @@ limit 10;
     { type: QueryTypes.SELECT }
   )
 
-  const unbeatenStreak = await sequelize.query(
+  const womenNoWinStreak = await sequelize.query(
+    `with win_values as (
+select 
+	team,
+	win, 
+	"date",
+  case when win = false then 1 else 0 end win_value
+from teamgames
+where category != 'qualification' and women = true),
+
+summed_win_values as (
+select 
+	team,
+	win,
+	"date",
+  sum(win_value) over (partition by team order by date) sum_wins,
+	row_number() over (partition by team order by date) round
+from win_values),
+
+grouped_wins as (
+select 
+	team,
+	win,
+	"date",
+  sum_wins,
+	round - sum_wins as grouped
+from summed_win_values
+where win = false),
+
+group_array as (
+select
+	team,
+  mode() within group (order by grouped) as max_count, 
+	array_agg(date order by date) as dates
+from grouped_wins
+group by grouped, team)
+
+select
+	team,
+	"name",
+  array_length(dates, 1) as game_count,
+	dates[1] as start_date,
+	dates[array_upper(dates,1)] as end_date
+from group_array
+join teams on group_array.team = teams.team_id 
+order by game_count desc
+limit 10;
+`,
+    { type: QueryTypes.SELECT }
+  )
+
+  const menUnbeatenStreak = await sequelize.query(
     `with win_values as (
 select 
 	team,
 	lost, 
 	"date",
-  women,
-	case when lost = false then 1 else 0 end win_value
+  case when lost = false then 1 else 0 end win_value
 from teamgames
-where category != 'qualification'),
+where category != 'qualification' and women = false),
 
 summed_win_values as (
 select 
 	team,
 	lost,
 	"date",
-  women,
-	sum(win_value) over (partition by team order by date) sum_wins,
+  sum(win_value) over (partition by team order by date) sum_wins,
 	row_number() over (partition by team order by date) round
 from win_values),
 
@@ -292,8 +474,7 @@ select
 	team,
 	lost,
 	"date",
-  women,
-	sum_wins,
+  sum_wins,
 	round - sum_wins as grouped
 from summed_win_values
 where lost = false),
@@ -301,17 +482,15 @@ where lost = false),
 group_array as (
 select
 	team,
-  women,
-	mode() within group (order by grouped) as max_count, 
+  mode() within group (order by grouped) as max_count, 
 	array_agg(date order by date) as dates
 from grouped_wins
-group by grouped, team, women)
+group by grouped, team)
 
 select
 	team,
 	"name",
-  group_array.women,
-	array_length(dates, 1) as game_count,
+  array_length(dates, 1) as game_count,
 	dates[1] as start_date,
 	dates[array_upper(dates,1)] as end_date
 from group_array
@@ -322,7 +501,69 @@ limit 10;
     { type: QueryTypes.SELECT }
   )
 
-  res.json({ unbeatenStreak, noWinStreak, winStreak, drawStreak, losingStreak })
+  const womenUnbeatenStreak = await sequelize.query(
+    `with win_values as (
+select 
+	team,
+	lost, 
+	"date",
+  case when lost = false then 1 else 0 end win_value
+from teamgames
+where category != 'qualification' and women = true),
+
+summed_win_values as (
+select 
+	team,
+	lost,
+	"date",
+  sum(win_value) over (partition by team order by date) sum_wins,
+	row_number() over (partition by team order by date) round
+from win_values),
+
+grouped_wins as (
+select 
+	team,
+	lost,
+	"date",
+  sum_wins,
+	round - sum_wins as grouped
+from summed_win_values
+where lost = false),
+
+group_array as (
+select
+	team,
+  mode() within group (order by grouped) as max_count, 
+	array_agg(date order by date) as dates
+from grouped_wins
+group by grouped, team)
+
+select
+	team,
+	"name",
+  array_length(dates, 1) as game_count,
+	dates[1] as start_date,
+	dates[array_upper(dates,1)] as end_date
+from group_array
+join teams on group_array.team = teams.team_id 
+order by game_count desc
+limit 10;
+`,
+    { type: QueryTypes.SELECT }
+  )
+
+  res.json({
+    menUnbeatenStreak,
+    menNoWinStreak,
+    menWinStreak,
+    menDrawStreak,
+    menLosingStreak,
+    womenUnbeatenStreak,
+    womenNoWinStreak,
+    womenWinStreak,
+    womenDrawStreak,
+    womenLosingStreak,
+  })
 })
 
 router.get('/season/:seasonId', async (req, res, next) => {
@@ -907,12 +1148,6 @@ router.get('/:gameId', async (req, res, next) => {
 router.post('/', authControl, async (req, res, next) => {
   const [game, created] = await Game.upsert(req.body)
 
-  const homeGame = homeTeam(game)
-  const awayGame = awayTeam(game)
-  const homeTeamGame = await TeamGame.create(homeGame)
-  const awayTeamGame = await TeamGame.create(awayGame)
-  console.log(homeTeamGame)
-  console.log(awayTeamGame)
   res.json(game)
 })
 
@@ -936,114 +1171,5 @@ router.put('/:gameId', authControl, async (req, res, next) => {
     res.json(game)
   }
 })
-
-const homeTeam = (game) => {
-  let points, win, lost, draw
-  const {
-    gameId,
-    homeTeamId,
-    awayTeamId,
-    homeGoal,
-    awayGoal,
-    date,
-    category,
-    group,
-    playoff,
-    women,
-  } = game
-  const goalDifference = homeGoal - awayGoal
-  const qualificationGame = category === 'qualification' ? true : false
-  if (homeGoal > awayGoal) {
-    points = 2
-    win = true
-    lost = false
-    draw = false
-  } else if (homeGoal < awayGoal) {
-    points = 0
-    win = false
-    lost = true
-    draw = false
-  } else {
-    points = 1
-    draw = true
-    win = false
-    lost = false
-  }
-
-  return {
-    gameId,
-    seasonId: season,
-    team: homeTeamId,
-    opponent: awayTeamId,
-    goalsScored: homeGoal,
-    goalsConceded: awayGoal,
-    goalDifference,
-    points,
-    win,
-    draw,
-    lost,
-    qualificationGame,
-    category,
-    group,
-    playoff,
-    women,
-    date,
-    homeGame: true,
-  }
-}
-const awayTeam = (game) => {
-  let points, win, lost, draw
-  const {
-    gameId,
-    homeTeamId,
-    awayTeamId,
-    homeGoal,
-    awayGoal,
-    date,
-    category,
-    group,
-    playoff,
-    women,
-  } = game
-  const goalDifference = awayGoal - homeGoal
-  const qualificationGame = category === 'qualification' ? true : false
-  if (awayGoal > homeGoal) {
-    points = 2
-    win = true
-    lost = false
-    draw = false
-  } else if (awayGoal < homeGoal) {
-    points = 0
-    win = false
-    lost = true
-    draw = false
-  } else {
-    points = 1
-    draw = true
-    win = false
-    lost = false
-  }
-
-  return {
-    gameId,
-    seasonId: season,
-    team: awayTeamId,
-    opponent: homeTeamId,
-    goalsScored: awayGoal,
-    goalsConceded: homeGoal,
-    goalDifference,
-    points,
-    win,
-    draw,
-    lost,
-    qualificationGame,
-    category,
-    group,
-    playoff,
-    women,
-    date,
-    homeGame: false,
-  }
-}
 
 module.exports = router

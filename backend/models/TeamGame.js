@@ -14,6 +14,10 @@ TeamGame.init(
       type: DataTypes.INTEGER,
       references: { model: 'games', key: 'gameId' },
     },
+    serieId: {
+      type: DataTypes.INTEGER,
+      references: { model: 'series', key: 'serieId' },
+    },
     team: {
       type: DataTypes.INTEGER,
       references: { model: 'teams', key: 'teamId' },

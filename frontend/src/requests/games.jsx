@@ -13,6 +13,11 @@ export const getGames = async () => {
   return response.data
 }
 
+export const getStreaks = async () => {
+  const response = await gamesApi.get('/streaks')
+  return response.data
+}
+
 export const getSeasonGames = async (seasonId) => {
   const response = await gamesApi.get(`/season/${seasonId}`)
   return response.data

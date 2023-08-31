@@ -5,7 +5,7 @@ import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
 import { Plus, Minus } from '../utilitycomponents/icons'
 
 const TeamSeasonForm = ({ seasonId, mutation, setShowModal, teams, women }) => {
-  const initState = []
+  const initState = { teamArray: [] }
   const [teamFilter, setTeamFilter] = useState('')
   const [formState, dispatch] = useReducer(teamArrayFormReducer, initState)
   const queryClient = useQueryClient()
@@ -45,18 +45,18 @@ const TeamSeasonForm = ({ seasonId, mutation, setShowModal, teams, women }) => {
 
   return (
     <>
-      <div className="justify-center items-center flex overflow-x-hidden fixed overflow-y-auto inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative h-[540px] w-[1024px] my-6 mx-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
+        <div className="relative mx-auto my-6 h-[540px] w-[1024px]">
           {/*content*/}
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+          <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
             {/*header*/}
-            <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+            <div className="flex items-start justify-between rounded-t border-b border-solid border-slate-200 p-5">
               <h3 className="text-3xl font-semibold">Lägg till lag</h3>
               <button
-                className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                className="float-right ml-auto border-0 bg-transparent p-1 text-3xl font-semibold leading-none text-black opacity-5 outline-none focus:outline-none"
                 onClick={() => setShowModal(false)}
               >
-                <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                <span className="block h-6 w-6 bg-transparent text-2xl text-black opacity-5 outline-none focus:outline-none">
                   ×
                 </span>
               </button>
@@ -73,8 +73,8 @@ const TeamSeasonForm = ({ seasonId, mutation, setShowModal, teams, women }) => {
             </div>
             {/*body*/}
             <div className="">
-              <div className="backdrop:flex flex-col w-[1024px] flex-auto p-5 px-16 justify-start">
-                <div className="p-1 flex flex-row">
+              <div className="w-[1024px] flex-auto flex-col justify-start p-5 px-16 backdrop:flex">
+                <div className="flex flex-row p-1">
                   <div className="w-3/4">
                     <div className="grid grid-cols-3 gap-2">
                       {teamSelection
@@ -100,7 +100,7 @@ const TeamSeasonForm = ({ seasonId, mutation, setShowModal, teams, women }) => {
                     </div>
                   </div>
                   <div>
-                    {formState.map((teamId) => {
+                    {formState.teamArray.map((teamId) => {
                       return (
                         <div key={teamId}>
                           {
@@ -119,16 +119,16 @@ const TeamSeasonForm = ({ seasonId, mutation, setShowModal, teams, women }) => {
               </div>
             </div>
             {/*footer*/}
-            <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+            <div className="flex items-center justify-end rounded-b border-t border-solid border-slate-200 p-6">
               <button
-                className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                className="background-transparent mb-1 mr-1 px-6 py-2 text-sm font-bold uppercase text-red-500 outline-none transition-all duration-150 ease-linear focus:outline-none"
                 type="button"
                 onClick={() => setShowModal(false)}
               >
                 Stäng
               </button>
               <button
-                className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                className="mb-1 mr-1 rounded bg-emerald-500 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:shadow-lg focus:outline-none active:bg-emerald-600"
                 onClick={handleSubmit}
               >
                 Spara
@@ -137,7 +137,7 @@ const TeamSeasonForm = ({ seasonId, mutation, setShowModal, teams, women }) => {
           </div>
         </div>
       </div>
-      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+      <div className="fixed inset-0 z-40 bg-black opacity-25"></div>
     </>
   )
 }

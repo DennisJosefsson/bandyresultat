@@ -8,6 +8,7 @@ import {
   filterOpposition,
 } from '../utilitycomponents/sortFunction'
 import { groupConstant } from '../utilitycomponents/constants'
+
 import Spinner from '../utilitycomponents/spinner'
 import CompareHelpModal from './CompareHelpModal'
 import StatsModal from './StatsModal'
