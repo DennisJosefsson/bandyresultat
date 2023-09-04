@@ -18,6 +18,11 @@ export const getStreaks = async () => {
   return response.data
 }
 
+export const getSearch = async (searchParams) => {
+  const response = await gamesApi.post('/streaks', searchParams)
+  return response.data
+}
+
 export const getSeasonGames = async (seasonId) => {
   const response = await gamesApi.get(`/season/${seasonId}`)
   return response.data

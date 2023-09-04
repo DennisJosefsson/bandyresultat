@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const { Game, Team, Season, TeamGame } = require('../models')
 const { sequelize } = require('../utils/db')
-const { Op, QueryTypes } = require('sequelize')
+const { Op, QueryTypes, Model } = require('sequelize')
 const { authControl } = require('../utils/middleware')
 
 router.get('/', async (req, res, next) => {
@@ -38,6 +38,135 @@ router.get('/', async (req, res, next) => {
     throw new Error('No such game in the database')
   } else {
     res.json(games)
+  }
+})
+
+router.post('/search', async (req, res) => {
+  let where = {}
+  where.category = req.body.categoryArray
+  where.women = req.body.women
+  let limit = req.body.limit || 10
+
+  let include = [
+    {
+      model: Team,
+      attributes: ['name', 'casualName', 'shortName'],
+      as: 'lag',
+    },
+    {
+      model: Team,
+      attributes: ['name', 'casualName', 'shortName'],
+      as: 'opp',
+    },
+    { model: Game, attributes: ['result'] },
+  ]
+
+  let order = [['date', req.body.order]]
+
+  if (req.body.team) {
+    where.team = req.body.team
+  }
+
+  if (req.body.opponent) {
+    where.opponent = req.body.opponent
+  }
+
+  if (req.body.date) {
+    const month = req.body.date.split('-')[1]
+    const day = req.body.date.split('-')[2]
+    where = {
+      ...where,
+      [Op.and]: [
+        sequelize.fn('extract(month from game."date") =', month),
+        sequelize.fn('extract(day from game."date") =', day),
+      ],
+    }
+  }
+
+  if (req.body.startSeason || req.body.endSeason) {
+    if (req.body.startSeason && req.body.endSeason) {
+      where.seasonId = {
+        [Op.and]: {
+          [Op.gte]: req.body.startSeason,
+          [Op.lte]: req.body.endSeason,
+        },
+      }
+    } else if (req.body.startSeason) {
+      where.seasonId = { [Op.gte]: req.body.startSeason }
+    } else if (req.body.endSeason) {
+      where.seasonId = { [Op.lte]: req.body.endSeason }
+    }
+  }
+
+  if (req.body.goalDifference) {
+    if (req.body.operator === 'gte') {
+      where.goalDifference = {
+        [Op.gte]: req.body.goalDifference,
+      }
+      order.unshift(['goalDifference', req.body.order])
+    } else if (req.body.operator === 'eq') {
+      where.goalDifference = {
+        [Op.eq]: req.body.goalDifference,
+      }
+    } else if (req.body.operator === 'lte') {
+      where.goalDifference = {
+        [Op.lte]: req.body.goalDifference,
+      }
+      order.unshift(['goalDifference', req.body.order])
+    }
+  }
+
+  if (req.body.orderVar === 'goalDiff') {
+    order.unshift(['goalDifference', req.body.order])
+  }
+
+  if (req.body.orderVar === 'totalGoals') {
+    order.unshift(['totalGoals', req.body.order])
+    limit = req.body.team ? req.body.limit || 10 : req.body.limit * 2 || 20
+  }
+
+  if (req.body.orderVar === 'goalsScored') {
+    order.unshift(['goalsScored', req.body.order])
+  }
+
+  if (req.body.orderVar === 'goalsConceded') {
+    order.unshift(['goalsConceded', req.body.order])
+  }
+
+  if (req.body.gameResult === 'win') {
+    where.win = true
+  }
+
+  if (req.body.gameResult === 'draw') {
+    where.draw = true
+  }
+
+  if (req.body.gameResult === 'lost') {
+    where.lost = true
+  }
+
+  if (req.body.result && req.body.team) {
+    where.goalsScored = req.body.result.split('-')[0]
+    where.goalsConceded = req.body.result.split('-')[1]
+  } else if (req.body.result) {
+    const resultGame = { model: Game, where: { result: req.body.result } }
+    include.push(resultGame)
+  }
+
+  const searchResult = await TeamGame.findAndCountAll({
+    where,
+    include,
+    limit,
+    order,
+  })
+
+  if (!searchResult) {
+    res.json({
+      status: 'noHits',
+      message: 'Hittade ingen match som matchade sökningen.',
+    })
+  } else {
+    res.json({ hits: searchResult.count, searchResult: searchResult.rows })
   }
 })
 

@@ -39,6 +39,9 @@ TeamGame.belongsTo(Season, { foreignKey: 'seasonId' })
 Team.hasMany(Table, { foreignKey: 'teamId' })
 Table.belongsTo(Team, { foreignKey: 'teamId' })
 
+Game.hasMany(TeamGame, { foreignKey: 'gameId' })
+TeamGame.belongsTo(Game, { foreignKey: 'gameId' })
+
 Team.belongsToMany(Season, {
   through: TeamSeason,
   foreignKey: 'teamId',
