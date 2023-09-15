@@ -61,15 +61,7 @@ Table.init(
       defaultValue: false,
     },
     group: {
-      type: DataTypes.ENUM(
-        'elitserien',
-        'allsvenskan',
-        'norr',
-        'syd',
-        'KvalA',
-        'KvalB'
-      ),
-      defaultValue: 'elitserien',
+      type: DataTypes.STRING,
     },
   },
   {

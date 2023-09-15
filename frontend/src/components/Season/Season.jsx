@@ -10,6 +10,7 @@ import Spinner from '../utilitycomponents/spinner'
 import SeasonHelpModal from './SeasonHelpModal'
 import PlayoffModal from './PlayoffModal'
 import TableList from './TableList'
+import StaticTableList from './StaticTableList'
 import RoundForRound from './RoundForRound'
 import PlayoffSeriesPopup from './PlayoffSeriesPopup'
 
@@ -88,6 +89,9 @@ const Season = () => {
     (table) => table.womens_table === women,
   )
   const groups = new Set(roundByRoundTables.map((team) => team.group))
+
+  const womensSeason = season.filter((season) => season.women === true)
+
   const teams = tables.map((team) => team.lag)
   const groupsArray = Array.from(groups)
   const final = tables.filter((table) => table.category === 'final')
@@ -111,7 +115,14 @@ const Season = () => {
   const regularTables = tableSortFunction(unsortedRegularTables)
   const qualificationTables = tableSortFunction(unsortedQualificationTables)
 
-  const seriesInfo = season.find((season) => season.women === women).series
+  const seriesInfo = season.find((season) => season.women === women)
+    ? season.find((season) => season.women === women).series
+    : []
+
+  const seasonTables = season.find((season) => season.women === women)
+    ? season.find((season) => season.women === women).tables
+    : []
+
   const bonusPointsArray = seriesInfo.map((serie) => {
     return {
       group: serie.serieGroupCode,
@@ -411,7 +422,7 @@ const Season = () => {
           </div>
         )}
 
-        {seasonId < 2024 && (
+        {seasonTables.length === 0 && seasonId < 2024 && (
           <div className="w-full px-2 xl:px-4 ">
             <div
               onClick={() => {
@@ -511,6 +522,26 @@ const Season = () => {
                 />
               </div>
             )}
+          </div>
+        )}
+        {seasonTables.length > 0 && (
+          <div>
+            <StaticTableList
+              tableArray={seasonTables.filter(
+                (team) => team.group === 'Div1Norr',
+              )}
+              seriesInfo={seriesInfo}
+              teams={womensSeason[0].teams}
+              serieName="Division 1 Norra"
+            />
+            <StaticTableList
+              tableArray={seasonTables.filter(
+                (team) => team.group === 'Div1Syd',
+              )}
+              seriesInfo={seriesInfo}
+              teams={womensSeason[0].teams}
+              serieName="Division 1 Södra"
+            />
           </div>
         )}
       </div>

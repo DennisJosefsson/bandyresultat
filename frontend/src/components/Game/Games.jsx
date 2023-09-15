@@ -162,7 +162,9 @@ const Games = () => {
 
   const genderSeason = season.filter((indSeason) => indSeason.women === women)
 
-  const seriesInfo = season.find((season) => season.women === women).series
+  const seriesInfo = season.find((season) => season.women === women)
+    ? season.find((season) => season.women === women).series
+    : []
 
   if (women && seasonId < 1973) {
     return (

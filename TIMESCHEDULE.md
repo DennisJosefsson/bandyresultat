@@ -40,3 +40,4 @@
 | 2023-08-20  | 14 hours  | Site is now responsive, have added      |
 |             |           | buttons for scrolling to section, and   |
 |             |           | added two presets for H2H comparisons.  |
+| 2023-09-15  | 15 hours  | Implemented a search function           |

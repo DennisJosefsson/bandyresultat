@@ -35,8 +35,8 @@ const About = () => {
             (särskilt från tiden före 1990). Ovärderligt bidrag av Ingemar
             Ekelund från Eksjö har gjort så att det nu enbart saknas tre
             säsonger av damernas resultat i högsta serien. De två första, och
-            1987/1988. Jag vill också tacka Fredrik Axelsson och Stefan Svensson
-            för bidrag till sidan.
+            1987/1988. Jag vill också tacka Johan Svedbom, Fredrik Axelsson och
+            Stefan Svensson för bidrag till sidan.
           </p>
           <p className="mb-2 text-justify text-sm md:text-base">
             Vad man däremot inte kommer att hitta är spelar&shy;statistik.

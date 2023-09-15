@@ -49,7 +49,11 @@ Team.belongsToMany(Season, {
 })
 Season.belongsToMany(Team, { through: TeamSeason, foreignKey: 'seasonId' })
 
-Table.belongsToMany(Season, { through: TableSeason, foreignKey: 'tableId' })
+Table.belongsToMany(Season, {
+  through: TableSeason,
+  foreignKey: 'tableId',
+  as: 'seasontable',
+})
 Season.belongsToMany(Table, { through: TableSeason, foreignKey: 'seasonId' })
 
 Season.hasOne(Metadata, { foreignKey: 'seasonId' })
