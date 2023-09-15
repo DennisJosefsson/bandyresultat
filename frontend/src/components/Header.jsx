@@ -60,6 +60,11 @@ const Header = () => {
                     </Link>
                   </li>
                   <li onClick={() => setIsMenuOpen(false)}>
+                    <Link to="/search" className="hover:opacity-90">
+                      Sök
+                    </Link>
+                  </li>
+                  <li onClick={() => setIsMenuOpen(false)}>
                     <Link to="/tables" className="hover:opacity-90">
                       Maratontabeller
                     </Link>
@@ -85,6 +90,9 @@ const Header = () => {
               </Link>
               <Link to="/teams" className="hover:opacity-90">
                 Lag
+              </Link>
+              <Link to="/search" className="hover:opacity-90">
+                Sök
               </Link>
               <Link to="/tables" className="hover:opacity-90">
                 Maratontabeller

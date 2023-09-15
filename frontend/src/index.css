@@ -147,7 +147,7 @@
   }
 
   .recordCard .record1st .name {
-    @apply w-48 font-semibold;
+    @apply w-32 font-semibold sm:w-48;
   }
 
   .recordCard .record1st .count {
@@ -159,6 +159,6 @@
   }
 
   .recordCard .record2nd .dates {
-    @apply w-64 text-[10px] md:text-xs;
+    @apply w-48 text-[10px] sm:w-64 md:text-xs;
   }
 }

@@ -32,8 +32,11 @@ const About = () => {
             Än så länge en målbild, för även om det är ganska så nära när det
             gäller herrarnas högsta serie så har det varit bra mycket
             knepi&shy;gare att hitta gamla res&shy;ultat från damernas matcher
-            (särskilt från tiden före 1990). Det blir nästa del av
-            pro&shy;jektet.
+            (särskilt från tiden före 1990). Ovärderligt bidrag av Ingemar
+            Ekelund från Eksjö har gjort så att det nu enbart saknas tre
+            säsonger av damernas resultat i högsta serien. De två första, och
+            1987/1988. Jag vill också tacka Fredrik Axelsson och Stefan Svensson
+            för bidrag till sidan.
           </p>
           <p className="mb-2 text-justify text-sm md:text-base">
             Vad man däremot inte kommer att hitta är spelar&shy;statistik.

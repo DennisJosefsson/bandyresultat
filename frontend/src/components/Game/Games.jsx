@@ -162,6 +162,8 @@ const Games = () => {
 
   const genderSeason = season.filter((indSeason) => indSeason.women === women)
 
+  const seriesInfo = season.find((season) => season.women === women).series
+
   if (women && seasonId < 1973) {
     return (
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
@@ -241,6 +243,7 @@ const Games = () => {
                 setShowModal={setShowAddGameModal}
                 setGameData={setGameData}
                 ref={(el) => (categoryRefs.current['final'] = el)}
+                seriesInfo={seriesInfo}
               />
             )}
             {semiGames.length > 0 && (
@@ -250,6 +253,7 @@ const Games = () => {
                 setShowModal={setShowAddGameModal}
                 setGameData={setGameData}
                 ref={(el) => (categoryRefs.current['semi'] = el)}
+                seriesInfo={seriesInfo}
               />
             )}
             {quarterGames.length > 0 && (
@@ -259,6 +263,7 @@ const Games = () => {
                 setShowModal={setShowAddGameModal}
                 setGameData={setGameData}
                 ref={(el) => (categoryRefs.current['quarter'] = el)}
+                seriesInfo={seriesInfo}
               />
             )}
             {eightGames.length > 0 && (
@@ -268,6 +273,7 @@ const Games = () => {
                 setShowModal={setShowAddGameModal}
                 setGameData={setGameData}
                 ref={(el) => (categoryRefs.current['eight'] = el)}
+                seriesInfo={seriesInfo}
               />
             )}
             {regularGames.length > 0 && (
@@ -277,6 +283,7 @@ const Games = () => {
                 setShowModal={setShowAddGameModal}
                 setGameData={setGameData}
                 ref={(el) => (categoryRefs.current['regular'] = el)}
+                seriesInfo={seriesInfo}
               />
             )}
 
@@ -287,6 +294,7 @@ const Games = () => {
                 setShowModal={setShowAddGameModal}
                 setGameData={setGameData}
                 ref={(el) => (categoryRefs.current['qualification'] = el)}
+                seriesInfo={seriesInfo}
               />
             )}
             {user && (

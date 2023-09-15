@@ -132,7 +132,7 @@ export const compareAllTeamData = (allDataArray) => {
       })
     }
     const teamIndex = newArray.findIndex(
-      (teamItem) => team.team === teamItem.team
+      (teamItem) => team.team === teamItem.team,
     )
     newArray[teamIndex].total_games += Number(team.total_games)
     newArray[teamIndex].total_wins += Number(team.total_wins)
@@ -140,10 +140,10 @@ export const compareAllTeamData = (allDataArray) => {
     newArray[teamIndex].total_lost += Number(team.total_lost)
     newArray[teamIndex].total_goals_scored += Number(team.total_goals_scored)
     newArray[teamIndex].total_goals_conceded += Number(
-      team.total_goals_conceded
+      team.total_goals_conceded,
     )
     newArray[teamIndex].total_goal_difference += Number(
-      team.total_goal_difference
+      team.total_goal_difference,
     )
     newArray[teamIndex].total_points += Number(team.total_points)
   })
@@ -170,3 +170,4 @@ export const filterOpposition = (array) => {
 
   return array.filter(callback)
 }
+

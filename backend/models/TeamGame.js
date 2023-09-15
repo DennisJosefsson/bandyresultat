@@ -39,6 +39,9 @@ TeamGame.init(
     goalDifference: {
       type: DataTypes.INTEGER,
     },
+    totalGoals: {
+      type: DataTypes.INTEGER,
+    },
     points: {
       type: DataTypes.INTEGER,
     },
