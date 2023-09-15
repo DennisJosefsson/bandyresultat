@@ -18,6 +18,22 @@ const searchReducer = (state, action) => {
         ),
       }
     }
+    case 'ADD GAMERESULT':
+      if (state.gameResult.includes(action.payload)) {
+        return state
+      }
+      return {
+        ...state,
+        gameResult: [...state.gameResult, action.payload],
+      }
+    case 'REMOVE GAMERESULT': {
+      return {
+        ...state,
+        gameResult: state.gameResult.filter(
+          (result) => result !== action.payload,
+        ),
+      }
+    }
     case 'TOGGLE':
       return { ...state, qualification: !state.qualification }
     default:

@@ -19,7 +19,7 @@ export const getStreaks = async () => {
 }
 
 export const getSearch = async (searchParams) => {
-  const response = await gamesApi.post('/streaks', searchParams)
+  const response = await gamesApi.post('/search', searchParams)
   return response.data
 }
 

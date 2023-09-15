@@ -7,8 +7,8 @@ import 'dayjs/locale/sv'
 dayjs.locale('sv')
 
 const GamesList = forwardRef(function GamesList(
-  { gamesArray, title, setShowModal, setGameData },
-  ref
+  { gamesArray, title, setShowModal, setGameData, seriesInfo },
+  ref,
 ) {
   const { user } = useContext(UserContext)
   const [width, setWidth] = useState(window.innerWidth)
@@ -21,17 +21,27 @@ const GamesList = forwardRef(function GamesList(
     return () => window.removeEventListener('resize', handleWindowResize)
   }, [])
   return (
-    <div className="mb-6 font-inter w-full" ref={ref}>
-      <h1 className="font-bold text-[1rem] md:text-[1.25rem] xl:text-[1.5rem]">
+    <div className="mb-6 w-full font-inter" ref={ref}>
+      <h1 className="text-[1rem] font-bold md:text-[1.25rem] xl:text-[1.5rem]">
         {title}
       </h1>
       <div>
         {gamesArray.map((group) => {
           return (
             <div key={group.group} className="mb-6">
-              <h3 className="font-bold text-[0.75rem] md:text-base xl:text-xl">
+              <h3 className="text-[0.75rem] font-bold md:text-base xl:text-xl">
                 {gamesArray.length > 1 ? `${groupConstant[group.group]}` : ''}
               </h3>
+              {seriesInfo.find((serie) => serie.serieGroupCode === group.group)
+                .comment != null && (
+                <p className="my-2 max-w-xl bg-white p-1 text-xs font-bold">
+                  {
+                    seriesInfo.find(
+                      (serie) => serie.serieGroupCode === group.group,
+                    ).comment
+                  }
+                </p>
+              )}
               <div>
                 {group.dates.map((date) => {
                   return (
@@ -46,7 +56,7 @@ const GamesList = forwardRef(function GamesList(
                           return (
                             <div
                               key={game.gameId}
-                              className="bg-slate-300 px-2 py-0.5 mb-1 xl:py-1 xl:mb-2 xl:w-[36rem] flex flex-row justify-between text-[10px] md:text-base"
+                              className="mb-1 flex flex-row justify-between bg-slate-300 px-2 py-0.5 text-[10px] md:text-base xl:mb-2 xl:w-[36rem] xl:py-1"
                             >
                               <span className="w-1/3 sm:w-2/5 xl:w-52">
                                 {width < breakpoint
@@ -59,11 +69,11 @@ const GamesList = forwardRef(function GamesList(
                                   ? `${game.awayTeam.casualName}`
                                   : `${game.awayTeam.name}`}
                               </span>
-                              <span className="w-1 xl:w-4 text-right">
+                              <span className="w-1 text-right xl:w-4">
                                 {game.homeGoal}
                               </span>
                               <span className="w-1">-</span>
-                              <span className="w-1 xl:w-4 text-justify">
+                              <span className="w-1 text-justify xl:w-4">
                                 {game.awayGoal}
                               </span>
                               {user && (

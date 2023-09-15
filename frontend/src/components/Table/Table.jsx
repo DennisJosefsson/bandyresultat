@@ -103,9 +103,9 @@ const Table = () => {
                         : `${team.lag.name}`}
                     </td>
                     <td>{team.total_games}</td>
+                    <td>{team.total_wins}</td>
                     <td>{team.total_draws}</td>
                     <td>{team.total_lost}</td>
-                    <td>{team.total_wins}</td>
                     <td>{team.total_goals_scored}</td>
                     <td>{team.total_goals_conceded}</td>
                     <td>{team.total_goal_difference}</td>
