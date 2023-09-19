@@ -17,6 +17,7 @@ const tablesRouter = require('./controllers/tables')
 const metadataRouter = require('./controllers/metadata')
 const loginRouter = require('./controllers/login')
 const linkRouter = require('./controllers/link')
+const seriesRouter = require('./controllers/series')
 const mainRouter = require('./controllers/main')
 
 app.use(cors({ credentials: true }))
@@ -39,6 +40,7 @@ app.use('/api/tables', tablesRouter)
 app.use('/api/metadata', metadataRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/links', linkRouter)
+app.use('/api/series', seriesRouter)
 
 app.use((req, res, next) => {
   res.sendFile(path.join(frontend, 'index.html'))

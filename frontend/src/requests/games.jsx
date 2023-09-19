@@ -33,8 +33,10 @@ export const getSingleGame = async ({ gameId }) => {
   return response.data
 }
 
-export const postGame = async ({ formState }) => {
-  return await gamesApi.post('/', formState)
+export const postGame = async (newGameData) => {
+  console.log(newGameData)
+  const response = await gamesApi.post('/', newGameData)
+  return response.data
 }
 
 export const updateGame = async (game) => {
