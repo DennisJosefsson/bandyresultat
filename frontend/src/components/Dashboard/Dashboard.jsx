@@ -9,6 +9,7 @@ import TeamForm from '../Team/TeamForm'
 import GenderButtonComponent from '../utilitycomponents/GenderButtonComponent'
 import { getSeasons } from '../../requests/seasons'
 import { getTeams, postTeam } from '../../requests/teams'
+import SeriesModal from './SeriesModal'
 
 const Dashboard = () => {
   const {
@@ -24,6 +25,7 @@ const Dashboard = () => {
   const [showMetadataModal, setShowMetadataModal] = useState(false)
   const [showTeamSeasonModal, setShowTeamSeasonModal] = useState(false)
   const [showNewTeamFormModal, setShowNewTeamFormModal] = useState(false)
+  const [showSeriesModal, setShowSeriesModal] = useState(false)
   const [seasonId, setSeasonId] = useState('')
   const [seasonFilter, setSeasonFilter] = useState('')
 
@@ -91,7 +93,12 @@ const Dashboard = () => {
               />
             </>
           ) : null}
-
+          <p>
+            <button onClick={() => setShowSeriesModal(true)}>Serie</button>
+          </p>
+          {showSeriesModal && (
+            <SeriesModal women={women} setShowModal={setShowSeriesModal} />
+          )}
           <p>
             <button onClick={() => setShowTeamSeasonModal(true)}>
               Lägg till lag till säsong

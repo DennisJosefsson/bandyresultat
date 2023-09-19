@@ -1,10 +1,32 @@
-import { useReducer } from 'react'
+import { useState } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import { ErrorMessage } from '@hookform/error-message'
+import { postGame } from '../../requests/games'
+import { useQuery } from 'react-query'
+import Select from 'react-select'
+import { selectStyles } from '../utilitycomponents/selectStyles'
 
-import gameFormReducer from '../../reducers/gameFormReducer'
+const ErrorComponent = ({ errors }) => {
+  if (Object.keys(errors).length === 0) {
+    return null
+  }
+  return (
+    <div className="mb-2 rounded border-red-700 bg-white p-2 text-sm font-semibold text-red-700 md:text-base">
+      {Object.keys(errors).map((fieldName) => (
+        <ErrorMessage
+          errors={errors}
+          name={fieldName}
+          as="div"
+          key={fieldName}
+        />
+      ))}
+    </div>
+  )
+}
 
-const initAdd = (seasonId, women) => {
+const initAdd = (initData) => {
   return {
-    seasonId: seasonId,
+    seasonId: initData.seasonId,
     homeTeamId: '',
     awayTeamId: '',
     result: '',
@@ -14,13 +36,12 @@ const initAdd = (seasonId, women) => {
     halftimeHomeGoal: '',
     halftimeAwayGoal: '',
     date: '',
-    round: '',
     category: 'regular',
     group: 'elitserien',
     playoff: false,
     extraTime: false,
     penalties: false,
-    women: women,
+    women: initData.women,
   }
 }
 
@@ -28,8 +49,14 @@ const initEdit = (gameData) => {
   return {
     gameId: gameData.gameId,
     seasonId: gameData.seasonId,
-    homeTeamId: gameData.homeTeam.teamId,
-    awayTeamId: gameData.awayTeam.teamId,
+    homeTeamId: {
+      value: gameData.homeTeam.teamId,
+      label: gameData.homeTeam.casualName,
+    },
+    awayTeamId: {
+      value: gameData.awayTeam.teamId,
+      label: gameData.awayTeam.casualName,
+    },
     result: gameData.result,
     halftimeResult: gameData.halftimeResult,
     homeGoal: gameData.homeGoal,
@@ -37,7 +64,6 @@ const initEdit = (gameData) => {
     halftimeHomeGoal: gameData.halftimeHomeGoal,
     halftimeAwayGoal: gameData.halftimeAwayGoal,
     date: gameData.date,
-    round: gameData.round,
     category: gameData.category,
     group: gameData.group,
     playoff: gameData.playoff,
@@ -47,91 +73,60 @@ const initEdit = (gameData) => {
   }
 }
 
-const GameForm = ({
-  season,
-  mutation,
-  setShowModal,
-  gameData,
-  setGameData,
-  women
-}) => {
+const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
+  const [newGameData, setNewGameData] = useState(null)
+  const [playoff, setPlayoff] = useState(false)
+  const [extraTime, setExtraTime] = useState(false)
+  const [penalties, setPenalties] = useState(false)
+  const { data } = useQuery({
+    queryKey: ['game', newGameData],
+    queryFn: () => postGame(newGameData),
+    enabled: !!newGameData,
+  })
   const teamSelection = season[0].teams.map((team) => {
     return { value: team.teamId, label: team.name }
   })
 
   const groupSelection = [
-    // { value: 'elitserien', label: 'Elitserien' },
-    // { value: 'allsvenskan', label: 'Allsvenskan' },
-    // { value: 'norr', label: 'Norr' },
-    // { value: 'syd', label: 'Syd' },
+    { value: 'elitserien', label: 'Elitserien' },
+    { value: 'allsvenskan', label: 'Allsvenskan' },
     { value: 'KvalA', label: 'Kvalgrupp A' },
     { value: 'KvalB', label: 'Kvalgrupp B' },
-    //{ value: 'E1', label: 'Åttondel 1' },
-    //{ value: 'E2', label: 'Åttondel 2' },
-    //{ value: 'Q1', label: 'Kvartsfinal 1' },
-    //{ value: 'Q2', label: 'Kvartsfinal 2' },
-    //{ value: 'Q3', label: 'Kvartsfinal 3' },
+    { value: 'E1', label: 'Åttondel 1' },
+    { value: 'E2', label: 'Åttondel 2' },
+    { value: 'Q1', label: 'Kvartsfinal 1' },
+    { value: 'Q2', label: 'Kvartsfinal 2' },
+    { value: 'Q3', label: 'Kvartsfinal 3' },
     { value: 'Q4', label: 'Kvartsfinal 4' },
     { value: 'S1', label: 'Semifinal 1' },
     { value: 'S2', label: 'Semifinal 2' },
     { value: 'final', label: 'Final' },
-    // { value: 'sexlagsserie', label: 'Sexlagsserie' },
-    //{ value: 'Div1Norr', label: 'Division 1 Norr' },
-    // { value: 'Div1Central', label: 'Division 1 Central' },
-    //{ value: 'Div1Syd', label: 'Division 1 Syd' },
-    // { value: 'Div1SydA', label: 'Division 1 SydA' },
-    // { value: 'Div1SydB', label: 'Division 1 SydB' },
-    // { value: 'Div1NorrA', label: 'Division 1 NorrA' },
-    // { value: 'Div1NorrB', label: 'Division 1 NorrB' },
-    // { value: 'NedflyttningNorr', label: 'Nedflyttning Norr' },
-    // { value: 'NedflyttningSyd', label: 'Nedflyttning Syd' },
-    // { value: 'AvdA', label: 'Avdelning A' },
-    // { value: 'AvdB', label: 'Avdelning B' },
-    // { value: 'AvdC', label: 'Avdelning C' },
-    // { value: 'AvdD', label: 'Avdelning D' },
-    // { value: 'SlutspelA', label: 'Slutspelsgrupp A' },
-    // { value: 'SlutspelB', label: 'Slutspelsgrupp B' },
   ]
 
-  const categorySelection = [
-    { value: 'regular', label: 'Grundserie' },
-    { value: 'qualification', label: 'Kvalmatch' },
-    { value: 'eight', label: 'Åttondelsfinal' },
-    { value: 'quarter', label: 'Kvartsfinal' },
-    { value: 'semi', label: 'Semifinal' },
-    { value: 'final', label: 'Final' },
-  ]
+  const {
+    register,
+    setValue,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: gameData
+      ? initEdit(gameData)
+      : initAdd({ seasonId: season[0].seasonId, women }),
+    criteriaMode: 'all',
+    mode: 'onBlur',
+  })
 
-  const [formState, dispatch] = useReducer(
-    gameFormReducer,
-    gameData ? initEdit(gameData) : initAdd(season.seasonId, women),
-  )
-
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    formState.homeGoal = formState.result.split('-')[0]
-    formState.awayGoal = formState.result.split('-')[1]
-    if (formState.halftimeResult) {
-      formState.halftimeHomeGoal = formState.halftimeResult.split('-')[0]
-      formState.halftimeAwayGoal = formState.halftimeResult.split('-')[1]
-    }
-    mutation.mutate({ formState })
-    setGameData(null)
-    setShowModal(false)
+  const onSubmit = (formData) => {
+    setNewGameData(formData)
   }
 
-  const handleChange = (event) => {
-    dispatch({
-      type: 'INPUT',
-      field: event.target.name,
-      payload: event.target.value,
-    })
-  }
+  console.log(data)
 
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
-        <div className="relative mx-auto my-6 w-auto max-w-3xl">
+        <div className="fixed inset-2 mx-auto my-6 w-auto max-w-3xl overflow-y-auto">
           {/*content*/}
           <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
             {/*header*/}
@@ -148,8 +143,8 @@ const GameForm = ({
             </div>
             {/*body*/}
             <div>
-              <form onSubmit={handleSubmit} id="GameForm">
-                <div className="flex w-[540px] flex-auto flex-col justify-start p-5 px-16">
+              <form onSubmit={handleSubmit(onSubmit)} id="GameForm">
+                <div className="flex w-[640px] flex-auto flex-col justify-start p-5 px-16">
                   <div className="p-1">
                     <label
                       htmlFor="homeTeamId"
@@ -157,21 +152,18 @@ const GameForm = ({
                     >
                       <div className="w-32">Hemmalag:</div>
                       <div>
-                        <select
-                          className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
+                        <Controller
                           name="homeTeamId"
-                          id="homeTeamId"
-                          value={formState.homeTeamId}
-                          onChange={(event) => handleChange(event)}
-                        >
-                          {teamSelection.map((team, index) => {
-                            return (
-                              <option key={index} value={team.value}>
-                                {team.label}
-                              </option>
-                            )
-                          })}
-                        </select>
+                          control={control}
+                          rules={{ required: 'Måste ange hemmalag' }}
+                          render={({ field }) => (
+                            <Select
+                              options={teamSelection}
+                              {...field}
+                              styles={selectStyles}
+                            />
+                          )}
+                        />
                       </div>
                     </label>
                   </div>
@@ -182,21 +174,18 @@ const GameForm = ({
                     >
                       <div className="w-32">Bortalag:</div>
                       <div>
-                        <select
-                          className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
+                        <Controller
                           name="awayTeamId"
-                          id="awayTeamId"
-                          value={formState.awayTeamId}
-                          onChange={(event) => handleChange(event)}
-                        >
-                          {teamSelection.map((team, index) => {
-                            return (
-                              <option key={index} value={team.value}>
-                                {team.label}
-                              </option>
-                            )
-                          })}
-                        </select>
+                          control={control}
+                          rules={{ required: 'Måste ange bortalag' }}
+                          render={({ field }) => (
+                            <Select
+                              options={teamSelection}
+                              {...field}
+                              styles={selectStyles}
+                            />
+                          )}
+                        />
                       </div>
                     </label>
                   </div>
@@ -211,9 +200,21 @@ const GameForm = ({
                           <input
                             className="w-24 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
                             type="text"
-                            name="result"
-                            value={formState.result}
-                            onChange={(event) => handleChange(event)}
+                            {...register('result', {
+                              minLength: {
+                                value: 3,
+                                message: 'Fel format på resultat',
+                              },
+                              maxLength: {
+                                value: 5,
+                                message: 'Fel format på resultat',
+                              },
+                              pattern: {
+                                value: '/[0-9]{1,2}-[0-9]{1,2}',
+                                message:
+                                  'Resultatet måste vara i formatet n-n, t.ex. 2-1.',
+                              },
+                            })}
                           />
                         </div>
                       </label>
@@ -228,9 +229,21 @@ const GameForm = ({
                           <input
                             className="w-24 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
                             type="text"
-                            name="halftimeResult"
-                            value={formState.halftimeResult}
-                            onChange={(event) => handleChange(event)}
+                            {...register('halftimeResult', {
+                              minLength: {
+                                value: 3,
+                                message: 'Fel format på halvtidsresultat',
+                              },
+                              maxLength: {
+                                value: 5,
+                                message: 'Fel format på halvtidsresultat',
+                              },
+                              pattern: {
+                                value: '/[0-9]{1,2}-[0-9]{1,2}',
+                                message:
+                                  'Halvtidsresultatet måste vara i formatet n-n, t.ex. 2-1.',
+                              },
+                            })}
                           />
                         </div>
                       </label>
@@ -245,9 +258,21 @@ const GameForm = ({
                           <input
                             className="w-32 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
                             type="text"
-                            name="date"
-                            value={formState.date}
-                            onChange={(event) => handleChange(event)}
+                            {...register('date', {
+                              minLength: {
+                                value: 10,
+                                message: 'Fel format på datumet',
+                              },
+                              maxLength: {
+                                value: 10,
+                                message: 'Fel format på datumet',
+                              },
+                              pattern: {
+                                value: '/[0-9]{4}-[0-9]{2}-[0-9]{2}',
+                                message:
+                                  'Datumet måste vara i formatet ÅÅÅÅ-MM-DD, t.ex. 1978-03-16.',
+                              },
+                            })}
                           />
                         </div>
                       </label>
@@ -259,23 +284,74 @@ const GameForm = ({
                         className="flex flex-row text-sm font-medium text-gray-900"
                       >
                         <div className="w-32">Kategori:</div>
-                        <div>
-                          <select
-                            className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                            name="category"
-                            id="category"
-                            value={formState.category}
-                            onChange={(event) => handleChange(event)}
-                          >
-                            {categorySelection.map((category, index) => {
-                              return (
-                                <option key={index} value={category.value}>
-                                  {category.label}
-                                </option>
-                              )
-                            })}
-                          </select>
-                        </div>
+                        <fieldset className="mb-2 grid grid-cols-2 self-start">
+                          <div className="mb-1 mr-2 flex items-center">
+                            <input
+                              className="content-center border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                              type="radio"
+                              value="final"
+                              {...register('category')}
+                            />
+                            <label htmlFor="final" className="pl-2">
+                              Final
+                            </label>
+                          </div>
+                          <div className="mb-1 mr-2 flex items-center">
+                            <input
+                              className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                              type="radio"
+                              value="semi"
+                              {...register('category')}
+                            />
+                            <label htmlFor="semi" className="pl-2">
+                              Semifinal
+                            </label>
+                          </div>
+                          <div className="mb-1 mr-2 flex items-center">
+                            <input
+                              className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                              type="radio"
+                              value="quarter"
+                              {...register('category')}
+                            />
+                            <label htmlFor="quarter" className="pl-2">
+                              Kvartsfinal
+                            </label>
+                          </div>
+                          <div className="mb-1 mr-2 flex items-center">
+                            <input
+                              className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                              type="radio"
+                              value="eight"
+                              {...register('category')}
+                            />
+                            <label htmlFor="eight" className="pl-2">
+                              Åttondelsfinal
+                            </label>
+                          </div>
+                          <div className="mb-1 mr-2 flex items-center">
+                            <input
+                              className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                              type="radio"
+                              value="regular"
+                              {...register('category')}
+                            />
+                            <label htmlFor="regular" className="pl-2">
+                              Grundserie
+                            </label>
+                          </div>
+                          <div className="mb-1 mr-2 flex items-center">
+                            <input
+                              className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                              type="radio"
+                              value="qualification"
+                              {...register('category')}
+                            />
+                            <label htmlFor="qualification" className="pl-2">
+                              Kvalmatch
+                            </label>
+                          </div>
+                        </fieldset>
                       </label>
                     </div>
                     <div className="p-1">
@@ -284,23 +360,26 @@ const GameForm = ({
                         className="flex flex-row text-sm font-medium text-gray-900"
                       >
                         <div className="w-32">Grupp:</div>
-                        <div>
-                          <select
-                            className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                            name="group"
-                            id="group"
-                            value={formState.group}
-                            onChange={(event) => handleChange(event)}
-                          >
-                            {groupSelection.map((group, index) => {
-                              return (
-                                <option key={index} value={group.value}>
+                        <fieldset className="mb-2 grid grid-cols-2 self-start">
+                          {groupSelection.map((group) => {
+                            return (
+                              <div
+                                key={group.value}
+                                className="mb-1 mr-2 flex items-center"
+                              >
+                                <input
+                                  className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                                  type="radio"
+                                  value={group.value}
+                                  {...register('group')}
+                                />
+                                <label htmlFor={group.value} className="pl-2">
                                   {group.label}
-                                </option>
-                              )
-                            })}
-                          </select>
-                        </div>
+                                </label>
+                              </div>
+                            )
+                          })}
+                        </fieldset>
                       </label>
                     </div>
                   </div>
@@ -317,11 +396,15 @@ const GameForm = ({
                             className="text-gray-900 focus:ring-gray-500"
                             type="checkbox"
                             name="playoff"
-                            value={formState.playoff}
-                            checked={formState.playoff}
-                            onChange={() =>
-                              dispatch({ type: 'TOGGLE PLAYOFF' })
-                            }
+                            {...register('playoff')}
+                            checked={playoff}
+                            onChange={(event) => {
+                              setValue(
+                                'playoff',
+                                event.target.checked ? true : false,
+                              )
+                              setPlayoff(!playoff)
+                            }}
                           />
                         </div>
                       </label>
@@ -338,11 +421,15 @@ const GameForm = ({
                             className="text-gray-900 focus:ring-gray-500"
                             type="checkbox"
                             name="extraTime"
-                            value={formState.extraTime}
-                            checked={formState.extraTime}
-                            onChange={() =>
-                              dispatch({ type: 'TOGGLE EXTRATIME' })
-                            }
+                            {...register('extraTime')}
+                            checked={extraTime}
+                            onChange={(event) => {
+                              setValue(
+                                'extraTime',
+                                event.target.checked ? true : false,
+                              )
+                              setExtraTime(!extraTime)
+                            }}
                           />
                         </div>
                       </label>
@@ -360,29 +447,15 @@ const GameForm = ({
                             className="text-gray-900 focus:ring-gray-500"
                             type="checkbox"
                             name="penalties"
-                            value={formState.penalties}
-                            checked={formState.penalties}
-                            onChange={() =>
-                              dispatch({ type: 'TOGGLE PENALTIES' })
-                            }
-                          />
-                        </div>
-                      </label>
-                    </div>
-                    <div className="p-1">
-                      <label
-                        htmlFor="women"
-                        className="flex flex-row  space-x-2 text-sm font-medium text-gray-900 "
-                      >
-                        <div className="w-32">Damlag?</div>
-                        <div>
-                          <input
-                            className="text-gray-900 focus:ring-gray-500"
-                            type="checkbox"
-                            name="women"
-                            value={formState.women}
-                            checked={formState.women}
-                            onChange={() => dispatch({ type: 'TOGGLE WOMEN' })}
+                            {...register('penalties')}
+                            checked={penalties}
+                            onChange={(event) => {
+                              setValue(
+                                'penalties',
+                                event.target.checked ? true : false,
+                              )
+                              setPenalties(!penalties)
+                            }}
                           />
                         </div>
                       </label>
@@ -390,6 +463,14 @@ const GameForm = ({
                   </div>
                 </div>
               </form>
+            </div>
+            <div>
+              <ErrorComponent errors={errors} />
+              {data && (
+                <div className="p-2">
+                  Ny match: {data.game.date} {data.game.result}
+                </div>
+              )}
             </div>
             {/*footer*/}
             <div className="flex items-center justify-end rounded-b border-t border-solid border-slate-200 p-6">

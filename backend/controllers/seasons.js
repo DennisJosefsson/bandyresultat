@@ -49,7 +49,7 @@ router.post('/', authControl, async (req, res, next) => {
 router.post('/teamseason', authControl, async (req, res, next) => {
   const seasonId = req.body.seasonId
   const women = req.body.women
-  const teamSeasons = req.body.formState.map((teamId) => {
+  const teamSeasons = req.body.formState.teamArray.map((teamId) => {
     return { teamId, seasonId, women }
   })
   const teamSeasonData = await TeamSeason.bulkCreate(teamSeasons)

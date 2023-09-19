@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { Game, Team, Season, TeamGame } = require('../models')
+const { Game, Team, Season, TeamGame, Serie } = require('../models')
 const { sequelize } = require('../utils/db')
 const { Op, QueryTypes, Model } = require('sequelize')
 const { authControl } = require('../utils/middleware')
@@ -1320,9 +1320,63 @@ router.get('/:gameId', async (req, res, next) => {
 })
 
 router.post('/', authControl, async (req, res, next) => {
-  const [game, created] = await Game.upsert(req.body)
+  const { serieId } = await Serie.findOne({
+    where: { seasonId: req.body.seasonId, serieGroupCode: req.body.group },
+    raw: true,
+  })
 
-  res.json(game)
+  const gameData = {
+    ...req.body,
+    serieId,
+    homeTeamId: req.body.homeTeamId.value,
+    awayTeamId: req.body.awayTeamId.value,
+    homeGoal: parseInt(req.body.result.split('-')[0]),
+    awayGoal: parseInt(req.body.result.split('-')[1]),
+    halftimeHomeGoal: req.body.halftimeResult
+      ? parseInt(req.body.halftimeResult.split('-')[0])
+      : null,
+    halftimeAwayGoal: req.body.halftimeResult
+      ? parseInt(req.body.halftimeResult.split('-')[1])
+      : null,
+  }
+
+  const [game, created] = await Game.upsert({ ...gameData })
+
+  let homeTeamGame
+  let awayTeamGame
+  const homeTeamGameData = homeTeam(game)
+  const awayTeamGameData = awayTeam(game)
+
+  const teamGames = await TeamGame.findAll({
+    where: { gameId: game.gameId },
+    raw: true,
+  })
+
+  if (teamGames.length === 0) {
+    homeTeamGame = await TeamGame.create({
+      ...homeTeamGameData,
+    })
+    awayTeamGame = await TeamGame.create({
+      ...awayTeamGameData,
+    })
+  } else {
+    const homeGame = teamGames.find((teamgame) => teamgame.homeGame === true)
+
+    const awayGame = teamGames.find((teamgame) => teamgame.homeGame === false)
+
+    homeTeamGame = await TeamGame.upsert({
+      teamGameId: homeGame.teamGameId,
+
+      ...homeTeamGameData,
+    })
+    awayTeamGame = await TeamGame.upsert({
+      teamGameId: awayGame.teamGameId,
+
+      ...awayTeamGameData,
+    })
+  }
+
+  res.json({ game, homeTeamGame, awayTeamGame })
 })
 
 router.delete('/:gameId', authControl, async (req, res, next) => {
@@ -1345,5 +1399,116 @@ router.put('/:gameId', authControl, async (req, res, next) => {
     res.json(game)
   }
 })
+
+const homeTeam = (gameData) => {
+  let points, win, lost, draw
+  const {
+    gameId,
+    homeTeamId,
+    awayTeamId,
+    homeGoal,
+    awayGoal,
+    date,
+    category,
+    group,
+    playoff,
+    women,
+    seasonId,
+  } = gameData
+  const goalDifference = homeGoal - awayGoal
+  const qualificationGame = category === 'qualification' ? true : false
+  if (homeGoal > awayGoal) {
+    points = 2
+    win = true
+    lost = false
+    draw = false
+  } else if (homeGoal < awayGoal) {
+    points = 0
+    win = false
+    lost = true
+    draw = false
+  } else {
+    points = 1
+    draw = true
+    win = false
+    lost = false
+  }
+
+  return {
+    gameId,
+    seasonId,
+    team: homeTeamId,
+    opponent: awayTeamId,
+    goalsScored: parseInt(homeGoal),
+    goalsConceded: parseInt(awayGoal),
+    goalDifference,
+    points,
+    win,
+    draw,
+    lost,
+    qualificationGame,
+    category,
+    group,
+    playoff,
+    women,
+    date,
+    homeGame: true,
+  }
+}
+const awayTeam = (gameData) => {
+  let points, win, lost, draw
+  const {
+    gameId,
+    homeTeamId,
+    awayTeamId,
+    homeGoal,
+    awayGoal,
+    date,
+    category,
+    group,
+    playoff,
+    women,
+    seasonId,
+  } = gameData
+  const goalDifference = awayGoal - homeGoal
+  const qualificationGame = category === 'qualification' ? true : false
+  if (awayGoal > homeGoal) {
+    points = 2
+    win = true
+    lost = false
+    draw = false
+  } else if (awayGoal < homeGoal) {
+    points = 0
+    win = false
+    lost = true
+    draw = false
+  } else {
+    points = 1
+    draw = true
+    win = false
+    lost = false
+  }
+
+  return {
+    gameId,
+    seasonId,
+    team: awayTeamId,
+    opponent: homeTeamId,
+    goalsScored: parseInt(awayGoal),
+    goalsConceded: parseInt(homeGoal),
+    goalDifference,
+    points,
+    win,
+    draw,
+    lost,
+    qualificationGame,
+    category,
+    group,
+    playoff,
+    women,
+    date,
+    homeGame: false,
+  }
+}
 
 module.exports = router

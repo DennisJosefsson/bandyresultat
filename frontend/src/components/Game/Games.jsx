@@ -231,8 +231,21 @@ const Games = () => {
         </div>
       </div>
       {seasonId === 2024 && (
-        <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
-          <p>Inga resultat än.</p>
+        <div>
+          <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
+            <p>Inga resultat än.</p>
+          </div>
+          <div>
+            {user && (
+              <div>
+                <ButtonComponent
+                  clickFunctions={() => setShowAddGameModal(true)}
+                >
+                  Lägg till Match
+                </ButtonComponent>
+              </div>
+            )}
+          </div>
         </div>
       )}
       {seasonId < 2024 && (
