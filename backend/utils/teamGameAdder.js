@@ -2,7 +2,7 @@
 
 const { TeamGame, Game } = require('../models')
 
-const season = 136
+const season = 171
 
 const addTeamGame = async () => {
   // await sequelize.authenticate()
@@ -21,7 +21,7 @@ const addTeamGame = async () => {
   }
 }
 
-const homeTeam = (game) => {
+const homeTeam = (gameData) => {
   let points, win, lost, draw
   const {
     gameId,
@@ -34,9 +34,32 @@ const homeTeam = (game) => {
     group,
     playoff,
     women,
-  } = game
+    seasonId,
+    played,
+  } = gameData
+
   const goalDifference = homeGoal - awayGoal
   const qualificationGame = category === 'qualification' ? true : false
+  if (!played) {
+    return {
+      gameId,
+      seasonId,
+      team: homeTeamId,
+      opponent: awayTeamId,
+      goalsScored: 0,
+      goalsConceded: 0,
+      goalDifference: 0,
+      points: 0,
+      qualificationGame,
+      category,
+      group,
+      playoff,
+      women,
+      date,
+      played,
+      homeGame: true,
+    }
+  }
   if (homeGoal > awayGoal) {
     points = 2
     win = true
@@ -56,11 +79,11 @@ const homeTeam = (game) => {
 
   return {
     gameId,
-    seasonId: season,
+    seasonId,
     team: homeTeamId,
     opponent: awayTeamId,
-    goalsScored: homeGoal,
-    goalsConceded: awayGoal,
+    goalsScored: parseInt(homeGoal),
+    goalsConceded: parseInt(awayGoal),
     goalDifference,
     points,
     win,
@@ -72,10 +95,11 @@ const homeTeam = (game) => {
     playoff,
     women,
     date,
+    played,
     homeGame: true,
   }
 }
-const awayTeam = (game) => {
+const awayTeam = (gameData) => {
   let points, win, lost, draw
   const {
     gameId,
@@ -88,9 +112,31 @@ const awayTeam = (game) => {
     group,
     playoff,
     women,
-  } = game
+    seasonId,
+    played,
+  } = gameData
   const goalDifference = awayGoal - homeGoal
   const qualificationGame = category === 'qualification' ? true : false
+  if (!played) {
+    return {
+      gameId,
+      seasonId,
+      team: homeTeamId,
+      opponent: awayTeamId,
+      goalsScored: 0,
+      goalsConceded: 0,
+      goalDifference: 0,
+      points: 0,
+      qualificationGame,
+      category,
+      group,
+      playoff,
+      women,
+      date,
+      played,
+      homeGame: false,
+    }
+  }
   if (awayGoal > homeGoal) {
     points = 2
     win = true
@@ -110,11 +156,11 @@ const awayTeam = (game) => {
 
   return {
     gameId,
-    seasonId: season,
+    seasonId,
     team: awayTeamId,
     opponent: homeTeamId,
-    goalsScored: awayGoal,
-    goalsConceded: homeGoal,
+    goalsScored: parseInt(awayGoal),
+    goalsConceded: parseInt(homeGoal),
     goalDifference,
     points,
     win,
@@ -126,6 +172,7 @@ const awayTeam = (game) => {
     playoff,
     women,
     date,
+    played,
     homeGame: false,
   }
 }

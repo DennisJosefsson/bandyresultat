@@ -162,25 +162,26 @@ const Season = () => {
   return (
     <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
       <div className="flex flex-row justify-between">
-        <div className="mb-4 flex w-full flex-row items-center justify-evenly">
-          {seasonId - 1 === 1906 ? null : (
+        <div className="mx-auto mb-4 flex w-full flex-row items-center justify-center">
+          <div className={seasonId - 1 === 1906 ? 'invisible' : null}>
             <Link to={`/season/${seasonId - 1}`} state={{ resetRound: true }}>
               <LeftArrow />
             </Link>
-          )}
-          <h2 className="text-center text-base font-bold leading-4 sm:text-xl lg:text-2xl">
-            Säsong {season[0].year} {women ? 'Damer' : 'Herrar'}
-          </h2>
-
-          {seasonId + 1 === 2025 ? null : (
+          </div>
+          <div className="mx-16">
+            <h2 className="text-center text-base font-bold leading-4 sm:text-xl lg:text-2xl">
+              Säsong {season[0].year} {women ? 'Damer' : 'Herrar'}
+            </h2>
+          </div>
+          <div className={seasonId + 1 === 2025 ? 'invisible' : null}>
             <Link to={`/season/${seasonId + 1}`} state={{ resetRound: true }}>
               <RightArrow />
             </Link>
-          )}
+          </div>
         </div>
       </div>
       <div className="flex flex-row-reverse justify-between">
-        {seasonId === 2024 && (
+        {seasonId === 2025 && (
           <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
             <p>Inga resultat än.</p>
           </div>
@@ -196,7 +197,7 @@ const Season = () => {
             </p>
           </div>
         )}
-        {seasonId < 2024 && (
+        {seasonId < 2025 && (
           <div ref={topRef}>
             <div className="flex flex-col-reverse justify-start gap-2 pr-2 md:mr-4 xl:mr-0 xl:flex-row xl:justify-between">
               <Link to={`/games/${seasonId}`}>
@@ -227,7 +228,9 @@ const Season = () => {
               <h2 className="text-right text-xl font-bold">Slutspel</h2>
 
               <div className="flex w-[36rem] flex-col">
-                <h5 className="text-right text-sm font-bold">Final</h5>
+                <h5 className="text-right text-sm font-bold">
+                  {final.length > 0 && 'Final'}
+                </h5>
                 <div className="mb-6 self-center">
                   <table className="w-32 table-fixed">
                     <thead>
@@ -455,7 +458,7 @@ const Season = () => {
           </div>
         )}
 
-        {seasonTables.length === 0 && seasonId < 2024 && (
+        {seasonTables.length === 0 && seasonId < 2025 && (
           <div className="w-full px-2 xl:px-4 ">
             <div
               onClick={() => {

@@ -44,6 +44,7 @@ router.get('/:teamId', async (req, res) => {
   const tabeller = await TeamGame.findAll({
     where: {
       team: req.params.teamId,
+      played: true,
     },
     attributes: [
       'category',
@@ -88,7 +89,7 @@ select
   women,
 	case when lost = true then 1 else 0 end lost_value
 from teamgames
-where category != 'qualification' and team = $teamId),
+where category != 'qualification' and played = true and team = $teamId),
 
 summed_lost_values as (
 select 
@@ -144,7 +145,7 @@ select
   women,
 	case when draw = true then 1 else 0 end draw_value
 from teamgames
-where category != 'qualification' and team = $teamId),
+where category != 'qualification' and played = true and team = $teamId),
 
 summed_draw_values as (
 select 
@@ -200,7 +201,7 @@ select
   women,
 	case when win = true then 1 else 0 end win_value
 from teamgames
-where category != 'qualification' and team = $teamId),
+where category != 'qualification' and played = true and team = $teamId),
 
 summed_win_values as (
 select 
@@ -256,7 +257,7 @@ select
   women,
 	case when win = false then 1 else 0 end win_value
 from teamgames
-where category != 'qualification' and team = $teamId),
+where category != 'qualification' and played = true and team = $teamId),
 
 summed_win_values as (
 select 
@@ -312,7 +313,7 @@ select
   women,
 	case when lost = false then 1 else 0 end win_value
 from teamgames
-where category != 'qualification' and team = $teamId),
+where category != 'qualification' and played = true and team = $teamId),
 
 summed_win_values as (
 select 

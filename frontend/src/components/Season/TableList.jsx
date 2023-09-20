@@ -117,7 +117,11 @@ const TableList = ({ tableArray, seriesInfo, bonusPoints }) => {
                               : `${team.lag.name}`}
                           </td>
 
-                          <td>{team.total_games}</td>
+                          <td>
+                            {parseInt(team.total_wins) +
+                              parseInt(team.total_draws) +
+                              parseInt(team.total_lost)}
+                          </td>
                           <td>{team.total_wins}</td>
                           <td>{team.total_draws}</td>
                           <td>{team.total_lost}</td>
@@ -136,7 +140,7 @@ const TableList = ({ tableArray, seriesInfo, bonusPoints }) => {
                 </tbody>
               </table>
               {seriesInfo.find((serie) => serie.serieGroupCode === group.group)
-                .comment != null && (
+                .comment && (
                 <p className="bg-white p-1 text-xs font-bold">
                   {
                     seriesInfo.find(

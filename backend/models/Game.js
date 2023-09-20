@@ -80,6 +80,10 @@ Game.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    played: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     sequelize,

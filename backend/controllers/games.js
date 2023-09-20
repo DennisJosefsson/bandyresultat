@@ -47,6 +47,7 @@ router.get('/', async (req, res, next) => {
 router.post('/search', async (req, res) => {
   let where = {}
   where.category = req.body.categoryArray
+  where.played = true
 
   let limit = req.body.limit.value || 10
 
@@ -232,7 +233,7 @@ select
 	"date",
   case when lost = true then 1 else 0 end lost_value
 from teamgames
-where category != 'qualification' and women = false),
+where category != 'qualification' and played = true and women = false),
 
 summed_lost_values as (
 select 
@@ -283,7 +284,7 @@ select
 	"date",
   case when lost = true then 1 else 0 end lost_value
 from teamgames
-where category != 'qualification' and women = true),
+where category != 'qualification' and played = true and women = true),
 
 summed_lost_values as (
 select 
@@ -334,7 +335,7 @@ select
 	"date",
   case when draw = true then 1 else 0 end draw_value
 from teamgames
-where category != 'qualification' and women = false),
+where category != 'qualification' and played = true and women = false),
 
 summed_draw_values as (
 select 
@@ -385,7 +386,7 @@ select
 	"date",
   case when draw = true then 1 else 0 end draw_value
 from teamgames
-where category != 'qualification' and women = true),
+where category != 'qualification' and played = true and women = true),
 
 summed_draw_values as (
 select 
@@ -436,7 +437,7 @@ select
 	"date",
   case when win = true then 1 else 0 end win_value
 from teamgames
-where category != 'qualification' and women = false),
+where category != 'qualification' and played = true and women = false),
 
 summed_win_values as (
 select 
@@ -487,7 +488,7 @@ select
 	"date",
   case when win = true then 1 else 0 end win_value
 from teamgames
-where category != 'qualification' and women = true),
+where category != 'qualification' and played = true and women = true),
 
 summed_win_values as (
 select 
@@ -538,7 +539,7 @@ select
 	"date",
   case when win = false then 1 else 0 end win_value
 from teamgames
-where category != 'qualification' and women = false),
+where category != 'qualification' and played = true and women = false),
 
 summed_win_values as (
 select 
@@ -589,7 +590,7 @@ select
 	"date",
   case when win = false then 1 else 0 end win_value
 from teamgames
-where category != 'qualification' and women = true),
+where category != 'qualification' and played = true and women = true),
 
 summed_win_values as (
 select 
@@ -640,7 +641,7 @@ select
 	"date",
   case when lost = false then 1 else 0 end win_value
 from teamgames
-where category != 'qualification' and women = false),
+where category != 'qualification' and played = true and women = false),
 
 summed_win_values as (
 select 
@@ -691,7 +692,7 @@ select
 	"date",
   case when lost = false then 1 else 0 end win_value
 from teamgames
-where category != 'qualification' and women = true),
+where category != 'qualification' and played = true and women = true),
 
 summed_win_values as (
 select 
@@ -753,6 +754,12 @@ router.get('/season/:seasonId', async (req, res, next) => {
     req.params.seasonId < 1964
       ? req.params.seasonId
       : `${Number(req.params.seasonId) - 1}/${req.params.seasonId}`
+
+  const seasonExist = await Season.count({ where: { year: seasonName } })
+  if (seasonExist === 0) {
+    return res.json({ success: false, message: 'Säsong finns inte' })
+  }
+
   const games = await Game.findAll({
     include: [
       {
@@ -788,7 +795,7 @@ select
 	case when lost = true then 1 else 0 end lost_value
 from teamgames
 join seasons on seasons.season_id = teamgames.season_id
-where category != 'qualification' and "year" = $season_name),
+where category != 'qualification' and played = true and "year" = $season_name),
 
 summed_lost_values as (
 select 
@@ -847,7 +854,7 @@ select
 	case when draw = true then 1 else 0 end draw_value
 from teamgames
 join seasons on seasons.season_id = teamgames.season_id
-where category != 'qualification' and "year" = $season_name),
+where category != 'qualification' and played = true and "year" = $season_name),
 
 summed_draw_values as (
 select 
@@ -906,7 +913,7 @@ select
 	case when win = true then 1 else 0 end win_value
 from teamgames
 join seasons on seasons.season_id = teamgames.season_id
-where category != 'qualification' and "year" = $season_name),
+where category != 'qualification' and played = true and "year" = $season_name),
 
 summed_win_values as (
 select 
@@ -965,7 +972,7 @@ select
 	case when win = false then 1 else 0 end win_value
 from teamgames
 join seasons on seasons.season_id = teamgames.season_id
-where category != 'qualification' and "year" = $season_name),
+where category != 'qualification' and played = true and "year" = $season_name),
 
 summed_win_values as (
 select 
@@ -1024,7 +1031,7 @@ select
 	case when lost = false then 1 else 0 end win_value
 from teamgames
 join seasons on seasons.season_id = teamgames.season_id
-where category != 'qualification' and "year" = $season_name),
+where category != 'qualification' and played = true and "year" = $season_name),
 
 summed_win_values as (
 select 
@@ -1234,7 +1241,7 @@ where goal_difference =
 				and teamgames.women = false 
 				
 		)
-and "year" = $season_name and teamgames.women = false)
+and "year" = $season_name and teamgames.women = false and teamgames.played = true)
 
 select
 	home_team."casual_name" as home_name,
@@ -1269,7 +1276,7 @@ where goal_difference =
 				and teamgames.women = true 
 				
 		)
-and "year" = $season_name and teamgames.women = true)
+and "year" = $season_name and teamgames.women = true and teamgames.played = true)
 
 select
 	home_team."casual_name" as home_name,
@@ -1422,9 +1429,31 @@ const homeTeam = (gameData) => {
     playoff,
     women,
     seasonId,
+    played,
   } = gameData
+
   const goalDifference = homeGoal - awayGoal
   const qualificationGame = category === 'qualification' ? true : false
+  if (!played) {
+    return {
+      gameId,
+      seasonId,
+      team: homeTeamId,
+      opponent: awayTeamId,
+      goalsScored: 0,
+      goalsConceded: 0,
+      goalDifference: 0,
+      points: 0,
+      qualificationGame,
+      category,
+      group,
+      playoff,
+      women,
+      date,
+      played,
+      homeGame: true,
+    }
+  }
   if (homeGoal > awayGoal) {
     points = 2
     win = true
@@ -1460,6 +1489,7 @@ const homeTeam = (gameData) => {
     playoff,
     women,
     date,
+    played,
     homeGame: true,
   }
 }
@@ -1477,9 +1507,30 @@ const awayTeam = (gameData) => {
     playoff,
     women,
     seasonId,
+    played,
   } = gameData
   const goalDifference = awayGoal - homeGoal
   const qualificationGame = category === 'qualification' ? true : false
+  if (!played) {
+    return {
+      gameId,
+      seasonId,
+      team: homeTeamId,
+      opponent: awayTeamId,
+      goalsScored: 0,
+      goalsConceded: 0,
+      goalDifference: 0,
+      points: 0,
+      qualificationGame,
+      category,
+      group,
+      playoff,
+      women,
+      date,
+      played,
+      homeGame: false,
+    }
+  }
   if (awayGoal > homeGoal) {
     points = 2
     win = true
@@ -1515,6 +1566,7 @@ const awayTeam = (gameData) => {
     playoff,
     women,
     date,
+    played,
     homeGame: false,
   }
 }

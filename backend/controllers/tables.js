@@ -6,7 +6,7 @@ const { authControl } = require('../utils/middleware')
 
 router.get('/maraton', async (req, res) => {
   const maratonTabell = await TeamGame.findAll({
-    where: { category: 'regular' },
+    where: { category: 'regular', played: true },
     attributes: [
       'team',
       [sequelize.fn('count', sequelize.col('team_game_id')), 'total_games'],
@@ -74,6 +74,7 @@ router.post('/compare', async (req, res) => {
         { seasonId: { [Op.gte]: startSeason } },
         { seasonId: { [Op.lte]: endSeason } },
       ],
+      played: true,
     },
     attributes: [
       'team',
@@ -144,6 +145,7 @@ router.post('/compare', async (req, res) => {
         { seasonId: { [Op.gte]: startSeason } },
         { seasonId: { [Op.lte]: endSeason } },
       ],
+      played: true,
     },
     attributes: [
       'team',
@@ -237,7 +239,7 @@ group by casual_name, team;
 rank() over (partition by home_team_id, away_team_id order by "date" asc) ranked_first_games,
 rank() over (partition by home_team_id, away_team_id order by "date" desc) ranked_last_games
 from games
-where home_team_id = any($team_array) and away_team_id = any($team_array))
+where home_team_id = any($team_array) and away_team_id = any($team_array)) and played = true
 
 select game_id, "date", result, home.casual_name as home_name, away.casual_name as away_name, ranked_first_games, ranked_last_games from first_games 
 join teams as home on first_games.home_team_id = home.team_id
@@ -268,6 +270,11 @@ router.get('/:seasonId', async (req, res) => {
     req.params.seasonId < 1964
       ? req.params.seasonId
       : `${Number(req.params.seasonId) - 1}/${req.params.seasonId}`
+
+  const seasonExist = await Season.count({ where: { year: seasonName } })
+  if (seasonExist === 0) {
+    return res.json({ success: false, message: 'Säsong finns inte' })
+  }
 
   const playoffGames = await Game.findAll({
     where: { playoff: true },
@@ -369,7 +376,7 @@ select
 	teamgames.women as womens_table
 from teamgames
 join seasons on teamgames.season_id = seasons.season_id
-where "year" = $season_name and category = 'regular'),
+where "year" = $season_name and category = 'regular' and played = true),
 
 round_selection as (
 select 

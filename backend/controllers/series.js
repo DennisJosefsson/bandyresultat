@@ -8,7 +8,6 @@ router.get('/:seasonId', async (req, res) => {
 })
 
 router.post('/', authControl, async (req, res) => {
-  console.log(req.body)
   const seasonName =
     req.body.season < 1964
       ? req.body.season

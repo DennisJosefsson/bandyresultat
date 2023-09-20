@@ -6,25 +6,11 @@ from team_ids import *
 locale.setlocale(locale.LC_ALL, 'sv_SE')
 
 
-# playoff = [
-#   ["semi","S1","1990-03-03 Västanfors Dam-AIK Dam 2-6"],
-#   ["semi","S2","1990-03-03 Boltic Dam-Sandviken Dam 3-2"],
-#   ["semi","S1","1990-03-10 AIK Dam-Västanfors Dam 3-3"],
-#   ["semi","S2","1990-03-10 Sandviken Dam-Boltic Dam 3-4"],
-# ]
 
-damAllSvenskanNorr = [
-  ["1975-01-06", "Falu Dam-Bälinge", "1-4"],
-  ["1975-01-11", "Göta Dam-Bälinge", "8-2"],
-  ["1975-01-12", "Bälinge-Söderhöjden", "17-1"],
-  ["1975-01-15", "Göta Dam-Söderhöjden", "17-0"],
-  ["1975-01-23", "Göta Dam-Falu Dam", "13-0"],
-  ["1975-02-02", "Falu Dam-Göta Dam", "13-0"],
-  ["1975-02-09", "Söderhöjden-Göta Dam", "1-13"],
-  ["1975-02-09", "Bälinge-Falu Dam", "7-1"],
-  ["1975-02-11", "Söderhöjden-Bälinge", "0-9"],
-  ["1975-02-11", "Söderhöjden-Falu Dam", "0-1"],
-  ["1975-02-16", "Bölinge-Göta Dam", "3-5"],
+
+ElitserienDam2324 = [
+"RättvikDamer Sunvära 2023-10-28","KSBandy VSKDam 2023-10-28","SandvikenDam Mölndal 2023-10-28","VillaDam UppsalaDam 2023-10-28","KSBandy Sunvära 2023-11-04","VillaDam RättvikDamer 2023-11-04","SandvikenDam Skirö 2023-11-05","RättvikDamer Mölndal 2023-11-11","SandvikenDam VillaDam 2023-11-11","Sunvära VSKDam 2023-11-11","UppsalaDam Skirö 2023-11-11","RättvikDamer VillaDam 2023-11-12","RättvikDamer UppsalaDam 2023-11-18","Skirö Mölndal 2023-11-18","VillaDam KSBandy 2023-11-18","VSKDam SandvikenDam 2023-11-19","Mölndal Sunvära 2023-11-24","SandvikenDam KSBandy 2023-11-24","Skirö VillaDam 2023-11-25","UppsalaDam VSKDam 2023-11-25","KSBandy RättvikDamer 2023-12-02","Sunvära UppsalaDam 2023-12-02","VillaDam Mölndal 2023-12-02","VSKDam Skirö 2023-12-02","Mölndal UppsalaDam 2023-12-03","Sunvära RättvikDamer 2023-12-03","Skirö KSBandy 2023-12-13","Sunvära VillaDam 2023-12-13","UppsalaDam SandvikenDam 2023-12-13","RättvikDamer Skirö 2023-12-16","KSBandy UppsalaDam 2023-12-16","Mölndal VSKDam 2023-12-16","SandvikenDam Sunvära 2023-12-17","VSKDam RättvikDamer 2023-12-20","RättvikDamer SandvikenDam 2023-12-26","Mölndal KSBandy 2023-12-26","Skirö Sunvära 2023-12-26","VillaDam VSKDam 2023-12-26","KSBandy Skirö 2023-12-30","UppsalaDam VillaDam 2023-12-30","VSKDam Mölndal 2023-12-30","RättvikDamer KSBandy 2024-01-06","Mölndal Skirö 2024-01-06","UppsalaDam Sunvära 2024-01-06","VillaDam SandvikenDam 2024-01-06","Mölndal VillaDam 2024-01-13","SandvikenDam UppsalaDam 2024-01-13","Skirö VSKDam 2024-01-13","Sunvära KSBandy 2024-01-13","KSBandy SandvikenDam 2024-01-20","Skirö RättvikDamer 2024-01-20","UppsalaDam Mölndal 2024-01-20","VSKDam Sunvära 2024-01-21",
+"KSBandy Mölndal 2024-01-27","Sunvära Skirö 2024-01-28","SandvikenDam VSKDam 2024-01-31","Mölndal SandvikenDam 2024-02-03","UppsalaDam RättvikDamer 2024-02-03","VillaDam Skirö 2024-02-03","VSKDam KSBandy 2024-02-03","Mölndal RättvikDamer 2024-02-10","Skirö SandvikenDam 2024-02-10","VillaDam Sunvära 2024-02-10","VSKDam UppsalaDam 2024-02-10","SandvikenDam RättvikDamer 2024-02-17","Sunvära Mölndal 2024-02-17","UppsalaDam KSBandy 2024-02-17","VSKDam VillaDam 2024-02-17","RättvikDamer VSKDam 2024-02-24","KSBandy VillaDam 2024-02-24","Skirö UppsalaDam 2024-02-24","Sunvära SandvikenDam 2024-02-24"
 ]
 
 
@@ -33,59 +19,60 @@ damAllSvenskanNorr = [
 
 
 
-output_file = 'women7475.json'
-seasonId = 121
+output_file = 'elitserienDam2324.json'
+seasonId = 171
+serieId = 1238
 games = []
 
 
 
 format = '%d %B %Y'
 
-for game in damAllsvenskanNorr:
-  game_data = {}
-  game_data['seasonId'] = seasonId
-  string_date = ' '.join(game.split(' ')[0:3])
-  game_data['date'] = datetime.strptime(string_date, format).date().strftime('%Y-%m-%d')
-  home_team = ' '.join(game.split('-')[0].split(' ')[3:])
-  game_data['homeTeamId'] = teamIds[home_team]
-  away_team = ' '.join(game.split('-')[1].split(' ')[0:-1])
-  game_data['awayTeamId'] = teamIds[away_team]
-  result = game.split(' ')[-1]
-  game_data['result'] = result
-  game_data['homeGoal'] = int(result.split('-')[0])
-  game_data['awayGoal'] = int(result.split('-')[1])
-  # halftime_result = game.split(' ')[-1][1:-1]
-  # game_data['halftimeResult'] = halftime_result
-  # game_data['halftimeHomeGoal'] = int(halftime_result.split('-')[0])
-  # game_data['halftimeAwayGoal'] = int(halftime_result.split('-')[1])
-  game_data['category'] = 'regular'
-  game_data['group'] = 'DamAllsvNorr'
-  game_data['serieId'] = 1164
-  game_data['women'] = True  
-  games.append(game_data)
+# for game in damAllsvenskanNorr:
+#   game_data = {}
+#   game_data['seasonId'] = seasonId
+#   string_date = ' '.join(game.split(' ')[0:3])
+#   game_data['date'] = datetime.strptime(string_date, format).date().strftime('%Y-%m-%d')
+#   home_team = ' '.join(game.split('-')[0].split(' ')[3:])
+#   game_data['homeTeamId'] = teamIds[home_team]
+#   away_team = ' '.join(game.split('-')[1].split(' ')[0:-1])
+#   game_data['awayTeamId'] = teamIds[away_team]
+#   result = game.split(' ')[-1]
+#   game_data['result'] = result
+#   game_data['homeGoal'] = int(result.split('-')[0])
+#   game_data['awayGoal'] = int(result.split('-')[1])
+#   # halftime_result = game.split(' ')[-1][1:-1]
+#   # game_data['halftimeResult'] = halftime_result
+#   # game_data['halftimeHomeGoal'] = int(halftime_result.split('-')[0])
+#   # game_data['halftimeAwayGoal'] = int(halftime_result.split('-')[1])
+#   game_data['category'] = 'regular'
+#   game_data['group'] = 'DamAllsvNorr'
+#   game_data['serieId'] = 1164
+#   game_data['women'] = True  
+#   games.append(game_data)
 
-for game in damAllsvenskanSyd:
-  game_data = {}
-  game_data['seasonId'] = seasonId
-  string_date = ' '.join(game.split(' ')[0:3])
-  game_data['date'] = datetime.strptime(string_date, format).date().strftime('%Y-%m-%d')
-  home_team = ' '.join(game.split('-')[0].split(' ')[3:])
-  game_data['homeTeamId'] = teamIds[home_team]
-  away_team = ' '.join(game.split('-')[1].split(' ')[0:-1])
-  game_data['awayTeamId'] = teamIds[away_team]
-  result = game.split(' ')[-1]
-  game_data['result'] = result
-  game_data['homeGoal'] = int(result.split('-')[0])
-  game_data['awayGoal'] = int(result.split('-')[1])
-  # halftime_result = game.split(' ')[-1][1:-1]
-  # game_data['halftimeResult'] = halftime_result
-  # game_data['halftimeHomeGoal'] = int(halftime_result.split('-')[0])
-  # game_data['halftimeAwayGoal'] = int(halftime_result.split('-')[1])
-  game_data['category'] = 'regular'
-  game_data['group'] = 'DamAllsvSyd'
-  game_data['serieId'] = 1165
-  game_data['women'] = True  
-  games.append(game_data)
+# for game in damAllsvenskanSyd:
+#   game_data = {}
+#   game_data['seasonId'] = seasonId
+#   string_date = ' '.join(game.split(' ')[0:3])
+#   game_data['date'] = datetime.strptime(string_date, format).date().strftime('%Y-%m-%d')
+#   home_team = ' '.join(game.split('-')[0].split(' ')[3:])
+#   game_data['homeTeamId'] = teamIds[home_team]
+#   away_team = ' '.join(game.split('-')[1].split(' ')[0:-1])
+#   game_data['awayTeamId'] = teamIds[away_team]
+#   result = game.split(' ')[-1]
+#   game_data['result'] = result
+#   game_data['homeGoal'] = int(result.split('-')[0])
+#   game_data['awayGoal'] = int(result.split('-')[1])
+#   # halftime_result = game.split(' ')[-1][1:-1]
+#   # game_data['halftimeResult'] = halftime_result
+#   # game_data['halftimeHomeGoal'] = int(halftime_result.split('-')[0])
+#   # game_data['halftimeAwayGoal'] = int(halftime_result.split('-')[1])
+#   game_data['category'] = 'regular'
+#   game_data['group'] = 'DamAllsvSyd'
+#   game_data['serieId'] = 1165
+#   game_data['women'] = True  
+#   games.append(game_data)
 
 
 # for game in Div1Norr:
@@ -181,6 +168,22 @@ for game in damAllsvenskanSyd:
 #   game_data['qualification'] = True
 #   game_data['women'] = False  
 #   games.append(game_data)
+
+for game in ElitserienDam2324:
+  game_data = {}
+  game_data['homeTeamId'] = teamIds[game.split(' ')[0]]
+  game_data['awayTeamId'] = teamIds[game.split(' ')[1]]
+  game_data['date'] = game.split(' ')[2]
+  print(game.split(' ')[2])
+  game_data['serieId'] = serieId
+  game_data['seasonId'] = seasonId
+  game_data['group'] = 'elitserien'
+  game_data['category'] = 'regular'
+  game_data['played'] = False
+  game_data['women'] = True
+  game_data['qualification'] = False
+  games.append(game_data)
+  
 
 
 with open(output_file, 'w') as outputfile:

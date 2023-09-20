@@ -74,6 +74,10 @@ TeamGame.init(
     category: { type: DataTypes.STRING(30) },
     group: { type: DataTypes.STRING(30) },
     date: { type: DataTypes.DATEONLY },
+    played: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     sequelize,

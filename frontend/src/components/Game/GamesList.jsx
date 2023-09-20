@@ -1,4 +1,3 @@
-import { groupConstant } from '../utilitycomponents/constants'
 import { useContext, useState, useEffect, forwardRef } from 'react'
 import { UserContext, TeamPreferenceContext } from '../../contexts/contexts'
 import dayjs from 'dayjs'
@@ -31,10 +30,16 @@ const GamesList = forwardRef(function GamesList(
           return (
             <div key={group.group} className="mb-6">
               <h3 className="text-[0.75rem] font-bold md:text-base xl:text-xl">
-                {gamesArray.length > 1 ? `${groupConstant[group.group]}` : ''}
+                {gamesArray.length > 1
+                  ? `${
+                      seriesInfo.find(
+                        (serie) => serie.serieGroupCode === group.group,
+                      ).serieName
+                    }`
+                  : ''}
               </h3>
               {seriesInfo.find((serie) => serie.serieGroupCode === group.group)
-                .comment != null && (
+                .comment && (
                 <p className="my-2 max-w-xl bg-white p-1 text-xs font-bold">
                   {
                     seriesInfo.find(

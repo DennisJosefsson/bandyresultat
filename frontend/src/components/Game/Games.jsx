@@ -214,24 +214,25 @@ const Games = () => {
         </form>
       </div>
       <div className="flex flex-row justify-between pt-4">
-        <div className="mb-4 flex w-full flex-row items-center justify-evenly">
-          {seasonId - 1 === 1906 ? null : (
-            <Link to={`/games/${seasonId - 1}`}>
+        <div className="mx-auto mb-4 flex w-full flex-row items-center justify-center">
+          <div className={seasonId - 1 === 1906 ? 'invisible' : null}>
+            <Link to={`/season/${seasonId - 1}`} state={{ resetRound: true }}>
               <LeftArrow />
             </Link>
-          )}
-          <h2 className="text-center text-base font-bold leading-4 sm:text-xl lg:text-2xl">
-            Säsong {season[0].year} {women ? 'Damer' : 'Herrar'}
-          </h2>
-
-          {seasonId + 1 === 2025 ? null : (
-            <Link to={`/games/${seasonId + 1}`}>
+          </div>
+          <div className="mx-16">
+            <h2 className="text-center text-base font-bold leading-4 sm:text-xl lg:text-2xl">
+              Säsong {season[0].year} {women ? 'Damer' : 'Herrar'}
+            </h2>
+          </div>
+          <div className={seasonId + 1 === 2025 ? 'invisible' : null}>
+            <Link to={`/season/${seasonId + 1}`} state={{ resetRound: true }}>
               <RightArrow />
             </Link>
-          )}
+          </div>
         </div>
       </div>
-      {seasonId === 2024 && (
+      {seasonId === 2025 && (
         <div>
           <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
             <p>Inga resultat än.</p>
@@ -249,7 +250,7 @@ const Games = () => {
           </div>
         </div>
       )}
-      {seasonId < 2024 && (
+      {seasonId < 2025 && (
         <div className="mx-1 flex flex-row justify-between xl:mx-0">
           <div className="w-full px-2 xl:px-0">
             {finalGames.length > 0 && (
