@@ -1,7 +1,8 @@
 import { useQuery } from 'react-query'
 import { useContext, useState, useEffect, useRef } from 'react'
 import { maratonTabell } from '../../requests/tables'
-import { GenderContext } from '../../contexts/contexts'
+import { GenderContext, TeamPreferenceContext } from '../../contexts/contexts'
+
 import { Link } from 'react-router-dom'
 
 import MaratonHelpModal from './MaratonHelp'
@@ -11,6 +12,7 @@ import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
 
 const Table = () => {
   const { women, dispatch } = useContext(GenderContext)
+  const { favTeams } = useContext(TeamPreferenceContext)
   const topRef = useRef()
   const bottomRef = useRef()
   const [showHelpModal, setShowHelpModal] = useState(false)
@@ -93,8 +95,12 @@ const Table = () => {
               {tabell.map((team, index) => {
                 return (
                   <tr
-                    key={`${team.teamId}-${index}`}
-                    className="maraton rounded odd:bg-slate-300"
+                    key={`${team.team}-${index}`}
+                    className={
+                      favTeams.includes(team.team)
+                        ? 'maraton rounded font-bold odd:bg-slate-300'
+                        : 'maraton rounded odd:bg-slate-300'
+                    }
                   >
                     <td className="center">{index + 1}</td>
                     <td className="left">

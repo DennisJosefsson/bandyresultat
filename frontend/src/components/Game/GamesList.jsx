@@ -1,6 +1,6 @@
 import { groupConstant } from '../utilitycomponents/constants'
 import { useContext, useState, useEffect, forwardRef } from 'react'
-import { UserContext } from '../../contexts/contexts'
+import { UserContext, TeamPreferenceContext } from '../../contexts/contexts'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 
@@ -11,6 +11,7 @@ const GamesList = forwardRef(function GamesList(
   ref,
 ) {
   const { user } = useContext(UserContext)
+  const { favTeams } = useContext(TeamPreferenceContext)
   const [width, setWidth] = useState(window.innerWidth)
   const breakpoint = 768
 
@@ -58,13 +59,25 @@ const GamesList = forwardRef(function GamesList(
                               key={game.gameId}
                               className="mb-1 flex flex-row justify-between bg-slate-300 px-2 py-0.5 text-[10px] md:text-base xl:mb-2 xl:w-[36rem] xl:py-1"
                             >
-                              <span className="w-1/3 sm:w-2/5 xl:w-52">
+                              <span
+                                className={
+                                  favTeams.includes(game.homeTeamId)
+                                    ? 'w-1/3 font-bold sm:w-2/5 xl:w-52'
+                                    : 'w-1/3 sm:w-2/5 xl:w-52'
+                                }
+                              >
                                 {width < breakpoint
                                   ? `${game.homeTeam.casualName}`
                                   : `${game.homeTeam.name}`}
                               </span>
                               <span className="w-1 xl:w-4"> - </span>
-                              <span className="w-1/3 sm:w-2/5 xl:w-52">
+                              <span
+                                className={
+                                  favTeams.includes(game.awayTeamId)
+                                    ? 'w-1/3 font-bold sm:w-2/5 xl:w-52'
+                                    : 'w-1/3 sm:w-2/5 xl:w-52'
+                                }
+                              >
                                 {width < breakpoint
                                   ? `${game.awayTeam.casualName}`
                                   : `${game.awayTeam.name}`}

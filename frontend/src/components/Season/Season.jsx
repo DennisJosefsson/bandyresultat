@@ -3,7 +3,7 @@ import { getSingleSeason } from '../../requests/seasons'
 import { getSingleSeasonTable } from '../../requests/tables'
 import { useParams, Link, useLocation } from 'react-router-dom'
 import { useContext, useState, useEffect, useRef } from 'react'
-import { GenderContext } from '../../contexts/contexts'
+import { GenderContext, TeamPreferenceContext } from '../../contexts/contexts'
 
 import { sortOrder } from '../utilitycomponents/constants'
 import Spinner from '../utilitycomponents/spinner'
@@ -25,6 +25,7 @@ import {
 const Season = () => {
   const seasonId = parseInt(useParams().seasonId)
   const { women, dispatch } = useContext(GenderContext)
+  const { favTeams } = useContext(TeamPreferenceContext)
   const topRef = useRef()
   const bottomRef = useRef()
   const [grupp, setGrupp] = useState('')
@@ -241,8 +242,16 @@ const Season = () => {
                     <tbody>
                       {final.map((team, index) => {
                         return (
-                          <tr key={`${team.teamId}-${index}`}>
-                            <td>{team.lag.casualName}</td>
+                          <tr key={`${team.team}-${index}`}>
+                            <td
+                              className={
+                                favTeams.includes(team.team)
+                                  ? 'font-bold'
+                                  : null
+                              }
+                            >
+                              {team.lag.casualName}
+                            </td>
                             <td className="text-right">
                               {team.total_goals_scored}
                             </td>
@@ -293,8 +302,16 @@ const Season = () => {
                           <tbody>
                             {group.tables.map((team) => {
                               return (
-                                <tr key={`${team.teamId}-${Math.random()}`}>
-                                  <td>{team.lag.casualName}</td>
+                                <tr key={`${team.team}-${Math.random()}`}>
+                                  <td
+                                    className={
+                                      favTeams.includes(team.team)
+                                        ? 'font-bold'
+                                        : null
+                                    }
+                                  >
+                                    {team.lag.casualName}
+                                  </td>
                                   <td className="text-right">
                                     {team.total_wins}
                                   </td>
@@ -345,8 +362,16 @@ const Season = () => {
                           <tbody>
                             {group.tables.map((team, index) => {
                               return (
-                                <tr key={`${team.teamId}-${index}`}>
-                                  <td>{team.lag.casualName}</td>
+                                <tr key={`${team.team}-${index}`}>
+                                  <td
+                                    className={
+                                      favTeams.includes(team.team)
+                                        ? 'font-bold'
+                                        : null
+                                    }
+                                  >
+                                    {team.lag.casualName}
+                                  </td>
                                   <td className="text-right">
                                     {team.total_wins}
                                   </td>
@@ -400,8 +425,16 @@ const Season = () => {
                           <tbody>
                             {group.tables.map((team) => {
                               return (
-                                <tr key={`${team.teamId}-${Math.random()}`}>
-                                  <td className="p-1">{team.lag.shortName}</td>
+                                <tr key={`${team.team}-${Math.random()}`}>
+                                  <td
+                                    className={
+                                      favTeams.includes(team.team)
+                                        ? 'p-1 font-bold'
+                                        : 'p-1'
+                                    }
+                                  >
+                                    {team.lag.shortName}
+                                  </td>
                                   <td className="p-1 text-center">
                                     {team.total_points}
                                   </td>

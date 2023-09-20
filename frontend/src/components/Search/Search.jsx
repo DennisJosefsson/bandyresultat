@@ -4,7 +4,7 @@ import { useQuery } from 'react-query'
 import { useState, useContext, useEffect, useRef } from 'react'
 import { getTeams } from '../../requests/teams'
 import { getSearch } from '../../requests/games'
-import { GenderContext } from '../../contexts/contexts'
+import { GenderContext, TeamPreferenceContext } from '../../contexts/contexts'
 import Spinner from '../utilitycomponents/spinner'
 import Select from 'react-select'
 import { selectStyles } from '../utilitycomponents/selectStyles'
@@ -79,6 +79,7 @@ const Search = () => {
   })
 
   const { women, dispatch } = useContext(GenderContext)
+  const { favTeams } = useContext(TeamPreferenceContext)
 
   const {
     data: teams,
@@ -146,6 +147,8 @@ const Search = () => {
       return {
         homeTeam: game.homeGame ? game.lag : game.opp,
         awayTeam: game.homeGame ? game.opp : game.lag,
+        homeTeamId: game.homeGame ? game.team : game.opponent,
+        awayTeamId: game.homeGame ? game.opponent : game.team,
         result: game.game.result,
         date: game.date,
         qualification: game.qualificationGame,
@@ -326,7 +329,16 @@ const Search = () => {
                       <div className="name">
                         {game.homeTeam.casualName}-{game.awayTeam.casualName}
                       </div>
-                      <div className="count">{game.result}</div>
+                      <div
+                        className={
+                          favTeams.includes(game.homeTeamId) ||
+                          favTeams.includes(game.awayTeamId)
+                            ? 'count font-bold'
+                            : 'count'
+                        }
+                      >
+                        {game.result}
+                      </div>
                     </div>
                     <div className="record2nd">
                       <div className="dates">

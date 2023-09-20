@@ -1,20 +1,28 @@
 import { useQuery } from 'react-query'
 import { getSingleTeam } from '../../requests/teams'
 import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-
+import { useEffect, useState, useContext } from 'react'
+import { TeamPreferenceContext } from '../../contexts/contexts'
+import {
+  addToFavTeams,
+  removeFromFavTeams,
+} from '../../reducers/favteamsReducer'
 import Spinner from '../utilitycomponents/spinner'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 import TeamTable from './TeamTable'
 import TeamCuriositiesModal from './TeamCuriositiesModal'
-import { HiddenButtonComponent } from '../utilitycomponents/ButtonComponents'
+import {
+  ButtonComponent,
+  HiddenButtonComponent,
+} from '../utilitycomponents/ButtonComponents'
 
 dayjs.locale('sv')
 
 const Team = () => {
   const teamId = parseInt(useParams().teamId)
   const [showTCModal, setShowTCModal] = useState(false)
+  const { favTeams, favTeamsDispatch } = useContext(TeamPreferenceContext)
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }, [])
@@ -73,18 +81,58 @@ const Team = () => {
   const playoffCount = Number(teams.playoffCount[0].playoff_count)
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
-      <div>
-        <h1 className="mb-4 text-center text-base font-bold md:text-2xl">
-          {teams.team.name}
-        </h1>
+    <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
+      <div className="flex flex-row">
+        <div className="flex-1">
+          <h1 className="mb-4 text-center text-base font-bold md:text-2xl">
+            {teams.team.name}
+          </h1>
+        </div>
+        <div className="hidden xl:contents">
+          {favTeams.includes(teamId) && (
+            <ButtonComponent
+              clickFunctions={() =>
+                favTeamsDispatch(removeFromFavTeams(teamId))
+              }
+            >
+              Ta bort favorit
+            </ButtonComponent>
+          )}
+          {!favTeams.includes(teamId) && (
+            <div>
+              <ButtonComponent
+                clickFunctions={() => favTeamsDispatch(addToFavTeams(teamId))}
+              >
+                Favoritlag
+              </ButtonComponent>
+            </div>
+          )}
+        </div>
       </div>
       <div className="mx-2 flex flex-row-reverse justify-between xl:mx-0">
         <div className="w-[30rem]">
-          <div className="flex flex-row items-center justify-end xl:hidden">
+          <div className="flex flex-col items-center justify-end xl:hidden">
             <HiddenButtonComponent clickFunctions={() => setShowTCModal(true)}>
               Statistik
             </HiddenButtonComponent>
+            {favTeams.includes(teamId) && (
+              <ButtonComponent
+                clickFunctions={() =>
+                  favTeamsDispatch(removeFromFavTeams(teamId))
+                }
+              >
+                Ta bort favorit
+              </ButtonComponent>
+            )}
+            {!favTeams.includes(teamId) && (
+              <div>
+                <ButtonComponent
+                  clickFunctions={() => favTeamsDispatch(addToFavTeams(teamId))}
+                >
+                  Favoritlag
+                </ButtonComponent>
+              </div>
+            )}
           </div>
           <div className="hidden xl:contents">
             <h2 className="text-right text-2xl font-bold">Kuriosa</h2>

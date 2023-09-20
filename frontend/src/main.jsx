@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 
 import GenderContextProvider from './contexts/genderContext'
 import UserContextProvider from './contexts/userContext'
+import FavTeamsContextProvider from './contexts/favteamsContext'
 import './index.css'
 import App from './App.jsx'
 
@@ -24,7 +25,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <QueryClientProvider client={queryClient}>
       <UserContextProvider>
         <GenderContextProvider>
-          <App />
+          <FavTeamsContextProvider>
+            <App />
+          </FavTeamsContextProvider>
         </GenderContextProvider>
       </UserContextProvider>
       <ReactQueryDevtools initialIsOpen />
