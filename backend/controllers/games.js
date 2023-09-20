@@ -173,11 +173,17 @@ router.post('/search', async (req, res) => {
     where.lost = true
   }
 
-  if (req.body.selectedGender === 'men' && req.body.team === '') {
+  if (
+    req.body.selectedGender === 'men' &&
+    (req.body.team === '' || req.body.team === null)
+  ) {
     where.women = false
   }
 
-  if (req.body.selectedGender === 'women' && req.body.team === '') {
+  if (
+    req.body.selectedGender === 'women' &&
+    (req.body.team === '' || req.body.team === null)
+  ) {
     where.women = true
   }
 
@@ -190,9 +196,11 @@ router.post('/search', async (req, res) => {
   }
 
   if (
-    (req.body.team === '' && req.body.result) ||
-    (req.body.team === '' && req.body.gameResult === 'draw') ||
-    (req.body.team === '' && req.body.orderVar.value === 'totalGoals') ||
+    ((req.body.team === '' || req.body.team === null) && req.body.result) ||
+    ((req.body.team === '' || req.body.team === null) &&
+      req.body.gameResult === 'draw') ||
+    ((req.body.team === '' || req.body.team === null) &&
+      req.body.orderVar.value === 'totalGoals') ||
     (req.body.goalDiff && req.body.goalDiff === 0)
   ) {
     limit = req.body.limit.value * 2 || 20

@@ -3,7 +3,11 @@ import { useState, useReducer, useContext, useRef } from 'react'
 import { getTeams, postTeam } from '../../requests/teams'
 import { getSeasons } from '../../requests/seasons'
 import { useNavigate, Link, useLocation } from 'react-router-dom'
-import { GenderContext, UserContext } from '../../contexts/contexts'
+import {
+  GenderContext,
+  UserContext,
+  TeamPreferenceContext,
+} from '../../contexts/contexts'
 
 import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
 import Spinner from '../utilitycomponents/spinner'
@@ -20,6 +24,7 @@ const Teams = () => {
   const bottomRef = useRef()
   const { women, dispatch: genderDispatch } = useContext(GenderContext)
   const { user } = useContext(UserContext)
+  const { favTeams } = useContext(TeamPreferenceContext)
   const [showTeamFormModal, setShowTeamFormModal] = useState(false)
   const [showHelpModal, setShowHelpModal] = useState(false)
   const [showSearchSelectionModal, setShowSearchSelectionModal] =
@@ -331,7 +336,13 @@ const Teams = () => {
                 className="flex flex-row items-center justify-between bg-white px-2 py-1 text-[1.125rem]"
               >
                 <Link to={`/teams/${team.teamId}`}>
-                  <div className="w-32">{team.casualName}</div>
+                  <div
+                    className={
+                      favTeams.includes(team.teamId) ? 'w-32 font-bold' : 'w-32'
+                    }
+                  >
+                    {team.casualName}
+                  </div>
                 </Link>
                 <div className="w-6 pl-4 pr-4">
                   <input

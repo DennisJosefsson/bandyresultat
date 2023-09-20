@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { roundForRoundSortFunction } from '../utilitycomponents/sortFunction'
-
+import { TeamPreferenceContext } from '../../contexts/contexts'
 import { RightArrow, LeftArrow } from '../utilitycomponents/icons'
 
 const RoundForRound = ({ array, round, setRound, seriesInfo, bonusPoints }) => {
   const [width, setWidth] = useState(window.innerWidth)
   const breakpoint = 576
-
+  const { favTeams } = useContext(TeamPreferenceContext)
   useEffect(() => {
     const handleWindowResize = () => setWidth(window.innerWidth)
     window.addEventListener('resize', handleWindowResize)
@@ -123,6 +123,8 @@ const RoundForRound = ({ array, round, setRound, seriesInfo, bonusPoints }) => {
                       .serieStructure?.includes(index + 1)
                       ? 'border-b-2 border-black'
                       : null
+                  } ${
+                    favTeams.includes(team.games[0].team) ? 'font-bold' : null
                   } odd:bg-slate-300`}
                 >
                   <td className="pos">

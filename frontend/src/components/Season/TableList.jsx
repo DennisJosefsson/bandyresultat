@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { TeamPreferenceContext } from '../../contexts/contexts'
 
 const TableList = ({ tableArray, seriesInfo, bonusPoints }) => {
   const [width, setWidth] = useState(window.innerWidth)
+  const { favTeams } = useContext(TeamPreferenceContext)
   const breakpoint = 576
 
   useEffect(() => {
@@ -104,6 +106,8 @@ const TableList = ({ tableArray, seriesInfo, bonusPoints }) => {
                               .serieStructure?.includes(index + 1)
                               ? 'border-b-2 border-black'
                               : null
+                          } ${
+                            favTeams.includes(team.team) ? 'font-bold' : null
                           } odd:bg-slate-300`}
                         >
                           <td className="pos">{index + 1}</td>

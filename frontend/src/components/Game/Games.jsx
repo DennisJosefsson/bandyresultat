@@ -29,6 +29,7 @@ const Games = () => {
   const seasonId = parseInt(useParams().seasonId)
   const { women, dispatch } = useContext(GenderContext)
   const { user } = useContext(UserContext)
+
   const categoryRefs = useRef({})
 
   const [teamFilter, setTeamFilter] = useState('')
