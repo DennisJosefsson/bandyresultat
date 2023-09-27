@@ -46,6 +46,22 @@ const Team = () => {
     )
   }
 
+  if (!teamId.toString().match('^[0-9]{1,3}$')) {
+    return (
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+        Kolla länken, angivet lag-id är felaktigt.
+      </div>
+    )
+  }
+
+  if (data?.success === 'false') {
+    return (
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+        {data.message}
+      </div>
+    )
+  }
+
   const teams = data
 
   const seasons = teams.team.seasonteam.filter(

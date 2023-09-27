@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 import { TeamPreferenceContext } from '../../contexts/contexts'
 
-const TableList = ({ tableArray, seriesInfo, bonusPoints }) => {
+const TableList = ({ tableArray, seriesInfo, bonusPoints, homeAwayTitle }) => {
   const [width, setWidth] = useState(window.innerWidth)
   const { favTeams } = useContext(TeamPreferenceContext)
   const breakpoint = 576
@@ -34,7 +34,7 @@ const TableList = ({ tableArray, seriesInfo, bonusPoints }) => {
           <div key={group.group} className="mb-6">
             {group.group.includes('Kval') && tableArray.length === 1 ? (
               <h2 className="text-[0.75rem] font-bold lg:text-[1rem] xl:text-xl">
-                Kvalgrupp
+                Kvalgrupp {homeAwayTitle}
               </h2>
             ) : (
               <h2 className="text-sm font-bold lg:text-base xl:text-xl">
@@ -42,7 +42,8 @@ const TableList = ({ tableArray, seriesInfo, bonusPoints }) => {
                   seriesInfo.find(
                     (serie) => serie.serieGroupCode === group.group,
                   ).serieName
-                }
+                }{' '}
+                {homeAwayTitle}
               </h2>
             )}
             <div>

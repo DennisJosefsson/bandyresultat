@@ -24,6 +24,11 @@ router.get('/:seasonId', async (req, res, next) => {
       ? req.params.seasonId
       : `${Number(req.params.seasonId) - 1}/${req.params.seasonId}`
 
+  const seasonExist = await Season.count({ where: { year: seasonName } })
+  if (seasonExist === 0) {
+    return res.json({ success: 'false', message: 'Säsong finns inte' })
+  }
+
   const season = await Season.findAll({
     where: { year: seasonName },
     attributes: { exclude: ['createdAt', 'updatedAt'] },

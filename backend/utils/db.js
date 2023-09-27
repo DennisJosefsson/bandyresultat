@@ -3,6 +3,8 @@ const { ELEPHANTSQL_URL } = require('./config')
 
 const sequelize = new Sequelize(ELEPHANTSQL_URL, { logging: false })
 
+
+
 const connectToDb = async () => {
   try {
     await sequelize.authenticate()

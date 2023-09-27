@@ -13,6 +13,8 @@ import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
 const Table = () => {
   const { women, dispatch } = useContext(GenderContext)
   const { favTeams } = useContext(TeamPreferenceContext)
+  const [selectedTable, setSelectedTable] = useState('all')
+  const [homeAwayTitle, setHomeAwayTitle] = useState('')
   const topRef = useRef()
   const bottomRef = useRef()
   const [showHelpModal, setShowHelpModal] = useState(false)
@@ -46,12 +48,27 @@ const Table = () => {
     event.preventDefault()
     window.scrollTo(0, ref.current.offsetTop)
   }
-  const tabell = data.filter((table) => table.lag.women === women)
+  let tabell
+  switch (selectedTable) {
+    case 'all':
+      tabell = data.maratonTabell.filter((table) => table.lag.women === women)
+      break
+    case 'home':
+      tabell = data.maratonHemmaTabell.filter(
+        (table) => table.lag.women === women,
+      )
+      break
+    case 'away':
+      tabell = data.maratonBortaTabell.filter(
+        (table) => table.lag.women === women,
+      )
+      break
+  }
 
   return (
     <div ref={topRef}>
       <h2 className="text-center text-base font-bold leading-4 sm:text-xl lg:text-2xl">
-        Maratontabell {women ? 'Damer' : 'Herrar'}
+        Maratontabell {women ? 'Damer' : 'Herrar'} {homeAwayTitle}
       </h2>
 
       <div className="mx-auto flex min-h-screen max-w-7xl flex-row-reverse justify-between pt-10 font-inter text-[#011d29]">
@@ -65,6 +82,36 @@ const Table = () => {
           <div>
             <ButtonComponent clickFunctions={() => setShowHelpModal(true)}>
               Hjälp/Info
+            </ButtonComponent>
+          </div>
+          <div>
+            <ButtonComponent
+              clickFunctions={() => {
+                setSelectedTable('home')
+                setHomeAwayTitle('Hemma')
+              }}
+            >
+              Hemma
+            </ButtonComponent>
+          </div>
+          <div>
+            <ButtonComponent
+              clickFunctions={() => {
+                setSelectedTable('away')
+                setHomeAwayTitle('Borta')
+              }}
+            >
+              Borta
+            </ButtonComponent>
+          </div>
+          <div>
+            <ButtonComponent
+              clickFunctions={() => {
+                setSelectedTable('all')
+                setHomeAwayTitle('')
+              }}
+            >
+              Alla
             </ButtonComponent>
           </div>
           <Link to={`/records`}>

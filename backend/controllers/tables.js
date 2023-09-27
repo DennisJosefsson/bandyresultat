@@ -48,7 +48,95 @@ router.get('/maraton', async (req, res) => {
       ['total_goals_scored', 'DESC'],
     ],
   })
-  res.json(maratonTabell)
+
+  const maratonHemmaTabell = await TeamGame.findAll({
+    where: { category: 'regular', played: true, homeGame: true },
+    attributes: [
+      'team',
+      [sequelize.fn('count', sequelize.col('team_game_id')), 'total_games'],
+      [sequelize.fn('sum', sequelize.col('points')), 'total_points'],
+      [
+        sequelize.fn('sum', sequelize.col('goals_scored')),
+        'total_goals_scored',
+      ],
+      [
+        sequelize.fn('sum', sequelize.col('goals_conceded')),
+        'total_goals_conceded',
+      ],
+      [
+        sequelize.fn('sum', sequelize.col('goal_difference')),
+        'total_goal_difference',
+      ],
+      [sequelize.literal(`(count(*) filter (where win))`), 'total_wins'],
+      [sequelize.literal(`(count(*) filter (where draw))`), 'total_draws'],
+      [sequelize.literal(`(count(*) filter (where lost))`), 'total_lost'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName', 'women'],
+        as: 'lag',
+      },
+    ],
+    group: [
+      'team',
+      'lag.name',
+      'lag.team_id',
+      'lag.casual_name',
+      'lag.short_name',
+      'lag.women',
+    ],
+    order: [
+      ['total_points', 'DESC'],
+      ['total_goal_difference', 'DESC'],
+      ['total_goals_scored', 'DESC'],
+    ],
+  })
+
+  const maratonBortaTabell = await TeamGame.findAll({
+    where: { category: 'regular', played: true, homeGame: false },
+    attributes: [
+      'team',
+      [sequelize.fn('count', sequelize.col('team_game_id')), 'total_games'],
+      [sequelize.fn('sum', sequelize.col('points')), 'total_points'],
+      [
+        sequelize.fn('sum', sequelize.col('goals_scored')),
+        'total_goals_scored',
+      ],
+      [
+        sequelize.fn('sum', sequelize.col('goals_conceded')),
+        'total_goals_conceded',
+      ],
+      [
+        sequelize.fn('sum', sequelize.col('goal_difference')),
+        'total_goal_difference',
+      ],
+      [sequelize.literal(`(count(*) filter (where win))`), 'total_wins'],
+      [sequelize.literal(`(count(*) filter (where draw))`), 'total_draws'],
+      [sequelize.literal(`(count(*) filter (where lost))`), 'total_lost'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName', 'women'],
+        as: 'lag',
+      },
+    ],
+    group: [
+      'team',
+      'lag.name',
+      'lag.team_id',
+      'lag.casual_name',
+      'lag.short_name',
+      'lag.women',
+    ],
+    order: [
+      ['total_points', 'DESC'],
+      ['total_goal_difference', 'DESC'],
+      ['total_goals_scored', 'DESC'],
+    ],
+  })
+  res.json({ maratonTabell, maratonHemmaTabell, maratonBortaTabell })
 })
 
 router.post('/compare', async (req, res) => {
@@ -273,7 +361,7 @@ router.get('/:seasonId', async (req, res) => {
 
   const seasonExist = await Season.count({ where: { year: seasonName } })
   if (seasonExist === 0) {
-    return res.json({ success: false, message: 'Säsong finns inte' })
+    return res.json({ success: 'false', message: 'Säsong finns inte' })
   }
 
   const playoffGames = await Game.findAll({
@@ -301,6 +389,120 @@ router.get('/:seasonId', async (req, res) => {
     ],
   })
   const tabell = await TeamGame.findAll({
+    attributes: [
+      'team',
+      'group',
+      'women',
+      'category',
+      [sequelize.fn('count', sequelize.col('team_game_id')), 'total_games'],
+      [sequelize.fn('sum', sequelize.col('points')), 'total_points'],
+      [
+        sequelize.fn('sum', sequelize.col('goals_scored')),
+        'total_goals_scored',
+      ],
+      [
+        sequelize.fn('sum', sequelize.col('goals_conceded')),
+        'total_goals_conceded',
+      ],
+      [
+        sequelize.fn('sum', sequelize.col('goal_difference')),
+        'total_goal_difference',
+      ],
+      [sequelize.literal(`(count(*) filter (where win))`), 'total_wins'],
+      [sequelize.literal(`(count(*) filter (where draw))`), 'total_draws'],
+      [sequelize.literal(`(count(*) filter (where lost))`), 'total_lost'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      {
+        model: Season,
+        attributes: ['seasonId', 'year'],
+        where: { year: { [Op.eq]: seasonName } },
+      },
+    ],
+    group: [
+      'group',
+      'team',
+      'lag.name',
+      'lag.team_id',
+      'lag.casual_name',
+      'lag.short_name',
+      'category',
+      'season.season_id',
+      'season.year',
+      'teamgame.women',
+    ],
+    order: [
+      ['group', 'DESC'],
+      ['total_points', 'DESC'],
+      ['total_goal_difference', 'DESC'],
+      ['total_goals_scored', 'DESC'],
+    ],
+  })
+
+  const hemmaTabell = await TeamGame.findAll({
+    where: { homeGame: true },
+    attributes: [
+      'team',
+      'group',
+      'women',
+      'category',
+      [sequelize.fn('count', sequelize.col('team_game_id')), 'total_games'],
+      [sequelize.fn('sum', sequelize.col('points')), 'total_points'],
+      [
+        sequelize.fn('sum', sequelize.col('goals_scored')),
+        'total_goals_scored',
+      ],
+      [
+        sequelize.fn('sum', sequelize.col('goals_conceded')),
+        'total_goals_conceded',
+      ],
+      [
+        sequelize.fn('sum', sequelize.col('goal_difference')),
+        'total_goal_difference',
+      ],
+      [sequelize.literal(`(count(*) filter (where win))`), 'total_wins'],
+      [sequelize.literal(`(count(*) filter (where draw))`), 'total_draws'],
+      [sequelize.literal(`(count(*) filter (where lost))`), 'total_lost'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      {
+        model: Season,
+        attributes: ['seasonId', 'year'],
+        where: { year: { [Op.eq]: seasonName } },
+      },
+    ],
+    group: [
+      'group',
+      'team',
+      'lag.name',
+      'lag.team_id',
+      'lag.casual_name',
+      'lag.short_name',
+      'category',
+      'season.season_id',
+      'season.year',
+      'teamgame.women',
+    ],
+    order: [
+      ['group', 'DESC'],
+      ['total_points', 'DESC'],
+      ['total_goal_difference', 'DESC'],
+      ['total_goals_scored', 'DESC'],
+    ],
+  })
+
+  const bortaTabell = await TeamGame.findAll({
+    where: { homeGame: false },
     attributes: [
       'team',
       'group',
@@ -420,7 +622,13 @@ order by "group",team, round asc;`,
   if (!tabell) {
     throw new Error('No such table in the database')
   } else {
-    res.json({ tabell, roundByRoundTables, playoffGames })
+    res.json({
+      tabell,
+      hemmaTabell,
+      bortaTabell,
+      roundByRoundTables,
+      playoffGames,
+    })
   }
 })
 

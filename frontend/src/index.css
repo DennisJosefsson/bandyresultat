@@ -122,6 +122,36 @@
     @apply px-1 py-1 text-left md:py-2;
   }
 
+  .animation th {
+    @apply text-right xl:w-8;
+  }
+  .animation th.pos {
+    @apply text-center xl:w-8;
+  }
+  .animation th.team {
+    @apply text-left xl:w-56;
+  }
+
+  .animation th.twelve {
+    @apply text-right xl:w-12;
+  }
+
+  .animation td {
+    @apply px-1 py-0.5 text-right tabular-nums;
+  }
+
+  .animation td.pos {
+    @apply text-center;
+  }
+
+  .animation td.team {
+    @apply text-left;
+  }
+
+  .animation td.twelve {
+    @apply text-right xl:w-12;
+  }
+
   .hideMenuNav {
     @apply hidden;
   }

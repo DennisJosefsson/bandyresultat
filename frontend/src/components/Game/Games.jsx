@@ -12,6 +12,7 @@ import GameForm from './GameForm'
 import GamesHelpModal from './GamesHelpModal'
 import CuriositiesModal from './CuriositiesModal'
 import StatsModal from './StatsModal'
+
 import GenderButtonComponent from '../utilitycomponents/GenderButtonComponent'
 import {
   ButtonComponent,
@@ -37,6 +38,7 @@ const Games = () => {
   const [showAddGameModal, setShowAddGameModal] = useState(false)
   const [showCuriositiesModal, setShowCuriositiesModal] = useState(false)
   const [showStatsModal, setShowStatsModal] = useState(false)
+
   const [gameData, setGameData] = useState(null)
 
   useEffect(() => {
@@ -76,6 +78,14 @@ const Games = () => {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         Något gick fel.
+      </div>
+    )
+  }
+
+  if (!seasonId.toString().match('^[0-9]{4}$')) {
+    return (
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+        Kolla länken, angivna årtalet är felaktigt.
       </div>
     )
   }
@@ -349,6 +359,7 @@ const Games = () => {
               <ButtonComponent clickFunctions={() => setShowHelpModal(true)}>
                 Hjälp/Info
               </ButtonComponent>
+
               <GenderButtonComponent
                 clickFunctions={() => {
                   setTeamFilter('')
@@ -644,6 +655,7 @@ const Games = () => {
           />
         </>
       ) : null}
+
       <div ref={(el) => (categoryRefs.current['bottom'] = el)}></div>
       <div className="sticky bottom-0 z-20 flex flex-row items-center justify-center gap-2 bg-[#f4f5f5]">
         {categoryArray.map((cat) => {

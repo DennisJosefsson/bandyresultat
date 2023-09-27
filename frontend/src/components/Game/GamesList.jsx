@@ -38,6 +38,7 @@ const GamesList = forwardRef(function GamesList(
                     }`
                   : ''}
               </h3>
+
               {seriesInfo.find((serie) => serie.serieGroupCode === group.group)
                 .comment && (
                 <p className="my-2 max-w-xl bg-white p-1 text-xs font-bold">

@@ -41,6 +41,10 @@ router.get('/:teamId', async (req, res) => {
     order: [[{ model: Season, as: 'seasonteam' }, 'seasonId', 'DESC']],
   })
 
+  if (!team) {
+    return res.json({ success: 'false', message: 'Laget finns inte.' })
+  }
+
   const tabeller = await TeamGame.findAll({
     where: {
       team: req.params.teamId,

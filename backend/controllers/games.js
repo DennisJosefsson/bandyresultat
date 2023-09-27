@@ -735,7 +735,2051 @@ limit 10;
     { type: QueryTypes.SELECT }
   )
 
+  const averagePointsMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('round', sequelize.fn('AVG', sequelize.col('points')), 2),
+        'avg_points',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 10`),
+    order: [[sequelize.fn('AVG', sequelize.col('points')), 'desc']],
+    limit: 10,
+  })
+
+  const averagePointsWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('round', sequelize.fn('AVG', sequelize.col('points')), 2),
+        'avg_points',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 10`),
+    order: [[sequelize.fn('AVG', sequelize.col('points')), 'desc']],
+    limit: 10,
+  })
+
+  const averagePointsHomeMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: true,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('round', sequelize.fn('AVG', sequelize.col('points')), 2),
+        'avg_points',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('points')), 'desc']],
+    limit: 10,
+  })
+
+  const averagePointsAwayMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('round', sequelize.fn('AVG', sequelize.col('points')), 2),
+        'avg_points',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('points')), 'desc']],
+    limit: 10,
+  })
+
+  const averagePointsHomeWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('round', sequelize.fn('AVG', sequelize.col('points')), 2),
+        'avg_points',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('points')), 'desc']],
+    limit: 10,
+  })
+
+  const averagePointsAwayWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: false,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('round', sequelize.fn('AVG', sequelize.col('points')), 2),
+        'avg_points',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('points')), 'desc']],
+    limit: 10,
+  })
+
+  const averagePointsMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('round', sequelize.fn('AVG', sequelize.col('points')), 2),
+        'avg_points',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 10`),
+    order: [[sequelize.fn('AVG', sequelize.col('points')), 'asc']],
+    limit: 10,
+  })
+
+  const averagePointsWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('round', sequelize.fn('AVG', sequelize.col('points')), 2),
+        'avg_points',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 10`),
+    order: [[sequelize.fn('AVG', sequelize.col('points')), 'asc']],
+    limit: 10,
+  })
+
+  const averagePointsHomeMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: true,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('round', sequelize.fn('AVG', sequelize.col('points')), 2),
+        'avg_points',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('points')), 'asc']],
+    limit: 10,
+  })
+
+  const averagePointsAwayMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('round', sequelize.fn('AVG', sequelize.col('points')), 2),
+        'avg_points',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('points')), 'asc']],
+    limit: 10,
+  })
+
+  const averagePointsHomeWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('round', sequelize.fn('AVG', sequelize.col('points')), 2),
+        'avg_points',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('points')), 'asc']],
+    limit: 10,
+  })
+
+  const averagePointsAwayWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: false,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('round', sequelize.fn('AVG', sequelize.col('points')), 2),
+        'avg_points',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('points')), 'asc']],
+    limit: 10,
+  })
+
+  const sumPointsMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [[sequelize.fn('SUM', sequelize.col('points')), 'sum_points']],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('points')), 'desc']],
+    limit: 10,
+  })
+
+  const sumPointsWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [[sequelize.fn('SUM', sequelize.col('points')), 'sum_points']],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('points')), 'desc']],
+    limit: 10,
+  })
+
+  const sumPointsHomeMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: true,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [[sequelize.fn('SUM', sequelize.col('points')), 'sum_points']],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('points')), 'desc']],
+    limit: 10,
+  })
+
+  const sumPointsAwayMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [[sequelize.fn('SUM', sequelize.col('points')), 'sum_points']],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('points')), 'desc']],
+    limit: 10,
+  })
+
+  const sumPointsHomeWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [[sequelize.fn('SUM', sequelize.col('points')), 'sum_points']],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('points')), 'desc']],
+    limit: 10,
+  })
+
+  const sumPointsAwayWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: false,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [[sequelize.fn('SUM', sequelize.col('points')), 'sum_points']],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('points')), 'desc']],
+    limit: 10,
+  })
+
+  const sumPointsMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [[sequelize.fn('SUM', sequelize.col('points')), 'sum_points']],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 24`),
+    order: [[sequelize.fn('SUM', sequelize.col('points')), 'asc']],
+    limit: 10,
+  })
+
+  const sumPointsWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [[sequelize.fn('SUM', sequelize.col('points')), 'sum_points']],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 12`),
+    order: [[sequelize.fn('SUM', sequelize.col('points')), 'asc']],
+    limit: 10,
+  })
+
+  const sumPointsHomeMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: true,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [[sequelize.fn('SUM', sequelize.col('points')), 'sum_points']],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 12`),
+    order: [[sequelize.fn('SUM', sequelize.col('points')), 'asc']],
+    limit: 10,
+  })
+
+  const sumPointsAwayMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [[sequelize.fn('SUM', sequelize.col('points')), 'sum_points']],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 12`),
+    order: [[sequelize.fn('SUM', sequelize.col('points')), 'asc']],
+    limit: 10,
+  })
+
+  const sumPointsHomeWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [[sequelize.fn('SUM', sequelize.col('points')), 'sum_points']],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 6`),
+    order: [[sequelize.fn('SUM', sequelize.col('points')), 'asc']],
+    limit: 10,
+  })
+
+  const sumPointsAwayWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: false,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [[sequelize.fn('SUM', sequelize.col('points')), 'sum_points']],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 6`),
+    order: [[sequelize.fn('SUM', sequelize.col('points')), 'asc']],
+    limit: 10,
+  })
+
+  const sumGoalsScoredMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [sequelize.fn('SUM', sequelize.col('goals_scored')), 'sum_goals_scored'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('goals_scored')), 'desc']],
+    limit: 10,
+  })
+
+  const sumGoalsScoredWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [sequelize.fn('SUM', sequelize.col('goals_scored')), 'sum_goals_scored'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('goals_scored')), 'desc']],
+    limit: 10,
+  })
+
+  const sumGoalsScoredHomeMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: true,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [sequelize.fn('SUM', sequelize.col('goals_scored')), 'sum_goals_scored'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('goals_scored')), 'desc']],
+    limit: 10,
+  })
+
+  const sumGoalsScoredAwayMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [sequelize.fn('SUM', sequelize.col('goals_scored')), 'sum_goals_scored'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('goals_scored')), 'desc']],
+    limit: 10,
+  })
+
+  const sumGoalsScoredHomeWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [sequelize.fn('SUM', sequelize.col('goals_scored')), 'sum_goals_scored'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('goals_scored')), 'desc']],
+    limit: 10,
+  })
+
+  const sumGoalsScoredAwayWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: false,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [sequelize.fn('SUM', sequelize.col('goals_scored')), 'sum_goals_scored'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('goals_scored')), 'desc']],
+    limit: 10,
+  })
+  const sumGoalsScoredMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [sequelize.fn('SUM', sequelize.col('goals_scored')), 'sum_goals_scored'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 24`),
+    order: [[sequelize.fn('SUM', sequelize.col('goals_scored')), 'asc']],
+    limit: 10,
+  })
+
+  const sumGoalsScoredWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [sequelize.fn('SUM', sequelize.col('goals_scored')), 'sum_goals_scored'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 12`),
+    order: [[sequelize.fn('SUM', sequelize.col('goals_scored')), 'asc']],
+    limit: 10,
+  })
+
+  const sumGoalsScoredHomeMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: true,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [sequelize.fn('SUM', sequelize.col('goals_scored')), 'sum_goals_scored'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 12`),
+    order: [[sequelize.fn('SUM', sequelize.col('goals_scored')), 'asc']],
+    limit: 10,
+  })
+
+  const sumGoalsScoredAwayMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [sequelize.fn('SUM', sequelize.col('goals_scored')), 'sum_goals_scored'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 12`),
+    order: [[sequelize.fn('SUM', sequelize.col('goals_scored')), 'asc']],
+    limit: 10,
+  })
+
+  const sumGoalsScoredHomeWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [sequelize.fn('SUM', sequelize.col('goals_scored')), 'sum_goals_scored'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 6`),
+    order: [[sequelize.fn('SUM', sequelize.col('goals_scored')), 'asc']],
+    limit: 10,
+  })
+
+  const sumGoalsScoredAwayWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: false,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [sequelize.fn('SUM', sequelize.col('goals_scored')), 'sum_goals_scored'],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 6`),
+    order: [[sequelize.fn('SUM', sequelize.col('goals_scored')), 'asc']],
+    limit: 10,
+  })
+
+  const averageGoalsScoredMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_scored')),
+          2
+        ),
+        'avg_goals_scored',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 10`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_scored')), 'desc']],
+    limit: 10,
+  })
+
+  const averageGoalsScoredWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_scored')),
+          2
+        ),
+        'avg_goals_scored',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 10`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_scored')), 'desc']],
+    limit: 10,
+  })
+
+  const averageGoalsScoredHomeMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: true,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_scored')),
+          2
+        ),
+        'avg_goals_scored',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_scored')), 'desc']],
+    limit: 10,
+  })
+
+  const averageGoalsScoredAwayMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_scored')),
+          2
+        ),
+        'avg_goals_scored',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_scored')), 'desc']],
+    limit: 10,
+  })
+
+  const averageGoalsScoredHomeWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_scored')),
+          2
+        ),
+        'avg_goals_scored',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_scored')), 'desc']],
+    limit: 10,
+  })
+
+  const averageGoalsScoredAwayWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: false,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_scored')),
+          2
+        ),
+        'avg_goals_scored',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_scored')), 'desc']],
+    limit: 10,
+  })
+  const averageGoalsScoredMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_scored')),
+          2
+        ),
+        'avg_goals_scored',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 10`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_scored')), 'asc']],
+    limit: 10,
+  })
+
+  const averageGoalsScoredWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_scored')),
+          2
+        ),
+        'avg_goals_scored',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 10`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_scored')), 'asc']],
+    limit: 10,
+  })
+
+  const averageGoalsScoredHomeMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: true,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_scored')),
+          2
+        ),
+        'avg_goals_scored',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_scored')), 'asc']],
+    limit: 10,
+  })
+
+  const averageGoalsScoredAwayMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_scored')),
+          2
+        ),
+        'avg_goals_scored',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_scored')), 'asc']],
+    limit: 10,
+  })
+
+  const averageGoalsScoredHomeWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_scored')),
+          2
+        ),
+        'avg_goals_scored',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_scored')), 'asc']],
+    limit: 10,
+  })
+
+  const averageGoalsScoredAwayWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: false,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_scored')),
+          2
+        ),
+        'avg_goals_scored',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_scored')), 'asc']],
+    limit: 10,
+  })
+
+  const sumGoalsConcededMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('SUM', sequelize.col('goals_conceded')),
+        'sum_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('goals_conceded')), 'desc']],
+    limit: 10,
+  })
+
+  const sumGoalsConcededWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('SUM', sequelize.col('goals_conceded')),
+        'sum_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('goals_conceded')), 'desc']],
+    limit: 10,
+  })
+
+  const sumGoalsConcededHomeMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: true,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('SUM', sequelize.col('goals_conceded')),
+        'sum_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('goals_conceded')), 'desc']],
+    limit: 10,
+  })
+
+  const sumGoalsConcededAwayMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('SUM', sequelize.col('goals_conceded')),
+        'sum_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('goals_conceded')), 'desc']],
+    limit: 10,
+  })
+
+  const sumGoalsConcededHomeWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('SUM', sequelize.col('goals_conceded')),
+        'sum_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('goals_conceded')), 'desc']],
+    limit: 10,
+  })
+
+  const sumGoalsConcededAwayWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: false,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('SUM', sequelize.col('goals_conceded')),
+        'sum_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    order: [[sequelize.fn('SUM', sequelize.col('goals_conceded')), 'desc']],
+    limit: 10,
+  })
+
+  const averageGoalsConcededMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_conceded')),
+          2
+        ),
+        'avg_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 10`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_conceded')), 'desc']],
+    limit: 10,
+  })
+
+  const averageGoalsConcededWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_conceded')),
+          2
+        ),
+        'avg_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 10`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_conceded')), 'desc']],
+    limit: 10,
+  })
+
+  const averageGoalsConcededHomeMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: true,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_conceded')),
+          2
+        ),
+        'avg_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_conceded')), 'desc']],
+    limit: 10,
+  })
+
+  const averageGoalsConcededAwayMenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_conceded')),
+          2
+        ),
+        'avg_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_conceded')), 'desc']],
+    limit: 10,
+  })
+
+  const averageGoalsConcededHomeWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_conceded')),
+          2
+        ),
+        'avg_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_conceded')), 'desc']],
+    limit: 10,
+  })
+
+  const averageGoalsConcededAwayWomenMax = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: false,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_conceded')),
+          2
+        ),
+        'avg_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_conceded')), 'desc']],
+    limit: 10,
+  })
+
+  const sumGoalsConcededMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('SUM', sequelize.col('goals_conceded')),
+        'sum_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 24`),
+    order: [[sequelize.fn('SUM', sequelize.col('goals_conceded')), 'asc']],
+    limit: 10,
+  })
+
+  const sumGoalsConcededWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('SUM', sequelize.col('goals_conceded')),
+        'sum_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 12`),
+    order: [[sequelize.fn('SUM', sequelize.col('goals_conceded')), 'asc']],
+    limit: 10,
+  })
+
+  const sumGoalsConcededHomeMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: true,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('SUM', sequelize.col('goals_conceded')),
+        'sum_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 12`),
+    order: [[sequelize.fn('SUM', sequelize.col('goals_conceded')), 'asc']],
+    limit: 10,
+  })
+
+  const sumGoalsConcededAwayMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('SUM', sequelize.col('goals_conceded')),
+        'sum_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 12`),
+    order: [[sequelize.fn('SUM', sequelize.col('goals_conceded')), 'asc']],
+    limit: 10,
+  })
+
+  const sumGoalsConcededHomeWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('SUM', sequelize.col('goals_conceded')),
+        'sum_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 6`),
+    order: [[sequelize.fn('SUM', sequelize.col('goals_conceded')), 'asc']],
+    limit: 10,
+  })
+
+  const sumGoalsConcededAwayWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: false,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn('SUM', sequelize.col('goals_conceded')),
+        'sum_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 6`),
+    order: [[sequelize.fn('SUM', sequelize.col('goals_conceded')), 'asc']],
+    limit: 10,
+  })
+
+  const averageGoalsConcededMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_conceded')),
+          2
+        ),
+        'avg_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 10`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_conceded')), 'asc']],
+    limit: 10,
+  })
+
+  const averageGoalsConcededWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_conceded')),
+          2
+        ),
+        'avg_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 10`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_conceded')), 'asc']],
+    limit: 10,
+  })
+
+  const averageGoalsConcededHomeMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: true,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_conceded')),
+          2
+        ),
+        'avg_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_conceded')), 'asc']],
+    limit: 10,
+  })
+
+  const averageGoalsConcededAwayMenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: false,
+      homeGame: false,
+      seasonId: { [Op.gt]: 102 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_conceded')),
+          2
+        ),
+        'avg_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_conceded')), 'asc']],
+    limit: 10,
+  })
+
+  const averageGoalsConcededHomeWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: true,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_conceded')),
+          2
+        ),
+        'avg_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_conceded')), 'asc']],
+    limit: 10,
+  })
+
+  const averageGoalsConcededAwayWomenMin = await TeamGame.findAll({
+    where: {
+      played: true,
+      women: true,
+      homeGame: false,
+      seasonId: { [Op.gt]: 162 },
+      category: 'regular',
+    },
+    attributes: [
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('goals_conceded')),
+          2
+        ),
+        'avg_goals_conceded',
+      ],
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      { model: Season },
+    ],
+    group: ['lag.team_id', 'season.season_id'],
+    having: sequelize.literal(`count("team_game_id") >= 5`),
+    order: [[sequelize.fn('AVG', sequelize.col('goals_conceded')), 'asc']],
+    limit: 10,
+  })
+
   res.json({
+    averagePointsWomenMax,
+    averagePointsMenMax,
+    averagePointsHomeWomenMax,
+    averagePointsAwayWomenMax,
+    averagePointsHomeMenMax,
+    averagePointsAwayMenMax,
+    averagePointsWomenMin,
+    averagePointsMenMin,
+    averagePointsHomeWomenMin,
+    averagePointsAwayWomenMin,
+    averagePointsHomeMenMin,
+    averagePointsAwayMenMin,
+    sumPointsWomenMax,
+    sumPointsMenMax,
+    sumPointsHomeWomenMax,
+    sumPointsAwayWomenMax,
+    sumPointsHomeMenMax,
+    sumPointsAwayMenMax,
+    sumPointsWomenMin,
+    sumPointsMenMin,
+    sumPointsHomeWomenMin,
+    sumPointsAwayWomenMin,
+    sumPointsHomeMenMin,
+    sumPointsAwayMenMin,
+    averageGoalsScoredWomenMax,
+    averageGoalsScoredMenMax,
+    averageGoalsScoredHomeWomenMax,
+    averageGoalsScoredAwayWomenMax,
+    averageGoalsScoredHomeMenMax,
+    averageGoalsScoredAwayMenMax,
+    sumGoalsScoredWomenMax,
+    sumGoalsScoredMenMax,
+    sumGoalsScoredHomeWomenMax,
+    sumGoalsScoredAwayWomenMax,
+    sumGoalsScoredHomeMenMax,
+    sumGoalsScoredAwayMenMax,
+    averageGoalsScoredWomenMin,
+    averageGoalsScoredMenMin,
+    averageGoalsScoredHomeWomenMin,
+    averageGoalsScoredAwayWomenMin,
+    averageGoalsScoredHomeMenMin,
+    averageGoalsScoredAwayMenMin,
+    sumGoalsScoredWomenMin,
+    sumGoalsScoredMenMin,
+    sumGoalsScoredHomeWomenMin,
+    sumGoalsScoredAwayWomenMin,
+    sumGoalsScoredHomeMenMin,
+    sumGoalsScoredAwayMenMin,
+    averageGoalsConcededWomenMax,
+    averageGoalsConcededMenMax,
+    averageGoalsConcededHomeWomenMax,
+    averageGoalsConcededAwayWomenMax,
+    averageGoalsConcededHomeMenMax,
+    averageGoalsConcededAwayMenMax,
+    sumGoalsConcededWomenMax,
+    sumGoalsConcededMenMax,
+    sumGoalsConcededHomeWomenMax,
+    sumGoalsConcededAwayWomenMax,
+    sumGoalsConcededHomeMenMax,
+    sumGoalsConcededAwayMenMax,
+    averageGoalsConcededWomenMin,
+    averageGoalsConcededMenMin,
+    averageGoalsConcededHomeWomenMin,
+    averageGoalsConcededAwayWomenMin,
+    averageGoalsConcededHomeMenMin,
+    averageGoalsConcededAwayMenMin,
+    sumGoalsConcededWomenMin,
+    sumGoalsConcededMenMin,
+    sumGoalsConcededHomeWomenMin,
+    sumGoalsConcededAwayWomenMin,
+    sumGoalsConcededHomeMenMin,
+    sumGoalsConcededAwayMenMin,
     menUnbeatenStreak,
     menNoWinStreak,
     menWinStreak,
@@ -757,7 +2801,7 @@ router.get('/season/:seasonId', async (req, res, next) => {
 
   const seasonExist = await Season.count({ where: { year: seasonName } })
   if (seasonExist === 0) {
-    return res.json({ success: false, message: 'Säsong finns inte' })
+    return res.json({ success: 'false', message: 'Säsong finns inte' })
   }
 
   const games = await Game.findAll({

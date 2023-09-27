@@ -35,6 +35,8 @@ const Season = () => {
   const [round, setRound] = useState(1)
   const [gameData, setGameData] = useState(null)
   const [showPlayoffGames, setShowPlayoffGames] = useState(false)
+  const [selectedTable, setSelectedTable] = useState('all')
+  const [homeAwayTitle, setHomeAwayTitle] = useState('')
 
   const location = useLocation()
   useEffect(() => {
@@ -76,12 +78,41 @@ const Season = () => {
     )
   }
 
+  if (!seasonId.toString().match('^[0-9]{4}$')) {
+    return (
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+        Kolla länken, angivna årtalet är felaktigt.
+      </div>
+    )
+  }
+
+  if (data?.success === 'false' || season?.success === 'false') {
+    return (
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+        {data.message}
+      </div>
+    )
+  }
+
   const scrollTo = (event, ref) => {
     event.preventDefault()
     window.scrollTo(0, ref.current.offsetTop)
   }
 
   const tables = data.tabell.filter((table) => table.women === women)
+
+  let regTables
+  switch (selectedTable) {
+    case 'all':
+      regTables = data.tabell.filter((table) => table.women === women)
+      break
+    case 'home':
+      regTables = data.hemmaTabell.filter((table) => table.women === women)
+      break
+    case 'away':
+      regTables = data.bortaTabell.filter((table) => table.women === women)
+      break
+  }
 
   const playoffGames = data.playoffGames.filter(
     (table) => table.women === women,
@@ -103,10 +134,11 @@ const Season = () => {
   const unsortedEightTables = tables.filter(
     (table) => table.category === 'eight',
   )
-  const unsortedRegularTables = tables.filter(
+
+  const unsortedRegularTables = regTables.filter(
     (table) => table.category === 'regular',
   )
-  const unsortedQualificationTables = tables.filter(
+  const unsortedQualificationTables = regTables.filter(
     (table) => table.category === 'qualification',
   )
 
@@ -459,27 +491,81 @@ const Season = () => {
         )}
 
         {seasonTables.length === 0 && seasonId < 2025 && (
-          <div className="w-full px-2 xl:px-4 ">
-            <div
-              onClick={() => {
-                setGrupp(
-                  groupsArray.sort((a, b) => {
-                    if (sortOrder.indexOf(a) > sortOrder.indexOf(b)) {
-                      return 1
-                    }
+          <div>
+            <div className="flex w-full flex-row justify-between px-2 lg:px-0">
+              <div
+                onClick={() => {
+                  !roundForRound && setSelectedTable('all')
+                  !roundForRound && setHomeAwayTitle('')
+                }}
+              >
+                <div
+                  className={
+                    roundForRound
+                      ? 'mb-2 w-[84px] cursor-not-allowed rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white opacity-25 transition-all duration-150 ease-in-out hover:bg-slate-600 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mb-6'
+                      : 'mb-2 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white transition-all duration-150 ease-in-out hover:bg-slate-600 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mb-6'
+                  }
+                >
+                  Alla matcher
+                </div>
+              </div>
+              <div
+                onClick={() => {
+                  !roundForRound && setSelectedTable('home')
+                  !roundForRound && setHomeAwayTitle('Hemma')
+                }}
+              >
+                <div
+                  className={
+                    roundForRound
+                      ? 'mb-2 w-[84px] cursor-not-allowed rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white opacity-25 transition-all duration-150 ease-in-out hover:bg-slate-600 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mb-6'
+                      : 'mb-2 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white transition-all duration-150 ease-in-out hover:bg-slate-600 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mb-6'
+                  }
+                >
+                  Hemmatabell
+                </div>
+              </div>
+              <div
+                onClick={() => {
+                  !roundForRound && setSelectedTable('away')
+                  !roundForRound && setHomeAwayTitle('Borta')
+                }}
+              >
+                <div
+                  className={
+                    roundForRound
+                      ? 'mb-2 w-[84px] cursor-not-allowed rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white opacity-25 transition-all duration-150 ease-in-out hover:bg-slate-600 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mb-6'
+                      : 'mb-2 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white transition-all duration-150 ease-in-out hover:bg-slate-600 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mb-6'
+                  }
+                >
+                  Bortatabell
+                </div>
+              </div>
 
-                    if (sortOrder.indexOf(a) < sortOrder.indexOf(b)) {
-                      return -1
-                    }
-                  })[0],
-                )
-                setRound(1)
-                setRoundForRound(!roundForRound)
-              }}
-              className="mb-2 w-full cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white transition-all duration-150 ease-in-out hover:bg-slate-600 lg:px-2 lg:py-1 lg:text-lg xl:mb-6"
-            >
-              {roundForRound ? 'Visa tabeller' : 'Visa utveckling'}
+              <div>
+                <div
+                  onClick={() => {
+                    setGrupp(
+                      groupsArray.sort((a, b) => {
+                        if (sortOrder.indexOf(a) > sortOrder.indexOf(b)) {
+                          return 1
+                        }
+
+                        if (sortOrder.indexOf(a) < sortOrder.indexOf(b)) {
+                          return -1
+                        }
+                      })[0],
+                    )
+                    setRound(1)
+                    setRoundForRound(!roundForRound)
+                  }}
+                  className="mb-2 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white transition-all duration-150 ease-in-out hover:bg-slate-600 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mb-6"
+                >
+                  {roundForRound ? 'Tabeller' : 'Utveckling'}
+                </div>
+              </div>
             </div>
+
             {!roundForRound && (
               <div>
                 {regularTables.length > 0 && (
@@ -487,6 +573,7 @@ const Season = () => {
                     tableArray={regularTables}
                     seriesInfo={seriesInfo}
                     bonusPoints={bonusPointsArray}
+                    homeAwayTitle={homeAwayTitle}
                   />
                 )}
                 {qualificationTables.length > 0 && (
@@ -494,6 +581,7 @@ const Season = () => {
                     tableArray={qualificationTables}
                     seriesInfo={seriesInfo}
                     bonusPoints={bonusPointsArray}
+                    homeAwayTitle={homeAwayTitle}
                   />
                 )}
               </div>
