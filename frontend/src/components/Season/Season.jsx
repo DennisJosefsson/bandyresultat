@@ -492,7 +492,7 @@ const Season = () => {
 
         {seasonTables.length === 0 && seasonId < 2025 && (
           <div>
-            <div className="flex w-full flex-row justify-between px-2 lg:px-0">
+            <div className="grid w-full grid-cols-2 justify-center gap-1 px-6 sm:px-2 md:flex md:flex-row md:justify-between lg:px-0">
               <div
                 onClick={() => {
                   !roundForRound && setSelectedTable('all')
@@ -502,8 +502,8 @@ const Season = () => {
                 <div
                   className={
                     roundForRound
-                      ? 'mb-2 w-[84px] cursor-not-allowed rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white opacity-25 transition-all duration-150 ease-in-out hover:bg-slate-600 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mb-6'
-                      : 'mb-2 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white transition-all duration-150 ease-in-out hover:bg-slate-600 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mb-6'
+                      ? 'mb-2 max-w-[80px] cursor-not-allowed rounded-md bg-[#011d29] px-0.5 py-0.5 text-center text-[10px] text-white opacity-25 transition-all duration-150 ease-in-out hover:bg-slate-600 sm:max-w-none sm:px-1 sm:text-sm lg:px-2 lg:py-1 xl:mb-6 xl:w-[128px] xl:text-lg'
+                      : 'mb-2 max-w-[80px] cursor-pointer rounded-md bg-[#011d29] px-0.5 py-0.5 text-center text-[10px] text-white transition-all duration-150 ease-in-out hover:bg-slate-600 sm:max-w-none sm:px-1 sm:text-sm lg:px-2 lg:py-1 xl:mb-6 xl:w-[128px] xl:text-lg'
                   }
                 >
                   Alla matcher
@@ -518,8 +518,8 @@ const Season = () => {
                 <div
                   className={
                     roundForRound
-                      ? 'mb-2 w-[84px] cursor-not-allowed rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white opacity-25 transition-all duration-150 ease-in-out hover:bg-slate-600 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mb-6'
-                      : 'mb-2 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white transition-all duration-150 ease-in-out hover:bg-slate-600 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mb-6'
+                      ? 'mb-2 max-w-[80px] cursor-not-allowed rounded-md bg-[#011d29] px-0.5 py-0.5 text-center text-[10px] text-white opacity-25 transition-all duration-150 ease-in-out hover:bg-slate-600 sm:max-w-none sm:px-1 sm:text-sm lg:px-2 lg:py-1 xl:mb-6 xl:w-[128px] xl:text-lg'
+                      : 'mb-2 max-w-[80px] cursor-pointer rounded-md bg-[#011d29] px-0.5 py-0.5 text-center text-[10px] text-white transition-all duration-150 ease-in-out hover:bg-slate-600 sm:max-w-none sm:px-1 sm:text-sm lg:px-2 lg:py-1 xl:mb-6 xl:w-[128px] xl:text-lg'
                   }
                 >
                   Hemmatabell
@@ -534,8 +534,8 @@ const Season = () => {
                 <div
                   className={
                     roundForRound
-                      ? 'mb-2 w-[84px] cursor-not-allowed rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white opacity-25 transition-all duration-150 ease-in-out hover:bg-slate-600 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mb-6'
-                      : 'mb-2 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white transition-all duration-150 ease-in-out hover:bg-slate-600 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mb-6'
+                      ? 'mb-2 max-w-[80px] cursor-not-allowed rounded-md bg-[#011d29] px-0.5 py-0.5 text-center text-[10px] text-white opacity-25 transition-all duration-150 ease-in-out hover:bg-slate-600 sm:max-w-none sm:px-1 sm:text-sm lg:px-2 lg:py-1 xl:mb-6 xl:w-[128px] xl:text-lg'
+                      : 'mb-2 max-w-[80px] cursor-pointer rounded-md bg-[#011d29] px-0.5 py-0.5 text-center text-[10px] text-white transition-all duration-150 ease-in-out hover:bg-slate-600 sm:max-w-none sm:px-1 sm:text-sm lg:px-2 lg:py-1 xl:mb-6 xl:w-[128px] xl:text-lg'
                   }
                 >
                   Bortatabell
@@ -559,7 +559,7 @@ const Season = () => {
                     setRound(1)
                     setRoundForRound(!roundForRound)
                   }}
-                  className="mb-2 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white transition-all duration-150 ease-in-out hover:bg-slate-600 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mb-6"
+                  className="mb-2 max-w-[80px] cursor-pointer rounded-md bg-[#011d29] px-0.5 py-0.5 text-center text-[10px] text-white transition-all duration-150 ease-in-out hover:bg-slate-600 sm:max-w-none sm:px-1 sm:text-sm lg:px-2 lg:py-1 xl:mb-6 xl:w-[128px] xl:text-lg"
                 >
                   {roundForRound ? 'Tabeller' : 'Utveckling'}
                 </div>

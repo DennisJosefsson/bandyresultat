@@ -47,9 +47,9 @@ const TableList = ({ tableArray, seriesInfo, bonusPoints, homeAwayTitle }) => {
               </h2>
             )}
             <div>
-              <table className="w-full px-1 text-xs md:text-sm xl:text-base">
+              <table className="season w-full px-1 text-xs md:text-sm xl:text-base">
                 <thead>
-                  <tr className="season">
+                  <tr className="">
                     <th scope="col" className="pos">
                       Pos
                     </th>
