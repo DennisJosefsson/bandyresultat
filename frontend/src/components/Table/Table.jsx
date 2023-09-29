@@ -71,8 +71,8 @@ const Table = () => {
         Maratontabell {women ? 'Damer' : 'Herrar'} {homeAwayTitle}
       </h2>
 
-      <div className="mx-auto flex min-h-screen max-w-7xl flex-row-reverse justify-between pt-10 font-inter text-[#011d29]">
-        <div>
+      <div className="xxs:flex-row-reverse xxs:justify-between mx-auto flex min-h-screen max-w-7xl flex-col pt-10 font-inter text-[#011d29]">
+        <div className="xxs:flex-col xxs:justify-start xxs:gap-0 flex flex-row justify-center gap-1">
           <div>
             <GenderButtonComponent
               women={women}

@@ -13,8 +13,8 @@ export const getGames = async () => {
   return response.data
 }
 
-export const getStreaks = async () => {
-  const response = await gamesApi.get('/streaks')
+export const getStreaks = async (params) => {
+  const response = await gamesApi.post('/streaks', params)
   return response.data
 }
 
