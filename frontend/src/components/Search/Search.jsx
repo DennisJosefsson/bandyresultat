@@ -102,6 +102,12 @@ const Search = () => {
         message: searchResult.message,
       })
     }
+    if (searchResult && searchResult.status === 404) {
+      methods.setError('root.random', {
+        type: 'random',
+        message: searchResult.message,
+      })
+    }
   }, [women, searchResult, methods])
 
   if (isTeamsLoading) {
@@ -314,8 +320,8 @@ const Search = () => {
         <ErrorComponent errors={methods.formState.errors} />
 
         {searchResult && searchResult.hits === 0 && (
-          <div className="rounded bg-white">
-            <p className="ml-5">Din sökning gav inga träffar.</p>
+          <div className="rounded bg-white p-2">
+            <p className="">Din sökning gav inga träffar.</p>
           </div>
         )}
         {searchResult && (

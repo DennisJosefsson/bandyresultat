@@ -216,7 +216,7 @@ router.post('/search', async (req, res) => {
 
   if (!searchResult) {
     res.json({
-      status: 'noHits',
+      status: 404,
       message: 'Hittade ingen match som matchade sökningen.',
     })
   } else {
