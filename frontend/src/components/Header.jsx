@@ -11,7 +11,7 @@ const Header = () => {
     <header
       className={`sticky ${
         scrollDirection === 'down' ? '-top-[81px]' : 'top-0'
-      } z-10 h-[81px] bg-[#f4f5f5] pt-6 font-poppins text-[#011d29] transition-all duration-500`}
+      } z-10000 h-[81px] bg-[#f4f5f5] pt-6 font-poppins text-[#011d29] transition-all duration-500`}
     >
       <section className="mx-auto flex max-w-7xl items-center justify-between">
         <h1 className="pl-4 text-base font-bold uppercase tracking-[0.2rem] md:text-2xl lg:text-4xl xl:pl-0 ">

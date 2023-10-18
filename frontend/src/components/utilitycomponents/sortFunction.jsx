@@ -281,3 +281,15 @@ export const animationData = (gameArray, teamArray, seriesArray) => {
 
   return gameDateAnimationArray
 }
+
+export const sortStatsCat = (array) => {
+  return array.sort((a, b) => {
+    if (sortOrder.indexOf(a.category) > sortOrder.indexOf(b.category)) {
+      return 1
+    }
+
+    if (sortOrder.indexOf(a.category) < sortOrder.indexOf(b.category)) {
+      return -1
+    }
+  })
+}

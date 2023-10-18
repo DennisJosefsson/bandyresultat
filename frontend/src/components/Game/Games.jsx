@@ -3,41 +3,31 @@ import { getSeasonGames } from '../../requests/games'
 import { getSingleSeason } from '../../requests/seasons'
 import { postGame } from '../../requests/games'
 import { useState, useContext, useEffect, useRef } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { GenderContext, UserContext } from '../../contexts/contexts'
 
 import Spinner from '../utilitycomponents/spinner'
 import GamesList from './GamesList'
 import GameForm from './GameForm'
-import GamesHelpModal from './GamesHelpModal'
-import CuriositiesModal from './CuriositiesModal'
-import StatsModal from './StatsModal'
 
-import GenderButtonComponent from '../utilitycomponents/GenderButtonComponent'
-import {
-  ButtonComponent,
-  HiddenButtonComponent,
-} from '../utilitycomponents/ButtonComponents'
+import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
 import { gameSortFunction } from '../utilitycomponents/sortFunction'
 import { sortOrder, groupConstant } from '../utilitycomponents/constants'
-import { LeftArrow, RightArrow } from '../utilitycomponents/icons'
+
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 
 dayjs.locale('sv')
 
-const Games = () => {
-  const seasonId = parseInt(useParams().seasonId)
-  const { women, dispatch } = useContext(GenderContext)
+const Games = ({ seasonId }) => {
+  const { women } = useContext(GenderContext)
   const { user } = useContext(UserContext)
 
   const categoryRefs = useRef({})
 
   const [teamFilter, setTeamFilter] = useState('')
-  const [showHelpModal, setShowHelpModal] = useState(false)
+
   const [showAddGameModal, setShowAddGameModal] = useState(false)
-  const [showCuriositiesModal, setShowCuriositiesModal] = useState(false)
-  const [showStatsModal, setShowStatsModal] = useState(false)
 
   const [gameData, setGameData] = useState(null)
 
@@ -95,45 +85,13 @@ const Games = () => {
     window.scrollTo(0, categoryRefs.current[ref].offsetTop)
   }
 
-  const games = data.games
+  const games = data
     .filter((table) => table.women === women)
     .filter(
       (game) =>
         game.homeTeam.name.toLowerCase().includes(teamFilter.toLowerCase()) ||
         game.awayTeam.name.toLowerCase().includes(teamFilter.toLowerCase()),
     )
-
-  const unbeatenStreak = data.unbeatenStreak.filter(
-    (table) => table.women === women,
-  )
-  const winStreak = data.winStreak.filter((table) => table.women === women)
-  const drawStreak = data.drawStreak.filter((table) => table.women === women)
-  const noWinStreak = data.noWinStreak.filter((table) => table.women === women)
-  const losingStreak = data.losingStreak.filter(
-    (table) => table.women === women,
-  )
-
-  const maxGoalsMen = data.maxGoalsMen
-  const minGoalsMen = data.minGoalsMen
-  const maxDiffMen = data.maxDiffMen
-  const maxGoalsWomen = data.maxGoalsWomen
-  const minGoalsWomen = data.minGoalsWomen
-  const maxDiffWomen = data.maxDiffWomen
-
-  const streakDataLength =
-    winStreak.length +
-    unbeatenStreak.length +
-    drawStreak.length +
-    noWinStreak.length +
-    losingStreak.length
-
-  const statsLength =
-    maxGoalsMen.length +
-    minGoalsMen.length +
-    maxDiffMen.length +
-    maxGoalsWomen.length +
-    minGoalsWomen.length +
-    maxDiffWomen.length
 
   const unsortedFinalGames = games.filter((game) => game.category === 'final')
   const unsortedSemiGames = games.filter((game) => game.category === 'semi')
@@ -179,27 +137,14 @@ const Games = () => {
 
   if (women && seasonId < 1973) {
     return (
-      <div className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
-        <div className="flex flex-row justify-end">
-          <div>
-            <GenderButtonComponent
-              women={women}
-              clickFunctions={() => {
-                setTeamFilter('')
-                dispatch({ type: 'TOGGLE' })
-              }}
-            />
-          </div>
-        </div>
-        <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
-          <p className="p-16 text-center">
-            Första säsongen för damernas högsta serie var{' '}
-            <Link to="/games/1973" className="font-bold">
-              1972/73
-            </Link>
-            .
-          </p>
-        </div>
+      <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
+        <p className="p-16 text-center">
+          Första säsongen för damernas högsta serie var{' '}
+          <Link to="/games/1973" className="font-bold">
+            1972/73
+          </Link>
+          .
+        </p>
       </div>
     )
   }
@@ -223,25 +168,7 @@ const Games = () => {
           />
         </form>
       </div>
-      <div className="flex flex-row justify-between pt-4">
-        <div className="mx-auto mb-4 flex w-full flex-row items-center justify-center">
-          <div className={seasonId - 1 === 1906 ? 'invisible' : null}>
-            <Link to={`/season/${seasonId - 1}`} state={{ resetRound: true }}>
-              <LeftArrow />
-            </Link>
-          </div>
-          <div className="mx-16">
-            <h2 className="text-center text-base font-bold leading-4 sm:text-xl lg:text-2xl">
-              Säsong {season[0].year} {women ? 'Damer' : 'Herrar'}
-            </h2>
-          </div>
-          <div className={seasonId + 1 === 2025 ? 'invisible' : null}>
-            <Link to={`/season/${seasonId + 1}`} state={{ resetRound: true }}>
-              <RightArrow />
-            </Link>
-          </div>
-        </div>
-      </div>
+
       {seasonId === 2025 && (
         <div>
           <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
@@ -334,282 +261,6 @@ const Games = () => {
               </div>
             )}
           </div>
-          <div className="flex flex-col justify-start">
-            <div className="mb-2 flex flex-col-reverse justify-start xl:mb-6 xl:flex-row xl:justify-end xl:gap-2">
-              <Link to={`/season/${seasonId}`}>
-                <ButtonComponent clickFunctions={() => {}}>
-                  Tabeller
-                </ButtonComponent>
-              </Link>
-
-              {streakDataLength > 0 && (
-                <HiddenButtonComponent
-                  clickFunctions={() => setShowCuriositiesModal(true)}
-                >
-                  Kuriosa
-                </HiddenButtonComponent>
-              )}
-              {statsLength > 0 && (
-                <HiddenButtonComponent
-                  clickFunctions={() => setShowStatsModal(true)}
-                >
-                  Statistik
-                </HiddenButtonComponent>
-              )}
-              <ButtonComponent clickFunctions={() => setShowHelpModal(true)}>
-                Hjälp/Info
-              </ButtonComponent>
-
-              <GenderButtonComponent
-                clickFunctions={() => {
-                  setTeamFilter('')
-                  dispatch({ type: 'TOGGLE' })
-                }}
-                women={women}
-              />
-            </div>
-            {(streakDataLength > 0 || statsLength > 0) && (
-              <div className="hidden xl:contents">
-                <div>
-                  <h4 className="mb-2 text-right text-xl font-bold">Kuriosa</h4>
-                </div>
-                <div className="flex w-[40rem] flex-row justify-between gap-3">
-                  {statsLength > 0 && (
-                    <div className="w-64">
-                      <h6 className="mb-2 text-base font-bold">
-                        Match(er) med flest antal mål:
-                      </h6>
-                      {!women && (
-                        <div>
-                          {maxGoalsMen.map((game) => {
-                            return (
-                              <p
-                                key={`${game.datum}-${Math.random()}`}
-                                className="mb-3 text-sm"
-                              >
-                                {game.datum && (
-                                  <span>
-                                    {dayjs(game.datum).format('D MMMM YYYY')}:
-                                  </span>
-                                )}{' '}
-                                {game.sum_goals} mål mellan {game.home_name} och{' '}
-                                {game.away_name} i en match som slutade{' '}
-                                {game.resultat}
-                              </p>
-                            )
-                          })}
-                        </div>
-                      )}
-                      {women && (
-                        <div>
-                          {maxGoalsWomen.map((game) => {
-                            return (
-                              <p
-                                key={`${game.datum}-${Math.random()}`}
-                                className="mb-3 text-sm"
-                              >
-                                {game.datum && (
-                                  <span>
-                                    {dayjs(game.datum).format('D MMMM YYYY')}:
-                                  </span>
-                                )}{' '}
-                                {game.sum_goals} mål mellan {game.home_name} och{' '}
-                                {game.away_name}, slutresultat {game.resultat}
-                              </p>
-                            )
-                          })}
-                        </div>
-                      )}
-                      <h6 className="mb-2 text-base font-bold">
-                        Match(er) med minst antal mål:
-                      </h6>
-                      {!women && (
-                        <div>
-                          {minGoalsMen.map((game) => {
-                            return (
-                              <p
-                                key={`${game.datum}-${Math.random()}`}
-                                className="mb-3 text-sm"
-                              >
-                                {game.datum && (
-                                  <span>
-                                    {dayjs(game.datum).format('D MMMM YYYY')}:
-                                  </span>
-                                )}{' '}
-                                {game.sum_goals} mål mellan {game.home_name} och{' '}
-                                {game.away_name}, slutresultat {game.resultat}
-                              </p>
-                            )
-                          })}
-                        </div>
-                      )}
-                      {women && (
-                        <div>
-                          {minGoalsWomen.map((game) => {
-                            return (
-                              <p
-                                key={`${game.datum}-${Math.random()}`}
-                                className="mb-3 text-sm"
-                              >
-                                {game.datum && (
-                                  <span>
-                                    {dayjs(game.datum).format('D MMMM YYYY')}:
-                                  </span>
-                                )}{' '}
-                                {game.sum_goals} mål mellan {game.home_name} och{' '}
-                                {game.away_name} i en match som slutade{' '}
-                                {game.resultat}
-                              </p>
-                            )
-                          })}
-                        </div>
-                      )}
-                      <h6 className="mb-2 text-base font-bold">
-                        Match(er) med störst målskillnad:
-                      </h6>
-                      {!women && (
-                        <div>
-                          {maxDiffMen.map((game) => {
-                            return (
-                              <p
-                                key={`${game.datum}-${Math.random()}`}
-                                className="mb-3 text-sm"
-                              >
-                                {game.datum && (
-                                  <span>
-                                    {dayjs(game.datum).format('D MMMM YYYY')}:
-                                  </span>
-                                )}{' '}
-                                {game.goal_difference} mål mellan{' '}
-                                {game.home_name} och {game.away_name}, matchen
-                                slutade {game.resultat}.
-                              </p>
-                            )
-                          })}
-                        </div>
-                      )}
-                      {women && (
-                        <div>
-                          {maxDiffWomen.map((game) => {
-                            return (
-                              <p
-                                key={`${game.datum}-${Math.random()}`}
-                                className="mb-3 text-sm"
-                              >
-                                {game.datum && (
-                                  <span>
-                                    {dayjs(game.datum).format('D MMMM YYYY')}:
-                                  </span>
-                                )}{' '}
-                                {game.goal_difference} mål mellan{' '}
-                                {game.home_name} och {game.away_name}, matchen
-                                slutade {game.resultat}.
-                              </p>
-                            )
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  {streakDataLength > 0 && (
-                    <div className="w-64">
-                      {unbeatenStreak.length > 0 && (
-                        <h6 className="mb-2 text-base font-bold">
-                          Matcher i rad utan förlust:
-                        </h6>
-                      )}
-                      {unbeatenStreak?.map((team) => {
-                        return (
-                          <p
-                            key={`${team.casual_name}-${team.game_count}-${team.start_date}`}
-                            className="mb-3 text-sm"
-                          >
-                            Mellan{' '}
-                            {dayjs(team.start_date).format('D MMMM YYYY')} och{' '}
-                            {dayjs(team.end_date).format('D MMMM YYYY')} var{' '}
-                            {team.casual_name} obesegrade i {team.game_count}{' '}
-                            matcher.
-                          </p>
-                        )
-                      })}
-                      {winStreak.length > 0 && (
-                        <h6 className="mb-2 text-base font-bold">
-                          Matcher i rad med vinst:
-                        </h6>
-                      )}
-                      {winStreak?.map((team) => {
-                        return (
-                          <p
-                            key={`${team.casual_name}-${team.game_count}-${team.start_date}`}
-                            className="mb-3 text-sm"
-                          >
-                            Från {dayjs(team.start_date).format('D MMMM YYYY')}{' '}
-                            till {dayjs(team.end_date).format('D MMMM YYYY')}{' '}
-                            vann {team.casual_name} alla sin matcher, totalt{' '}
-                            {team.game_count} stycken.
-                          </p>
-                        )
-                      })}
-                      {drawStreak.length > 0 && (
-                        <h6 className="mb-2 text-base font-bold">
-                          Matcher i rad med oavgjort:
-                        </h6>
-                      )}
-                      {drawStreak?.map((team) => {
-                        return (
-                          <p
-                            key={`${team.casual_name}-${team.game_count}-${team.start_date}`}
-                            className="mb-3 text-sm"
-                          >
-                            {team.casual_name} spelade från{' '}
-                            {dayjs(team.start_date).format('D MMMM YYYY')} till{' '}
-                            {dayjs(team.end_date).format('D MMMM YYYY')}{' '}
-                            {team.game_count} matcher som alla slutade oavgjort.
-                          </p>
-                        )
-                      })}
-                      {noWinStreak.length > 0 && (
-                        <h6 className="mb-2 text-base font-bold">
-                          Matcher i rad utan vinst:
-                        </h6>
-                      )}
-                      {noWinStreak?.map((team) => {
-                        return (
-                          <p
-                            key={`${team.casual_name}-${team.game_count}-${team.start_date}`}
-                            className="mb-3 text-sm"
-                          >
-                            {team.casual_name} spelade {team.game_count} matcher
-                            utan att vinna mellan{' '}
-                            {dayjs(team.start_date).format('D MMMM YYYY')} och{' '}
-                            {dayjs(team.end_date).format('D MMMM YYYY')}
-                          </p>
-                        )
-                      })}
-                      {losingStreak.length > 0 && (
-                        <h6 className="mb-2 text-base font-bold">
-                          Matcher i rad med förlust:
-                        </h6>
-                      )}
-                      {losingStreak?.map((team) => {
-                        return (
-                          <p
-                            key={`${team.casual_name}-${team.game_count}-${team.start_date}`}
-                            className="mb-3 text-sm"
-                          >
-                            {team.casual_name} förlorade {team.game_count} raka
-                            matcher mellan{' '}
-                            {dayjs(team.start_date).format('D MMMM YYYY')} och{' '}
-                            {dayjs(team.end_date).format('D MMMM YYYY')}
-                          </p>
-                        )
-                      })}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
         </div>
       )}
       {showAddGameModal ? (
@@ -621,37 +272,6 @@ const Games = () => {
             setShowModal={setShowAddGameModal}
             gameData={gameData}
             setGameData={setGameData}
-          />
-        </>
-      ) : null}
-      {showHelpModal ? (
-        <>
-          <GamesHelpModal setShowModal={setShowHelpModal} />
-        </>
-      ) : null}
-      {showStatsModal ? (
-        <>
-          <StatsModal
-            women={women}
-            maxGoalsMen={maxGoalsMen}
-            minGoalsMen={minGoalsMen}
-            maxGoalsWomen={maxGoalsWomen}
-            minGoalsWomen={minGoalsWomen}
-            maxDiffMen={maxDiffMen}
-            maxDiffWomen={maxDiffWomen}
-            setShowModal={setShowStatsModal}
-          />
-        </>
-      ) : null}
-      {showCuriositiesModal ? (
-        <>
-          <CuriositiesModal
-            winStreak={winStreak}
-            noWinStreak={noWinStreak}
-            losingStreak={losingStreak}
-            unbeatenStreak={unbeatenStreak}
-            drawStreak={drawStreak}
-            setShowModal={setShowCuriositiesModal}
           />
         </>
       ) : null}

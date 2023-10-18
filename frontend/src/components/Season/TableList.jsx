@@ -142,7 +142,7 @@ const TableList = ({ tableArray, seriesInfo, bonusPoints, homeAwayTitle }) => {
               </table>
               {seriesInfo.find((serie) => serie.serieGroupCode === group.group)
                 .comment && (
-                <p className="bg-white p-1 text-xs font-bold">
+                <p className="max-w-[564px] bg-white p-1 text-xs font-bold">
                   {
                     seriesInfo.find(
                       (serie) => serie.serieGroupCode === group.group,

@@ -28,6 +28,11 @@ export const getSeasonGames = async (seasonId) => {
   return response.data
 }
 
+export const getSeasonStats = async (seasonId) => {
+  const response = await gamesApi.get(`/stats/${seasonId}`)
+  return response.data
+}
+
 export const getSingleGame = async ({ gameId }) => {
   const response = await gamesApi.get(`/${gameId}`)
   return response.data

@@ -22,6 +22,7 @@ import About from './components/About/About'
 import Link from './components/Link/Link'
 import Record from './components/Record/Record'
 import Search from './components/Search/Search'
+import Map from './components/Team/Map'
 import { UserContext } from './contexts/contexts'
 
 const ProtectedRoute = ({ user, children }) => {
@@ -51,6 +52,7 @@ const App = () => {
             <Route path="/compare" element={<Compare />} />
             <Route path="/records" element={<Record />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/map" element={<Map />} />
             <Route
               path="/dashboard"
               element={

@@ -272,6 +272,9 @@ const Teams = () => {
                 genderDispatch({ type: 'TOGGLE' })
               }}
             />
+            <ButtonComponent clickFunctions={() => navigate('/map')}>
+              Karta
+            </ButtonComponent>
             <ButtonComponent clickFunctions={() => setShowHelpModal(true)}>
               Hjälp/Info
             </ButtonComponent>
