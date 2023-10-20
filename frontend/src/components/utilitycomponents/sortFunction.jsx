@@ -212,6 +212,7 @@ export const animationData = (gameArray, teamArray, seriesArray) => {
           teamId: team.teamId,
           casualName: team.casualName,
           table: {
+            position: 0,
             games: 0,
             wins: 0,
             draws: 0,
@@ -261,6 +262,18 @@ export const animationData = (gameArray, teamArray, seriesArray) => {
             teamsTables[awayTeamIndex].table.points += 1
           }
         })
+        teamsTables
+          .sort((teamA, teamB) => {
+            if (teamA.table.points === teamB.table.points) {
+              return (
+                teamB.table.scoredGoals -
+                teamB.table.concededGoals -
+                (teamA.table.scoredGoals - teamA.table.concededGoals)
+              )
+            }
+            return teamB.table.points - teamA.table.points
+          })
+          .forEach((team, index, array) => (array[index].position = index + 1))
         const table = JSON.parse(JSON.stringify(teamsTables))
         return {
           date: date.date,

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import { getSeasonGames } from '../../requests/games'
 import { getSingleSeason } from '../../requests/seasons'
@@ -8,7 +9,12 @@ import {
   gameSortFunction,
 } from '../utilitycomponents/sortFunction'
 import Spinner from '../utilitycomponents/spinner'
-import { LeftArrow, RightArrow } from '../utilitycomponents/icons'
+import {
+  LeftArrow,
+  RightArrow,
+  SmallArrowUpRight,
+  SmallArrowDownRight,
+} from '../utilitycomponents/icons'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 dayjs.locale('sv')
@@ -63,12 +69,29 @@ const Animation = ({ seasonId }) => {
     .filter((table) => table.women === women)
     .filter((game) => game.category === 'regular')
 
+  if (women && seasonId < 1973) {
+    return (
+      <div className="mx-auto mt-4 grid place-items-center font-inter text-[#011d29]">
+        <p>
+          Första säsongen för damernas högsta serie var{' '}
+          <Link to="/season/1973" className="font-bold">
+            1972/73
+          </Link>
+          .
+        </p>
+      </div>
+    )
+  }
+
   if (
-    unsortedRegularGames.filter((game) => game.result !== null).length === 0
+    unsortedRegularGames.filter((game) => game.result !== null).length === 0 ||
+    seasonId === 1930 ||
+    seasonId === 1933 ||
+    seasonId === 1937
   ) {
     return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
-        Inga resultat än.
+      <div className="mx-auto mt-4 grid place-items-center font-inter font-bold text-[#011d29]">
+        Data över serieutvecklingen saknas för denna säsong.
       </div>
     )
   }
@@ -106,6 +129,23 @@ const Animation = ({ seasonId }) => {
       ? gamesArray.filter((serieGroup) => serieGroup.group === group)[0].dates
       : []
 
+  const displayArrow = (teamId) => {
+    const prevPos = dateArray[round - 1].table.find(
+      (team) => team.teamId === teamId,
+    ).position
+    const currPos = dateArray[round].table.find(
+      (team) => team.teamId === teamId,
+    ).position
+
+    if (prevPos === currPos) {
+      return ''
+    } else if (prevPos < currPos) {
+      return <SmallArrowDownRight />
+    } else if (prevPos > currPos) {
+      return <SmallArrowUpRight />
+    }
+  }
+
   return (
     <div className="mx-auto flex flex-col pt-4 font-inter text-[#011d29]">
       {gamesArray.length > 1 && (
@@ -118,7 +158,7 @@ const Animation = ({ seasonId }) => {
                   setGroup(group.group)
                   setRound(0)
                 }}
-                className="cursor-pointer rounded bg-slate-400 p-1"
+                className="cursor-pointer rounded bg-slate-400 p-1 text-white"
               >
                 {group.serieName}
               </div>
@@ -221,6 +261,7 @@ const Animation = ({ seasonId }) => {
                       <th scope="col"></th>
                       <th scope="col"></th>
                       <th scope="col"></th>
+                      <th scope="col"></th>
                       <th scope="col" className="twelve"></th>
                       <th scope="col" className="twelve"></th>
                       <th scope="col" className="twelve"></th>
@@ -234,9 +275,13 @@ const Animation = ({ seasonId }) => {
                           key={`${team.teamId}-${index}`}
                           className="season odd:bg-slate-300"
                         >
-                          <td className="pos">{index + 1}</td>
+                          <td className="pos">{team.position}</td>
                           <td className="team">{team.casualName}</td>
-
+                          <td className="opacity-40">
+                            {round > 0 &&
+                              team.table.games > 0 &&
+                              displayArrow(team.teamId)}
+                          </td>
                           <td>{team.table.games}</td>
                           <td>{team.table.wins}</td>
                           <td>{team.table.draws}</td>

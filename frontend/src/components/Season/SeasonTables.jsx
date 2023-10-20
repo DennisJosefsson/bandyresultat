@@ -80,6 +80,28 @@ const SeasonTables = ({ seasonId }) => {
     ? season.find((season) => season.women === women).tables
     : []
 
+  if (women && seasonId < 1973) {
+    return (
+      <div className="mx-auto mt-4 grid place-items-center font-inter text-[#011d29]">
+        <p>
+          Första säsongen för damernas högsta serie var{' '}
+          <Link to="/season/1973" className="font-bold">
+            1972/73
+          </Link>
+          .
+        </p>
+      </div>
+    )
+  }
+
+  if (unsortedRegularTables.length === 0 && seasonTables.length === 0) {
+    return (
+      <div className="mx-auto mt-4 grid place-items-center font-inter font-bold text-[#011d29]">
+        Inga serietabeller för denna säsong.
+      </div>
+    )
+  }
+
   const womensSeason = season.filter((season) => season.women === true)
 
   const bonusPointsArray = seriesInfo.map((serie) => {
@@ -95,17 +117,6 @@ const SeasonTables = ({ seasonId }) => {
         {seasonId === 2025 && (
           <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
             <p>Inga resultat än.</p>
-          </div>
-        )}
-        {women && seasonId < 1973 && (
-          <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
-            <p>
-              Första säsongen för damernas högsta serie var{' '}
-              <Link to="/season/1973" className="font-bold">
-                1972/73
-              </Link>
-              .
-            </p>
           </div>
         )}
 

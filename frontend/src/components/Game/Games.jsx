@@ -137,10 +137,10 @@ const Games = ({ seasonId }) => {
 
   if (women && seasonId < 1973) {
     return (
-      <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
-        <p className="p-16 text-center">
+      <div className="mx-auto mt-4 grid place-items-center font-inter text-[#011d29]">
+        <p>
           Första säsongen för damernas högsta serie var{' '}
-          <Link to="/games/1973" className="font-bold">
+          <Link to="/season/1973" className="font-bold">
             1972/73
           </Link>
           .

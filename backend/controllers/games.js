@@ -3104,6 +3104,66 @@ router.get('/stats/:seasonId', async (req, res) => {
     group: ['game.women', 'category', 'season.year', 'season.season_id'],
   })
 
+  const winCountHomeTeam = await TeamGame.count({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    where: { homeGame: true, win: true },
+    group: ['teamgame.women', 'season.year', 'season.season_id'],
+  })
+
+  const winCountAwayTeam = await TeamGame.count({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    where: { homeGame: false, win: true },
+    group: ['teamgame.women', 'season.year', 'season.season_id'],
+  })
+
+  const drawCount = await TeamGame.count({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    where: { draw: true },
+    group: ['teamgame.women', 'season.year', 'season.season_id'],
+  })
+
+  const winCountHomeTeamCat = await TeamGame.count({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    where: { homeGame: true, win: true },
+    group: ['teamgame.women', 'category', 'season.year', 'season.season_id'],
+  })
+
+  const winCountAwayTeamCat = await TeamGame.count({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    where: { homeGame: false, win: true },
+    group: ['teamgame.women', 'category', 'season.year', 'season.season_id'],
+  })
+
+  const drawCountCat = await TeamGame.count({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    where: { draw: true },
+    group: ['teamgame.women', 'category', 'season.year', 'season.season_id'],
+  })
+
   const losingStreak = await sequelize.query(
     `with lost_values as (
 select 
@@ -3613,6 +3673,12 @@ join teams as away_team on max_diff.away = away_team.team_id;`,
   res.json({
     gamesCountTotal,
     gamesCountTotalCat,
+    winCountHomeTeam,
+    winCountAwayTeam,
+    drawCount,
+    winCountHomeTeamCat,
+    winCountAwayTeamCat,
+    drawCountCat,
     goalsScoredTotal,
     goalsScoredTotalCat,
     goalsScoredAverage,

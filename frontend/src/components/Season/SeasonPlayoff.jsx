@@ -64,14 +64,22 @@ const Playoff = ({ seasonId }) => {
 
   if (women && seasonId < 1973) {
     return (
-      <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
-        <p className="p-16 text-center">
+      <div className="mx-auto mt-4 grid place-items-center font-inter text-[#011d29]">
+        <p>
           Första säsongen för damernas högsta serie var{' '}
           <Link to="/season/1973" className="font-bold">
             1972/73
           </Link>
           .
         </p>
+      </div>
+    )
+  }
+
+  if (playoffGames.length === 0) {
+    return (
+      <div className="mx-auto mt-4 grid place-items-center font-inter font-bold text-[#011d29]">
+        Inga slutspelsmatcher än.
       </div>
     )
   }

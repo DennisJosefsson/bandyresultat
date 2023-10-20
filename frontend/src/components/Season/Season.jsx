@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useLocation } from 'react-router-dom'
 import { useContext, useState, useEffect } from 'react'
 import { GenderContext } from '../../contexts/contexts'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -24,38 +24,24 @@ import {
   WomanIcon,
   MapIcon,
 } from '../utilitycomponents/icons'
-import GenderButtonComponent from '../utilitycomponents/GenderButtonComponent'
 
 const Season = () => {
   const seasonId = parseInt(useParams().seasonId)
   const { women, dispatch } = useContext(GenderContext)
   const [tab, setTab] = useState('tables')
   const [showHelpModal, setShowHelpModal] = useState(false)
+  const { state } = useLocation()
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-  }, [])
+    if (state && state.tab === 'games') {
+      setTab('games')
+    }
+  }, [state])
 
-  if (women && seasonId < 1973) {
+  if (!seasonId.toString().match('^[0-9]{4}$') || seasonId > 2024) {
     return (
-      <div className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
-        <div className="flex flex-row justify-end">
-          <div>
-            <GenderButtonComponent
-              women={women}
-              clickFunctions={() => dispatch({ type: 'TOGGLE' })}
-            />
-          </div>
-        </div>
-        <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
-          <p className="p-16 text-center">
-            Första säsongen för damernas högsta serie var{' '}
-            <Link to="/season/1973" className="font-bold">
-              1972/73
-            </Link>
-            .
-          </p>
-        </div>
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+        Kolla länken, angivna årtalet är felaktigt.
       </div>
     )
   }
@@ -200,22 +186,6 @@ const Season = () => {
         </div>
       </div>
       <div>
-        {seasonId === 2025 && (
-          <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
-            <p>Inga resultat än.</p>
-          </div>
-        )}
-        {women && seasonId < 1973 && (
-          <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
-            <p>
-              Första säsongen för damernas högsta serie var{' '}
-              <Link to="/season/1973" className="font-bold">
-                1972/73
-              </Link>
-              .
-            </p>
-          </div>
-        )}
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
           onError={logError}
