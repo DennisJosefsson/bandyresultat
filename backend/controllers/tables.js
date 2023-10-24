@@ -327,7 +327,7 @@ group by casual_name, team;
 rank() over (partition by home_team_id, away_team_id order by "date" asc) ranked_first_games,
 rank() over (partition by home_team_id, away_team_id order by "date" desc) ranked_last_games
 from games
-where home_team_id = any($team_array) and away_team_id = any($team_array)) and played = true
+where home_team_id = any($team_array) and away_team_id = any($team_array) and played = true) 
 
 select game_id, "date", result, home.casual_name as home_name, away.casual_name as away_name, ranked_first_games, ranked_last_games from first_games 
 join teams as home on first_games.home_team_id = home.team_id

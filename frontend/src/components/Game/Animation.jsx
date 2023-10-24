@@ -20,7 +20,7 @@ import 'dayjs/locale/sv'
 dayjs.locale('sv')
 
 const Animation = ({ seasonId }) => {
-  const [group, setGroup] = useState('elitserien')
+  const [group, setGroup] = useState()
   const [round, setRound] = useState(0)
   const { data, isLoading, error } = useQuery(
     ['singleSeasonGames', seasonId],
@@ -37,8 +37,22 @@ const Animation = ({ seasonId }) => {
   const { women } = useContext(GenderContext)
 
   useEffect(() => {
+    if (!isLoading && !error) {
+      const unsortedRegularGames = data
+        .filter((table) => table.women === women)
+        .filter((game) => game.category === 'regular')
+
+      const groupArray = [
+        ...new Set(unsortedRegularGames.map((game) => game.group)),
+      ]
+      if (groupArray.length === 1) {
+        setGroup(groupArray[0])
+      }
+    }
+  }, [data, isLoading, error, women])
+
+  useEffect(() => {
     setRound(0)
-    setGroup('elitserien')
   }, [women, seasonId])
 
   if (isLoading || isSeasonLoading) {
@@ -84,10 +98,7 @@ const Animation = ({ seasonId }) => {
   }
 
   if (
-    unsortedRegularGames.filter((game) => game.result !== null).length === 0 ||
-    seasonId === 1930 ||
-    seasonId === 1933 ||
-    seasonId === 1937
+    unsortedRegularGames.filter((game) => game.result !== null).length === 0
   ) {
     return (
       <div className="mx-auto mt-4 grid place-items-center font-inter font-bold text-[#011d29]">
@@ -158,7 +169,7 @@ const Animation = ({ seasonId }) => {
                   setGroup(group.group)
                   setRound(0)
                 }}
-                className="cursor-pointer rounded bg-slate-400 p-1 text-white"
+                className="cursor-pointer truncate rounded bg-slate-400 p-1 text-xs text-white md:text-sm lg:text-base"
               >
                 {group.serieName}
               </div>

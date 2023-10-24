@@ -122,7 +122,7 @@ const SeasonTables = ({ seasonId }) => {
 
         {seasonTables.length === 0 && seasonId < 2025 && (
           <div>
-            <div className="mt-2 grid w-full grid-cols-3 justify-center gap-1 px-6 sm:px-2 md:flex md:flex-row md:justify-between lg:px-0">
+            <div className="mt-2 grid w-full grid-cols-3 justify-center gap-4 px-6 sm:px-2 md:flex md:flex-row lg:px-0">
               <div
                 onClick={() => {
                   setSelectedTable('all')

@@ -175,7 +175,10 @@ export const animationData = (gameArray, teamArray, seriesArray) => {
   const teamSeriesArray = gameArray.map((group) => {
     let teamArray = []
     group.dates.forEach((date) =>
-      date.games.forEach((game) => teamArray.push(game.homeTeamId)),
+      date.games.forEach((game) => {
+        teamArray.push(game.homeTeamId)
+        teamArray.push(game.awayTeamId)
+      }),
     )
     return { group: group.group, teams: teamArray }
   })

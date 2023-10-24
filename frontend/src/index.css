@@ -205,7 +205,7 @@
   }
 
   .streakCard {
-    @apply m-1 flex flex-col bg-white p-1 placeholder:rounded md:mb-2 md:p-2;
+    @apply m-1 flex flex-col rounded bg-white p-1 text-sm xs:text-base md:mb-2 md:p-2;
   }
 
   .streakCard .head {
@@ -213,11 +213,7 @@
   }
 
   .streakCard .streak1st {
-    @apply flex flex-row;
-  }
-
-  .streakCard .pos {
-    @apply mr-4 w-8 text-right text-2xl font-bold tabular-nums;
+    @apply flex flex-row justify-between;
   }
 
   .streakCard .streak1st .name {
@@ -225,7 +221,7 @@
   }
 
   .streakCard .streak1st .count {
-    @apply w-24 text-right;
+    @apply w-24 text-right tabular-nums;
   }
 
   .streakCard .streak2nd {

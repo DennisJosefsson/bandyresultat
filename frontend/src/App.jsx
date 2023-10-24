@@ -12,7 +12,6 @@ import Footer from './components/Footer'
 
 import Team from './components/Team/Team'
 import Teams from './components/Team/Teams'
-import Table from './components/Table/Table'
 import Season from './components/Season/Season'
 import Seasons from './components/Season/Seasons'
 import Games from './components/Game/Games'
@@ -24,6 +23,7 @@ import Record from './components/Record/Record'
 import Search from './components/Search/Search'
 import Map from './components/Team/Map'
 import { UserContext } from './contexts/contexts'
+import Maraton from './components/Maraton/Maraton'
 
 const ProtectedRoute = ({ user, children }) => {
   if (!user) {
@@ -45,8 +45,7 @@ const App = () => {
             <Route path="/teams" element={<Teams />} />
             <Route path="/season/:seasonId" element={<Season />} />
             <Route path="/seasons" element={<Seasons />} />
-            <Route path="/tables/:seasonId" element={<Table />} />
-            <Route path="/tables" element={<Table />} />
+            <Route path="/tables" element={<Maraton />} />
             <Route path="/games/:seasonId" element={<Games />} />
             <Route path="/link/:linkName" element={<Link />} />
             <Route path="/compare" element={<Compare />} />

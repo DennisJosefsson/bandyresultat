@@ -44,6 +44,14 @@ const SeasonStats = ({ seasonId }) => {
     )
   }
 
+  if (women && (seasonId === 1973 || seasonId === 1974)) {
+    return (
+      <div className="mx-auto mt-4 grid place-items-center font-inter font-bold text-[#011d29]">
+        Statistik saknas för denna säsong.
+      </div>
+    )
+  }
+
   if (women && seasonId < 1973) {
     return (
       <div className="mx-auto mt-4 grid place-items-center font-inter text-[#011d29]">
@@ -160,7 +168,9 @@ const SeasonStats = ({ seasonId }) => {
   return (
     <div>
       <div>
-        <h4 className="font-bold md:text-lg">Match- och resultatstatistik</h4>
+        <h4 className="ml-2 font-bold md:text-lg xl:ml-0">
+          Match- och resultatstatistik
+        </h4>
         <div className="grid grid-cols-1 gap-y-4 pt-2 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:gap-x-44">
           <div>
             <div className="statsCard">
@@ -187,12 +197,14 @@ const SeasonStats = ({ seasonId }) => {
             </div>
             <div className="statsCard">
               <div className="name">Vinster bortalag: </div>
-              <div className="count">{winCountAwayTeam.count}</div>
+              <div className="count">{winCountAwayTeam?.count}</div>
             </div>
-            <div className="statsCard">
-              <div className="name">Oavgjort: </div>
-              <div className="count">{drawCount.count / 2}</div>
-            </div>
+            {drawCount?.count > 0 && (
+              <div className="statsCard">
+                <div className="name">Oavgjort: </div>
+                <div className="count">{drawCount?.count / 2}</div>
+              </div>
+            )}
           </div>
           <div>
             <div className="statsCard">
@@ -208,28 +220,32 @@ const SeasonStats = ({ seasonId }) => {
               <div className="name">Vinster bortalag: </div>
               <div className="count">
                 {`${(
-                  (winCountAwayTeam.count / gamesCountTotal.count) *
+                  (winCountAwayTeam?.count / gamesCountTotal.count) *
                   100
                 ).toFixed(1)}%`}
               </div>
             </div>
-            <div className="statsCard">
-              <div className="name">Oavgjort: </div>
-              <div className="count">
-                {`${(
-                  (drawCount.count / 2 / gamesCountTotal.count) *
-                  100
-                ).toFixed(1)}%`}
+            {drawCount?.count > 0 && (
+              <div className="statsCard">
+                <div className="name">Oavgjort: </div>
+                <div className="count">
+                  {`${(
+                    (drawCount?.count / 2 / gamesCountTotal.count) *
+                    100
+                  ).toFixed(1)}%`}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
         {winCountHomeTeamCat.length > 1 && (
           <div>
-            <h4 className="font-bold md:text-lg">Resultatstatistik kategori</h4>
+            <h4 className="ml-2 font-bold md:text-lg xl:ml-0">
+              Resultatstatistik kategori
+            </h4>
             <div className="grid grid-cols-1 gap-y-4 pt-2 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:gap-x-44">
               <div>
-                <h5 className="text-sm font-bold md:text-base">
+                <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
                   Vinst hemmalag
                 </h5>
                 {sortStatsCat(winCountHomeTeamCat).map((cat) => {
@@ -245,7 +261,7 @@ const SeasonStats = ({ seasonId }) => {
                 })}
               </div>
               <div>
-                <h5 className="text-sm font-bold md:text-base">
+                <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
                   Vinst bortalag
                 </h5>
                 {sortStatsCat(winCountAwayTeamCat).map((cat) => {
@@ -260,31 +276,37 @@ const SeasonStats = ({ seasonId }) => {
                   )
                 })}
               </div>
-              <div>
-                <h5 className="text-sm font-bold md:text-base">Oavgjort</h5>
-                {sortStatsCat(drawCountCat).map((cat) => {
-                  return (
-                    <div
-                      key={`${cat.category}-${Math.random()}`}
-                      className="statsCard"
-                    >
-                      <div className="name">{groupConstant[cat.category]}</div>
-                      <div className="count">{cat.count / 2}</div>
-                    </div>
-                  )
-                })}
-              </div>
+              {drawCountCat.length > 0 && (
+                <div>
+                  <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
+                    Oavgjort
+                  </h5>
+                  {sortStatsCat(drawCountCat).map((cat) => {
+                    return (
+                      <div
+                        key={`${cat.category}-${Math.random()}`}
+                        className="statsCard"
+                      >
+                        <div className="name">
+                          {groupConstant[cat.category]}
+                        </div>
+                        <div className="count">{cat.count / 2}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
             </div>
           </div>
         )}
         {winCountHomeTeamCat.length > 1 && (
           <div>
-            <h4 className="font-bold md:text-lg">
+            <h4 className="ml-2 font-bold md:text-lg xl:ml-0">
               Resultatstatistik kategori genomsnitt
             </h4>
             <div className="grid grid-cols-1 gap-y-4 pt-2 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:gap-x-44">
               <div>
-                <h5 className="text-sm font-bold md:text-base">
+                <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
                   Vinst hemmalag
                 </h5>
                 {sortStatsCat(winCountHomeTeamCat).map((cat) => {
@@ -306,7 +328,7 @@ const SeasonStats = ({ seasonId }) => {
                 })}
               </div>
               <div>
-                <h5 className="text-sm font-bold md:text-base">
+                <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
                   Vinst bortalag
                 </h5>
                 {sortStatsCat(winCountAwayTeamCat).map((cat) => {
@@ -327,32 +349,38 @@ const SeasonStats = ({ seasonId }) => {
                   )
                 })}
               </div>
-              <div>
-                <h5 className="text-sm font-bold md:text-base">Oavgjort</h5>
-                {sortStatsCat(drawCountCat).map((cat) => {
-                  return (
-                    <div
-                      key={`${cat.category}-${Math.random()}`}
-                      className="statsCard"
-                    >
-                      <div className="name">{groupConstant[cat.category]}</div>
-                      <div className="count">{`${(
-                        (cat.count /
-                          2 /
-                          gamesCountTotalCat.find(
-                            (category) => category.category === cat.category,
-                          ).count) *
-                        100
-                      ).toFixed(1)}%`}</div>
-                    </div>
-                  )
-                })}
-              </div>
+              {drawCountCat.length > 0 && (
+                <div>
+                  <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
+                    Oavgjort
+                  </h5>
+                  {sortStatsCat(drawCountCat).map((cat) => {
+                    return (
+                      <div
+                        key={`${cat.category}-${Math.random()}`}
+                        className="statsCard"
+                      >
+                        <div className="name">
+                          {groupConstant[cat.category]}
+                        </div>
+                        <div className="count">{`${(
+                          (cat.count /
+                            2 /
+                            gamesCountTotalCat.find(
+                              (category) => category.category === cat.category,
+                            ).count) *
+                          100
+                        ).toFixed(1)}%`}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
             </div>
           </div>
         )}
       </div>
-      <h4 className="font-bold md:text-lg">Målstatistik</h4>
+      <h4 className="ml-2 font-bold md:text-lg xl:ml-0">Målstatistik</h4>
       <div className="grid grid-cols-1 gap-y-4 pt-2 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:gap-x-44">
         <div>
           <div className="statsCard">
@@ -463,7 +491,7 @@ const SeasonStats = ({ seasonId }) => {
           })}
         </div>
       </div>
-      <h4 className="font-bold md:text-lg">Resultat</h4>
+      <h4 className="ml-2 font-bold md:text-lg xl:ml-0">Resultat</h4>
       <div className="grid grid-cols-1 gap-y-4 pt-2 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:gap-x-44">
         {(streakDataLength > 0 || statsLength > 0) && (
           <div>
