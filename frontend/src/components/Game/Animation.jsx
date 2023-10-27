@@ -101,8 +101,10 @@ const Animation = ({ seasonId }) => {
     unsortedRegularGames.filter((game) => game.result !== null).length === 0
   ) {
     return (
-      <div className="mx-auto mt-4 grid place-items-center font-inter font-bold text-[#011d29]">
-        Data över serieutvecklingen saknas för denna säsong.
+      <div className="mx-auto mt-4 grid place-items-center py-5 font-inter text-sm font-bold text-[#011d29] md:text-base">
+        <p className="mx-10 text-center">
+          Data över serieutvecklingen saknas för denna säsong.
+        </p>
       </div>
     )
   }

@@ -12,7 +12,6 @@ import GameForm from './GameForm'
 
 import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
 import { gameSortFunction } from '../utilitycomponents/sortFunction'
-import { sortOrder, groupConstant } from '../utilitycomponents/constants'
 
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
@@ -23,7 +22,8 @@ const Games = ({ seasonId }) => {
   const { women } = useContext(GenderContext)
   const { user } = useContext(UserContext)
 
-  const categoryRefs = useRef({})
+  const topRef = useRef(null)
+  const bottomRef = useRef(null)
 
   const [teamFilter, setTeamFilter] = useState('')
 
@@ -82,7 +82,7 @@ const Games = ({ seasonId }) => {
 
   const scrollTo = (event, ref) => {
     event.preventDefault()
-    window.scrollTo(0, categoryRefs.current[ref].offsetTop)
+    window.scrollTo(0, ref.current.offsetTop)
   }
 
   const games = data
@@ -93,41 +93,59 @@ const Games = ({ seasonId }) => {
         game.awayTeam.name.toLowerCase().includes(teamFilter.toLowerCase()),
     )
 
-  const unsortedFinalGames = games.filter((game) => game.category === 'final')
-  const unsortedSemiGames = games.filter((game) => game.category === 'semi')
-  const unsortedQuarterGames = games.filter(
-    (game) => game.category === 'quarter',
-  )
-  const unsortedEightGames = games.filter((game) => game.category === 'eight')
-  const unsortedRegularGames = games.filter(
-    (game) => game.category === 'regular',
-  )
-  const unsortedQualificationGames = games.filter(
-    (game) => game.category === 'qualification',
-  )
+  const unsortedPlayedFinalGames = games
+    .filter((game) => game.category === 'final')
+    .filter((game) => game.played === true)
+  const unsortedPlayedSemiGames = games
+    .filter((game) => game.category === 'semi')
+    .filter((game) => game.played === true)
+  const unsortedPlayedQuarterGames = games
+    .filter((game) => game.category === 'quarter')
+    .filter((game) => game.played === true)
+  const unsortedPlayedEightGames = games
+    .filter((game) => game.category === 'eight')
+    .filter((game) => game.played === true)
+  const unsortedPlayedRegularGames = games
+    .filter((game) => game.category === 'regular')
+    .filter((game) => game.played === true)
+  const unsortedPlayedQualificationGames = games
+    .filter((game) => game.category === 'qualification')
+    .filter((game) => game.played === true)
+  const unsortedUnplayedFinalGames = games
+    .filter((game) => game.category === 'final')
+    .filter((game) => game.played === false)
+  const unsortedUnplayedSemiGames = games
+    .filter((game) => game.category === 'semi')
+    .filter((game) => game.played === false)
+  const unsortedUnplayedQuarterGames = games
+    .filter((game) => game.category === 'quarter')
+    .filter((game) => game.played === false)
+  const unsortedUnplayedEightGames = games
+    .filter((game) => game.category === 'eight')
+    .filter((game) => game.played === false)
+  const unsortedUnplayedRegularGames = games
+    .filter((game) => game.category === 'regular')
+    .filter((game) => game.played === false)
+  const unsortedUnplayedQualificationGames = games
+    .filter((game) => game.category === 'qualification')
+    .filter((game) => game.played === false)
 
-  const categoryArray = [
-    ...new Set(
-      games
-        .map((game) => game.category)
-        .sort((a, b) => {
-          if (sortOrder.indexOf(a) > sortOrder.indexOf(b)) {
-            return 1
-          }
-
-          if (sortOrder.indexOf(a) < sortOrder.indexOf(b)) {
-            return -1
-          }
-        }),
-    ),
-  ]
-
-  const finalGames = gameSortFunction(unsortedFinalGames)
-  const semiGames = gameSortFunction(unsortedSemiGames)
-  const quarterGames = gameSortFunction(unsortedQuarterGames)
-  const eightGames = gameSortFunction(unsortedEightGames)
-  const regularGames = gameSortFunction(unsortedRegularGames)
-  const qualificationGames = gameSortFunction(unsortedQualificationGames)
+  const playedFinalGames = gameSortFunction(unsortedPlayedFinalGames)
+  const playedSemiGames = gameSortFunction(unsortedPlayedSemiGames)
+  const playedQuarterGames = gameSortFunction(unsortedPlayedQuarterGames)
+  const playedEightGames = gameSortFunction(unsortedPlayedEightGames)
+  const playedRegularGames = gameSortFunction(unsortedPlayedRegularGames)
+  const playedQualificationGames = gameSortFunction(
+    unsortedPlayedQualificationGames,
+  )
+  const unplayedFinalGames = gameSortFunction(unsortedUnplayedFinalGames)
+  const unplayedSemiGames = gameSortFunction(unsortedUnplayedSemiGames)
+  const unplayedQuarterGames = gameSortFunction(unsortedUnplayedQuarterGames)
+  const unplayedEightGames = gameSortFunction(unsortedUnplayedEightGames)
+  const unplayedRegularGames = gameSortFunction(unsortedUnplayedRegularGames)
+  const unplayedQualificationGames = gameSortFunction(
+    unsortedUnplayedQualificationGames,
+  )
 
   const genderSeason = season.filter((indSeason) => indSeason.women === women)
 
@@ -151,7 +169,7 @@ const Games = ({ seasonId }) => {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
-      <div className="w-full" ref={(el) => (categoryRefs.current['top'] = el)}>
+      <div className="w-full" ref={topRef}>
         <form>
           <input
             className="w-full border-[#011d29] focus:border-[#011d29]"
@@ -172,7 +190,7 @@ const Games = ({ seasonId }) => {
       {seasonId === 2025 && (
         <div>
           <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
-            <p>Inga resultat än.</p>
+            <p>Inga matcher än.</p>
           </div>
           <div>
             {user && (
@@ -188,79 +206,159 @@ const Games = ({ seasonId }) => {
         </div>
       )}
       {seasonId < 2025 && (
-        <div className="mx-1 flex flex-row justify-between xl:mx-0">
-          <div className="w-full px-2 xl:px-0">
-            {finalGames.length > 0 && (
-              <GamesList
-                gamesArray={finalGames}
-                title={'Final'}
-                setShowModal={setShowAddGameModal}
-                setGameData={setGameData}
-                ref={(el) => (categoryRefs.current['final'] = el)}
-                seriesInfo={seriesInfo}
-              />
-            )}
-            {semiGames.length > 0 && (
-              <GamesList
-                gamesArray={semiGames}
-                title={'Semifinaler'}
-                setShowModal={setShowAddGameModal}
-                setGameData={setGameData}
-                ref={(el) => (categoryRefs.current['semi'] = el)}
-                seriesInfo={seriesInfo}
-              />
-            )}
-            {quarterGames.length > 0 && (
-              <GamesList
-                gamesArray={quarterGames}
-                title={'Kvartsfinaler'}
-                setShowModal={setShowAddGameModal}
-                setGameData={setGameData}
-                ref={(el) => (categoryRefs.current['quarter'] = el)}
-                seriesInfo={seriesInfo}
-              />
-            )}
-            {eightGames.length > 0 && (
-              <GamesList
-                gamesArray={eightGames}
-                title={'Åttondelsfinaler'}
-                setShowModal={setShowAddGameModal}
-                setGameData={setGameData}
-                ref={(el) => (categoryRefs.current['eight'] = el)}
-                seriesInfo={seriesInfo}
-              />
-            )}
-            {regularGames.length > 0 && (
-              <GamesList
-                gamesArray={regularGames}
-                title={'Grundseriematcher'}
-                setShowModal={setShowAddGameModal}
-                setGameData={setGameData}
-                ref={(el) => (categoryRefs.current['regular'] = el)}
-                seriesInfo={seriesInfo}
-              />
-            )}
+        <div className="mx-1 mt-2 grid grid-cols-1 lg:grid-cols-2 xl:mx-0">
+          {games.filter((game) => game.played === true).length > 0 && (
+            <div>
+              <h1 className="text-[1rem] font-bold md:text-[1.25rem]">
+                Spelade
+              </h1>
+              <div className="w-full px-2 xl:px-0">
+                {playedFinalGames.length > 0 && (
+                  <GamesList
+                    gamesArray={playedFinalGames}
+                    title={'Final'}
+                    setShowModal={setShowAddGameModal}
+                    setGameData={setGameData}
+                    seriesInfo={seriesInfo}
+                    played
+                  />
+                )}
+                {playedSemiGames.length > 0 && (
+                  <GamesList
+                    gamesArray={playedSemiGames}
+                    title={'Semifinaler'}
+                    setShowModal={setShowAddGameModal}
+                    setGameData={setGameData}
+                    seriesInfo={seriesInfo}
+                    played
+                  />
+                )}
+                {playedQuarterGames.length > 0 && (
+                  <GamesList
+                    gamesArray={playedQuarterGames}
+                    title={'Kvartsfinaler'}
+                    setShowModal={setShowAddGameModal}
+                    setGameData={setGameData}
+                    seriesInfo={seriesInfo}
+                    played
+                  />
+                )}
+                {playedEightGames.length > 0 && (
+                  <GamesList
+                    gamesArray={playedEightGames}
+                    title={'Åttondelsfinaler'}
+                    setShowModal={setShowAddGameModal}
+                    setGameData={setGameData}
+                    seriesInfo={seriesInfo}
+                    played
+                  />
+                )}
+                {playedRegularGames.length > 0 && (
+                  <GamesList
+                    gamesArray={playedRegularGames}
+                    title={'Grundseriematcher'}
+                    setShowModal={setShowAddGameModal}
+                    setGameData={setGameData}
+                    seriesInfo={seriesInfo}
+                    played
+                  />
+                )}
 
-            {qualificationGames.length > 0 && (
-              <GamesList
-                gamesArray={qualificationGames}
-                title={'Kvalmatcher'}
-                setShowModal={setShowAddGameModal}
-                setGameData={setGameData}
-                ref={(el) => (categoryRefs.current['qualification'] = el)}
-                seriesInfo={seriesInfo}
-              />
-            )}
-            {user && (
-              <div>
-                <ButtonComponent
-                  clickFunctions={() => setShowAddGameModal(true)}
-                >
-                  Lägg till Match
-                </ButtonComponent>
+                {playedQualificationGames.length > 0 && (
+                  <GamesList
+                    gamesArray={playedQualificationGames}
+                    title={'Kvalmatcher'}
+                    setShowModal={setShowAddGameModal}
+                    setGameData={setGameData}
+                    seriesInfo={seriesInfo}
+                    played
+                  />
+                )}
+                {user && (
+                  <div>
+                    <ButtonComponent
+                      clickFunctions={() => setShowAddGameModal(true)}
+                    >
+                      Lägg till Match
+                    </ButtonComponent>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
+          )}
+          {games.filter((game) => game.played === false).length > 0 && (
+            <div>
+              <h1 className="text-[1rem] font-bold md:text-[1.25rem]">
+                Kommande
+              </h1>
+              <div className="w-full px-2 xl:px-0">
+                {unplayedFinalGames.length > 0 && (
+                  <GamesList
+                    gamesArray={unplayedFinalGames}
+                    title={'Final'}
+                    setShowModal={setShowAddGameModal}
+                    setGameData={setGameData}
+                    seriesInfo={seriesInfo}
+                  />
+                )}
+                {unplayedSemiGames.length > 0 && (
+                  <GamesList
+                    gamesArray={unplayedSemiGames}
+                    title={'Semifinaler'}
+                    setShowModal={setShowAddGameModal}
+                    setGameData={setGameData}
+                    seriesInfo={seriesInfo}
+                  />
+                )}
+                {unplayedQuarterGames.length > 0 && (
+                  <GamesList
+                    gamesArray={unplayedQuarterGames}
+                    title={'Kvartsfinaler'}
+                    setShowModal={setShowAddGameModal}
+                    setGameData={setGameData}
+                    seriesInfo={seriesInfo}
+                  />
+                )}
+                {unplayedEightGames.length > 0 && (
+                  <GamesList
+                    gamesArray={unplayedEightGames}
+                    title={'Åttondelsfinaler'}
+                    setShowModal={setShowAddGameModal}
+                    setGameData={setGameData}
+                    seriesInfo={seriesInfo}
+                  />
+                )}
+                {unplayedRegularGames.length > 0 && (
+                  <GamesList
+                    gamesArray={unplayedRegularGames}
+                    title={'Grundseriematcher'}
+                    setShowModal={setShowAddGameModal}
+                    setGameData={setGameData}
+                    seriesInfo={seriesInfo}
+                  />
+                )}
+
+                {unplayedQualificationGames.length > 0 && (
+                  <GamesList
+                    gamesArray={unplayedQualificationGames}
+                    title={'Kvalmatcher'}
+                    setShowModal={setShowAddGameModal}
+                    setGameData={setGameData}
+                    seriesInfo={seriesInfo}
+                  />
+                )}
+                {user && (
+                  <div>
+                    <ButtonComponent
+                      clickFunctions={() => setShowAddGameModal(true)}
+                    >
+                      Lägg till Match
+                    </ButtonComponent>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
       {showAddGameModal ? (
@@ -276,19 +374,20 @@ const Games = ({ seasonId }) => {
         </>
       ) : null}
 
-      <div ref={(el) => (categoryRefs.current['bottom'] = el)}></div>
+      <div ref={bottomRef}></div>
       <div className="sticky bottom-0 z-20 flex flex-row items-center justify-center gap-2 bg-[#f4f5f5]">
-        {categoryArray.map((cat) => {
-          return (
-            <div
-              key={cat}
-              onClick={(event) => scrollTo(event, cat)}
-              className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
-            >
-              {groupConstant[cat]}
-            </div>
-          )
-        })}
+        <div
+          onClick={(event) => scrollTo(event, topRef)}
+          className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
+        >
+          Scrolla upp
+        </div>
+        <div
+          onClick={(event) => scrollTo(event, bottomRef)}
+          className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
+        >
+          Scrolla ner
+        </div>
       </div>
     </div>
   )

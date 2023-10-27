@@ -58,7 +58,7 @@ const Season = () => {
             </Link>
           </div>
           <div className="mx-16">
-            <h2 className="text-center text-base font-bold leading-4 sm:text-xl lg:text-2xl">
+            <h2 className="text-center text-[12px] font-bold sm:text-xl lg:text-2xl">
               Säsong{' '}
               {seasonId < 1964 ? `${seasonId}` : `${seasonId - 1}/${seasonId}`}{' '}
               {women ? 'Damer' : 'Herrar'}

@@ -46,8 +46,8 @@ const SeasonStats = ({ seasonId }) => {
 
   if (women && (seasonId === 1973 || seasonId === 1974)) {
     return (
-      <div className="mx-auto mt-4 grid place-items-center font-inter font-bold text-[#011d29]">
-        Statistik saknas för denna säsong.
+      <div className="mx-auto mt-4 grid place-items-center py-5 font-inter text-sm font-bold text-[#011d29] md:text-base">
+        <p className="mx-10 text-center">Statistik saknas för denna säsong.</p>
       </div>
     )
   }
@@ -175,7 +175,7 @@ const SeasonStats = ({ seasonId }) => {
           <div>
             <div className="statsCard">
               <div className="name">Antal matcher: </div>
-              <div className="count">{gamesCountTotal.count}</div>
+              <div className="count">{gamesCountTotal?.count}</div>
             </div>
 
             {sortStatsCat(gamesCountTotalCat).map((cat) => {
@@ -185,20 +185,24 @@ const SeasonStats = ({ seasonId }) => {
                   className="statsCard"
                 >
                   <div className="name">{groupConstant[cat.category]}</div>
-                  <div className="count">{cat.count}</div>
+                  <div className="count">{cat?.count}</div>
                 </div>
               )
             })}
           </div>
           <div>
-            <div className="statsCard">
-              <div className="name">Vinster hemmalag: </div>
-              <div className="count">{winCountHomeTeam.count}</div>
-            </div>
-            <div className="statsCard">
-              <div className="name">Vinster bortalag: </div>
-              <div className="count">{winCountAwayTeam?.count}</div>
-            </div>
+            {winCountHomeTeam?.count > 0 && (
+              <div className="statsCard">
+                <div className="name">Vinster hemmalag: </div>
+                <div className="count">{winCountHomeTeam?.count}</div>
+              </div>
+            )}
+            {winCountAwayTeam?.count > 0 && (
+              <div className="statsCard">
+                <div className="name">Vinster bortalag: </div>
+                <div className="count">{winCountAwayTeam?.count}</div>
+              </div>
+            )}
             {drawCount?.count > 0 && (
               <div className="statsCard">
                 <div className="name">Oavgjort: </div>
@@ -207,30 +211,34 @@ const SeasonStats = ({ seasonId }) => {
             )}
           </div>
           <div>
-            <div className="statsCard">
-              <div className="name">Vinster hemmalag: </div>
-              <div className="count">
-                {`${(
-                  (winCountHomeTeam.count / gamesCountTotal.count) *
-                  100
-                ).toFixed(1)}%`}
+            {winCountHomeTeam?.count > 0 && (
+              <div className="statsCard">
+                <div className="name">Vinster hemmalag: </div>
+                <div className="count">
+                  {`${(
+                    (winCountHomeTeam?.count / gamesCountTotal?.count) *
+                    100
+                  ).toFixed(1)}%`}
+                </div>
               </div>
-            </div>
-            <div className="statsCard">
-              <div className="name">Vinster bortalag: </div>
-              <div className="count">
-                {`${(
-                  (winCountAwayTeam?.count / gamesCountTotal.count) *
-                  100
-                ).toFixed(1)}%`}
+            )}
+            {winCountAwayTeam?.count > 0 && (
+              <div className="statsCard">
+                <div className="name">Vinster bortalag: </div>
+                <div className="count">
+                  {`${(
+                    (winCountAwayTeam?.count / gamesCountTotal?.count) *
+                    100
+                  ).toFixed(1)}%`}
+                </div>
               </div>
-            </div>
+            )}
             {drawCount?.count > 0 && (
               <div className="statsCard">
                 <div className="name">Oavgjort: </div>
                 <div className="count">
                   {`${(
-                    (drawCount?.count / 2 / gamesCountTotal.count) *
+                    (drawCount?.count / 2 / gamesCountTotal?.count) *
                     100
                   ).toFixed(1)}%`}
                 </div>
@@ -255,7 +263,7 @@ const SeasonStats = ({ seasonId }) => {
                       className="statsCard"
                     >
                       <div className="name">{groupConstant[cat.category]}</div>
-                      <div className="count">{cat.count}</div>
+                      <div className="count">{cat?.count}</div>
                     </div>
                   )
                 })}
@@ -271,7 +279,7 @@ const SeasonStats = ({ seasonId }) => {
                       className="statsCard"
                     >
                       <div className="name">{groupConstant[cat.category]}</div>
-                      <div className="count">{cat.count}</div>
+                      <div className="count">{cat?.count}</div>
                     </div>
                   )
                 })}
@@ -290,7 +298,7 @@ const SeasonStats = ({ seasonId }) => {
                         <div className="name">
                           {groupConstant[cat.category]}
                         </div>
-                        <div className="count">{cat.count / 2}</div>
+                        <div className="count">{cat?.count / 2}</div>
                       </div>
                     )
                   })}
@@ -317,7 +325,7 @@ const SeasonStats = ({ seasonId }) => {
                     >
                       <div className="name">{groupConstant[cat.category]}</div>
                       <div className="count">{`${(
-                        (cat.count /
+                        (cat?.count /
                           gamesCountTotalCat.find(
                             (category) => category.category === cat.category,
                           ).count) *
@@ -339,7 +347,7 @@ const SeasonStats = ({ seasonId }) => {
                     >
                       <div className="name">{groupConstant[cat.category]}</div>
                       <div className="count">{`${(
-                        (cat.count /
+                        (cat?.count /
                           gamesCountTotalCat.find(
                             (category) => category.category === cat.category,
                           ).count) *
@@ -364,7 +372,7 @@ const SeasonStats = ({ seasonId }) => {
                           {groupConstant[cat.category]}
                         </div>
                         <div className="count">{`${(
-                          (cat.count /
+                          (cat?.count /
                             2 /
                             gamesCountTotalCat.find(
                               (category) => category.category === cat.category,
@@ -380,432 +388,442 @@ const SeasonStats = ({ seasonId }) => {
           </div>
         )}
       </div>
-      <h4 className="ml-2 font-bold md:text-lg xl:ml-0">Målstatistik</h4>
-      <div className="grid grid-cols-1 gap-y-4 pt-2 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:gap-x-44">
+      {goalsScoredTotal.data > 0 && (
         <div>
-          <div className="statsCard">
-            <div className="name">Antal mål: </div>
-            <div className="count">{parseInt(goalsScoredTotal.data) / 2}</div>
-          </div>
-
-          {sortStatsCat(goalsScoredTotalCat).map((cat) => {
-            return (
-              <div
-                key={`${cat.category}-${Math.random()}`}
-                className="statsCard"
-              >
-                <div className="name">{groupConstant[cat.category]}</div>
-                <div className="count">{parseInt(cat.data) / 2}</div>
-              </div>
-            )
-          })}
-        </div>
-        <div>
-          <div className="statsCard">
-            <div className="name">Antal mål hemmalag: </div>
-            <div className="count">{goalsScoredHomeTotal.data}</div>
-          </div>
-
-          {sortStatsCat(goalsScoredHomeTotalCat).map((cat) => {
-            return (
-              <div
-                key={`${cat.category}-${Math.random()}`}
-                className="statsCard"
-              >
-                <div className="name">{groupConstant[cat.category]}</div>
-                <div className="count">{cat.data}</div>
-              </div>
-            )
-          })}
-        </div>
-        <div>
-          <div className="statsCard">
-            <div className="name">Antal mål bortalag: </div>
-            <div className="count">{goalsScoredAwayTotal.data}</div>
-          </div>
-
-          {sortStatsCat(goalsScoredAwayTotalCat).map((cat) => {
-            return (
-              <div
-                key={`${cat.category}-${Math.random()}`}
-                className="statsCard"
-              >
-                <div className="name">{groupConstant[cat.category]}</div>
-                <div className="count">{cat.data}</div>
-              </div>
-            )
-          })}
-        </div>
-        <div>
-          <div className="statsCard">
-            <div className="name">Genomsnitt mål: </div>
-            <div className="count">{goalsScoredAverage.data}</div>
-          </div>
-
-          {sortStatsCat(goalsScoredAverageCat).map((cat) => {
-            return (
-              <div
-                key={`${cat.category}-${Math.random()}`}
-                className="statsCard"
-              >
-                <div className="name">{groupConstant[cat.category]}</div>
-                <div className="count">{cat.data}</div>
-              </div>
-            )
-          })}
-        </div>
-        <div>
-          <div className="statsCard">
-            <div className="name">Genomsnitt mål hemmalag: </div>
-            <div className="count">{goalsScoredHomeAverage.data}</div>
-          </div>
-
-          {sortStatsCat(goalsScoredHomeAverageCat).map((cat) => {
-            return (
-              <div
-                key={`${cat.category}-${Math.random()}`}
-                className="statsCard"
-              >
-                <div className="name">{groupConstant[cat.category]}</div>
-                <div className="count">{cat.data}</div>
-              </div>
-            )
-          })}
-        </div>
-        <div>
-          <div className="statsCard">
-            <div className="name">Genomsnitt mål bortalag: </div>
-            <div className="count">{goalsScoredAwayAverage.data}</div>
-          </div>
-
-          {sortStatsCat(goalsScoredAwayAverageCat).map((cat) => {
-            return (
-              <div
-                key={`${cat.category}-${Math.random()}`}
-                className="statsCard"
-              >
-                <div className="name">{groupConstant[cat.category]}</div>
-                <div className="count">{cat.data}</div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-      <h4 className="ml-2 font-bold md:text-lg xl:ml-0">Resultat</h4>
-      <div className="grid grid-cols-1 gap-y-4 pt-2 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:gap-x-44">
-        {(streakDataLength > 0 || statsLength > 0) && (
-          <div>
-            <div className="streakCard">
-              <div className="head">Match(er) med flest antal mål:</div>
-              {!women && (
-                <div>
-                  {maxGoalsMen.map((game) => {
-                    return (
-                      <>
-                        <div
-                          key={`${game.casual_name}-${game.game_count}-${
-                            game.start_date
-                          }-${Math.random()}`}
-                          className="streak1st"
-                        >
-                          <div className="name">
-                            {game.home_name}-{game.away_name}
-                          </div>
-                          <div className="count">{game.resultat}</div>
-                        </div>
-                        <div className="streak2nd">
-                          <div className="dates">
-                            {dayjs(game.datum).format('D MMMM YYYY')}
-                          </div>
-                        </div>
-                      </>
-                    )
-                  })}
+          <h4 className="ml-2 font-bold md:text-lg xl:ml-0">Målstatistik</h4>
+          <div className="grid grid-cols-1 gap-y-4 pt-2 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:gap-x-44">
+            <div>
+              <div className="statsCard">
+                <div className="name">Antal mål: </div>
+                <div className="count">
+                  {parseInt(goalsScoredTotal.data) / 2}
                 </div>
-              )}
-              {women && (
-                <div>
-                  {maxGoalsWomen.map((game) => {
-                    return (
-                      <>
-                        <div
-                          key={`${game.casual_name}-${game.game_count}-${
-                            game.start_date
-                          }-${Math.random()}`}
-                          className="streak1st"
-                        >
-                          <div className="name">
-                            {game.home_name}-{game.away_name}
-                          </div>
-                          <div className="count">{game.resultat}</div>
-                        </div>
-                        <div className="streak2nd">
-                          <div className="dates">
-                            {dayjs(game.datum).format('D MMMM YYYY')}
-                          </div>
-                        </div>
-                      </>
-                    )
-                  })}
-                </div>
-              )}
+              </div>
+
+              {sortStatsCat(goalsScoredTotalCat).map((cat) => {
+                return (
+                  <div
+                    key={`${cat.category}-${Math.random()}`}
+                    className="statsCard"
+                  >
+                    <div className="name">{groupConstant[cat.category]}</div>
+                    <div className="count">{parseInt(cat.data) / 2}</div>
+                  </div>
+                )
+              })}
             </div>
-            <div className="streakCard">
-              <h6 className="head">Match(er) med minst antal mål:</h6>
-              {!women && (
-                <div>
-                  {minGoalsMen.map((game) => {
-                    return (
-                      <>
-                        <div
-                          key={`${game.casual_name}-${game.game_count}-${
-                            game.start_date
-                          }-${Math.random()}`}
-                          className="streak1st"
-                        >
-                          <div className="name">
-                            {game.home_name}-{game.away_name}
-                          </div>
-                          <div className="count">{game.resultat}</div>
-                        </div>
-                        <div className="streak2nd">
-                          <div className="dates">
-                            {dayjs(game.datum).format('D MMMM YYYY')}
-                          </div>
-                        </div>
-                      </>
-                    )
-                  })}
-                </div>
-              )}
-              {women && (
-                <div>
-                  {minGoalsWomen.map((game) => {
-                    return (
-                      <>
-                        <div
-                          key={`${game.casual_name}-${game.game_count}-${
-                            game.start_date
-                          }-${Math.random()}`}
-                          className="streak1st"
-                        >
-                          <div className="name">
-                            {game.home_name}-{game.away_name}
-                          </div>
-                          <div className="count">{game.resultat}</div>
-                        </div>
-                        <div className="streak2nd">
-                          <div className="dates">
-                            {dayjs(game.datum).format('D MMMM YYYY')}
-                          </div>
-                        </div>
-                      </>
-                    )
-                  })}
-                </div>
-              )}
+            <div>
+              <div className="statsCard">
+                <div className="name">Antal mål hemmalag: </div>
+                <div className="count">{goalsScoredHomeTotal.data}</div>
+              </div>
+
+              {sortStatsCat(goalsScoredHomeTotalCat).map((cat) => {
+                return (
+                  <div
+                    key={`${cat.category}-${Math.random()}`}
+                    className="statsCard"
+                  >
+                    <div className="name">{groupConstant[cat.category]}</div>
+                    <div className="count">{cat.data}</div>
+                  </div>
+                )
+              })}
             </div>
-            <div className="streakCard">
-              <h6 className="head">Match(er) med störst målskillnad:</h6>
-              {!women && (
-                <div>
-                  {maxDiffMen.map((game) => {
-                    return (
-                      <>
-                        <div
-                          key={`${game.casual_name}-${game.game_count}-${
-                            game.start_date
-                          }-${Math.random()}`}
-                          className="streak1st"
-                        >
-                          <div className="name">
-                            {game.home_name}-{game.away_name}
-                          </div>
-                          <div className="count">{game.resultat}</div>
-                        </div>
-                        <div className="streak2nd">
-                          <div className="dates">
-                            {dayjs(game.datum).format('D MMMM YYYY')}
-                          </div>
-                        </div>
-                      </>
-                    )
-                  })}
-                </div>
-              )}
-              {women && (
-                <div>
-                  {maxDiffWomen.map((game) => {
-                    return (
-                      <>
-                        <div
-                          key={`${game.casual_name}-${game.game_count}-${
-                            game.start_date
-                          }-${Math.random()}`}
-                          className="streak1st"
-                        >
-                          <div className="name">
-                            {game.home_name}-{game.away_name}
-                          </div>
-                          <div className="count">{game.resultat}</div>
-                        </div>
-                        <div className="streak2nd">
-                          <div className="dates">
-                            {dayjs(game.datum).format('D MMMM YYYY')}
-                          </div>
-                        </div>
-                      </>
-                    )
-                  })}
-                </div>
-              )}
+            <div>
+              <div className="statsCard">
+                <div className="name">Antal mål bortalag: </div>
+                <div className="count">{goalsScoredAwayTotal.data}</div>
+              </div>
+
+              {sortStatsCat(goalsScoredAwayTotalCat).map((cat) => {
+                return (
+                  <div
+                    key={`${cat.category}-${Math.random()}`}
+                    className="statsCard"
+                  >
+                    <div className="name">{groupConstant[cat.category]}</div>
+                    <div className="count">{cat.data}</div>
+                  </div>
+                )
+              })}
+            </div>
+            <div>
+              <div className="statsCard">
+                <div className="name">Genomsnitt mål: </div>
+                <div className="count">{goalsScoredAverage.data}</div>
+              </div>
+
+              {sortStatsCat(goalsScoredAverageCat).map((cat) => {
+                return (
+                  <div
+                    key={`${cat.category}-${Math.random()}`}
+                    className="statsCard"
+                  >
+                    <div className="name">{groupConstant[cat.category]}</div>
+                    <div className="count">{cat.data}</div>
+                  </div>
+                )
+              })}
+            </div>
+            <div>
+              <div className="statsCard">
+                <div className="name">Genomsnitt mål hemmalag: </div>
+                <div className="count">{goalsScoredHomeAverage.data}</div>
+              </div>
+
+              {sortStatsCat(goalsScoredHomeAverageCat).map((cat) => {
+                return (
+                  <div
+                    key={`${cat.category}-${Math.random()}`}
+                    className="statsCard"
+                  >
+                    <div className="name">{groupConstant[cat.category]}</div>
+                    <div className="count">{cat.data}</div>
+                  </div>
+                )
+              })}
+            </div>
+            <div>
+              <div className="statsCard">
+                <div className="name">Genomsnitt mål bortalag: </div>
+                <div className="count">{goalsScoredAwayAverage.data}</div>
+              </div>
+
+              {sortStatsCat(goalsScoredAwayAverageCat).map((cat) => {
+                return (
+                  <div
+                    key={`${cat.category}-${Math.random()}`}
+                    className="statsCard"
+                  >
+                    <div className="name">{groupConstant[cat.category]}</div>
+                    <div className="count">{cat.data}</div>
+                  </div>
+                )
+              })}
             </div>
           </div>
-        )}
-        {streakDataLength > 0 && (
-          <div>
-            {unbeatenStreak.length > 0 && (
-              <div className="streakCard">
-                <h6 className="head">Matcher i rad utan förlust:</h6>
-
-                {unbeatenStreak?.map((team) => {
-                  return (
-                    <>
-                      <div
-                        key={`${team.casual_name}-${team.game_count}-${
-                          team.start_date
-                        }-${Math.random()}`}
-                        className="streak1st"
-                      >
-                        <div className="name">{team.casual_name}</div>
-                        <div className="count">{team.game_count}</div>
-                      </div>
-                      <div className="streak2nd">
-                        <div className="dates">
-                          {dayjs(team.start_date).format('D MMMM YYYY')} -
-                          {dayjs(team.end_date).format('D MMMM YYYY')}
-                        </div>
-                      </div>
-                    </>
-                  )
-                })}
+        </div>
+      )}
+      {(streakDataLength > 0 || statsLength > 0) && (
+        <div>
+          <h4 className="ml-2 font-bold md:text-lg xl:ml-0">Resultat</h4>
+          <div className="grid grid-cols-1 gap-y-4 pt-2 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:gap-x-44">
+            {(streakDataLength > 0 || statsLength > 0) && (
+              <div>
+                <div className="streakCard">
+                  <div className="head">Match(er) med flest antal mål:</div>
+                  {!women && (
+                    <div>
+                      {maxGoalsMen.map((game) => {
+                        return (
+                          <>
+                            <div
+                              key={`${game.casual_name}-${game.game_count}-${
+                                game.start_date
+                              }-${Math.random()}`}
+                              className="streak1st"
+                            >
+                              <div className="name">
+                                {game.home_name}-{game.away_name}
+                              </div>
+                              <div className="count">{game.resultat}</div>
+                            </div>
+                            <div className="streak2nd">
+                              <div className="dates">
+                                {dayjs(game.datum).format('D MMMM YYYY')}
+                              </div>
+                            </div>
+                          </>
+                        )
+                      })}
+                    </div>
+                  )}
+                  {women && (
+                    <div>
+                      {maxGoalsWomen.map((game) => {
+                        return (
+                          <>
+                            <div
+                              key={`${game.casual_name}-${game.game_count}-${
+                                game.start_date
+                              }-${Math.random()}`}
+                              className="streak1st"
+                            >
+                              <div className="name">
+                                {game.home_name}-{game.away_name}
+                              </div>
+                              <div className="count">{game.resultat}</div>
+                            </div>
+                            <div className="streak2nd">
+                              <div className="dates">
+                                {dayjs(game.datum).format('D MMMM YYYY')}
+                              </div>
+                            </div>
+                          </>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+                <div className="streakCard">
+                  <h6 className="head">Match(er) med minst antal mål:</h6>
+                  {!women && (
+                    <div>
+                      {minGoalsMen.map((game) => {
+                        return (
+                          <>
+                            <div
+                              key={`${game.casual_name}-${game.game_count}-${
+                                game.start_date
+                              }-${Math.random()}`}
+                              className="streak1st"
+                            >
+                              <div className="name">
+                                {game.home_name}-{game.away_name}
+                              </div>
+                              <div className="count">{game.resultat}</div>
+                            </div>
+                            <div className="streak2nd">
+                              <div className="dates">
+                                {dayjs(game.datum).format('D MMMM YYYY')}
+                              </div>
+                            </div>
+                          </>
+                        )
+                      })}
+                    </div>
+                  )}
+                  {women && (
+                    <div>
+                      {minGoalsWomen.map((game) => {
+                        return (
+                          <>
+                            <div
+                              key={`${game.casual_name}-${game.game_count}-${
+                                game.start_date
+                              }-${Math.random()}`}
+                              className="streak1st"
+                            >
+                              <div className="name">
+                                {game.home_name}-{game.away_name}
+                              </div>
+                              <div className="count">{game.resultat}</div>
+                            </div>
+                            <div className="streak2nd">
+                              <div className="dates">
+                                {dayjs(game.datum).format('D MMMM YYYY')}
+                              </div>
+                            </div>
+                          </>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+                <div className="streakCard">
+                  <h6 className="head">Match(er) med störst målskillnad:</h6>
+                  {!women && (
+                    <div>
+                      {maxDiffMen.map((game) => {
+                        return (
+                          <>
+                            <div
+                              key={`${game.casual_name}-${game.game_count}-${
+                                game.start_date
+                              }-${Math.random()}`}
+                              className="streak1st"
+                            >
+                              <div className="name">
+                                {game.home_name}-{game.away_name}
+                              </div>
+                              <div className="count">{game.resultat}</div>
+                            </div>
+                            <div className="streak2nd">
+                              <div className="dates">
+                                {dayjs(game.datum).format('D MMMM YYYY')}
+                              </div>
+                            </div>
+                          </>
+                        )
+                      })}
+                    </div>
+                  )}
+                  {women && (
+                    <div>
+                      {maxDiffWomen.map((game) => {
+                        return (
+                          <>
+                            <div
+                              key={`${game.casual_name}-${game.game_count}-${
+                                game.start_date
+                              }-${Math.random()}`}
+                              className="streak1st"
+                            >
+                              <div className="name">
+                                {game.home_name}-{game.away_name}
+                              </div>
+                              <div className="count">{game.resultat}</div>
+                            </div>
+                            <div className="streak2nd">
+                              <div className="dates">
+                                {dayjs(game.datum).format('D MMMM YYYY')}
+                              </div>
+                            </div>
+                          </>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
+            {streakDataLength > 0 && (
+              <div>
+                {unbeatenStreak.length > 0 && (
+                  <div className="streakCard">
+                    <h6 className="head">Matcher i rad utan förlust:</h6>
 
-            {winStreak.length > 0 && (
-              <div className="streakCard">
-                <h6 className="head">Matcher i rad med vinst:</h6>
+                    {unbeatenStreak?.map((team) => {
+                      return (
+                        <>
+                          <div
+                            key={`${team.casual_name}-${team.game_count}-${
+                              team.start_date
+                            }-${Math.random()}`}
+                            className="streak1st"
+                          >
+                            <div className="name">{team.casual_name}</div>
+                            <div className="count">{team.game_count}</div>
+                          </div>
+                          <div className="streak2nd">
+                            <div className="dates">
+                              {dayjs(team.start_date).format('D MMMM YYYY')} -
+                              {dayjs(team.end_date).format('D MMMM YYYY')}
+                            </div>
+                          </div>
+                        </>
+                      )
+                    })}
+                  </div>
+                )}
 
-                {winStreak?.map((team) => {
-                  return (
-                    <>
-                      <div
-                        key={`${team.casual_name}-${team.game_count}-${
-                          team.start_date
-                        }-${Math.random()}`}
-                        className="streak1st"
-                      >
-                        <div className="name">{team.casual_name}</div>
-                        <div className="count">{team.game_count}</div>
-                      </div>
-                      <div className="streak2nd">
-                        <div className="dates">
-                          {dayjs(team.start_date).format('D MMMM YYYY')} -
-                          {dayjs(team.end_date).format('D MMMM YYYY')}
-                        </div>
-                      </div>
-                    </>
-                  )
-                })}
-              </div>
-            )}
+                {winStreak.length > 0 && (
+                  <div className="streakCard">
+                    <h6 className="head">Matcher i rad med vinst:</h6>
 
-            {drawStreak.length > 0 && (
-              <div className="streakCard">
-                <h6 className="head">Matcher i rad med oavgjort:</h6>
+                    {winStreak?.map((team) => {
+                      return (
+                        <>
+                          <div
+                            key={`${team.casual_name}-${team.game_count}-${
+                              team.start_date
+                            }-${Math.random()}`}
+                            className="streak1st"
+                          >
+                            <div className="name">{team.casual_name}</div>
+                            <div className="count">{team.game_count}</div>
+                          </div>
+                          <div className="streak2nd">
+                            <div className="dates">
+                              {dayjs(team.start_date).format('D MMMM YYYY')} -
+                              {dayjs(team.end_date).format('D MMMM YYYY')}
+                            </div>
+                          </div>
+                        </>
+                      )
+                    })}
+                  </div>
+                )}
 
-                {drawStreak?.map((team) => {
-                  return (
-                    <>
-                      <div
-                        key={`${team.casual_name}-${team.game_count}-${
-                          team.start_date
-                        }-${Math.random()}`}
-                        className="streak1st"
-                      >
-                        <div className="name">{team.casual_name}</div>
-                        <div className="count">{team.game_count}</div>
-                      </div>
-                      <div className="streak2nd">
-                        <div className="dates">
-                          {dayjs(team.start_date).format('D MMMM YYYY')} -
-                          {dayjs(team.end_date).format('D MMMM YYYY')}
-                        </div>
-                      </div>
-                    </>
-                  )
-                })}
-              </div>
-            )}
+                {drawStreak.length > 0 && (
+                  <div className="streakCard">
+                    <h6 className="head">Matcher i rad med oavgjort:</h6>
 
-            {noWinStreak.length > 0 && (
-              <div className="streakCard">
-                <div className="head">Matcher i rad utan vinst:</div>
+                    {drawStreak?.map((team) => {
+                      return (
+                        <>
+                          <div
+                            key={`${team.casual_name}-${team.game_count}-${
+                              team.start_date
+                            }-${Math.random()}`}
+                            className="streak1st"
+                          >
+                            <div className="name">{team.casual_name}</div>
+                            <div className="count">{team.game_count}</div>
+                          </div>
+                          <div className="streak2nd">
+                            <div className="dates">
+                              {dayjs(team.start_date).format('D MMMM YYYY')} -
+                              {dayjs(team.end_date).format('D MMMM YYYY')}
+                            </div>
+                          </div>
+                        </>
+                      )
+                    })}
+                  </div>
+                )}
 
-                {noWinStreak?.map((team) => {
-                  return (
-                    <>
-                      <div
-                        key={`${team.casual_name}-${team.game_count}-${
-                          team.start_date
-                        }-${Math.random()}`}
-                        className="streak1st"
-                      >
-                        <div className="name">{team.casual_name}</div>
-                        <div className="count">{team.game_count}</div>
-                      </div>
-                      <div className="streak2nd">
-                        <div className="dates">
-                          {dayjs(team.start_date).format('D MMMM YYYY')} -
-                          {dayjs(team.end_date).format('D MMMM YYYY')}
-                        </div>
-                      </div>
-                    </>
-                  )
-                })}
-              </div>
-            )}
+                {noWinStreak.length > 0 && (
+                  <div className="streakCard">
+                    <div className="head">Matcher i rad utan vinst:</div>
 
-            {losingStreak.length > 0 && (
-              <div className="streakCard">
-                <div className="head">Matcher i rad med förlust:</div>
+                    {noWinStreak?.map((team) => {
+                      return (
+                        <>
+                          <div
+                            key={`${team.casual_name}-${team.game_count}-${
+                              team.start_date
+                            }-${Math.random()}`}
+                            className="streak1st"
+                          >
+                            <div className="name">{team.casual_name}</div>
+                            <div className="count">{team.game_count}</div>
+                          </div>
+                          <div className="streak2nd">
+                            <div className="dates">
+                              {dayjs(team.start_date).format('D MMMM YYYY')} -
+                              {dayjs(team.end_date).format('D MMMM YYYY')}
+                            </div>
+                          </div>
+                        </>
+                      )
+                    })}
+                  </div>
+                )}
 
-                {losingStreak?.map((team) => {
-                  return (
-                    <>
-                      <div
-                        key={`${team.casual_name}-${team.game_count}-${
-                          team.start_date
-                        }-${Math.random()}`}
-                        className="streak1st"
-                      >
-                        <div className="name">{team.casual_name}</div>
-                        <div className="count">{team.game_count}</div>
-                      </div>
-                      <div className="streak2nd">
-                        <div className="dates">
-                          {dayjs(team.start_date).format('D MMMM YYYY')} -
-                          {dayjs(team.end_date).format('D MMMM YYYY')}
-                        </div>
-                      </div>
-                    </>
-                  )
-                })}
+                {losingStreak.length > 0 && (
+                  <div className="streakCard">
+                    <div className="head">Matcher i rad med förlust:</div>
+
+                    {losingStreak?.map((team) => {
+                      return (
+                        <>
+                          <div
+                            key={`${team.casual_name}-${team.game_count}-${
+                              team.start_date
+                            }-${Math.random()}`}
+                            className="streak1st"
+                          >
+                            <div className="name">{team.casual_name}</div>
+                            <div className="count">{team.game_count}</div>
+                          </div>
+                          <div className="streak2nd">
+                            <div className="dates">
+                              {dayjs(team.start_date).format('D MMMM YYYY')} -
+                              {dayjs(team.end_date).format('D MMMM YYYY')}
+                            </div>
+                          </div>
+                        </>
+                      )
+                    })}
+                  </div>
+                )}
               </div>
             )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   )
 }

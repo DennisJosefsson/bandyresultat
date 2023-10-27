@@ -1,14 +1,17 @@
-import { useContext, useState, useEffect, forwardRef } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { UserContext, TeamPreferenceContext } from '../../contexts/contexts'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 
 dayjs.locale('sv')
 
-const GamesList = forwardRef(function GamesList(
-  { gamesArray, title, setShowModal, setGameData, seriesInfo },
-  ref,
-) {
+const GamesList = ({
+  gamesArray,
+  title,
+  setShowModal,
+  setGameData,
+  seriesInfo,
+}) => {
   const { user } = useContext(UserContext)
   const { favTeams } = useContext(TeamPreferenceContext)
   const [width, setWidth] = useState(window.innerWidth)
@@ -21,10 +24,8 @@ const GamesList = forwardRef(function GamesList(
     return () => window.removeEventListener('resize', handleWindowResize)
   }, [])
   return (
-    <div className="mb-6 w-full font-inter" ref={ref}>
-      <h1 className="text-[1rem] font-bold md:text-[1.25rem] xl:text-[1.5rem]">
-        {title}
-      </h1>
+    <div className="mb-6 w-full font-inter">
+      <h1 className="text-[1rem] font-bold md:text-[1.25rem]">{title}</h1>
       <div>
         {gamesArray.map((group) => {
           return (
@@ -58,12 +59,12 @@ const GamesList = forwardRef(function GamesList(
                           {dayjs(date.date).format('D MMMM YYYY')}
                         </h3>
                       )}
-                      <div className="w-full sm:w-2/3">
+                      <div className="w-full">
                         {date.games.map((game) => {
                           return (
                             <div
                               key={game.gameId}
-                              className="mb-1 flex flex-row justify-between bg-slate-300 px-2 py-0.5 text-[10px] md:text-base xl:mb-2 xl:w-[36rem] xl:py-1"
+                              className="mb-1 flex flex-row items-center justify-between bg-slate-300 px-2 py-0.5 text-[10px] md:text-base xl:mb-2 xl:w-[36rem] xl:py-1"
                             >
                               <span
                                 className={
@@ -88,13 +89,17 @@ const GamesList = forwardRef(function GamesList(
                                   ? `${game.awayTeam.casualName}`
                                   : `${game.awayTeam.name}`}
                               </span>
-                              <span className="w-1 text-right xl:w-4">
-                                {game.homeGoal}
+                              <span className="w-10 text-right tabular-nums">
+                                {game.result}
                               </span>
-                              <span className="w-1">-</span>
-                              <span className="w-1 text-justify xl:w-4">
-                                {game.awayGoal}
-                              </span>
+
+                              {game.halftimeResult && (
+                                <>
+                                  <span className="ml-2 text-right text-[8px] tabular-nums md:text-sm">
+                                    ({game.halftimeResult})
+                                  </span>
+                                </>
+                              )}
                               {user && (
                                 <span
                                   className="cursor-pointer"
@@ -120,6 +125,6 @@ const GamesList = forwardRef(function GamesList(
       </div>
     </div>
   )
-})
+}
 
 export default GamesList
