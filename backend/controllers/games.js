@@ -3729,7 +3729,7 @@ router.get('/:gameId', async (req, res, next) => {
   }
 })
 
-router.post('/', authControl, async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   const { serieId } = await Serie.findOne({
     where: { seasonId: req.body.seasonId, serieGroupCode: req.body.group },
     raw: true,
@@ -3748,6 +3748,7 @@ router.post('/', authControl, async (req, res, next) => {
     halftimeAwayGoal: req.body.halftimeResult
       ? parseInt(req.body.halftimeResult.split('-')[1])
       : null,
+    played: req.body.result !== null ? true : false,
   }
 
   const [game, created] = await Game.upsert({ ...gameData })
@@ -3910,8 +3911,8 @@ const awayTeam = (gameData) => {
     return {
       gameId,
       seasonId,
-      team: homeTeamId,
-      opponent: awayTeamId,
+      team: awayTeamId,
+      opponent: homeTeamId,
       goalsScored: 0,
       goalsConceded: 0,
       goalDifference: 0,
