@@ -34,7 +34,6 @@ export const getSingleGame = async ({ gameId }) => {
 }
 
 export const postGame = async (newGameData) => {
-  console.log(newGameData)
   const response = await gamesApi.post('/', newGameData)
   return response.data
 }

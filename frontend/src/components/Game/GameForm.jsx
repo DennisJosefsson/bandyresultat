@@ -121,7 +121,7 @@ const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
     setNewGameData(formData)
   }
 
-  console.log(data)
+  
 
   return (
     <>
