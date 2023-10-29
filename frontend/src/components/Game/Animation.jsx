@@ -49,6 +49,7 @@ const Animation = ({ seasonId }) => {
         setGroup(groupArray[0])
       }
     }
+    setRound(0)
   }, [data, isLoading, error, women])
 
   useEffect(() => {
@@ -83,10 +84,14 @@ const Animation = ({ seasonId }) => {
     .filter((table) => table.women === women)
     .filter((game) => game.category === 'regular')
 
+  const seriesInfo = season.find((season) => season.women === women)
+    ? season.find((season) => season.women === women).series
+    : []
+
   if (women && seasonId < 1973) {
     return (
-      <div className="mx-auto mt-4 grid place-items-center font-inter text-[#011d29]">
-        <p>
+      <div className="mx-auto mt-4 grid place-items-center py-5 font-inter text-sm font-bold text-[#011d29] md:text-base">
+        <p className="mx-10 text-center">
           Första säsongen för damernas högsta serie var{' '}
           <Link to="/season/1973" className="font-bold">
             1972/73
@@ -113,7 +118,12 @@ const Animation = ({ seasonId }) => {
     unsortedRegularGames.filter((game) => game.result !== null),
   )
 
-  const animationArray = animationData(regularGames, teamArray, seriesArray)
+  const animationArray = animationData(
+    regularGames,
+    teamArray,
+    seriesArray,
+    seasonId,
+  )
 
   const groupName = seriesArray.find((serie) => serie.serieGroupCode === group)
     ? seriesArray.find((serie) => serie.serieGroupCode === group).serieName
@@ -218,13 +228,16 @@ const Animation = ({ seasonId }) => {
             <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-8">
               <div className="mx-2 xl:mx-0">
                 <div>
-                  {dateArray[round].date !== null && (
+                  {dateArray[round]?.date !== null && (
                     <span className="text-sm font-bold md:text-base">
-                      {dayjs(dateArray[round].date).format('D MMMM YYYY')}
+                      {dayjs(dateArray[round]?.date).format('D MMMM YYYY') !==
+                      'Invalid Date'
+                        ? dayjs(dateArray[round]?.date).format('D MMMM YYYY')
+                        : 'Saknar speldatum'}
                     </span>
                   )}
                 </div>
-                {dateArray[round].games.map((game) => {
+                {dateArray[round]?.games.map((game) => {
                   return (
                     <div
                       key={game.gameId}
@@ -282,7 +295,7 @@ const Animation = ({ seasonId }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {dateArray[round].table.map((team, index) => {
+                    {dateArray[round]?.table.map((team, index) => {
                       return (
                         <tr
                           key={`${team.teamId}-${index}`}
@@ -290,7 +303,7 @@ const Animation = ({ seasonId }) => {
                         >
                           <td className="pos">{team.position}</td>
                           <td className="team">{team.casualName}</td>
-                          <td className="opacity-40">
+                          <td className="text-slate-100">
                             {round > 0 &&
                               team.table.games > 0 &&
                               displayArrow(team.teamId)}
@@ -310,6 +323,15 @@ const Animation = ({ seasonId }) => {
                     })}
                   </tbody>
                 </table>
+                {seriesInfo.find((serie) => serie.serieGroupCode === group)
+                  .comment && (
+                  <p className="bg-white p-1 text-xs font-bold">
+                    {
+                      seriesInfo.find((serie) => serie.serieGroupCode === group)
+                        .comment
+                    }
+                  </p>
+                )}
               </div>
             </div>
           </div>

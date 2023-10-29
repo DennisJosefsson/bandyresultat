@@ -41,6 +41,10 @@
     @apply px-1 py-1 text-right xl:w-12;
   }
 
+  .season th.points {
+    @apply pl-1 pr-2;
+  }
+
   .season td {
     @apply px-1 py-1 text-right tabular-nums xl:py-2;
   }
@@ -51,6 +55,10 @@
 
   .season td.team {
     @apply px-1 py-1 text-left xl:py-2;
+  }
+
+  .season td.points {
+    @apply pl-1 pr-2;
   }
 
   .roundForRound th {

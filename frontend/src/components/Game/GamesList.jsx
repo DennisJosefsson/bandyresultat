@@ -108,7 +108,7 @@ const GamesList = ({
                                     setShowModal(true)
                                   }}
                                 >
-                                  [Ändra]
+                                  [Ä]
                                 </span>
                               )}
                             </div>

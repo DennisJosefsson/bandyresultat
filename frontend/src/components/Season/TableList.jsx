@@ -1,7 +1,13 @@
 import { useState, useEffect, useContext } from 'react'
 import { TeamPreferenceContext } from '../../contexts/contexts'
 
-const TableList = ({ tableArray, seriesInfo, bonusPoints, homeAwayTitle }) => {
+const TableList = ({
+  tableArray,
+  seriesInfo,
+  bonusPoints,
+  homeAwayTitle,
+  selectedTable,
+}) => {
   const [width, setWidth] = useState(window.innerWidth)
   const { favTeams } = useContext(TeamPreferenceContext)
   const breakpoint = 576
@@ -14,6 +20,7 @@ const TableList = ({ tableArray, seriesInfo, bonusPoints, homeAwayTitle }) => {
   }, [])
 
   const calculateBonusPoints = (group, teamId) => {
+    if (selectedTable !== 'all') return 0
     const bonus = bonusPoints.find((points) => points.group === group)
     if (bonus.bonusPoints === null) {
       return 0
@@ -33,11 +40,11 @@ const TableList = ({ tableArray, seriesInfo, bonusPoints, homeAwayTitle }) => {
         return (
           <div key={group.group} className="mb-6">
             {group.group.includes('Kval') && tableArray.length === 1 ? (
-              <h2 className="text-[0.75rem] font-bold lg:text-[1rem] xl:text-xl">
+              <h2 className="ml-1 text-[0.75rem] font-bold lg:text-[1rem] xl:ml-0 xl:text-xl">
                 Kvalgrupp {homeAwayTitle}
               </h2>
             ) : (
-              <h2 className="text-sm font-bold lg:text-base xl:text-xl">
+              <h2 className="ml-1 text-sm font-bold lg:text-base xl:ml-0 xl:text-xl">
                 {
                   seriesInfo.find(
                     (serie) => serie.serieGroupCode === group.group,
@@ -69,7 +76,9 @@ const TableList = ({ tableArray, seriesInfo, bonusPoints, homeAwayTitle }) => {
                     <th scope="col" className="twelve">
                       MS
                     </th>
-                    <th scope="col">P</th>
+                    <th scope="col" className="points">
+                      P
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -129,7 +138,7 @@ const TableList = ({ tableArray, seriesInfo, bonusPoints, homeAwayTitle }) => {
                           <td>{team.total_goals_scored}</td>
                           <td>{team.total_goals_conceded}</td>
                           <td>{team.total_goal_difference}</td>
-                          <td>
+                          <td className="points">
                             {Number(team.total_points) +
                               Number(
                                 calculateBonusPoints(group.group, team.team),
@@ -142,7 +151,7 @@ const TableList = ({ tableArray, seriesInfo, bonusPoints, homeAwayTitle }) => {
               </table>
               {seriesInfo.find((serie) => serie.serieGroupCode === group.group)
                 .comment && (
-                <p className="max-w-[564px] bg-white p-1 text-xs font-bold">
+                <p className="bg-white p-1 text-xs font-bold">
                   {
                     seriesInfo.find(
                       (serie) => serie.serieGroupCode === group.group,

@@ -2964,6 +2964,7 @@ router.get('/stats/:seasonId', async (req, res) => {
   })
 
   const goalsScoredAverage = await TeamGame.findAll({
+    where: { played: true },
     include: {
       model: Season,
       where: { year: { [Op.eq]: seasonName } },
@@ -2984,6 +2985,7 @@ router.get('/stats/:seasonId', async (req, res) => {
   })
 
   const goalsScoredAverageCat = await TeamGame.findAll({
+    where: { played: true },
     include: {
       model: Season,
       where: { year: { [Op.eq]: seasonName } },
@@ -3087,6 +3089,7 @@ router.get('/stats/:seasonId', async (req, res) => {
   })
 
   const gamesCountTotal = await Game.count({
+    where: { played: true },
     include: {
       model: Season,
       where: { year: { [Op.eq]: seasonName } },
@@ -3096,6 +3099,7 @@ router.get('/stats/:seasonId', async (req, res) => {
   })
 
   const gamesCountTotalCat = await Game.count({
+    where: { played: true },
     include: {
       model: Season,
       where: { year: { [Op.eq]: seasonName } },
@@ -3740,8 +3744,10 @@ router.post('/', async (req, res, next) => {
     serieId,
     homeTeamId: req.body.homeTeamId.value,
     awayTeamId: req.body.awayTeamId.value,
-    homeGoal: parseInt(req.body.result.split('-')[0]),
-    awayGoal: parseInt(req.body.result.split('-')[1]),
+    homeGoal:
+      req.body.result !== null ? parseInt(req.body.result.split('-')[0]) : null,
+    awayGoal:
+      req.body.result !== null ? parseInt(req.body.result.split('-')[1]) : null,
     halftimeHomeGoal: req.body.halftimeResult
       ? parseInt(req.body.halftimeResult.split('-')[0])
       : null,

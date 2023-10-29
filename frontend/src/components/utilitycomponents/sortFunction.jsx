@@ -171,7 +171,7 @@ export const filterOpposition = (array) => {
   return array.filter(callback)
 }
 
-export const animationData = (gameArray, teamArray, seriesArray) => {
+export const animationData = (gameArray, teamArray, seriesArray, seasonId) => {
   const teamSeriesArray = gameArray.map((group) => {
     let teamArray = []
     group.dates.forEach((date) =>
@@ -203,6 +203,26 @@ export const animationData = (gameArray, teamArray, seriesArray) => {
     }
   }
   const initTeamArray = (teamArray, group) => {
+    if (seasonId > 2023) {
+      return teamArray
+        .filter((team) => team.teamseason.qualification != true)
+        .map((team) => {
+          return {
+            teamId: team.teamId,
+            casualName: team.casualName,
+            table: {
+              position: 0,
+              games: 0,
+              wins: 0,
+              draws: 0,
+              lost: 0,
+              scoredGoals: 0,
+              concededGoals: 0,
+              points: 0 + Number(calculateBonusPoints(group, team.teamId)),
+            },
+          }
+        })
+    }
     return teamArray
       .filter((team) => team.teamseason.qualification != true)
       .filter((team) =>

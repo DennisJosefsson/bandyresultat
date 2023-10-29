@@ -1,5 +1,7 @@
 import { useQuery } from 'react-query'
 import { getTeams } from '../../requests/teams'
+import { useContext } from 'react'
+import { MenuContext } from '../../contexts/contexts'
 import Spinner from '../utilitycomponents/spinner'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
@@ -9,6 +11,7 @@ import 'leaflet/dist/leaflet.css'
 
 const Map = () => {
   const { data, isLoading, error } = useQuery(['teams'], getTeams)
+  const { open } = useContext(MenuContext)
   const navigate = useNavigate()
 
   if (isLoading) {
@@ -45,33 +48,35 @@ const Map = () => {
             </ButtonComponent>
           </div>
         </div>
-        <div id="map" className="h-[400px] w-screen max-w-xl p-2">
-          <MapContainer
-            center={[62, 15]}
-            zoom={4}
-            scrollWheelZoom={true}
-            className="h-[400px]"
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <MarkerClusterGroup chunkedLoading>
-              {data?.map((team) => {
-                const position = [team.lat, team.long]
-                return (
-                  <Marker key={team.teamId} position={position}>
-                    <Popup>
-                      <Link to={`/teams/${team.teamId}`}>
-                        {team.name} {team.women ? 'Dam' : 'Herr'}
-                      </Link>
-                    </Popup>
-                  </Marker>
-                )
-              })}
-            </MarkerClusterGroup>
-          </MapContainer>
-        </div>
+        {!open && (
+          <div id="map" className="h-[400px] w-screen max-w-xl p-2">
+            <MapContainer
+              center={[62, 15]}
+              zoom={4}
+              scrollWheelZoom={true}
+              className="h-[400px]"
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <MarkerClusterGroup chunkedLoading>
+                {data?.map((team) => {
+                  const position = [team.lat, team.long]
+                  return (
+                    <Marker key={team.teamId} position={position}>
+                      <Popup>
+                        <Link to={`/teams/${team.teamId}`}>
+                          {team.name} {team.women ? 'Dam' : 'Herr'}
+                        </Link>
+                      </Popup>
+                    </Marker>
+                  )
+                })}
+              </MarkerClusterGroup>
+            </MapContainer>
+          </div>
+        )}
       </div>
     </div>
   )

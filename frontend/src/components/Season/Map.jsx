@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { useQuery } from 'react-query'
-import { GenderContext } from '../../contexts/contexts'
+import { GenderContext, MenuContext } from '../../contexts/contexts'
 import { Link } from 'react-router-dom'
 import { getSingleSeason } from '../../requests/seasons'
 import Spinner from '../utilitycomponents/spinner'
@@ -14,6 +14,7 @@ const Map = ({ seasonId }) => {
     getSingleSeason(seasonId),
   )
   const { women } = useContext(GenderContext)
+  const { open } = useContext(MenuContext)
 
   if (isLoading) {
     return (
@@ -41,8 +42,8 @@ const Map = ({ seasonId }) => {
 
   if (women && seasonId < 1973) {
     return (
-      <div className="mx-auto mt-4 grid place-items-center font-inter text-[#011d29]">
-        <p>
+      <div className="mx-auto mt-4 grid place-items-center py-5 font-inter text-sm font-bold text-[#011d29] md:text-base">
+        <p className="mx-10 text-center">
           Första säsongen för damernas högsta serie var{' '}
           <Link to="/season/1973" className="font-bold">
             1972/73
@@ -81,37 +82,41 @@ const Map = ({ seasonId }) => {
   const bounds = new latLngBounds(latLongArray)
 
   return (
-    <div id="map" className="h-[400px] w-screen max-w-xl p-2">
-      <MapContainer
-        bounds={bounds}
-        center={[62, 15]}
-        zoom={4}
-        scrollWheelZoom={true}
-        className="h-[400px]"
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <MarkerClusterGroup chunkedLoading>
-          {teams.map((team) => {
-            const position = [team.lat, team.long]
-            return (
-              <Marker key={team.teamId} position={position}>
-                <Popup>{team.name}</Popup>
-              </Marker>
-            )
-          })}
-          {qualificationTeams.map((team) => {
-            const position = [team.lat, team.long]
-            return (
-              <Marker key={team.teamId} position={position} icon={qualIcon}>
-                <Popup>{team.name}</Popup>
-              </Marker>
-            )
-          })}
-        </MarkerClusterGroup>
-      </MapContainer>
+    <div>
+      {!open && (
+        <div id="map" className="h-[400px] w-screen max-w-xl p-2">
+          <MapContainer
+            bounds={bounds}
+            center={[62, 15]}
+            zoom={4}
+            scrollWheelZoom={true}
+            className="h-[400px]"
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <MarkerClusterGroup chunkedLoading>
+              {teams.map((team) => {
+                const position = [team.lat, team.long]
+                return (
+                  <Marker key={team.teamId} position={position}>
+                    <Popup>{team.name}</Popup>
+                  </Marker>
+                )
+              })}
+              {qualificationTeams.map((team) => {
+                const position = [team.lat, team.long]
+                return (
+                  <Marker key={team.teamId} position={position} icon={qualIcon}>
+                    <Popup>{team.name}</Popup>
+                  </Marker>
+                )
+              })}
+            </MarkerClusterGroup>
+          </MapContainer>
+        </div>
+      )}
     </div>
   )
 }
