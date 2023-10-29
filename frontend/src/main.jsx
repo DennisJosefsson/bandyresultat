@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import GenderContextProvider from './contexts/genderContext'
 import UserContextProvider from './contexts/userContext'
 import FavTeamsContextProvider from './contexts/favteamsContext'
+import MenuContextProvider from './contexts/menuContext'
 import './index.css'
 import App from './App.jsx'
 
@@ -26,7 +27,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <UserContextProvider>
         <GenderContextProvider>
           <FavTeamsContextProvider>
-            <App />
+            <MenuContextProvider>
+              <App />
+            </MenuContextProvider>
           </FavTeamsContextProvider>
         </GenderContextProvider>
       </UserContextProvider>

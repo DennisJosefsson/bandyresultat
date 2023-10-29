@@ -1,17 +1,17 @@
 import { getStreaks } from '../../requests/games'
 import { useQuery } from 'react-query'
-import { useContext, useRef, useState } from 'react'
+import { useContext, useRef, useState, useEffect } from 'react'
 import { GenderContext } from '../../contexts/contexts'
 
 import Spinner from '../utilitycomponents/spinner'
-import GenderButtonComponent from '../utilitycomponents/GenderButtonComponent'
+
 import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 dayjs.locale('sv')
 
 const Record = () => {
-  const { women, dispatch } = useContext(GenderContext)
+  const { women } = useContext(GenderContext)
   const [params, setParams] = useState({ record: 'points', women: women })
   const [title, setTitle] = useState('Poäng')
   const { data, isLoading, error } = useQuery(['streaks', params], () =>
@@ -19,6 +19,10 @@ const Record = () => {
   )
   const topRef = useRef(null)
   const bottomRef = useRef(null)
+
+  useEffect(() => {
+    setParams((params) => ({ ...params, women: women }))
+  }, [women])
 
   if (isLoading) {
     return (
@@ -43,18 +47,52 @@ const Record = () => {
 
   return (
     <div
-      className="mx-auto my-4 min-h-screen max-w-7xl font-inter text-[#011d29]"
+      className="mx-auto mt-4 min-h-screen max-w-7xl font-inter text-[#011d29]"
       ref={topRef}
     >
-      <div className="xs:flex-row xs:justify-between flex flex-col-reverse">
+      <div className="flex flex-col">
+        <div>
+          <h2 className="mb-4 text-center text-base font-bold leading-4 sm:text-xl md:mb-6 lg:text-2xl">
+            {title} {women ? 'Damer' : 'Herrar'}
+          </h2>
+        </div>
+        <div className="flex flex-row justify-center gap-4">
+          <ButtonComponent
+            clickFunctions={() => {
+              setParams((params) => ({ ...params, record: 'points' }))
+              setTitle('Poäng Elitserien')
+            }}
+          >
+            Poäng
+          </ButtonComponent>
+          <ButtonComponent
+            clickFunctions={() => {
+              setParams((params) => ({ ...params, record: 'scored' }))
+              setTitle('Gjorda mål Elitserien')
+            }}
+          >
+            Gjorda mål
+          </ButtonComponent>
+          <ButtonComponent
+            clickFunctions={() => {
+              setParams((params) => ({ ...params, record: 'conceded' }))
+              setTitle('Insläppta mål Elitserien')
+            }}
+          >
+            Insl. mål
+          </ButtonComponent>
+          <ButtonComponent
+            clickFunctions={() => {
+              setParams((params) => ({ ...params, record: 'streaks' }))
+              setTitle('Rekordsviter')
+            }}
+          >
+            Rekordsviter
+          </ButtonComponent>
+        </div>
         <div className="flex flex-col">
           {params.record !== 'streaks' && (
             <div className="ml-4 xl:ml-0">
-              <div>
-                <h2 className="mb-4 text-center text-base font-bold leading-4 sm:text-xl md:mb-6 lg:text-2xl">
-                  {title} Elitserien {women ? 'Damer' : 'Herrar'}
-                </h2>
-              </div>
               <h3 className="mb-2 px-2 text-sm font-bold leading-4 sm:text-lg lg:text-xl">
                 Högsta
               </h3>
@@ -392,11 +430,6 @@ const Record = () => {
 
           {params.record === 'streaks' && (
             <div className="ml-4 xl:ml-0">
-              <div>
-                <h2 className="mb-4 text-center text-base font-bold leading-4 sm:text-xl md:mb-6 lg:text-2xl">
-                  Rekordsviter
-                </h2>
-              </div>
               <div className="grid grid-cols-1 gap-2 lg:grid-cols-2 xl:grid-cols-3">
                 <div className="p-2">
                   <h3 className="mb-2 text-sm font-bold leading-4 sm:text-lg lg:text-xl">
@@ -546,46 +579,6 @@ const Record = () => {
               </div>
             </div>
           )}
-        </div>
-        <div className="xs:flex-col xs:justify-start flex flex-row justify-center gap-2">
-          <GenderButtonComponent
-            women={women}
-            clickFunctions={() => {
-              setParams((params) => ({ ...params, women: !women }))
-              dispatch({ type: 'TOGGLE' })
-            }}
-          />
-          <ButtonComponent
-            clickFunctions={() => {
-              setParams((params) => ({ ...params, record: 'points' }))
-              setTitle('Poäng')
-            }}
-          >
-            Poäng
-          </ButtonComponent>
-          <ButtonComponent
-            clickFunctions={() => {
-              setParams((params) => ({ ...params, record: 'scored' }))
-              setTitle('Gjorda mål')
-            }}
-          >
-            Gjorda mål
-          </ButtonComponent>
-          <ButtonComponent
-            clickFunctions={() => {
-              setParams((params) => ({ ...params, record: 'conceded' }))
-              setTitle('Insläppta mål')
-            }}
-          >
-            Insl. mål
-          </ButtonComponent>
-          <ButtonComponent
-            clickFunctions={() => {
-              setParams((params) => ({ ...params, record: 'streaks' }))
-            }}
-          >
-            Rekordsviter
-          </ButtonComponent>
         </div>
       </div>
       <div ref={bottomRef}></div>

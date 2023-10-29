@@ -19,7 +19,6 @@ export const getSingleMetadata = async ({ seasonId }) => {
 }
 
 export const postMetadata = async ({ formState }) => {
-  console.log('Console logging from request function', formState)
   return await metadataApi.post('/', formState)
 }
 

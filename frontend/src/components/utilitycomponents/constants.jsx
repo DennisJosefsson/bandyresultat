@@ -104,3 +104,19 @@ export const sortOrder = [
   'regular',
   'qualification',
 ]
+
+export const semiColStarts = {
+  S1: 'md:col-start-2',
+  S2: 'md:col-start-4',
+}
+export const quarterColStarts = {
+  Q1: 'md:col-start-1',
+  Q2: 'md:col-start-2',
+  Q3: 'md:col-start-3',
+  Q4: 'md:col-start-4',
+}
+
+export const eightColStarts = {
+  E1: 'md:col-start-2',
+  E2: 'md:col-start-4',
+}

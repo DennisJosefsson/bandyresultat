@@ -84,7 +84,8 @@ const Seasons = () => {
                   </div>
                   <div className="w-1/4 rounded-md bg-slate-300 px-2 py-1 text-center lg:bg-white xl:p-0">
                     <Link
-                      to={`/games/${seasonYear}`}
+                      to={`/season/${seasonYear}`}
+                      state={{ tab: 'games' }}
                       className="font-medium hover:font-bold lg:font-normal"
                     >
                       Matcher

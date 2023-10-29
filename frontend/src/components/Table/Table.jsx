@@ -3,15 +3,13 @@ import { useContext, useState, useEffect, useRef } from 'react'
 import { maratonTabell } from '../../requests/tables'
 import { GenderContext, TeamPreferenceContext } from '../../contexts/contexts'
 
-import { Link } from 'react-router-dom'
-
 import MaratonHelpModal from './MaratonHelp'
 import Spinner from '../utilitycomponents/spinner'
-import GenderButtonComponent from '../utilitycomponents/GenderButtonComponent'
+
 import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
 
 const Table = () => {
-  const { women, dispatch } = useContext(GenderContext)
+  const { women } = useContext(GenderContext)
   const { favTeams } = useContext(TeamPreferenceContext)
   const [selectedTable, setSelectedTable] = useState('all')
   const [homeAwayTitle, setHomeAwayTitle] = useState('')
@@ -67,23 +65,12 @@ const Table = () => {
 
   return (
     <div ref={topRef}>
-      <h2 className="text-center text-base font-bold leading-4 sm:text-xl lg:text-2xl">
+      <h2 className="mt-4 text-center text-base font-bold leading-4 sm:text-xl lg:text-2xl">
         Maratontabell {women ? 'Damer' : 'Herrar'} {homeAwayTitle}
       </h2>
 
-      <div className="xxs:flex-row-reverse xxs:justify-between mx-auto flex min-h-screen max-w-7xl flex-col pt-10 font-inter text-[#011d29]">
-        <div className="xxs:flex-col xxs:justify-start xxs:gap-0 flex flex-row justify-center gap-1">
-          <div>
-            <GenderButtonComponent
-              women={women}
-              clickFunctions={() => dispatch({ type: 'TOGGLE' })}
-            />
-          </div>
-          <div>
-            <ButtonComponent clickFunctions={() => setShowHelpModal(true)}>
-              Hjälp/Info
-            </ButtonComponent>
-          </div>
+      <div className="mx-auto mt-4 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
+        <div className="flex flex-row justify-center gap-4">
           <div>
             <ButtonComponent
               clickFunctions={() => {
@@ -114,11 +101,8 @@ const Table = () => {
               Alla
             </ButtonComponent>
           </div>
-          <Link to={`/records`}>
-            <ButtonComponent clickFunctions={() => {}}>Rekord</ButtonComponent>
-          </Link>
         </div>
-        <div className="w-full md:w-4/5">
+        <div className="w-full">
           <table className="w-full table-auto text-[10px] md:text-xs lg:text-base">
             <thead>
               <tr className="maraton" key={'header'}>

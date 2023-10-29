@@ -171,11 +171,14 @@ export const filterOpposition = (array) => {
   return array.filter(callback)
 }
 
-export const animationData = (gameArray, teamArray, seriesArray) => {
+export const animationData = (gameArray, teamArray, seriesArray, seasonId) => {
   const teamSeriesArray = gameArray.map((group) => {
     let teamArray = []
     group.dates.forEach((date) =>
-      date.games.forEach((game) => teamArray.push(game.homeTeamId)),
+      date.games.forEach((game) => {
+        teamArray.push(game.homeTeamId)
+        teamArray.push(game.awayTeamId)
+      }),
     )
     return { group: group.group, teams: teamArray }
   })
@@ -200,6 +203,26 @@ export const animationData = (gameArray, teamArray, seriesArray) => {
     }
   }
   const initTeamArray = (teamArray, group) => {
+    if (seasonId > 2023) {
+      return teamArray
+        .filter((team) => team.teamseason.qualification != true)
+        .map((team) => {
+          return {
+            teamId: team.teamId,
+            casualName: team.casualName,
+            table: {
+              position: 0,
+              games: 0,
+              wins: 0,
+              draws: 0,
+              lost: 0,
+              scoredGoals: 0,
+              concededGoals: 0,
+              points: 0 + Number(calculateBonusPoints(group, team.teamId)),
+            },
+          }
+        })
+    }
     return teamArray
       .filter((team) => team.teamseason.qualification != true)
       .filter((team) =>
@@ -212,6 +235,7 @@ export const animationData = (gameArray, teamArray, seriesArray) => {
           teamId: team.teamId,
           casualName: team.casualName,
           table: {
+            position: 0,
             games: 0,
             wins: 0,
             draws: 0,
@@ -261,6 +285,18 @@ export const animationData = (gameArray, teamArray, seriesArray) => {
             teamsTables[awayTeamIndex].table.points += 1
           }
         })
+        teamsTables
+          .sort((teamA, teamB) => {
+            if (teamA.table.points === teamB.table.points) {
+              return (
+                teamB.table.scoredGoals -
+                teamB.table.concededGoals -
+                (teamA.table.scoredGoals - teamA.table.concededGoals)
+              )
+            }
+            return teamB.table.points - teamA.table.points
+          })
+          .forEach((team, index, array) => (array[index].position = index + 1))
         const table = JSON.parse(JSON.stringify(teamsTables))
         return {
           date: date.date,
@@ -280,4 +316,16 @@ export const animationData = (gameArray, teamArray, seriesArray) => {
   })
 
   return gameDateAnimationArray
+}
+
+export const sortStatsCat = (array) => {
+  return array.sort((a, b) => {
+    if (sortOrder.indexOf(a.category) > sortOrder.indexOf(b.category)) {
+      return 1
+    }
+
+    if (sortOrder.indexOf(a.category) < sortOrder.indexOf(b.category)) {
+      return -1
+    }
+  })
 }

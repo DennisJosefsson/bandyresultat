@@ -2864,6 +2864,310 @@ router.get('/season/:seasonId', async (req, res, next) => {
     ],
   })
 
+  if (!games) {
+    throw new Error('No such game in the database')
+  } else {
+    res.json(games)
+  }
+})
+
+router.get('/stats/:seasonId', async (req, res) => {
+  const seasonName =
+    req.params.seasonId < 1964
+      ? req.params.seasonId
+      : `${Number(req.params.seasonId) - 1}/${req.params.seasonId}`
+
+  const seasonExist = await Season.count({ where: { year: seasonName } })
+  if (seasonExist === 0) {
+    return res.json({ success: 'false', message: 'Säsong finns inte' })
+  }
+
+  const goalsScoredTotal = await TeamGame.findAll({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    attributes: [
+      'women',
+      [sequelize.fn('SUM', sequelize.col('total_goals')), 'data'],
+    ],
+    group: ['teamgame.women', 'season.year', 'season.season_id'],
+  })
+
+  const goalsScoredTotalCat = await TeamGame.findAll({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    attributes: [
+      'women',
+      'category',
+      [sequelize.fn('SUM', sequelize.col('total_goals')), 'data'],
+    ],
+    group: ['teamgame.women', 'category', 'season.year', 'season.season_id'],
+  })
+
+  const goalsScoredHomeTotal = await Game.findAll({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    attributes: [
+      'women',
+      [sequelize.fn('SUM', sequelize.col('home_goal')), 'data'],
+    ],
+    group: ['game.women', 'season.year', 'season.season_id'],
+  })
+
+  const goalsScoredHomeTotalCat = await Game.findAll({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    attributes: [
+      'women',
+      'category',
+      [sequelize.fn('SUM', sequelize.col('home_goal')), 'data'],
+    ],
+    group: ['game.women', 'category', 'season.year', 'season.season_id'],
+  })
+
+  const goalsScoredAwayTotal = await Game.findAll({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    attributes: [
+      'women',
+      [sequelize.fn('SUM', sequelize.col('away_goal')), 'data'],
+    ],
+    group: ['game.women', 'season.year', 'season.season_id'],
+  })
+
+  const goalsScoredAwayTotalCat = await Game.findAll({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    attributes: [
+      'women',
+      'category',
+      [sequelize.fn('SUM', sequelize.col('away_goal')), 'data'],
+    ],
+    group: ['game.women', 'category', 'season.year', 'season.season_id'],
+  })
+
+  const goalsScoredAverage = await TeamGame.findAll({
+    where: { played: true },
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    attributes: [
+      'women',
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('total_goals')),
+          2
+        ),
+        'data',
+      ],
+    ],
+    group: ['teamgame.women', 'season.year', 'season.season_id'],
+  })
+
+  const goalsScoredAverageCat = await TeamGame.findAll({
+    where: { played: true },
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    attributes: [
+      'women',
+      'category',
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('total_goals')),
+          2
+        ),
+        'data',
+      ],
+    ],
+    group: ['teamgame.women', 'category', 'season.year', 'season.season_id'],
+  })
+
+  const goalsScoredHomeAverage = await Game.findAll({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    attributes: [
+      'women',
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('home_goal')),
+          2
+        ),
+        'data',
+      ],
+    ],
+    group: ['game.women', 'season.year', 'season.season_id'],
+  })
+
+  const goalsScoredHomeAverageCat = await Game.findAll({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    attributes: [
+      'women',
+      'category',
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('home_goal')),
+          2
+        ),
+        'data',
+      ],
+    ],
+    group: ['game.women', 'category', 'season.year', 'season.season_id'],
+  })
+
+  const goalsScoredAwayAverage = await Game.findAll({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    attributes: [
+      'women',
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('away_goal')),
+          2
+        ),
+        'data',
+      ],
+    ],
+    group: ['game.women', 'season.year', 'season.season_id'],
+  })
+
+  const goalsScoredAwayAverageCat = await Game.findAll({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    attributes: [
+      'women',
+      'category',
+      [
+        sequelize.fn(
+          'round',
+          sequelize.fn('AVG', sequelize.col('away_goal')),
+          2
+        ),
+        'data',
+      ],
+    ],
+    group: ['game.women', 'category', 'season.year', 'season.season_id'],
+  })
+
+  const gamesCountTotal = await Game.count({
+    where: { played: true },
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    group: ['game.women', 'season.year', 'season.season_id'],
+  })
+
+  const gamesCountTotalCat = await Game.count({
+    where: { played: true },
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    group: ['game.women', 'category', 'season.year', 'season.season_id'],
+  })
+
+  const winCountHomeTeam = await TeamGame.count({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    where: { homeGame: true, win: true },
+    group: ['teamgame.women', 'season.year', 'season.season_id'],
+  })
+
+  const winCountAwayTeam = await TeamGame.count({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    where: { homeGame: false, win: true },
+    group: ['teamgame.women', 'season.year', 'season.season_id'],
+  })
+
+  const drawCount = await TeamGame.count({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    where: { draw: true },
+    group: ['teamgame.women', 'season.year', 'season.season_id'],
+  })
+
+  const winCountHomeTeamCat = await TeamGame.count({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    where: { homeGame: true, win: true },
+    group: ['teamgame.women', 'category', 'season.year', 'season.season_id'],
+  })
+
+  const winCountAwayTeamCat = await TeamGame.count({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    where: { homeGame: false, win: true },
+    group: ['teamgame.women', 'category', 'season.year', 'season.season_id'],
+  })
+
+  const drawCountCat = await TeamGame.count({
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonName } },
+      attributes: ['year', 'seasonId'],
+    },
+    where: { draw: true },
+    group: ['teamgame.women', 'category', 'season.year', 'season.season_id'],
+  })
+
   const losingStreak = await sequelize.query(
     `with lost_values as (
 select 
@@ -3370,24 +3674,39 @@ join teams as away_team on max_diff.away = away_team.team_id;`,
     { bind: { season_name: seasonName }, type: QueryTypes.SELECT }
   )
 
-  if (!games) {
-    throw new Error('No such game in the database')
-  } else {
-    res.json({
-      games,
-      unbeatenStreak,
-      winStreak,
-      drawStreak,
-      noWinStreak,
-      losingStreak,
-      maxGoalsMen,
-      maxGoalsWomen,
-      minGoalsMen,
-      minGoalsWomen,
-      maxDiffMen,
-      maxDiffWomen,
-    })
-  }
+  res.json({
+    gamesCountTotal,
+    gamesCountTotalCat,
+    winCountHomeTeam,
+    winCountAwayTeam,
+    drawCount,
+    winCountHomeTeamCat,
+    winCountAwayTeamCat,
+    drawCountCat,
+    goalsScoredTotal,
+    goalsScoredTotalCat,
+    goalsScoredAverage,
+    goalsScoredAverageCat,
+    goalsScoredHomeTotal,
+    goalsScoredAwayTotal,
+    goalsScoredHomeTotalCat,
+    goalsScoredAwayTotalCat,
+    goalsScoredHomeAverage,
+    goalsScoredAwayAverage,
+    goalsScoredHomeAverageCat,
+    goalsScoredAwayAverageCat,
+    unbeatenStreak,
+    winStreak,
+    drawStreak,
+    noWinStreak,
+    losingStreak,
+    maxGoalsMen,
+    maxGoalsWomen,
+    minGoalsMen,
+    minGoalsWomen,
+    maxDiffMen,
+    maxDiffWomen,
+  })
 })
 
 router.get('/:gameId', async (req, res, next) => {
@@ -3425,8 +3744,10 @@ router.post('/', async (req, res, next) => {
     serieId,
     homeTeamId: req.body.homeTeamId.value,
     awayTeamId: req.body.awayTeamId.value,
-    homeGoal: parseInt(req.body.result.split('-')[0]),
-    awayGoal: parseInt(req.body.result.split('-')[1]),
+    homeGoal:
+      req.body.result !== null ? parseInt(req.body.result.split('-')[0]) : null,
+    awayGoal:
+      req.body.result !== null ? parseInt(req.body.result.split('-')[1]) : null,
     halftimeHomeGoal: req.body.halftimeResult
       ? parseInt(req.body.halftimeResult.split('-')[0])
       : null,

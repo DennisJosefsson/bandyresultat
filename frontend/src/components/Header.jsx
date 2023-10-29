@@ -1,17 +1,18 @@
 import { Link } from 'react-router-dom'
-import { useContext, useState } from 'react'
-import { UserContext } from '../contexts/contexts'
+import { useContext } from 'react'
+import { MenuContext, UserContext } from '../contexts/contexts'
 import useScrollDirection from './utilitycomponents/useScrollDirection'
 
 const Header = () => {
   const { user } = useContext(UserContext)
+  const { open, dispatch } = useContext(MenuContext)
   const scrollDirection = useScrollDirection()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   return (
     <header
       className={`sticky ${
         scrollDirection === 'down' ? '-top-[81px]' : 'top-0'
-      } z-10 h-[81px] bg-[#f4f5f5] pt-6 font-poppins text-[#011d29] transition-all duration-500`}
+      } z-10000 h-[81px] bg-[#f4f5f5] pt-6 font-poppins text-[#011d29] transition-all duration-500`}
     >
       <section className="mx-auto flex max-w-7xl items-center justify-between">
         <h1 className="pl-4 text-base font-bold uppercase tracking-[0.2rem] md:text-2xl lg:text-4xl xl:pl-0 ">
@@ -22,7 +23,7 @@ const Header = () => {
             <div className="lg:hidden">
               <div
                 className="cursor-pointer pr-4"
-                onClick={() => setIsMenuOpen((current) => !current)}
+                onClick={() => dispatch({ type: 'TOGGLE' })}
               >
                 <svg viewBox="0 0 24 24" width="24" height="24">
                   <rect width="24" height="4" rx="2" />
@@ -30,10 +31,10 @@ const Header = () => {
                   <rect y="16" width="24" height="4" rx="2" />
                 </svg>
               </div>
-              <div className={isMenuOpen ? 'showMenuNav' : 'hideMenuNav'}>
+              <div className={open ? 'showMenuNav' : 'hideMenuNav'}>
                 <div
                   className="absolute right-0 top-0 cursor-pointer px-3 py-4"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => dispatch({ type: 'CLOSE' })}
                 >
                   <svg
                     className="h-8 w-8 text-[#011d29]"
@@ -49,34 +50,34 @@ const Header = () => {
                   </svg>
                 </div>
                 <ul className="header flex min-h-[250px] flex-col items-center justify-between">
-                  <li onClick={() => setIsMenuOpen(false)}>
+                  <li onClick={() => dispatch({ type: 'CLOSE' })}>
                     <Link to="/seasons" className="hover:opacity-90">
                       Säsonger
                     </Link>
                   </li>
-                  <li onClick={() => setIsMenuOpen(false)}>
+                  <li onClick={() => dispatch({ type: 'CLOSE' })}>
                     <Link to="/teams" className="hover:opacity-90">
                       Lag
                     </Link>
                   </li>
-                  <li onClick={() => setIsMenuOpen(false)}>
+                  <li onClick={() => dispatch({ type: 'CLOSE' })}>
                     <Link to="/search" className="hover:opacity-90">
                       Sök
                     </Link>
                   </li>
-                  <li onClick={() => setIsMenuOpen(false)}>
+                  <li onClick={() => dispatch({ type: 'CLOSE' })}>
                     <Link to="/tables" className="hover:opacity-90">
                       Maratontabeller
                     </Link>
                   </li>
                   {user && (
-                    <li onClick={() => setIsMenuOpen(false)}>
+                    <li onClick={() => dispatch({ type: 'CLOSE' })}>
                       <Link to="/dashboard" className="hover:opacity-90">
                         Dashboard
                       </Link>
                     </li>
                   )}
-                  <li onClick={() => setIsMenuOpen(false)}>
+                  <li onClick={() => dispatch({ type: 'CLOSE' })}>
                     <Link to="/about" className="hover:opacity-90">
                       Om sidan
                     </Link>

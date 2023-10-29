@@ -29,6 +29,12 @@ Team.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    lat: {
+      type: DataTypes.FLOAT,
+    },
+    long: {
+      type: DataTypes.FLOAT,
+    },
   },
   {
     sequelize,

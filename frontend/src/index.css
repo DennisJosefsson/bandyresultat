@@ -28,17 +28,21 @@
   }
 
   .season th {
-    @apply px-1 py-1 text-right xl:w-8 xl:py-2;
+    @apply px-1 py-1 text-right xl:w-8;
   }
   .season th.pos {
-    @apply px-1 py-1 text-center xl:w-8 xl:py-2;
+    @apply px-1 py-1 text-center xl:w-8;
   }
   .season th.team {
-    @apply px-1 py-1 text-left xl:w-56 xl:py-2;
+    @apply px-1 py-1 text-left xl:w-56;
   }
 
   .season th.twelve {
-    @apply px-1 py-1 text-right xl:w-12 xl:py-2;
+    @apply px-1 py-1 text-right xl:w-12;
+  }
+
+  .season th.points {
+    @apply pl-1 pr-2;
   }
 
   .season td {
@@ -51,6 +55,10 @@
 
   .season td.team {
     @apply px-1 py-1 text-left xl:py-2;
+  }
+
+  .season td.points {
+    @apply pl-1 pr-2;
   }
 
   .roundForRound th {
@@ -157,7 +165,7 @@
   }
 
   .showMenuNav {
-    @apply absolute left-0 top-0 z-[100] flex h-screen w-full flex-col items-center justify-evenly bg-[#f4f5f5];
+    @apply absolute left-0 top-0 z-[10001] flex h-screen w-full flex-col items-center justify-evenly bg-[#f4f5f5];
   }
 
   .header li {
@@ -191,4 +199,67 @@
   .recordCard .record2nd .dates {
     @apply w-48 text-[10px] sm:w-64 md:text-xs;
   }
+
+  .statsCard {
+    @apply m-1 flex flex-row justify-between rounded bg-white p-1 text-sm xs:text-base md:mb-2 md:p-2;
+  }
+
+  .statsCard .name {
+    @apply font-semibold;
+  }
+
+  .statsCard .count {
+    @apply text-right tabular-nums;
+  }
+
+  .streakCard {
+    @apply m-1 flex flex-col rounded bg-white p-1 text-sm xs:text-base md:mb-2 md:p-2;
+  }
+
+  .streakCard .head {
+    @apply text-sm font-bold xs:text-base;
+  }
+
+  .streakCard .streak1st {
+    @apply flex flex-row justify-between;
+  }
+
+  .streakCard .streak1st .name {
+    @apply w-32 font-semibold sm:w-48;
+  }
+
+  .streakCard .streak1st .count {
+    @apply w-24 text-right tabular-nums;
+  }
+
+  .streakCard .streak2nd {
+    @apply flex flex-row;
+  }
+
+  .streakCard .streak2nd .dates {
+    @apply w-48 text-[10px] sm:w-64 md:text-xs;
+  }
+
+  .leaflet-container {
+    @apply z-0;
+  }
+
+  .leaflet-icon-blue {
+    @apply border-none bg-transparent fill-blue-700;
+  }
+
+  .leaflet-icon-red {
+    @apply border-none bg-transparent fill-red-700;
+  }
+}
+
+#map {
+  z-index: 0;
+}
+
+.leaflet-bottom,
+.leaflet-control,
+.leaflet-pane,
+.leaflet-top {
+  z-index: 0 !important;
 }
