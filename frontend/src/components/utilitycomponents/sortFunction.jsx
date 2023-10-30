@@ -1,6 +1,6 @@
 import { sortOrder } from './constants'
 
-export const gameSortFunction = (gamesArray) => {
+export const gameSortFunction = (gamesArray, played = false) => {
   const sortGroups = gamesArray.reduce((groups, game) => {
     if (!groups[game.group]) {
       groups[game.group] = []
@@ -33,7 +33,7 @@ export const gameSortFunction = (gamesArray) => {
     })
     return {
       group: groupObject['group'],
-      dates: sortedGameDates,
+      dates: played ? sortedGameDates.reverse() : sortedGameDates,
     }
   })
 

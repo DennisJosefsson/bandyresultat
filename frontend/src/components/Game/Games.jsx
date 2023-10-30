@@ -130,13 +130,14 @@ const Games = ({ seasonId }) => {
     .filter((game) => game.category === 'qualification')
     .filter((game) => game.played === false)
 
-  const playedFinalGames = gameSortFunction(unsortedPlayedFinalGames)
-  const playedSemiGames = gameSortFunction(unsortedPlayedSemiGames)
-  const playedQuarterGames = gameSortFunction(unsortedPlayedQuarterGames)
-  const playedEightGames = gameSortFunction(unsortedPlayedEightGames)
-  const playedRegularGames = gameSortFunction(unsortedPlayedRegularGames)
+  const playedFinalGames = gameSortFunction(unsortedPlayedFinalGames, true)
+  const playedSemiGames = gameSortFunction(unsortedPlayedSemiGames, true)
+  const playedQuarterGames = gameSortFunction(unsortedPlayedQuarterGames, true)
+  const playedEightGames = gameSortFunction(unsortedPlayedEightGames, true)
+  const playedRegularGames = gameSortFunction(unsortedPlayedRegularGames, true)
   const playedQualificationGames = gameSortFunction(
     unsortedPlayedQualificationGames,
+    true,
   )
   const unplayedFinalGames = gameSortFunction(unsortedUnplayedFinalGames)
   const unplayedSemiGames = gameSortFunction(unsortedUnplayedSemiGames)
