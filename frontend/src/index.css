@@ -95,15 +95,20 @@
     @apply px-1 py-1 text-left opacity-30 xl:py-2;
   }
 
-  .compareFirstLast th {
-    @apply px-0.5 py-1;
-  }
-  .compareFirstLast td {
-    @apply px-0.5 py-1;
+  .compareFirstLast .card {
+    @apply my-1 flex flex-col;
   }
 
-  .compareFirstLast td.result {
-    @apply text-right tabular-nums;
+  .compareFirstLast .line1 {
+    @apply mb-0.5 font-semibold;
+  }
+
+  .compareFirstLast .line2 {
+    @apply flex flex-row justify-between;
+  }
+
+  .compareFirstLast .result {
+    @apply tabular-nums;
   }
 
   .compareStats th {

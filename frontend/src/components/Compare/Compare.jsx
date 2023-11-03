@@ -208,7 +208,7 @@ const Compare = ({ compObject, origin }) => {
               <div className="w-full">
                 <div>
                   <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>
-                  <table className="compareGames mb-6 table-fixed text-[8px] sm:text-sm md:text-base xl:w-[36rem]">
+                  <table className="compareGames mb-6 w-full table-fixed text-[8px] sm:text-sm xl:w-[36rem]">
                     <thead>
                       <tr key={`tableheadAllgames`}>
                         <th scope="col" className="team">
@@ -265,7 +265,7 @@ const Compare = ({ compObject, origin }) => {
                           {groupConstant[category.category]}
                         </h4>
                         <div>
-                          <table className="compareGames mb-3 w-[90%] table-fixed text-[8px] sm:text-sm md:text-base xl:w-[36rem]">
+                          <table className="compareGames mb-6 w-full table-fixed text-[8px] sm:text-sm xl:w-[36rem]">
                             <thead>
                               <tr key={`head-${category.category}-${index}`}>
                                 <th scope="col" className="team">
@@ -325,7 +325,7 @@ const Compare = ({ compObject, origin }) => {
               <div className="w-full">
                 <div>
                   <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>
-                  <table className="compareGames mb-6 w-full table-fixed text-[8px] sm:text-sm md:text-base xl:w-[36rem]">
+                  <table className="compareGames mb-6 w-full table-fixed text-[8px] sm:text-sm xl:w-[36rem]">
                     <thead>
                       <tr key={`tableheadAllgames`}>
                         <th scope="col" className="team">
@@ -382,7 +382,7 @@ const Compare = ({ compObject, origin }) => {
                           {groupConstant[category.category]}
                         </h4>
                         <div>
-                          <table className="compareGames mb-3 w-full table-fixed text-[8px] sm:text-sm md:text-base xl:w-[36rem]">
+                          <table className="compareGames mb-3 w-full table-fixed text-[8px] sm:text-sm xl:w-[36rem]">
                             <thead>
                               <tr key={`head-${category.category}-${index}`}>
                                 <th scope="col" className="team">
@@ -446,40 +446,35 @@ const Compare = ({ compObject, origin }) => {
                 <h2 className="text-sm font-bold md:text-lg xl:text-right">
                   Statistik
                 </h2>
-                <div className="grid grid-cols-1 flex-row justify-between gap-2 md:flex xl:gap-4">
+                <div className="grid grid-cols-1 flex-row justify-between gap-2 md:flex xl:gap-8">
                   <div className="w-full md:w-80">
                     <div className="w-full">
                       <h3 className="text-sm font-semibold md:text-base">
                         Första matcherna
                       </h3>
-                      <table className="compareFirstLast mb-3 w-full text-[8px] sm:text-sm md:text-base">
-                        <thead>
-                          <tr key={`head-first-games`}>
-                            <th scope="col" className=""></th>
-                            <th scope="col" className="ml-2"></th>
-                            <th scope="col" className="ml-2 tabular-nums"></th>
-                          </tr>
-                        </thead>
-                        <tbody>
+                      <div className="compareFirstLast mb-3 w-full text-[8px] sm:text-sm">
+                        <div>
                           {firstGames.map((game) => {
                             return (
-                              <tr key={game.game_id} className="rounded">
-                                <td>
+                              <div key={game.game_id} className="card">
+                                <div className="line1">
                                   {game.date && (
                                     <span>
                                       {dayjs(game.date).format('D MMMM YYYY')}:
                                     </span>
                                   )}
-                                </td>
-                                <td>
-                                  {game.home_name}-{game.away_name}
-                                </td>
-                                <td className="result">{game.result}</td>
-                              </tr>
+                                </div>
+                                <div className="line2">
+                                  <div>
+                                    {game.home_name}-{game.away_name}
+                                  </div>
+                                  <div className="result">{game.result}</div>
+                                </div>
+                              </div>
                             )
                           })}
-                        </tbody>
-                      </table>
+                        </div>
+                      </div>
                       <p className="my-2 w-full bg-white p-1 text-[8px] font-bold md:text-xs">
                         Obs! Speldatum 1 januari före 1931 gäller enbart
                         tillsvidare, de betyder att faktiskt datum saknas.{' '}
@@ -489,34 +484,29 @@ const Compare = ({ compObject, origin }) => {
                       <h3 className="text-sm font-semibold md:text-base">
                         Senaste matcherna
                       </h3>
-                      <table className="compareFirstLast mb-3 w-full text-[8px] sm:text-sm md:text-base">
-                        <thead>
-                          <tr key={`head-latest-games`}>
-                            <th scope="col" className=""></th>
-                            <th scope="col" className="ml-2"></th>
-                            <th scope="col" className="ml-2"></th>
-                          </tr>
-                        </thead>
-                        <tbody>
+                      <div className="compareFirstLast mb-3 w-full text-[8px] sm:text-sm">
+                        <div>
                           {latestGames.map((game) => {
                             return (
-                              <tr key={game.game_id} className="rounded">
-                                <td>
+                              <div key={game.game_id} className="card">
+                                <div className="line1">
                                   {game.date && (
                                     <span>
                                       {dayjs(game.date).format('D MMMM YYYY')}:
                                     </span>
                                   )}
-                                </td>
-                                <td>
-                                  {game.home_name}-{game.away_name}
-                                </td>
-                                <td className="result">{game.result}</td>
-                              </tr>
+                                </div>
+                                <div className="line2">
+                                  <div>
+                                    {game.home_name}-{game.away_name}
+                                  </div>
+                                  <div className="result">{game.result}</div>
+                                </div>
+                              </div>
                             )
                           })}
-                        </tbody>
-                      </table>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div className="w-full md:w-80">
@@ -524,7 +514,7 @@ const Compare = ({ compObject, origin }) => {
                       <h3 className="text-sm font-semibold md:text-base lg:text-right">
                         Säsonger
                       </h3>
-                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm md:text-base">
+                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm">
                         <thead>
                           <tr key={`head-seasons`}>
                             <th scope="col" className="w-32 text-left"></th>
@@ -547,7 +537,7 @@ const Compare = ({ compObject, origin }) => {
                       <h3 className="text-sm font-semibold md:text-base lg:text-right">
                         Säsonger sedan 1931
                       </h3>
-                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm md:text-base">
+                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm">
                         <thead>
                           <tr key={`head-seasons`}>
                             <th scope="col" className="w-32 text-left"></th>
@@ -570,7 +560,7 @@ const Compare = ({ compObject, origin }) => {
                       <h3 className="text-sm font-semibold md:text-base lg:text-right">
                         Slutspel
                       </h3>
-                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm md:text-base">
+                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm">
                         <thead>
                           <tr key={`head-playoffs`}>
                             <th scope="col" className="w-32 text-left"></th>
@@ -593,7 +583,7 @@ const Compare = ({ compObject, origin }) => {
                       <h3 className="text-sm font-semibold md:text-base lg:text-right">
                         Slutspel sedan 1931
                       </h3>
-                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm md:text-base">
+                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm">
                         <thead>
                           <tr key={`head-playoffs`}>
                             <th scope="col" className="w-32 text-left"></th>
@@ -616,7 +606,7 @@ const Compare = ({ compObject, origin }) => {
                       <h3 className="text-sm font-semibold md:text-base lg:text-right">
                         SM-Guld
                       </h3>
-                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm md:text-base">
+                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm">
                         <thead>
                           <tr key={`head-golds`}>
                             <th scope="col" className="w-32"></th>
