@@ -1,34 +1,42 @@
 import { useQuery, useMutation } from 'react-query'
-import { useState, useReducer, useContext, useRef } from 'react'
+import { useState, useReducer, useContext, useEffect } from 'react'
 import { getTeams, postTeam } from '../../requests/teams'
 import { getSeasons } from '../../requests/seasons'
-import { useNavigate, Link, useLocation } from 'react-router-dom'
-import {
-  GenderContext,
-  UserContext,
-  TeamPreferenceContext,
-} from '../../contexts/contexts'
+import { useLocation, useParams } from 'react-router-dom'
+import { GenderContext, UserContext } from '../../contexts/contexts'
 
 import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
 import Spinner from '../utilitycomponents/spinner'
+import TeamsList from './TeamsList'
 import TeamForm from './TeamForm'
-import TeamsListHelpModal from './TeamsListHelpModal'
-import SearchSelectionModal from './SearchSelectionModal'
-import GenderButtonComponent from '../utilitycomponents/GenderButtonComponent'
-import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
+import FormStateComponent from './FormStateComponent'
+import SearchSelection from './SearchSelectionModal'
+import Map from './Map'
+import Compare from '../Compare/Compare'
+import Team from './Team'
+import Help from './Help'
+
+import {
+  ListIcon,
+  MapIcon,
+  ManIcon,
+  WomanIcon,
+  SearchIcon,
+  SelectionIcon,
+  QuestionIcon,
+} from '../utilitycomponents/icons'
 
 const Teams = () => {
-  const navigate = useNavigate()
   const location = useLocation()
-  const topRef = useRef()
-  const bottomRef = useRef()
+  const params = useParams()
+
   const { women, dispatch: genderDispatch } = useContext(GenderContext)
   const { user } = useContext(UserContext)
-  const { favTeams } = useContext(TeamPreferenceContext)
+
+  const [tab, setTab] = useState('teams')
+  const [teamId, setTeamId] = useState(null)
   const [showTeamFormModal, setShowTeamFormModal] = useState(false)
-  const [showHelpModal, setShowHelpModal] = useState(false)
-  const [showSearchSelectionModal, setShowSearchSelectionModal] =
-    useState(false)
+
   const [teamFilter, setTeamFilter] = useState('')
   const [valueError, setValueError] = useState({ error: false })
   const initState = location.state
@@ -45,6 +53,7 @@ const Teams = () => {
         ],
         startSeason: '',
         endSeason: '',
+        women: women,
       }
 
   const [formState, compareDispatch] = useReducer(
@@ -62,6 +71,22 @@ const Teams = () => {
   const teamFormMutation = useMutation({
     mutationFn: postTeam,
   })
+
+  useEffect(() => {
+    if (location.state) {
+      genderDispatch({
+        type: 'SET',
+        payload: location.state.compObject.women
+          ? location.state.compObject.women
+          : women,
+      })
+      setTab('compare')
+    }
+    if (params.teamId) {
+      setTeamId(params.teamId)
+      setTab('singleTeam')
+    }
+  }, [location.state, params.teamId, genderDispatch, women])
 
   if (isLoading || isSeasonsLoading) {
     return (
@@ -98,7 +123,7 @@ const Teams = () => {
         message: 'Måste ange minst en matchkategori.',
       })
     } else {
-      navigate('/compare', { state: { compObject: formState } })
+      setTab('compare')
     }
   }
 
@@ -150,11 +175,6 @@ const Teams = () => {
     })
   }
 
-  const scrollTo = (event, ref) => {
-    event.preventDefault()
-    window.scrollTo(0, ref.current.offsetTop)
-  }
-
   const teams = data
     .filter((team) => team.women === women)
     .filter((team) =>
@@ -174,209 +194,243 @@ const Teams = () => {
   const unFilteredTeams = data
 
   return (
-    <div
-      ref={topRef}
-      className="mx-auto mb-2 min-h-screen max-w-7xl px-1 font-inter text-[#011d29] lg:px-0"
-    >
-      <div className="w-full">
-        <form>
-          <input
-            className="w-full border-[#011d29] text-[#011d29] focus:border-[#011d29]"
-            type="text"
-            placeholder="Filter"
-            value={teamFilter}
-            name="teamFilter"
-            onChange={(event) =>
-              setTeamFilter(
-                event.target.value.replace(/[^a-z0-9\u00C0-\u017F]/gi, ''),
-              )
-            }
-            onKeyDown={handleKeyDown}
-          />
-        </form>
-      </div>
-      <div className="my-2 flex h-10 w-full flex-row items-center justify-start pt-2 text-xs lg:text-xl">
-        <div>
-          {formState.teamArray.length < 5 && !valueError.error && (
-            <h3 className="mx-2 font-bold">Valda lag:</h3>
-          )}
-        </div>
-        {formState.teamArray.length < 5 && !valueError.error && (
-          <div className="flex flex-row items-center justify-start text-xs lg:text-xl">
-            {formState.teamArray.map((teamId) => {
-              return (
-                <div
-                  key={teamId}
-                  className="lg:rounded-0 mr-3 rounded-md bg-slate-300 px-1 py-0.5 text-center lg:px-2 lg:py-1"
-                >
-                  {
-                    unFilteredTeams.find((team) => team.teamId === teamId)
-                      .shortName
-                  }
-                </div>
-              )
-            })}
-          </div>
-        )}
-
-        {formState.teamArray.length > 4 &&
-          formState.categoryArray.length > 0 && (
-            <div
-              className="text-warning-800 mb-1 mr-2 w-1/3 rounded-lg bg-[#FED7AA] px-1 py-0.5 text-center text-xs font-bold lg:px-2  lg:py-1 lg:text-xl"
-              role="alert"
-            >
-              Välj max 4 lag.
-            </div>
-          )}
-
-        {valueError.error && (
+    <div className="mx-auto mb-2 min-h-screen max-w-7xl px-1 font-inter text-[#011d29] lg:px-0">
+      <div className="hidden items-center bg-slate-300 text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
+        <div className="flex flex-row xs:gap-1 md:gap-2">
           <div
-            className="text-warning-800 mb-1 mr-2 flex flex-row items-center justify-between rounded-lg bg-[#FED7AA] px-1 py-0.5 text-center text-xs font-bold lg:px-2 lg:py-1 lg:text-xl"
-            role="alert"
+            className={`${
+              tab === 'teams'
+                ? 'border-b-4 border-black'
+                : 'border-b-4 border-slate-300'
+            } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
+            onClick={() => setTab('teams')}
           >
-            <div>{valueError.message}</div>
-            <div>
-              <button
-                type="button"
-                className="text-warning-900 hover:text-warning-900 ml-auto box-content rounded-none border-none p-1 opacity-50 hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
-                data-te-alert-dismiss
-                aria-label="Close"
-                onClick={() => setValueError(false)}
-              >
-                <span className="w-[1em] focus:opacity-100 disabled:pointer-events-none disabled:select-none disabled:opacity-25 [&.disabled]:pointer-events-none [&.disabled]:select-none [&.disabled]:opacity-25">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="h-6 w-6"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </span>
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-      <div className=" mb-6 flex flex-row-reverse justify-between">
-        <div className="mr-1 flex w-1/4 flex-col pt-2 md:flex-row-reverse">
-          <div className="float-right flex w-full flex-col items-end pr-0.5 lg:w-3/4 lg:p-0">
-            <GenderButtonComponent
-              women={women}
-              clickFunctions={() => {
-                compareDispatch({ type: 'CLEAR TEAMS' })
-                genderDispatch({ type: 'TOGGLE' })
-              }}
-            />
-            <ButtonComponent clickFunctions={() => navigate('/map')}>
-              Karta
-            </ButtonComponent>
-            <ButtonComponent clickFunctions={() => setShowHelpModal(true)}>
-              Hjälp/Info
-            </ButtonComponent>
-            <div>
-              {formState.teamArray.length > 1 && (
-                <ButtonComponent
-                  clickFunctions={() => setShowSearchSelectionModal(true)}
-                >
-                  Sökval
-                </ButtonComponent>
-              )}
-            </div>
-            {formState.teamArray.length > 1 &&
-              formState.teamArray.length < 5 && (
-                <ButtonComponent clickFunctions={handleSubmit}>
-                  Jämför
-                </ButtonComponent>
-              )}
+            Laglista
           </div>
 
-          {user && (
-            <p className="text-sm">
-              <button onClick={() => setShowTeamFormModal(true)}>
-                Lägg till lag
-              </button>
-            </p>
+          <div
+            className={`${
+              tab === 'map'
+                ? 'border-b-4 border-black'
+                : 'border-b-4 border-slate-300'
+            } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
+            onClick={() => setTab('map')}
+          >
+            Lagkarta
+          </div>
+          {formState.teamArray.length > 1 && (
+            <div
+              className={`${
+                tab === 'selection'
+                  ? 'border-b-4 border-black'
+                  : 'border-b-4 border-slate-300'
+              } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
+              onClick={() => setTab('selection')}
+            >
+              Sökval
+            </div>
           )}
-          {showTeamFormModal ? (
-            <>
-              <TeamForm
-                mutation={teamFormMutation}
-                setShowModal={setShowTeamFormModal}
-              />
-            </>
-          ) : null}
-          {showHelpModal ? (
-            <>
-              <TeamsListHelpModal setShowModal={setShowHelpModal} />
-            </>
-          ) : null}
-          {showSearchSelectionModal ? (
-            <>
-              <SearchSelectionModal
-                setShowModal={setShowSearchSelectionModal}
-                formState={formState}
-                handleCategoryArrayChange={handleCategoryArrayChange}
-                handleEndSeasonChange={handleEndSeasonChange}
-                handleStartSeasonChange={handleStartSeasonChange}
-                endOptions={endOptions}
-                startOptions={startOptions}
-                compareDispatch={compareDispatch}
-                women={women}
-              />
-            </>
-          ) : null}
+          {formState.teamArray.length > 1 && formState.teamArray.length < 5 && (
+            <div
+              className={`${
+                tab === 'compare'
+                  ? 'border-b-4 border-black'
+                  : 'border-b-4 border-slate-300'
+              } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
+              onClick={handleSubmit}
+            >
+              Jämför
+            </div>
+          )}
         </div>
-        <div className="grid w-2/3 grid-cols-1 justify-between gap-x-8 gap-y-2 pt-2 lg:grid-cols-3">
-          {teams.map((team) => {
-            return (
-              <div
-                key={team.teamId}
-                className="flex flex-row items-center justify-between bg-white px-2 py-1 text-[1.125rem]"
-              >
-                <Link to={`/teams/${team.teamId}`}>
-                  <div
-                    className={
-                      favTeams.includes(team.teamId) ? 'w-32 font-bold' : 'w-32'
-                    }
-                  >
-                    {team.casualName}
-                  </div>
-                </Link>
-                <div className="w-6 pl-4 pr-4">
-                  <input
-                    type="checkbox"
-                    id={team.teamId}
-                    checked={formState.teamArray.includes(team.teamId)}
-                    onChange={(event) =>
-                      handleTeamArrayChange(event, team.teamId)
-                    }
-                    className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
-                  />
-                </div>
-              </div>
-            )
-          })}
+        <div className="flex flex-row xs:gap-1 md:gap-2">
+          <div
+            className={`${
+              tab === 'help'
+                ? 'border-b-4 border-black'
+                : 'border-b-4 border-slate-300'
+            } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
+            onClick={() => setTab('help')}
+          >
+            Hjälp/Info
+          </div>
+          <div
+            className="cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors"
+            onClick={() => {
+              genderDispatch({ type: 'TOGGLE' })
+              compareDispatch({ type: 'RESET' })
+              setTab('teams')
+            }}
+          >
+            {women ? 'Herrar' : 'Damer'}
+          </div>
         </div>
       </div>
-      <div ref={bottomRef}></div>
-      <div className="sticky bottom-0 z-20 flex flex-row items-center justify-center gap-2 bg-[#f4f5f5]">
-        <div
-          onClick={(event) => scrollTo(event, topRef)}
-          className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
-        >
-          Scrolla upp
+      <div className="flex flex-row justify-between gap-1 bg-slate-300 text-sm font-bold xs:mb-2 xs:hidden md:gap-2 md:text-lg">
+        <div className="flex flex-row justify-start xs:gap-1 md:gap-2">
+          <div
+            className={`${
+              tab === 'teams'
+                ? 'border-b-4 border-black'
+                : 'border-b-4 border-slate-300'
+            } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
+            onClick={() => setTab('teams')}
+          >
+            <ListIcon />
+          </div>
+
+          <div
+            className={`${
+              tab === 'map'
+                ? 'border-b-4 border-black'
+                : 'border-b-4 border-slate-300'
+            } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
+            onClick={() => setTab('map')}
+          >
+            <MapIcon />
+          </div>
+          {formState.teamArray.length > 1 && (
+            <div
+              className={`${
+                tab === 'selection'
+                  ? 'border-b-4 border-black'
+                  : 'border-b-4 border-slate-300'
+              } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
+              onClick={() => setTab('selection')}
+            >
+              <SelectionIcon />
+            </div>
+          )}
+          {formState.teamArray.length > 1 && formState.teamArray.length < 5 && (
+            <div
+              className={`${
+                tab === 'compare'
+                  ? 'border-b-4 border-black'
+                  : 'border-b-4 border-slate-300'
+              } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
+              onClick={handleSubmit}
+            >
+              <SearchIcon />
+            </div>
+          )}
         </div>
-        <div
-          onClick={(event) => scrollTo(event, bottomRef)}
-          className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
-        >
-          Scrolla ner
+        <div className="flex flex-row justify-end xs:gap-1 md:gap-2">
+          <div
+            className={`${
+              tab === 'help'
+                ? 'border-b-4 border-black'
+                : 'border-b-4 border-slate-300'
+            } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
+            onClick={() => setTab('help')}
+          >
+            <QuestionIcon />
+          </div>
+
+          <div
+            className="cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200"
+            onClick={() => {
+              genderDispatch({ type: 'TOGGLE' })
+              compareDispatch({ type: 'RESET' })
+              setTab('teams')
+            }}
+          >
+            {women ? <ManIcon /> : <WomanIcon />}
+          </div>
         </div>
+      </div>
+      {(tab === 'teams' || tab === 'map') && (
+        <div className="mt-2 w-full">
+          <form>
+            <input
+              className="w-full border-[#011d29] text-[#011d29] focus:border-[#011d29]"
+              type="text"
+              placeholder="Filter"
+              value={teamFilter}
+              name="teamFilter"
+              onChange={(event) =>
+                setTeamFilter(
+                  event.target.value.replace(/[^a-z0-9\u00C0-\u017F]/gi, ''),
+                )
+              }
+              onKeyDown={handleKeyDown}
+            />
+          </form>
+        </div>
+      )}
+
+      <div>
+        {user && (
+          <p className="text-sm">
+            <button onClick={() => setShowTeamFormModal(true)}>
+              Lägg till lag
+            </button>
+          </p>
+        )}
+        {showTeamFormModal ? (
+          <>
+            <TeamForm
+              mutation={teamFormMutation}
+              setShowModal={setShowTeamFormModal}
+            />
+          </>
+        ) : null}
+        {(tab === 'teams' || tab === 'map' || tab === 'selection') && (
+          <FormStateComponent
+            valueError={valueError}
+            setValueError={setValueError}
+            formState={formState}
+            unFilteredTeams={unFilteredTeams}
+            dispatch={compareDispatch}
+            setTab={setTab}
+            tab={tab}
+          />
+        )}
+        {tab === 'teams' && (
+          <TeamsList
+            teams={teams}
+            handleTeamArrayChange={handleTeamArrayChange}
+            formState={formState}
+            setTab={setTab}
+            setTeamId={setTeamId}
+            valueError={valueError}
+            setValueError={setValueError}
+            unFilteredTeams={unFilteredTeams}
+            dispatch={compareDispatch}
+          />
+        )}
+        {tab === 'map' && (
+          <Map
+            teams={teams}
+            handleTeamArrayChange={handleTeamArrayChange}
+            formState={formState}
+            setTab={setTab}
+            setTeamId={setTeamId}
+            valueError={valueError}
+            setValueError={setValueError}
+            unFilteredTeams={unFilteredTeams}
+            dispatch={compareDispatch}
+          />
+        )}
+        {tab === 'compare' && (
+          <Compare compObject={formState} origin={location.state?.origin} />
+        )}
+        {tab === 'singleTeam' && <Team teamId={teamId} />}
+        {tab === 'help' && <Help />}
+        {tab === 'selection' && (
+          <SearchSelection
+            formState={formState}
+            handleCategoryArrayChange={handleCategoryArrayChange}
+            handleEndSeasonChange={handleEndSeasonChange}
+            handleStartSeasonChange={handleStartSeasonChange}
+            endOptions={endOptions}
+            startOptions={startOptions}
+            dispatch={compareDispatch}
+            women={women}
+            valueError={valueError}
+            setValueError={setValueError}
+            unFilteredTeams={unFilteredTeams}
+          />
+        )}
       </div>
     </div>
   )

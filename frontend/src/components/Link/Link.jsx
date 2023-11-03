@@ -15,7 +15,7 @@ const Link = () => {
         setError(linkData)
       } else if (linkData.success) {
         setError({ sucess: linkData.success, message: linkData.message })
-        navigate('/compare', { state: { compObject: linkData.searchString } })
+        navigate('/teams', { state: { compObject: linkData.searchString } })
       }
     }
 
@@ -29,7 +29,7 @@ const Link = () => {
   }, [linkName, navigate])
 
   return (
-    <div className="grid h-screen place-items-center mx-auto font-inter text-[#011d29]">
+    <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
       {error.success === false && <span>{error.message}</span>}
     </div>
   )

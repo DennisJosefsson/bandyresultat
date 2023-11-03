@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import { compareTeams } from '../../requests/tables'
 import {
@@ -10,28 +10,22 @@ import {
 import { groupConstant } from '../utilitycomponents/constants'
 
 import Spinner from '../utilitycomponents/spinner'
-import CompareHelpModal from './CompareHelpModal'
-import StatsModal from './StatsModal'
-import {
-  ButtonComponent,
-  HiddenButtonComponent,
-} from '../utilitycomponents/ButtonComponents'
+
+import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 
 dayjs.locale('sv')
 
-const Compare = () => {
+const Compare = ({ compObject, origin }) => {
   const navigate = useNavigate()
-  const location = useLocation()
-  const { compObject } = location.state
-  const [showHelpModal, setShowHelpModal] = useState(false)
-  const [showStatsModal, setShowStatsModal] = useState(false)
+
   const [isCopied, setIsCopied] = useState(false)
   const [width, setWidth] = useState(window.innerWidth)
   const breakpoint = 768
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     const handleWindowResize = () => setWidth(window.innerWidth)
     window.addEventListener('resize', handleWindowResize)
 
@@ -94,6 +88,8 @@ const Compare = () => {
 
   const seasons = data.data.seasons
   const playoffs = data.data.playoffs
+  const allSeasons = data.data.allSeasons
+  const allPlayoffs = data.data.allPlayoffs
   const golds = data.data.golds
   const firstGames = data.data.firstAndLatestGames.filter(
     (game) => game.ranked_first_games === '1',
@@ -135,9 +131,9 @@ const Compare = () => {
       : data.data.seasonNames[1].year
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-7xl flex-row justify-between pt-4 font-inter text-[#011d29]">
-      <div className="ml-2 flex flex-row justify-between xl:ml-0">
-        {allData.length === 0 && (
+    <div className="mx-auto flex min-h-screen max-w-7xl flex-col pt-4 font-inter text-[#011d29]">
+      {allData.length === 0 && (
+        <div className="mx-2 flex flex-row justify-between xl:mx-0">
           <div>
             <p className="mb-2 w-[90%] text-base font-bold md:text-lg lg:mb-4 xl:w-[36rem]">
               Lagen har inte mötts {catString} mellan{' '}
@@ -145,23 +141,74 @@ const Compare = () => {
               {data.data.seasonNames[1].year}.
             </p>
           </div>
-        )}
+          <div className="mb-2 flex flex-col-reverse justify-end gap-2 xl:mb-6 xl:flex-row xl:justify-end">
+            {origin === 'gamesList' && (
+              <ButtonComponent clickFunctions={() => navigate(-1)}>
+                Tillbaka
+              </ButtonComponent>
+            )}
+            {allData.length > 0 && (
+              <ButtonComponent
+                clickFunctions={(event) => handleCopyClick(event)}
+              >
+                {isCopied ? 'Kopierad!' : `Länk: ${compareLink}`}
+              </ButtonComponent>
+            )}
+          </div>
+        </div>
+      )}
+      {allData.length > 0 && (
+        <div className="mx-2 flex flex-row justify-between xl:mx-0">
+          {compObject.teamArray.length > 2 && (
+            <div className="w-full">
+              <h2 className="mb-2 text-base font-bold md:text-xl xl:text-2xl">
+                Inbördes möten
+              </h2>
+              <p className="mb-2 w-[90%] text-xs font-bold md:text-sm lg:mb-4 xl:w-[36rem]">
+                Möten mellan {teamString} {catString}{' '}
+                {compObject.startSeason === compObject.endSeason
+                  ? `säsongen ${data.data.seasonNames[0].year}`
+                  : `${startSeasonName}-${endSeasonName}.`}
+              </p>
+            </div>
+          )}
+          {compObject.teamArray.length === 2 && (
+            <div className="w-full">
+              <h2 className="mb-2 text-base font-bold md:text-xl xl:text-2xl">
+                Inbördes möten
+              </h2>
+              <p className="mb-2 w-[90%] text-xs font-bold md:text-sm lg:mb-4 xl:w-[36rem]">
+                Möten mellan {teamString} {catString}{' '}
+                {compObject.startSeason === compObject.endSeason
+                  ? `säsongen ${data.data.seasonNames[0].year}`
+                  : `${startSeasonName}-${endSeasonName}.`}
+              </p>
+            </div>
+          )}
+          <div className="mb-2 flex flex-col-reverse justify-end gap-2 xl:mb-6 xl:h-9 xl:flex-row xl:justify-end">
+            {origin === 'gamesList' && (
+              <ButtonComponent clickFunctions={() => navigate(-1)}>
+                Tillbaka
+              </ButtonComponent>
+            )}
+            {allData.length > 0 && (
+              <ButtonComponent
+                clickFunctions={(event) => handleCopyClick(event)}
+              >
+                {isCopied ? 'Kopierad!' : `Länk: ${compareLink}`}
+              </ButtonComponent>
+            )}
+          </div>
+        </div>
+      )}
+      <div className="flex flex-col justify-between xl:flex-row">
         {allData.length > 0 && (
-          <div>
+          <div className="mx-2 xl:mx-0">
             {compObject.teamArray.length > 2 && (
               <div className="w-full">
-                <h2 className="mb-2 text-base font-bold md:text-xl xl:text-2xl">
-                  Inbördes möten
-                </h2>
-                <p className="mb-2 w-[90%] text-xs font-bold md:text-sm lg:mb-4 xl:w-[36rem]">
-                  Möten mellan {teamString} {catString}{' '}
-                  {compObject.startSeason === compObject.endSeason
-                    ? `säsongen ${data.data.seasonNames[0].year}`
-                    : `${startSeasonName}-${endSeasonName}.`}
-                </p>
                 <div>
                   <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>
-                  <table className="compareGames mb-6 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
+                  <table className="compareGames mb-6 table-fixed text-[8px] sm:text-sm md:text-base xl:w-[36rem]">
                     <thead>
                       <tr key={`tableheadAllgames`}>
                         <th scope="col" className="team">
@@ -218,7 +265,7 @@ const Compare = () => {
                           {groupConstant[category.category]}
                         </h4>
                         <div>
-                          <table className="compareGames mb-3 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
+                          <table className="compareGames mb-3 w-[90%] table-fixed text-[8px] sm:text-sm md:text-base xl:w-[36rem]">
                             <thead>
                               <tr key={`head-${category.category}-${index}`}>
                                 <th scope="col" className="team">
@@ -276,18 +323,9 @@ const Compare = () => {
             )}
             {compObject.teamArray.length === 2 && (
               <div className="w-full">
-                <h2 className="mb-2 text-base font-bold md:text-xl xl:text-2xl">
-                  Inbördes möten
-                </h2>
-                <p className="mb-2 w-[90%] text-xs font-bold md:text-sm lg:mb-4 xl:w-[36rem]">
-                  Möten mellan {teamString} {catString}{' '}
-                  {compObject.startSeason === compObject.endSeason
-                    ? `säsongen ${data.data.seasonNames[0].year}`
-                    : `${startSeasonName}-${endSeasonName}.`}
-                </p>
                 <div>
                   <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>
-                  <table className="compareGames mb-6 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
+                  <table className="compareGames mb-6 w-full table-fixed text-[8px] sm:text-sm md:text-base xl:w-[36rem]">
                     <thead>
                       <tr key={`tableheadAllgames`}>
                         <th scope="col" className="team">
@@ -344,7 +382,7 @@ const Compare = () => {
                           {groupConstant[category.category]}
                         </h4>
                         <div>
-                          <table className="compareGames mb-3 w-[90%] table-fixed text-[10px] md:text-base xl:w-[36rem]">
+                          <table className="compareGames mb-3 w-full table-fixed text-[8px] sm:text-sm md:text-base xl:w-[36rem]">
                             <thead>
                               <tr key={`head-${category.category}-${index}`}>
                                 <th scope="col" className="team">
@@ -400,205 +438,210 @@ const Compare = () => {
             )}
           </div>
         )}
-      </div>
-      <div className="mr-2 xl:mr-0">
-        <div className="mb-2 flex flex-col-reverse justify-end xl:mb-6 xl:flex-row xl:justify-end xl:gap-2">
-          {allData.length > 0 && (
-            <ButtonComponent clickFunctions={(event) => handleCopyClick(event)}>
-              {isCopied ? 'Kopierad!' : `Länk: ${compareLink}`}
-            </ButtonComponent>
-          )}
-          <ButtonComponent
-            clickFunctions={() =>
-              navigate('/teams', { state: { compObject: compObject } })
-            }
-          >
-            Ändra
-          </ButtonComponent>
 
-          <ButtonComponent clickFunctions={() => setShowHelpModal(true)}>
-            Hjälp/Info
-          </ButtonComponent>
-          {allData.length > 0 && (
-            <HiddenButtonComponent
-              clickFunctions={() => setShowStatsModal(true)}
-            >
-              Statistik
-            </HiddenButtonComponent>
-          )}
-        </div>
-        <div>
-          {allData.length > 0 && (
-            <div className="hidden xl:contents xl:w-[40rem]">
-              <h2 className="mb-2 text-right text-2xl font-bold">Statistik</h2>
-              <div className="flex flex-row justify-between gap-2">
-                <div className="w-96">
-                  <div>
-                    <h3 className="text-lg font-bold">Första matcherna</h3>
-                    <table className="compareFirstLast mb-3">
-                      <thead>
-                        <tr key={`head-first-games`}>
-                          <th scope="col" className="w-60"></th>
-                          <th scope="col" className="w-60"></th>
-                          <th scope="col" className="w-16"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {firstGames.map((game) => {
-                          return (
-                            <tr
-                              key={game.game_id}
-                              className="rounded odd:bg-slate-300"
-                            >
-                              <td>
-                                {game.date && (
-                                  <span>
-                                    {dayjs(game.date).format('D MMMM YYYY')}:
-                                  </span>
-                                )}
-                              </td>
-                              <td>
-                                {game.home_name}-{game.away_name}
-                              </td>
-                              <td>{game.result}</td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
+        <div className="mx-2 xl:mx-0 xl:mr-0">
+          <div>
+            {allData.length > 0 && (
+              <div className="">
+                <h2 className="text-sm font-bold md:text-lg xl:text-right">
+                  Statistik
+                </h2>
+                <div className="grid grid-cols-1 flex-row justify-between gap-2 md:flex xl:gap-4">
+                  <div className="w-full md:w-80">
+                    <div className="w-full">
+                      <h3 className="text-sm font-semibold md:text-base">
+                        Första matcherna
+                      </h3>
+                      <table className="compareFirstLast mb-3 w-full text-[8px] sm:text-sm md:text-base">
+                        <thead>
+                          <tr key={`head-first-games`}>
+                            <th scope="col" className=""></th>
+                            <th scope="col" className="ml-2"></th>
+                            <th scope="col" className="ml-2 tabular-nums"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {firstGames.map((game) => {
+                            return (
+                              <tr key={game.game_id} className="rounded">
+                                <td>
+                                  {game.date && (
+                                    <span>
+                                      {dayjs(game.date).format('D MMMM YYYY')}:
+                                    </span>
+                                  )}
+                                </td>
+                                <td>
+                                  {game.home_name}-{game.away_name}
+                                </td>
+                                <td className="result">{game.result}</td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
+                      <p className="my-2 w-full bg-white p-1 text-[8px] font-bold md:text-xs">
+                        Obs! Speldatum 1 januari före 1931 gäller enbart
+                        tillsvidare, de betyder att faktiskt datum saknas.{' '}
+                      </p>
+                    </div>
+                    <div className="w-full">
+                      <h3 className="text-sm font-semibold md:text-base">
+                        Senaste matcherna
+                      </h3>
+                      <table className="compareFirstLast mb-3 w-full text-[8px] sm:text-sm md:text-base">
+                        <thead>
+                          <tr key={`head-latest-games`}>
+                            <th scope="col" className=""></th>
+                            <th scope="col" className="ml-2"></th>
+                            <th scope="col" className="ml-2"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {latestGames.map((game) => {
+                            return (
+                              <tr key={game.game_id} className="rounded">
+                                <td>
+                                  {game.date && (
+                                    <span>
+                                      {dayjs(game.date).format('D MMMM YYYY')}:
+                                    </span>
+                                  )}
+                                </td>
+                                <td>
+                                  {game.home_name}-{game.away_name}
+                                </td>
+                                <td className="result">{game.result}</td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-bold">Senaste matcherna</h3>
-                    <table className="compareFirstLast mb-3">
-                      <thead>
-                        <tr key={`head-latest-games`}>
-                          <th scope="col" className="w-60"></th>
-                          <th scope="col" className="w-60"></th>
-                          <th scope="col" className="w-16"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {latestGames.map((game) => {
-                          return (
-                            <tr
-                              key={game.game_id}
-                              className="rounded odd:bg-slate-300"
-                            >
-                              <td>
-                                {game.date && (
-                                  <span>
-                                    {dayjs(game.date).format('D MMMM YYYY')}:
-                                  </span>
-                                )}
-                              </td>
-                              <td>
-                                {game.home_name}-{game.away_name}
-                              </td>
-                              <td>{game.result}</td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <div className="w-56">
-                  <div className="w-56">
-                    <h3 className="text-right text-lg font-bold">Säsonger</h3>
-                    <table className="compareStats mb-3 w-56">
-                      <thead>
-                        <tr key={`head-seasons`}>
-                          <th scope="col" className="w-32 text-left"></th>
-                          <th scope="col" className="w-8 text-right"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {seasons.map((team) => {
-                          return (
-                            <tr
-                              key={team.team}
-                              className="rounded odd:bg-slate-300"
-                            >
-                              <td>{team.casual_name}</td>
-                              <td className="text-right">{team.seasons}</td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                  <div>
-                    <h3 className="text-right text-lg font-bold">Slutspel</h3>
-                    <table className="compareStats mb-3 w-56">
-                      <thead>
-                        <tr key={`head-playoffs`}>
-                          <th scope="col" className="w-32 text-left"></th>
-                          <th scope="col" className="w-8 text-right"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {playoffs.map((team) => {
-                          return (
-                            <tr
-                              key={team.team}
-                              className="rounded odd:bg-slate-300"
-                            >
-                              <td>{team.casual_name}</td>
-                              <td className="text-right">{team.playoffs}</td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                  <div>
-                    <h3 className="text-right text-lg font-bold">SM-Guld</h3>
-                    <table className="compareStats mb-3 w-56">
-                      <thead>
-                        <tr key={`head-golds`}>
-                          <th scope="col" className="w-32"></th>
-                          <th scope="col" className="w-8"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {golds.map((team) => {
-                          return (
-                            <tr
-                              key={team.team}
-                              className="rounded odd:bg-slate-300"
-                            >
-                              <td>{team.casual_name}</td>
-                              <td className="text-right">{team.guld}</td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
+                  <div className="w-full md:w-80">
+                    <div className="w-full">
+                      <h3 className="text-sm font-semibold md:text-base lg:text-right">
+                        Säsonger
+                      </h3>
+                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm md:text-base">
+                        <thead>
+                          <tr key={`head-seasons`}>
+                            <th scope="col" className="w-32 text-left"></th>
+                            <th scope="col" className="w-8 text-right"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {allSeasons.map((team) => {
+                            return (
+                              <tr key={team.team} className="rounded">
+                                <td>{team.casual_name}</td>
+                                <td className="text-right">{team.seasons}</td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="w-full">
+                      <h3 className="text-sm font-semibold md:text-base lg:text-right">
+                        Säsonger sedan 1931
+                      </h3>
+                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm md:text-base">
+                        <thead>
+                          <tr key={`head-seasons`}>
+                            <th scope="col" className="w-32 text-left"></th>
+                            <th scope="col" className="w-8 text-right"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {seasons.map((team) => {
+                            return (
+                              <tr key={team.team} className="rounded">
+                                <td>{team.casual_name}</td>
+                                <td className="text-right">{team.seasons}</td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold md:text-base lg:text-right">
+                        Slutspel
+                      </h3>
+                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm md:text-base">
+                        <thead>
+                          <tr key={`head-playoffs`}>
+                            <th scope="col" className="w-32 text-left"></th>
+                            <th scope="col" className="w-8 text-right"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {allPlayoffs.map((team) => {
+                            return (
+                              <tr key={team.team} className="rounded">
+                                <td>{team.casual_name}</td>
+                                <td className="text-right">{team.playoffs}</td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold md:text-base lg:text-right">
+                        Slutspel sedan 1931
+                      </h3>
+                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm md:text-base">
+                        <thead>
+                          <tr key={`head-playoffs`}>
+                            <th scope="col" className="w-32 text-left"></th>
+                            <th scope="col" className="w-8 text-right"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {playoffs.map((team) => {
+                            return (
+                              <tr key={team.team} className="rounded">
+                                <td>{team.casual_name}</td>
+                                <td className="text-right">{team.playoffs}</td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold md:text-base lg:text-right">
+                        SM-Guld
+                      </h3>
+                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm md:text-base">
+                        <thead>
+                          <tr key={`head-golds`}>
+                            <th scope="col" className="w-32"></th>
+                            <th scope="col" className="w-8"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {golds.map((team) => {
+                            return (
+                              <tr key={team.team} className="rounded">
+                                <td>{team.casual_name}</td>
+                                <td className="text-right">{team.guld}</td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
-
-      {showHelpModal ? (
-        <>
-          <CompareHelpModal setShowModal={setShowHelpModal} />
-        </>
-      ) : null}
-      {showStatsModal ? (
-        <>
-          <StatsModal
-            setShowModal={setShowStatsModal}
-            playoffs={playoffs}
-            golds={golds}
-            seasons={seasons}
-            firstGames={firstGames}
-            latestGames={latestGames}
-          />
-        </>
-      ) : null}
     </div>
   )
 }

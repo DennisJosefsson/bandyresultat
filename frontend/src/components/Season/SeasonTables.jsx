@@ -2,7 +2,7 @@ import { useQuery } from 'react-query'
 import { getSingleSeason } from '../../requests/seasons'
 import { getSingleSeasonTable } from '../../requests/tables'
 import { Link } from 'react-router-dom'
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { GenderContext } from '../../contexts/contexts'
 import { tableSortFunction } from '../utilitycomponents/sortFunction'
 import Spinner from '../utilitycomponents/spinner'
@@ -25,6 +25,11 @@ const SeasonTables = ({ seasonId }) => {
   } = useQuery(['singleSeasonTable', seasonId], () =>
     getSingleSeasonTable(seasonId),
   )
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+  }, [])
+
   if (isLoading || isTableLoading) {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">

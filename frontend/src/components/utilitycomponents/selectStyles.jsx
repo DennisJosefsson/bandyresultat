@@ -2,6 +2,7 @@ export const selectStyles = {
   menu: (defaultStyles) => ({
     ...defaultStyles,
     maxWidth: '256px',
+    zIndex: 9999,
   }),
   option: (defaultStyles, state) => ({
     ...defaultStyles,

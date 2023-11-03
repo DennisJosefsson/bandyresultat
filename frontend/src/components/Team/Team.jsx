@@ -1,7 +1,6 @@
 import { useQuery } from 'react-query'
 import { getSingleTeam } from '../../requests/teams'
-import { useParams } from 'react-router-dom'
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useContext } from 'react'
 import { TeamPreferenceContext } from '../../contexts/contexts'
 import {
   addToFavTeams,
@@ -11,17 +10,12 @@ import Spinner from '../utilitycomponents/spinner'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 import TeamTable from './TeamTable'
-import TeamCuriositiesModal from './TeamCuriositiesModal'
-import {
-  ButtonComponent,
-  HiddenButtonComponent,
-} from '../utilitycomponents/ButtonComponents'
+
+import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
 
 dayjs.locale('sv')
 
-const Team = () => {
-  const teamId = parseInt(useParams().teamId)
-  const [showTCModal, setShowTCModal] = useState(false)
+const Team = ({ teamId }) => {
   const { favTeams, favTeamsDispatch } = useContext(TeamPreferenceContext)
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
@@ -104,7 +98,7 @@ const Team = () => {
             {teams.team.name}
           </h1>
         </div>
-        <div className="hidden xl:contents">
+        <div>
           {favTeams.includes(teamId) && (
             <ButtonComponent
               clickFunctions={() =>
@@ -125,215 +119,203 @@ const Team = () => {
           )}
         </div>
       </div>
-      <div className="mx-2 flex flex-row-reverse justify-between xl:mx-0">
-        <div className="w-[30rem]">
-          <div className="flex flex-col items-center justify-end xl:hidden">
-            <HiddenButtonComponent clickFunctions={() => setShowTCModal(true)}>
-              Statistik
-            </HiddenButtonComponent>
-            {favTeams.includes(teamId) && (
-              <ButtonComponent
-                clickFunctions={() =>
-                  favTeamsDispatch(removeFromFavTeams(teamId))
-                }
-              >
-                Ta bort favorit
-              </ButtonComponent>
-            )}
-            {!favTeams.includes(teamId) && (
-              <div>
-                <ButtonComponent
-                  clickFunctions={() => favTeamsDispatch(addToFavTeams(teamId))}
-                >
-                  Favoritlag
-                </ButtonComponent>
-              </div>
-            )}
-          </div>
-          <div className="hidden xl:contents">
-            <h2 className="text-right text-2xl font-bold">Kuriosa</h2>
-            <p className="mb-3 text-sm">
+      <div className="mx-2 flex flex-col-reverse justify-between lg:flex-row-reverse xl:mx-0">
+        <div className="max-w-[30rem]">
+          <div>
+            <h2 className="text-sm font-bold xs:text-base md:text-xl lg:text-right">
+              Kuriosa
+            </h2>
+            <div className="teamCurCard">
               {seasons.length === 1 && (
-                <span>
+                <div className="cur">
                   {teams.team.name} från {teams.team.city} har spelat en säsong
                   i högsta serien, det var {seasons[0].year}.
-                </span>
+                </div>
               )}
               {seasons.length > 1 && (
-                <span>
+                <div className="cur">
                   {teams.team.name} från {teams.team.city} har spelat{' '}
                   {seasons.length} säsonger i högsta serien. Första säsongen var{' '}
                   {seasons[seasons.length - 1].year} och senaste{' '}
                   {seasons[0].year}.{' '}
-                </span>
+                </div>
               )}
-              {qualificationSeasons.length === 1
-                ? `${teams.team.casualName} har kvalat till högsta serien, mot motstånd från den högre serien, vid ett tillfälle.`
-                : ''}{' '}
-              {qualificationSeasons.length > 1
-                ? `${teams.team.casualName} har kvalat till högsta serien, mot motstånd från den högre serien, vid ${qualificationSeasons.length} tillfällen.`
-                : ''}
-            </p>
-            {finals > 0 && golds > 0 && (
-              <p className="mb-3 text-sm">
-                {teams.team.casualName} har spelat{' '}
-                {finals === 1 ? 'en finalmatch' : `${finals} finalmatcher`} och
-                vunnit{' '}
-                {golds === 1
-                  ? `en gång (${winString.slice(2)}).`
-                  : `${golds} gånger (${winString.slice(2)}).`}
-              </p>
-            )}
-            {finals > 0 && golds === 0 && (
-              <p className="mb-3 text-sm">
-                {teams.team.casualName} har spelat{' '}
-                {finals === 1 ? 'en finalmatch' : `${finals} finalmatcher`} men
-                har aldrig vunnit.
-              </p>
-            )}
-            {playoffCount > 0 && (
-              <p className="mb-3 text-sm">
-                Laget har kvalificerat sig för slutspel{' '}
-                {playoffCount === 1 ? 'en gång.' : `${playoffCount} gånger.`}
-              </p>
-            )}
-            {playoffCount === 0 && (
-              <p className="mb-3 text-sm">
-                Laget har inte kvalificerat sig för slutspel genom seriespel.
-              </p>
-            )}
-            {playoffStreak.length > 0 && (
-              <span>
-                {playoffStreak.map((streak, index) => {
-                  return (
-                    <p
-                      className="mb-3 text-sm"
-                      key={`${streak.start_year}-${index}`}
-                    >
-                      {teams.team.casualName} spelade slutspel{' '}
-                      {streak.streak_length} år på raken mellan{' '}
-                      {streak.start_year} och {streak.end_year}.
-                    </p>
-                  )
-                })}
-              </span>
-            )}
+              <div className="cur">
+                {qualificationSeasons.length === 1
+                  ? `${teams.team.casualName} har kvalat till högsta serien, mot motstånd från den högre serien, vid ett tillfälle.`
+                  : ''}
+              </div>
+              <div className="cur">
+                {qualificationSeasons.length > 1
+                  ? `${teams.team.casualName} har kvalat till högsta serien, mot motstånd från den högre serien, vid ${qualificationSeasons.length} tillfällen.`
+                  : ''}
+              </div>
+
+              {finals > 0 && golds > 0 && (
+                <div className="cur">
+                  {teams.team.casualName} har spelat{' '}
+                  {finals === 1 ? 'en finalmatch' : `${finals} finalmatcher`}{' '}
+                  och vunnit{' '}
+                  {golds === 1
+                    ? `en gång (${winString.slice(2)}).`
+                    : `${golds} gånger (${winString.slice(2)}).`}
+                </div>
+              )}
+              {finals > 0 && golds === 0 && (
+                <div className="cur">
+                  {teams.team.casualName} har spelat{' '}
+                  {finals === 1 ? 'en finalmatch' : `${finals} finalmatcher`}{' '}
+                  men har aldrig vunnit.
+                </div>
+              )}
+              {playoffCount > 0 && (
+                <div className="cur">
+                  Laget har kvalificerat sig för slutspel{' '}
+                  {playoffCount === 1 ? 'en gång.' : `${playoffCount} gånger.`}
+                </div>
+              )}
+              {playoffCount === 0 && (
+                <div className="cur">
+                  Laget har inte kvalificerat sig för slutspel genom seriespel.
+                </div>
+              )}
+
+              {playoffStreak.length > 0 && (
+                <div className="cur">
+                  {playoffStreak.map((streak, index) => {
+                    return (
+                      <div key={`${streak.start_year}-${index}`}>
+                        {teams.team.casualName} spelade slutspel{' '}
+                        {streak.streak_length} år på raken mellan{' '}
+                        {streak.start_year} och {streak.end_year}.
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
             {unbeatenStreak.length > 0 && (
-              <span>
-                <h4 className="text-right text-xl font-bold">Obesegrade</h4>
-                {unbeatenStreak.map((streak, index) => {
-                  return (
-                    <p
-                      className="mb-3 text-sm"
-                      key={`${streak.start_date}-${index}`}
-                    >
-                      Mellan {dayjs(streak.start_date).format('D MMMM YYYY')}{' '}
-                      och {dayjs(streak.end_date).format('D MMMM YYYY')} spelade
-                      laget {streak.game_count} matcher utan att förlora.
-                    </p>
-                  )
-                })}
-              </span>
+              <div>
+                <h4 className="text-sm font-bold xs:text-base md:text-xl lg:text-right">
+                  Obesegrade
+                </h4>
+                <div className="teamCurCard">
+                  {unbeatenStreak.map((streak, index) => {
+                    return (
+                      <div
+                        key={`${streak.start_date}-${index}`}
+                        className="curCard1st"
+                      >
+                        <div className="dates">
+                          {dayjs(streak.start_date).format('D MMMM YYYY')} -
+                          {dayjs(streak.end_date).format('D MMMM YYYY')}
+                        </div>
+                        <div className="count">{streak.game_count} matcher</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
             )}
             {winStreak.length > 0 && (
-              <span>
-                <h4 className="text-right text-xl font-bold">Vinster i rad</h4>
-                {winStreak.map((streak, index) => {
-                  return (
-                    <p
-                      className="mb-3 text-sm"
-                      key={`${streak.start_date}-${index}`}
-                    >
-                      Mellan {dayjs(streak.start_date).format('D MMMM YYYY')}{' '}
-                      och {dayjs(streak.end_date).format('D MMMM YYYY')} vann
-                      laget {streak.game_count} matcher i rad.
-                    </p>
-                  )
-                })}
-              </span>
+              <div>
+                <h4 className="text-sm font-bold xs:text-base md:text-xl lg:text-right">
+                  Vinster i rad
+                </h4>
+                <div className="teamCurCard">
+                  {winStreak.map((streak, index) => {
+                    return (
+                      <div
+                        key={`${streak.start_date}-${index}`}
+                        className="curCard1st"
+                      >
+                        <div className="dates">
+                          {dayjs(streak.start_date).format('D MMMM YYYY')} -
+                          {dayjs(streak.end_date).format('D MMMM YYYY')}
+                        </div>
+                        <div className="count">{streak.game_count} matcher</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
             )}
             {drawStreak.length > 0 && (
-              <span>
-                <h4 className="text-right text-xl font-bold">
+              <div>
+                <h4 className="text-sm font-bold xs:text-base md:text-xl lg:text-right">
                   Oavgjorda matcher
                 </h4>
-                {drawStreak.map((streak, index) => {
-                  return (
-                    <p
-                      className="mb-3 text-sm"
-                      key={`${streak.start_date}-${index}`}
-                    >
-                      Mellan {dayjs(streak.start_date).format('D MMMM YYYY')}{' '}
-                      och {dayjs(streak.end_date).format('D MMMM YYYY')} spelade
-                      laget oavgjort {streak.game_count} matcher på raken.
-                    </p>
-                  )
-                })}
-              </span>
+                <div className="teamCurCard">
+                  {drawStreak.map((streak, index) => {
+                    return (
+                      <div
+                        key={`${streak.start_date}-${index}`}
+                        className="curCard1st"
+                      >
+                        <div className="dates">
+                          {dayjs(streak.start_date).format('D MMMM YYYY')} -
+                          {dayjs(streak.end_date).format('D MMMM YYYY')}
+                        </div>
+                        <div className="count">{streak.game_count} matcher</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
             )}
             {losingStreak.length > 0 && (
-              <span>
-                <h4 className="text-right text-xl font-bold">Förlustsvit</h4>
-                {losingStreak.map((streak, index) => {
-                  return (
-                    <p
-                      className="mb-3 text-sm"
-                      key={`${streak.start_date}-${index}`}
-                    >
-                      Mellan {dayjs(streak.start_date).format('D MMMM YYYY')}{' '}
-                      och {dayjs(streak.end_date).format('D MMMM YYYY')} spelade
-                      laget {streak.game_count} matcher och förlorade alla.
-                    </p>
-                  )
-                })}
-              </span>
+              <div>
+                <h4 className="text-sm font-bold xs:text-base md:text-xl lg:text-right">
+                  Förlustsvit
+                </h4>
+                <div className="teamCurCard">
+                  {losingStreak.map((streak, index) => {
+                    return (
+                      <div
+                        key={`${streak.start_date}-${index}`}
+                        className="curCard1st"
+                      >
+                        <div className="dates">
+                          {dayjs(streak.start_date).format('D MMMM YYYY')} -
+                          {dayjs(streak.end_date).format('D MMMM YYYY')}
+                        </div>
+                        <div className="count">{streak.game_count} matcher</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
             )}
             {noWinStreak.length > 0 && (
-              <span>
-                <h4 className="text-right text-xl font-bold">
+              <div>
+                <h4 className="text-sm font-bold xs:text-base md:text-xl lg:text-right">
                   Matcher i rad utan vinst
                 </h4>
-                {noWinStreak.map((streak, index) => {
-                  return (
-                    <p
-                      className="mb-3 text-sm"
-                      key={`${streak.start_date}-${index}`}
-                    >
-                      Mellan {dayjs(streak.start_date).format('D MMMM YYYY')}{' '}
-                      och {dayjs(streak.end_date).format('D MMMM YYYY')} spelade
-                      laget {streak.game_count} matcher utan att vinna.
-                    </p>
-                  )
-                })}
-              </span>
+                <div className="teamCurCard">
+                  {noWinStreak.map((streak, index) => {
+                    return (
+                      <div
+                        key={`${streak.start_date}-${index}`}
+                        className="curCard1st"
+                      >
+                        <div className="dates">
+                          {dayjs(streak.start_date).format('D MMMM YYYY')} -
+                          {dayjs(streak.end_date).format('D MMMM YYYY')}
+                        </div>
+                        <div className="count">{streak.game_count} matcher</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
             )}
           </div>
         </div>
         <div>
-          <h2 className="text-base font-bold md:text-xl">Tabeller</h2>
+          <h2 className="ml-0 text-base font-bold md:text-xl">Tabeller</h2>
           <TeamTable tableArray={teams.tabeller} />
         </div>
       </div>
-      {showTCModal ? (
-        <>
-          <TeamCuriositiesModal
-            finals={finals}
-            golds={golds}
-            winString={winString}
-            setShowModal={setShowTCModal}
-            winStreak={winStreak}
-            noWinStreak={noWinStreak}
-            losingStreak={losingStreak}
-            unbeatenStreak={unbeatenStreak}
-            drawStreak={drawStreak}
-            playoffStreak={playoffStreak}
-            playoffCount={playoffCount}
-            teams={teams}
-            seasons={seasons}
-            qualificationSeasons={qualificationSeasons}
-          />
-        </>
-      ) : null}
     </div>
   )
 }

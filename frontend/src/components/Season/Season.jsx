@@ -3,7 +3,7 @@ import { useContext, useState, useEffect } from 'react'
 import { GenderContext } from '../../contexts/contexts'
 import { ErrorBoundary } from 'react-error-boundary'
 import { logError } from '../utilitycomponents/logError'
-import SeasonHelpModal from './SeasonHelpModal'
+import SeasonHelp from './SeasonHelpModal'
 import SeasonTables from './SeasonTables'
 import Games from '../Game/Games'
 import Playoff from './SeasonPlayoff'
@@ -23,13 +23,14 @@ import {
   ManIcon,
   WomanIcon,
   MapIcon,
+  QuestionIcon,
 } from '../utilitycomponents/icons'
 
 const Season = () => {
   const seasonId = parseInt(useParams().seasonId)
   const { women, dispatch } = useContext(GenderContext)
   const [tab, setTab] = useState('tables')
-  const [showHelpModal, setShowHelpModal] = useState(false)
+
   const { state } = useLocation()
 
   useEffect(() => {
@@ -76,54 +77,76 @@ const Season = () => {
       <div className="hidden items-center bg-slate-300 text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
         <div
           className={`${
-            tab === 'games' ? 'border-b-4 border-black' : null
-          } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
+            tab === 'games'
+              ? 'border-b-4 border-black'
+              : 'border-b-4 border-slate-300'
+          } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
           onClick={() => setTab('games')}
         >
           Matcher
         </div>
         <div
           className={`${
-            tab === 'tables' ? 'border-b-4 border-black' : null
-          } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
+            tab === 'tables'
+              ? 'border-b-4 border-black'
+              : 'border-b-4 border-slate-300'
+          } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
           onClick={() => setTab('tables')}
         >
           Tabell
         </div>
         <div
           className={`${
-            tab === 'playoff' ? 'border-b-4 border-black' : null
-          } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
+            tab === 'playoff'
+              ? 'border-b-4 border-black'
+              : 'border-b-4 border-slate-300'
+          } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
           onClick={() => setTab('playoff')}
         >
           Slutspel
         </div>
         <div
           className={`${
-            tab === 'roundForRound' ? 'border-b-4 border-black' : null
-          } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
+            tab === 'roundForRound'
+              ? 'border-b-4 border-black'
+              : 'border-b-4 border-slate-300'
+          } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
           onClick={() => setTab('roundForRound')}
         >
           Utveckling
         </div>
         <div
           className={`${
-            tab === 'stats' ? 'border-b-4 border-black' : null
-          } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
+            tab === 'stats'
+              ? 'border-b-4 border-black'
+              : 'border-b-4 border-slate-300'
+          } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
           onClick={() => setTab('stats')}
         >
           Statistik
         </div>
         <div
           className={`${
-            tab === 'map' ? 'border-b-4 border-black' : null
-          } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
+            tab === 'map'
+              ? 'border-b-4 border-black'
+              : 'border-b-4 border-slate-300'
+          } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
           onClick={() => setTab('map')}
         >
           Karta
         </div>
         <div
-          className="cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200"
+          className={`${
+            tab === 'help'
+              ? 'border-b-4 border-black'
+              : 'border-b-4 border-slate-300'
+          } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
+          onClick={() => setTab('help')}
+        >
+          Hjälp/Info
+        </div>
+        <div
+          className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 duration-300 ease-in-out hover:border-black hover:bg-slate-200 hover:transition-colors"
           onClick={() => dispatch({ type: 'TOGGLE' })}
         >
           {women ? 'Herrar' : 'Damer'}
@@ -132,7 +155,9 @@ const Season = () => {
       <div className="flex flex-row justify-between gap-1 bg-slate-300 text-sm font-bold xs:mb-2 xs:hidden md:gap-2 md:text-lg">
         <div
           className={`${
-            tab === 'games' ? 'border-b-4 border-black' : null
+            tab === 'games'
+              ? 'border-b-4 border-black'
+              : 'border-b-4 border-slate-300'
           } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
           onClick={() => setTab('games')}
         >
@@ -140,7 +165,9 @@ const Season = () => {
         </div>
         <div
           className={`${
-            tab === 'tables' ? 'border-b-4 border-black' : null
+            tab === 'tables'
+              ? 'border-b-4 border-black'
+              : 'border-b-4 border-slate-300'
           } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
           onClick={() => setTab('tables')}
         >
@@ -148,7 +175,9 @@ const Season = () => {
         </div>
         <div
           className={`${
-            tab === 'playoff' ? 'border-b-4 border-black' : null
+            tab === 'playoff'
+              ? 'border-b-4 border-black'
+              : 'border-b-4 border-slate-300'
           } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
           onClick={() => setTab('playoff')}
         >
@@ -156,7 +185,9 @@ const Season = () => {
         </div>
         <div
           className={`${
-            tab === 'roundForRound' ? 'border-b-4 border-black' : null
+            tab === 'roundForRound'
+              ? 'border-b-4 border-black'
+              : 'border-b-4 border-slate-300'
           } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
           onClick={() => setTab('roundForRound')}
         >
@@ -164,7 +195,9 @@ const Season = () => {
         </div>
         <div
           className={`${
-            tab === 'stats' ? 'border-b-4 border-black' : null
+            tab === 'stats'
+              ? 'border-b-4 border-black'
+              : 'border-b-4 border-slate-300'
           } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
           onClick={() => setTab('stats')}
         >
@@ -172,14 +205,26 @@ const Season = () => {
         </div>
         <div
           className={`${
-            tab === 'map' ? 'border-b-4 border-black' : null
+            tab === 'map'
+              ? 'border-b-4 border-black'
+              : 'border-b-4 border-slate-300'
           } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
           onClick={() => setTab('map')}
         >
           <MapIcon />
         </div>
         <div
-          className="cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200"
+          className={`${
+            tab === 'help'
+              ? 'border-b-4 border-black'
+              : 'border-b-4 border-slate-300'
+          } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
+          onClick={() => setTab('help')}
+        >
+          <QuestionIcon />
+        </div>
+        <div
+          className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 hover:border-black hover:bg-slate-200"
           onClick={() => dispatch({ type: 'TOGGLE' })}
         >
           {women ? <ManIcon /> : <WomanIcon />}
@@ -205,14 +250,9 @@ const Season = () => {
             <SeasonStats seasonId={seasonId} />
           )}
           {tab === 'map' && seasonId < 2025 && <Map seasonId={seasonId} />}
+          {tab === 'help' && <SeasonHelp />}
         </ErrorBoundary>
       </div>
-
-      {showHelpModal ? (
-        <>
-          <SeasonHelpModal setShowModal={setShowHelpModal} />
-        </>
-      ) : null}
     </div>
   )
 }

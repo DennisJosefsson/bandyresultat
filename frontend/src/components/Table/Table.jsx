@@ -3,7 +3,6 @@ import { useContext, useState, useEffect, useRef } from 'react'
 import { maratonTabell } from '../../requests/tables'
 import { GenderContext, TeamPreferenceContext } from '../../contexts/contexts'
 
-import MaratonHelpModal from './MaratonHelp'
 import Spinner from '../utilitycomponents/spinner'
 
 import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
@@ -15,12 +14,13 @@ const Table = () => {
   const [homeAwayTitle, setHomeAwayTitle] = useState('')
   const topRef = useRef()
   const bottomRef = useRef()
-  const [showHelpModal, setShowHelpModal] = useState(false)
+
   const { data, isLoading, error } = useQuery('maratonTabell', maratonTabell)
   const [width, setWidth] = useState(window.innerWidth)
   const breakpoint = 576
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     const handleWindowResize = () => setWidth(window.innerWidth)
     window.addEventListener('resize', handleWindowResize)
 
@@ -154,11 +154,6 @@ const Table = () => {
           </table>
           <div ref={bottomRef}></div>
         </div>
-        {showHelpModal ? (
-          <>
-            <MaratonHelpModal setShowModal={setShowHelpModal} />
-          </>
-        ) : null}
       </div>
       <div className="sticky bottom-0 z-20 flex flex-row items-center justify-center gap-2 bg-[#f4f5f5]">
         <div

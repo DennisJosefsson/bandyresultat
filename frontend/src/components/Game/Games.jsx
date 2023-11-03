@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from 'react-query'
 import { getSeasonGames } from '../../requests/games'
-import { getSingleSeason } from '../../requests/seasons'
+import { getSingleSeason, getSeasons } from '../../requests/seasons'
 import { postGame } from '../../requests/games'
 import { useState, useContext, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
@@ -46,6 +46,12 @@ const Games = ({ seasonId }) => {
     error: seasonError,
   } = useQuery(['singleSeason', seasonId], () => getSingleSeason(seasonId))
 
+  const {
+    data: unFilteredSeasons,
+    isLoading: isAllSeasonsLoading,
+    error: allSeasonsError,
+  } = useQuery(['seasons'], getSeasons)
+
   const postGameMutation = useMutation({
     mutationFn: postGame,
   })
@@ -56,7 +62,7 @@ const Games = ({ seasonId }) => {
     }
   }
 
-  if (isLoading || isSeasonLoading) {
+  if (isLoading || isSeasonLoading || isAllSeasonsLoading) {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         <Spinner />
@@ -64,7 +70,7 @@ const Games = ({ seasonId }) => {
     )
   }
 
-  if (error || seasonError) {
+  if (error || seasonError || allSeasonsError) {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         Något gick fel.
@@ -84,6 +90,12 @@ const Games = ({ seasonId }) => {
     event.preventDefault()
     window.scrollTo(0, ref.current.offsetTop)
   }
+
+  const allSeasons = unFilteredSeasons.filter(
+    (season) => season.women === women,
+  )
+  const startSeason = allSeasons.pop().seasonId
+  const endSeason = allSeasons.shift().seasonId
 
   const games = data
     .filter((table) => table.women === women)
@@ -221,6 +233,8 @@ const Games = ({ seasonId }) => {
                     setShowModal={setShowAddGameModal}
                     setGameData={setGameData}
                     seriesInfo={seriesInfo}
+                    startSeason={startSeason}
+                    endSeason={endSeason}
                     played
                   />
                 )}
@@ -231,6 +245,8 @@ const Games = ({ seasonId }) => {
                     setShowModal={setShowAddGameModal}
                     setGameData={setGameData}
                     seriesInfo={seriesInfo}
+                    startSeason={startSeason}
+                    endSeason={endSeason}
                     played
                   />
                 )}
@@ -241,6 +257,8 @@ const Games = ({ seasonId }) => {
                     setShowModal={setShowAddGameModal}
                     setGameData={setGameData}
                     seriesInfo={seriesInfo}
+                    startSeason={startSeason}
+                    endSeason={endSeason}
                     played
                   />
                 )}
@@ -251,6 +269,8 @@ const Games = ({ seasonId }) => {
                     setShowModal={setShowAddGameModal}
                     setGameData={setGameData}
                     seriesInfo={seriesInfo}
+                    startSeason={startSeason}
+                    endSeason={endSeason}
                     played
                   />
                 )}
@@ -261,6 +281,8 @@ const Games = ({ seasonId }) => {
                     setShowModal={setShowAddGameModal}
                     setGameData={setGameData}
                     seriesInfo={seriesInfo}
+                    startSeason={startSeason}
+                    endSeason={endSeason}
                     played
                   />
                 )}
@@ -272,6 +294,8 @@ const Games = ({ seasonId }) => {
                     setShowModal={setShowAddGameModal}
                     setGameData={setGameData}
                     seriesInfo={seriesInfo}
+                    startSeason={startSeason}
+                    endSeason={endSeason}
                     played
                   />
                 )}
@@ -300,6 +324,8 @@ const Games = ({ seasonId }) => {
                     setShowModal={setShowAddGameModal}
                     setGameData={setGameData}
                     seriesInfo={seriesInfo}
+                    startSeason={startSeason}
+                    endSeason={endSeason}
                   />
                 )}
                 {unplayedSemiGames.length > 0 && (
@@ -309,6 +335,8 @@ const Games = ({ seasonId }) => {
                     setShowModal={setShowAddGameModal}
                     setGameData={setGameData}
                     seriesInfo={seriesInfo}
+                    startSeason={startSeason}
+                    endSeason={endSeason}
                   />
                 )}
                 {unplayedQuarterGames.length > 0 && (
@@ -318,6 +346,8 @@ const Games = ({ seasonId }) => {
                     setShowModal={setShowAddGameModal}
                     setGameData={setGameData}
                     seriesInfo={seriesInfo}
+                    startSeason={startSeason}
+                    endSeason={endSeason}
                   />
                 )}
                 {unplayedEightGames.length > 0 && (
@@ -327,6 +357,8 @@ const Games = ({ seasonId }) => {
                     setShowModal={setShowAddGameModal}
                     setGameData={setGameData}
                     seriesInfo={seriesInfo}
+                    startSeason={startSeason}
+                    endSeason={endSeason}
                   />
                 )}
                 {unplayedRegularGames.length > 0 && (
@@ -336,6 +368,8 @@ const Games = ({ seasonId }) => {
                     setShowModal={setShowAddGameModal}
                     setGameData={setGameData}
                     seriesInfo={seriesInfo}
+                    startSeason={startSeason}
+                    endSeason={endSeason}
                   />
                 )}
 
@@ -346,6 +380,8 @@ const Games = ({ seasonId }) => {
                     setShowModal={setShowAddGameModal}
                     setGameData={setGameData}
                     seriesInfo={seriesInfo}
+                    startSeason={startSeason}
+                    endSeason={endSeason}
                   />
                 )}
                 {user && (

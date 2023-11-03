@@ -5,6 +5,8 @@ const genderReducer = (state, action) => {
   switch (action.type) {
     case 'TOGGLE':
       return !state
+    case 'SET':
+      return (state = action.payload)
     default:
       return state
   }

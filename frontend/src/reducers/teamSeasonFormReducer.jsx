@@ -9,7 +9,7 @@ const teamArrayFormReducer = (state, action) => {
       return {
         ...state,
         teamArray: state.teamArray.filter(
-          (teamId) => teamId !== action.payload
+          (teamId) => teamId !== action.payload,
         ),
       }
     }
@@ -28,7 +28,7 @@ const teamArrayFormReducer = (state, action) => {
       return {
         ...state,
         categoryArray: state.categoryArray.filter(
-          (cat) => cat !== action.payload
+          (cat) => cat !== action.payload,
         ),
       }
     }
@@ -39,6 +39,20 @@ const teamArrayFormReducer = (state, action) => {
       return { ...state, startSeason: action.payload }
     case 'INPUT END':
       return { ...state, endSeason: action.payload }
+    case 'RESET':
+      return {
+        teamArray: [],
+        categoryArray: [
+          'qualification',
+          'regular',
+          'eight',
+          'quarter',
+          'semi',
+          'final',
+        ],
+        endSeason: '',
+        startSeason: '',
+      }
     default:
       return state
   }

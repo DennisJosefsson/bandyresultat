@@ -96,18 +96,22 @@
   }
 
   .compareFirstLast th {
-    @apply px-0.5 py-1 md:px-1 md:py-2;
+    @apply px-0.5 py-1;
   }
   .compareFirstLast td {
-    @apply px-1 py-1;
+    @apply px-0.5 py-1;
+  }
+
+  .compareFirstLast td.result {
+    @apply text-right tabular-nums;
   }
 
   .compareStats th {
-    @apply px-0.5 py-1 md:px-1 md:py-2;
+    @apply px-0.5 py-1;
   }
 
   .compareStats td {
-    @apply px-1 py-1;
+    @apply px-0.5 py-1;
   }
 
   .compareGames th {
@@ -250,6 +254,22 @@
 
   .leaflet-icon-red {
     @apply border-none bg-transparent fill-red-700;
+  }
+
+  .teamCurCard {
+    @apply m-1 mb-2 flex flex-col rounded  p-1 text-[10px] xxs:text-xs md:p-2 md:text-sm lg:mr-0;
+  }
+
+  .teamCurCard .curCard1st {
+    @apply mb-1 flex flex-row justify-between;
+  }
+
+  .teamCurCard .dates {
+    @apply font-semibold;
+  }
+
+  .teamCurCard .cur {
+    @apply mb-2;
   }
 }
 

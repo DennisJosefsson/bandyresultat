@@ -15,66 +15,66 @@ const TeamTable = ({ tableArray }) => {
       {sortedTables.map((category, index) => {
         return (
           <div key={category.category} className="mb-6">
-            <h2 className="font-bold text-base md:text-xl">
+            <h2 className="text-sm font-bold xs:text-base md:text-xl">
               {groupConstant[category.category]}
             </h2>
 
             <div>
-              <table className="table-fixed w-full md:w-[30rem] text-sm md:text-base">
+              <table className="w-full table-fixed text-[10px] xxs:text-xs md:w-[30rem] md:text-sm lg:text-base">
                 <thead>
                   <tr>
                     <th
                       scope="col"
-                      className="w-4 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                      className="w-4 px-0.5 py-1 text-right xl:w-8 xl:px-1 xl:py-2"
                     >
                       M
                     </th>
                     <th
                       scope="col"
-                      className="w-4 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                      className="w-4 px-0.5 py-1 text-right xl:w-8 xl:px-1 xl:py-2"
                     >
                       V
                     </th>
                     <th
                       scope="col"
-                      className="w-4 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                      className="w-4 px-0.5 py-1 text-right xl:w-8 xl:px-1 xl:py-2"
                     >
                       O
                     </th>
                     <th
                       scope="col"
-                      className="w-4 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                      className="w-4 px-0.5 py-1 text-right xl:w-8 xl:px-1 xl:py-2"
                     >
                       F
                     </th>
                     <th
                       scope="col"
-                      className="w-6 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                      className="w-6 px-0.5 py-1 text-right xl:w-8 xl:px-1 xl:py-2"
                     >
                       GM
                     </th>
                     <th
                       scope="col"
-                      className="w-6 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                      className="w-6 px-0.5 py-1 text-right xl:w-8 xl:px-1 xl:py-2"
                     >
                       IM
                     </th>
                     <th
                       scope="col"
-                      className="w-6 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                      className="w-6 px-0.5 py-1 text-right xl:w-8 xl:px-1 xl:py-2"
                     >
                       MS
                     </th>
                     <th
                       scope="col"
-                      className="w-4 px-0.5 py-1 xl:w-8 xl:px-1 xl:py-2 text-right"
+                      className="w-4 px-0.5 py-1 text-right xl:w-8 xl:px-1 xl:py-2"
                     >
                       P
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr key={index} className="odd:bg-slate-300 rounded">
+                  <tr key={index} className="rounded odd:bg-slate-300">
                     <td className="px-1 py-2 text-right tabular-nums">
                       {category.total_games}
                     </td>
@@ -96,7 +96,7 @@ const TeamTable = ({ tableArray }) => {
                     <td className="px-1 py-2 text-right tabular-nums">
                       {category.total_goal_difference}
                     </td>
-                    <td className="px-1 py-2 p text-right tabular-nums">
+                    <td className="p px-1 py-2 text-right tabular-nums">
                       {category.total_points}
                     </td>
                   </tr>

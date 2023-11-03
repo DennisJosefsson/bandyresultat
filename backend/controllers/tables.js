@@ -321,6 +321,28 @@ group by casual_name, team;
     { bind: { team_array: teamArray }, type: QueryTypes.SELECT }
   )
 
+  const allPlayoffs = await sequelize.query(
+    `
+  select count(distinct season_id) as playoffs, team, casual_name
+from teamgames
+join teams on teamgames.team = teams.team_id
+where team = any($team_array) and category = any(array['quarter','semi','final'])
+group by casual_name, team;
+  `,
+    { bind: { team_array: teamArray }, type: QueryTypes.SELECT }
+  )
+
+  const allSeasons = await sequelize.query(
+    `
+  select count(distinct season_id) as seasons, team, casual_name
+from teamgames
+join teams on teamgames.team = teams.team_id
+where team = any($team_array)
+group by casual_name, team;
+  `,
+    { bind: { team_array: teamArray }, type: QueryTypes.SELECT }
+  )
+
   const firstAndLatestGames = await sequelize.query(
     `
  with first_games as (select game_id, home_team_id, away_team_id, "date", result,
@@ -347,6 +369,8 @@ where ranked_first_games = 1 or ranked_last_games = 1;
     golds,
     playoffs,
     seasons,
+    allPlayoffs,
+    allSeasons,
     firstAndLatestGames,
     link,
     seasonNames,
