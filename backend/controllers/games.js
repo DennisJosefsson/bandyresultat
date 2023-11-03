@@ -3733,7 +3733,7 @@ router.get('/:gameId', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', authControl, async (req, res, next) => {
   const { serieId } = await Serie.findOne({
     where: { seasonId: req.body.seasonId, serieGroupCode: req.body.group },
     raw: true,
