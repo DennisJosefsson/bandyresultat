@@ -129,23 +129,25 @@ const Animation = ({ seasonId }) => {
     ? seriesArray.find((serie) => serie.serieGroupCode === group).serieName
     : ''
 
-  const gamesArray = regularGames.map((group) => {
-    return {
-      group: group.group,
-      serieName: animationArray.find(
-        (aniGroup) => aniGroup.group === group.group,
-      ).serieName,
-      dates: group.dates.map((date) => {
-        return {
-          date: date.date,
-          games: [...date.games],
-          table: animationArray
-            .find((tableGroup) => tableGroup.group === group.group)
-            .tables.find((tableDate) => tableDate.date === date.date).table,
-        }
-      }),
-    }
-  })
+  const gamesArray = regularGames
+    .filter((group) => group.group !== 'mix')
+    .map((group) => {
+      return {
+        group: group.group,
+        serieName: animationArray.find(
+          (aniGroup) => aniGroup.group === group.group,
+        ).serieName,
+        dates: group.dates.map((date) => {
+          return {
+            date: date.date,
+            games: [...date.games],
+            table: animationArray
+              .find((tableGroup) => tableGroup.group === group.group)
+              .tables.find((tableDate) => tableDate.date === date.date).table,
+          }
+        }),
+      }
+    })
 
   const dateArray =
     gamesArray.filter((serieGroup) => serieGroup.group === group).length > 0
@@ -202,7 +204,7 @@ const Animation = ({ seasonId }) => {
               className={
                 round > 0
                   ? 'mt-3 w-6 cursor-pointer rounded-md py-3 text-left text-[#011d29]'
-                  : 'mt-3 w-6 cursor-not-allowed rounded-md py-3 text-left text-[#011d29] opacity-25'
+                  : 'mt-3 w-6 cursor-not-allowed rounded-md py-3 text-left text-slate-400'
               }
             >
               <LeftArrow />
@@ -218,7 +220,7 @@ const Animation = ({ seasonId }) => {
               className={
                 round < dateArray.length - 1
                   ? 'mt-3 w-6 cursor-pointer rounded-md py-3 text-right text-[#011d29]'
-                  : 'mt-3 w-6 cursor-not-allowed rounded-md py-3 text-right text-[#011d29] opacity-25'
+                  : 'mt-3 w-6 cursor-not-allowed rounded-md py-3 text-right text-slate-400'
               }
             >
               <RightArrow />

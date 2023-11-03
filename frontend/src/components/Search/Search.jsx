@@ -4,18 +4,27 @@ import { useQuery } from 'react-query'
 import { useState, useContext, useEffect, useRef } from 'react'
 import { getTeams } from '../../requests/teams'
 import { getSearch } from '../../requests/games'
-import { GenderContext, TeamPreferenceContext } from '../../contexts/contexts'
+import {
+  GenderContext,
+  TeamPreferenceContext,
+  MenuContext,
+} from '../../contexts/contexts'
 import Spinner from '../utilitycomponents/spinner'
 import Select from 'react-select'
 import { selectStyles } from '../utilitycomponents/selectStyles'
-import GenderButtonComponent from '../utilitycomponents/GenderButtonComponent'
-import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
+
 import ResultFormComponent from './ResultFormComponent'
 import OrderFormComponent from './OrderFormComponent'
 import SeasonFormComponent from './SeasonFormComponent'
 import PreferenceFormComponent from './PreferenceFormComponent'
-import SearchFormModal from './SearchFormModal'
-import { ChevronDown } from '../utilitycomponents/icons'
+import SearchHelp from './SearchFormModal'
+import {
+  ChevronDown,
+  SearchIcon,
+  QuestionIcon,
+  ManIcon,
+  WomanIcon,
+} from '../utilitycomponents/icons'
 
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
@@ -46,7 +55,8 @@ const Search = () => {
   const [showOrderForm, setShowOrderForm] = useState(false)
   const [showSeasonForm, setShowSeasonForm] = useState(false)
   const [showPreferenceForm, setShowPreferenceForm] = useState(false)
-  const [showHelpModal, setShowHelpModal] = useState(false)
+  const [tab, setTab] = useState('search')
+
   const topRef = useRef()
   const bottomRef = useRef()
   const methods = useForm({
@@ -80,6 +90,7 @@ const Search = () => {
 
   const { women, dispatch } = useContext(GenderContext)
   const { favTeams } = useContext(TeamPreferenceContext)
+  const { open } = useContext(MenuContext)
 
   const {
     data: teams,
@@ -166,228 +177,289 @@ const Search = () => {
       className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]"
       ref={topRef}
     >
-      <div className="flex flex-row-reverse justify-between">
-        <div>
-          <GenderButtonComponent
-            women={women}
-            clickFunctions={() => {
-              methods.setValue('team', '')
-              methods.setValue('opponent', '')
-
+      <div className="hidden items-center bg-slate-300 text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
+        <div className="flex flex-row xs:gap-1 md:gap-2">
+          <div
+            className={`${
+              tab === 'search'
+                ? 'border-b-4 border-black'
+                : 'border-b-4 border-slate-300'
+            } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
+            onClick={() => setTab('search')}
+          >
+            Sök
+          </div>
+        </div>
+        <div className="flex flex-row xs:gap-1 md:gap-2">
+          <div
+            className={`${
+              tab === 'help'
+                ? 'border-b-4 border-black'
+                : 'border-b-4 border-slate-300'
+            } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
+            onClick={() => setTab('help')}
+          >
+            Hjälp/Info
+          </div>
+          <div
+            className="cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors"
+            onClick={() => {
               dispatch({ type: 'TOGGLE' })
             }}
-          />
-          <ButtonComponent clickFunctions={() => setShowHelpModal(true)}>
-            Hjälp/Info
-          </ButtonComponent>
-          <div>
-            <input
-              type="submit"
-              value="Sök"
-              form="search-form"
-              className="mb-4 mt-2 w-[84px] cursor-pointer truncate rounded-md bg-[#011d29] py-0.5 text-center text-sm text-white transition-all duration-150 ease-in-out first:last:px-1 hover:bg-slate-600 lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
-            />
-          </div>
-        </div>
-        <div className="ml-2 w-[70%] max-w-[800px] lg:ml-0 lg:w-full">
-          <div>
-            <FormProvider {...methods}>
-              <form onSubmit={methods.handleSubmit(onSubmit)} id="search-form">
-                <div className="grid grid-cols-1 gap-2 p-1 lg:grid-cols-3 lg:justify-between">
-                  <div className="flex max-w-[18rem] flex-col text-sm md:text-base">
-                    <div>Välj lag</div>
-                    <div>
-                      <Controller
-                        name="team"
-                        control={methods.control}
-                        render={({ field }) => (
-                          <Select
-                            placeholder="Lag"
-                            {...field}
-                            options={teamSelection}
-                            styles={selectStyles}
-                            isClearable
-                            noOptionsMessage={() => 'Inga val'}
-                          />
-                        )}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex max-w-[18rem] flex-col text-sm md:text-base">
-                    <div>Välj motståndare</div>
-                    <div>
-                      <Controller
-                        name="opponent"
-                        control={methods.control}
-                        render={({ field }) => (
-                          <Select
-                            placeholder="Lag"
-                            {...field}
-                            options={opponentSelection}
-                            styles={selectStyles}
-                            isClearable
-                            noOptionsMessage={() => 'Inga val'}
-                          />
-                        )}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {!showResultForm && (
-                  <div
-                    className="mb-1 flex w-[18rem] cursor-pointer flex-row justify-between rounded bg-white p-2 shadow-md lg:w-full"
-                    onClick={() => setShowResultForm(true)}
-                  >
-                    <div className="text-sm md:text-base">
-                      Visa resultatformulär
-                    </div>
-                    <div>
-                      <ChevronDown />
-                    </div>
-                  </div>
-                )}
-                {showResultForm && (
-                  <ResultFormComponent
-                    showResultForm={showResultForm}
-                    setShowResultForm={setShowResultForm}
-                  />
-                )}
-                {!showOrderForm && (
-                  <div
-                    className="mb-1 flex w-[18rem] cursor-pointer flex-row justify-between rounded bg-white p-2 shadow-md lg:w-full"
-                    onClick={() => setShowOrderForm(true)}
-                  >
-                    <div className="text-sm md:text-base">
-                      Visa sorteringsval
-                    </div>
-                    <div>
-                      <ChevronDown />
-                    </div>
-                  </div>
-                )}
-                {showOrderForm && (
-                  <OrderFormComponent
-                    showOrderForm={showOrderForm}
-                    setShowOrderForm={setShowOrderForm}
-                  />
-                )}
-                {!showSeasonForm && (
-                  <div
-                    className="mb-1 flex w-[18rem] cursor-pointer flex-row justify-between rounded bg-white p-2 shadow-md lg:w-full"
-                    onClick={() => setShowSeasonForm(true)}
-                  >
-                    <div className="text-sm md:text-base">
-                      Visa säsongsinställningar
-                    </div>
-                    <div>
-                      <ChevronDown />
-                    </div>
-                  </div>
-                )}
-                {showSeasonForm && (
-                  <SeasonFormComponent
-                    showSeasonForm={showSeasonForm}
-                    setShowSeasonForm={setShowSeasonForm}
-                  />
-                )}
-                {!showPreferenceForm && (
-                  <div
-                    className="mb-1 flex w-[18rem] cursor-pointer flex-row justify-between rounded bg-white p-2 shadow-md lg:w-full"
-                    onClick={() => setShowPreferenceForm(true)}
-                  >
-                    <div className="text-sm md:text-base">
-                      Visa matchinställningar
-                    </div>
-                    <div>
-                      <ChevronDown />
-                    </div>
-                  </div>
-                )}
-                {showPreferenceForm && (
-                  <PreferenceFormComponent
-                    setShowPreferenceForm={setShowPreferenceForm}
-                    showPreferenceForm={showPreferenceForm}
-                  />
-                )}
-              </form>
-            </FormProvider>
+          >
+            {women ? 'Herrar' : 'Damer'}
           </div>
         </div>
       </div>
-      <div className="ml-2 w-[22rem] max-w-[800px] md:w-full lg:ml-0">
-        <ErrorComponent errors={methods.formState.errors} />
-
-        {searchResult && searchResult.hits === 0 && (
-          <div className="rounded bg-white p-2">
-            <p className="">Din sökning gav inga träffar.</p>
+      <div className="flex flex-row justify-between gap-1 bg-slate-300 text-sm font-bold xs:mb-2 xs:hidden md:gap-2 md:text-lg">
+        <div className="flex flex-row justify-start xs:gap-1 md:gap-2">
+          <div
+            className={`${
+              tab === 'search'
+                ? 'border-b-4 border-black'
+                : 'border-b-4 border-slate-300'
+            } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
+            onClick={() => setTab('search')}
+          >
+            <SearchIcon />
           </div>
-        )}
-        {searchResult && (
-          <div>
-            {gameArray?.map((game, index) => {
-              return (
-                <div className="recordCard" key={`${game.date}-${index}`}>
-                  <div className="pos">{index + 1}</div>
-                  <div className="flex flex-col">
-                    <div className="record1st">
-                      <div className="name">
-                        {game.homeTeam.casualName}-{game.awayTeam.casualName}
+        </div>
+        <div className="flex flex-row justify-end xs:gap-1 md:gap-2">
+          <div
+            className={`${
+              tab === 'help'
+                ? 'border-b-4 border-black'
+                : 'border-b-4 border-slate-300'
+            } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
+            onClick={() => setTab('help')}
+          >
+            <QuestionIcon />
+          </div>
+
+          <div
+            className="cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200"
+            onClick={() => {
+              dispatch({ type: 'TOGGLE' })
+            }}
+          >
+            {women ? <ManIcon /> : <WomanIcon />}
+          </div>
+        </div>
+      </div>
+      {!open && tab === 'search' && (
+        <div className="mx-1 xl:mx-0">
+          <div className="flex flex-row-reverse justify-between">
+            <div>
+              <div>
+                <input
+                  type="submit"
+                  value="Sök"
+                  form="search-form"
+                  className="mb-4 w-[72px] cursor-pointer truncate rounded-md bg-[#011d29] px-1 py-0.5 text-center text-[10px] text-white transition-all duration-150 ease-in-out first:last:px-1 hover:bg-slate-600 xs:w-[84px] xs:text-sm lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
+                />
+              </div>
+            </div>
+            <div className="ml-2 w-[70%] max-w-[800px] lg:ml-0 lg:w-full">
+              <div>
+                <FormProvider {...methods}>
+                  <form
+                    onSubmit={methods.handleSubmit(onSubmit)}
+                    id="search-form"
+                  >
+                    <div className="grid grid-cols-1 gap-2 p-1 lg:grid-cols-3 lg:justify-between">
+                      <div className="flex max-w-[18rem] flex-col text-sm md:text-base">
+                        <div>Välj lag</div>
+                        <div>
+                          <Controller
+                            name="team"
+                            control={methods.control}
+                            render={({ field }) => (
+                              <Select
+                                placeholder="Lag"
+                                {...field}
+                                options={teamSelection}
+                                styles={selectStyles}
+                                isClearable
+                                noOptionsMessage={() => 'Inga val'}
+                              />
+                            )}
+                          />
+                        </div>
                       </div>
+
+                      <div className="flex max-w-[18rem] flex-col text-sm md:text-base">
+                        <div>Välj motståndare</div>
+                        <div>
+                          <Controller
+                            name="opponent"
+                            control={methods.control}
+                            render={({ field }) => (
+                              <Select
+                                placeholder="Lag"
+                                {...field}
+                                options={opponentSelection}
+                                styles={selectStyles}
+                                isClearable
+                                noOptionsMessage={() => 'Inga val'}
+                              />
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {!showResultForm && (
                       <div
-                        className={
-                          favTeams.includes(game.homeTeamId) ||
-                          favTeams.includes(game.awayTeamId)
-                            ? 'count font-bold'
-                            : 'count'
-                        }
+                        className="mb-1 flex w-[18rem] cursor-pointer flex-row justify-between rounded bg-white p-2 shadow-md lg:w-full"
+                        onClick={() => setShowResultForm(true)}
                       >
-                        {game.result}
+                        <div className="text-sm md:text-base">
+                          Visa resultatformulär
+                        </div>
+                        <div>
+                          <ChevronDown />
+                        </div>
+                      </div>
+                    )}
+                    {showResultForm && (
+                      <ResultFormComponent
+                        showResultForm={showResultForm}
+                        setShowResultForm={setShowResultForm}
+                      />
+                    )}
+                    {!showOrderForm && (
+                      <div
+                        className="mb-1 flex w-[18rem] cursor-pointer flex-row justify-between rounded bg-white p-2 shadow-md lg:w-full"
+                        onClick={() => setShowOrderForm(true)}
+                      >
+                        <div className="text-sm md:text-base">
+                          Visa sorteringsval
+                        </div>
+                        <div>
+                          <ChevronDown />
+                        </div>
+                      </div>
+                    )}
+                    {showOrderForm && (
+                      <OrderFormComponent
+                        showOrderForm={showOrderForm}
+                        setShowOrderForm={setShowOrderForm}
+                      />
+                    )}
+                    {!showSeasonForm && (
+                      <div
+                        className="mb-1 flex w-[18rem] cursor-pointer flex-row justify-between rounded bg-white p-2 shadow-md lg:w-full"
+                        onClick={() => setShowSeasonForm(true)}
+                      >
+                        <div className="text-sm md:text-base">
+                          Visa säsongsinställningar
+                        </div>
+                        <div>
+                          <ChevronDown />
+                        </div>
+                      </div>
+                    )}
+                    {showSeasonForm && (
+                      <SeasonFormComponent
+                        showSeasonForm={showSeasonForm}
+                        setShowSeasonForm={setShowSeasonForm}
+                      />
+                    )}
+                    {!showPreferenceForm && (
+                      <div
+                        className="mb-1 flex w-[18rem] cursor-pointer flex-row justify-between rounded bg-white p-2 shadow-md lg:w-full"
+                        onClick={() => setShowPreferenceForm(true)}
+                      >
+                        <div className="text-sm md:text-base">
+                          Visa matchinställningar
+                        </div>
+                        <div>
+                          <ChevronDown />
+                        </div>
+                      </div>
+                    )}
+                    {showPreferenceForm && (
+                      <PreferenceFormComponent
+                        setShowPreferenceForm={setShowPreferenceForm}
+                        showPreferenceForm={showPreferenceForm}
+                      />
+                    )}
+                  </form>
+                </FormProvider>
+              </div>
+            </div>
+          </div>
+          <div className="ml-2 w-[22rem] max-w-[800px] md:w-full lg:ml-0">
+            <ErrorComponent errors={methods.formState.errors} />
+
+            {searchResult && searchResult.hits === 0 && (
+              <div className="rounded bg-white p-2">
+                <p className="">Din sökning gav inga träffar.</p>
+              </div>
+            )}
+            {searchResult && (
+              <div>
+                {gameArray?.map((game, index) => {
+                  return (
+                    <div className="recordCard" key={`${game.date}-${index}`}>
+                      <div className="pos">{index + 1}</div>
+                      <div className="flex flex-col">
+                        <div className="record1st">
+                          <div className="name">
+                            {game.homeTeam.casualName}-
+                            {game.awayTeam.casualName}
+                          </div>
+                          <div
+                            className={
+                              favTeams.includes(game.homeTeamId) ||
+                              favTeams.includes(game.awayTeamId)
+                                ? 'count font-bold'
+                                : 'count'
+                            }
+                          >
+                            {game.result}
+                          </div>
+                        </div>
+                        <div className="record2nd">
+                          <div className="dates">
+                            {game.date && (
+                              <span className="mr-1">
+                                {dayjs(game.date).format('D MMMM YYYY')}
+                              </span>
+                            )}
+                            {game.qualification && <span>(K)</span>}
+                            {!game.date && (
+                              <span className="invisible">Gömt datum </span>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div className="record2nd">
-                      <div className="dates">
-                        {game.date && (
-                          <span className="mr-1">
-                            {dayjs(game.date).format('D MMMM YYYY')}
-                          </span>
-                        )}
-                        {game.qualification && <span>(K)</span>}
-                        {!game.date && (
-                          <span className="invisible">Gömt datum </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
+                  )
+                })}
+              </div>
+            )}
           </div>
-        )}
-      </div>
-      <div ref={bottomRef}></div>
-      {searchResult && (
-        <div className="sticky bottom-0 z-20 flex flex-row items-center justify-center gap-2 bg-[#f4f5f5]">
-          <div
-            onClick={(event) => scrollTo(event, topRef)}
-            className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
-          >
-            Scrolla upp
-          </div>
-          <div
-            onClick={(event) => scrollTo(event, bottomRef)}
-            className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
-          >
-            Scrolla ner
-          </div>
+          <div ref={bottomRef}></div>
+          {searchResult && (
+            <div className="sticky bottom-0 z-20 flex flex-row items-center justify-center gap-2 bg-[#f4f5f5]">
+              <div
+                onClick={(event) => scrollTo(event, topRef)}
+                className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
+              >
+                Scrolla upp
+              </div>
+              <div
+                onClick={(event) => scrollTo(event, bottomRef)}
+                className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
+              >
+                Scrolla ner
+              </div>
+            </div>
+          )}
         </div>
       )}
-      {showHelpModal ? (
-        <>
-          <SearchFormModal setShowModal={setShowHelpModal} />
-        </>
-      ) : null}
+      {tab === 'help' && <SearchHelp />}
     </div>
   )
 }

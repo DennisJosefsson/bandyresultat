@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query'
 import { getSeasons } from '../../requests/seasons'
 import { Link } from 'react-router-dom'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 import Spinner from '../utilitycomponents/spinner'
 
@@ -10,6 +10,11 @@ const Seasons = () => {
   const topRef = useRef()
   const bottomRef = useRef()
   const { data, isLoading, error } = useQuery('allSeasons', getSeasons)
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+  }, [])
+
   if (isLoading) {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
@@ -61,7 +66,7 @@ const Seasons = () => {
       </div>
 
       <div className="self-center">
-        <div className="grid grid-cols-1 justify-between gap-x-8 gap-y-2 pt-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 justify-between gap-x-8 gap-y-2 pt-2 sm:grid-cols-2 lg:grid-cols-3">
           {seasons.map((season) => {
             const seasonYear =
               parseInt(season.year.split('/')[1]) >= 1964
@@ -71,10 +76,10 @@ const Seasons = () => {
               return (
                 <div
                   key={season.seasonId}
-                  className="flex flex-row items-center justify-between bg-white px-2 py-1 text-[1.125rem]"
+                  className="flex flex-row items-center justify-between bg-white px-2 py-1 text-sm lg:text-[1.125rem]"
                 >
                   <div className="w-28 font-semibold">{season.year}</div>
-                  <div className="lg:rounded-0 w-1/4 rounded-md bg-slate-300 px-2 py-1 text-center lg:bg-white xl:p-0">
+                  <div className="rounded-md bg-slate-300 px-2 py-1 text-center lg:bg-white xl:p-0">
                     <Link
                       to={`/season/${seasonYear}`}
                       className="font-medium tabular-nums hover:font-bold lg:font-normal"
@@ -82,7 +87,7 @@ const Seasons = () => {
                       Tabeller
                     </Link>
                   </div>
-                  <div className="w-1/4 rounded-md bg-slate-300 px-2 py-1 text-center lg:bg-white xl:p-0">
+                  <div className="rounded-md bg-slate-300 px-2 py-1 text-center lg:bg-white xl:p-0">
                     <Link
                       to={`/season/${seasonYear}`}
                       state={{ tab: 'games' }}

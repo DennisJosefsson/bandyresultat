@@ -10,7 +10,6 @@ import Home from './components/Home'
 import Header from './components/Header'
 import Footer from './components/Footer'
 
-import Team from './components/Team/Team'
 import Teams from './components/Team/Teams'
 import Season from './components/Season/Season'
 import Seasons from './components/Season/Seasons'
@@ -41,7 +40,7 @@ const App = () => {
         <Header />
         <main className="mb-4">
           <Routes>
-            <Route path="/teams/:teamId" element={<Team />} />
+            <Route path="/teams/:teamId" element={<Teams />} />
             <Route path="/teams" element={<Teams />} />
             <Route path="/season/:seasonId" element={<Season />} />
             <Route path="/seasons" element={<Seasons />} />

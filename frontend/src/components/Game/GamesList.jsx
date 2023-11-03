@@ -1,5 +1,10 @@
 import { useContext, useState, useEffect } from 'react'
-import { UserContext, TeamPreferenceContext } from '../../contexts/contexts'
+import { Link } from 'react-router-dom'
+import {
+  UserContext,
+  TeamPreferenceContext,
+  GenderContext,
+} from '../../contexts/contexts'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 
@@ -11,11 +16,23 @@ const GamesList = ({
   setShowModal,
   setGameData,
   seriesInfo,
+  startSeason,
+  endSeason,
 }) => {
   const { user } = useContext(UserContext)
   const { favTeams } = useContext(TeamPreferenceContext)
+  const { women } = useContext(GenderContext)
   const [width, setWidth] = useState(window.innerWidth)
-  const breakpoint = 768
+  const breakpoint = 1050
+
+  const categoryArray = [
+    'qualification',
+    'regular',
+    'eight',
+    'quarter',
+    'semi',
+    'final',
+  ]
 
   useEffect(() => {
     const handleWindowResize = () => setWidth(window.innerWidth)
@@ -62,44 +79,61 @@ const GamesList = ({
                       <div className="w-full">
                         {date.games.map((game) => {
                           return (
-                            <div
-                              key={game.gameId}
-                              className="mb-1 flex flex-row items-center justify-between bg-slate-300 px-2 py-0.5 text-[10px] md:text-base xl:mb-2 xl:w-[36rem] xl:py-1"
-                            >
-                              <span
-                                className={
-                                  favTeams.includes(game.homeTeamId)
-                                    ? 'w-1/3 font-bold sm:w-2/5 xl:w-52'
-                                    : 'w-1/3 sm:w-2/5 xl:w-52'
-                                }
+                            <div key={game.gameId}>
+                              <Link
+                                to="/teams"
+                                state={{
+                                  compObject: {
+                                    teamArray: [
+                                      game.homeTeamId,
+                                      game.awayTeamId,
+                                    ],
+                                    categoryArray: categoryArray,
+                                    startSeason: startSeason,
+                                    endSeason: endSeason,
+                                    women: women,
+                                  },
+                                  origin: 'gamesList',
+                                }}
                               >
-                                {width < breakpoint
-                                  ? `${game.homeTeam.casualName}`
-                                  : `${game.homeTeam.name}`}
-                              </span>
-                              <span className="w-1 xl:w-4"> - </span>
-                              <span
-                                className={
-                                  favTeams.includes(game.awayTeamId)
-                                    ? 'w-1/3 font-bold sm:w-2/5 xl:w-52'
-                                    : 'w-1/3 sm:w-2/5 xl:w-52'
-                                }
-                              >
-                                {width < breakpoint
-                                  ? `${game.awayTeam.casualName}`
-                                  : `${game.awayTeam.name}`}
-                              </span>
-                              <span className="w-10 text-right tabular-nums">
-                                {game.result}
-                              </span>
-
-                              {game.halftimeResult && (
-                                <>
-                                  <span className="ml-2 text-right text-[8px] tabular-nums md:text-sm">
-                                    ({game.halftimeResult})
+                                <div className="mb-1 flex flex-row items-center justify-between bg-slate-300 px-2 py-0.5 text-[10px] md:text-base xl:mb-2 xl:w-[36rem] xl:py-1">
+                                  <span
+                                    className={
+                                      favTeams.includes(game.homeTeamId)
+                                        ? 'w-1/3 font-bold sm:w-2/5 lg:w-40 xl:w-52'
+                                        : 'w-1/3 sm:w-2/5 lg:w-40 xl:w-52'
+                                    }
+                                  >
+                                    {width < breakpoint
+                                      ? `${game.homeTeam.casualName}`
+                                      : `${game.homeTeam.name}`}
                                   </span>
-                                </>
-                              )}
+                                  <span className="w-1 xl:w-4"> - </span>
+                                  <span
+                                    className={
+                                      favTeams.includes(game.awayTeamId)
+                                        ? 'w-1/3 font-bold sm:w-2/5 lg:w-40 xl:w-52'
+                                        : 'w-1/3 sm:w-2/5 lg:w-40 xl:w-52'
+                                    }
+                                  >
+                                    {width < breakpoint
+                                      ? `${game.awayTeam.casualName}`
+                                      : `${game.awayTeam.name}`}
+                                  </span>
+
+                                  <span className="w-10 text-right tabular-nums">
+                                    {game.result}
+                                  </span>
+
+                                  {game.halftimeResult && (
+                                    <>
+                                      <span className="ml-2 text-right text-[8px] tabular-nums md:text-sm">
+                                        ({game.halftimeResult})
+                                      </span>
+                                    </>
+                                  )}
+                                </div>
+                              </Link>
                               {user && (
                                 <span
                                   className="cursor-pointer"

@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 import { GenderContext } from '../../contexts/contexts'
@@ -19,6 +19,10 @@ const SeasonStats = ({ seasonId }) => {
   )
 
   const { women } = useContext(GenderContext)
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+  }, [])
 
   if (isLoading) {
     return (
