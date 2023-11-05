@@ -1,9 +1,9 @@
 import Select from 'react-select'
-import { selectStyles } from '../utilitycomponents/selectStyles'
+import { selectStyles } from '../../utilitycomponents/Components/selectStyles'
 
-import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
+import { ButtonComponent } from '../../utilitycomponents/Components/ButtonComponents'
 import { useContext } from 'react'
-import { MenuContext } from '../../contexts/contexts'
+import { MenuContext } from '../../../contexts/contexts'
 
 const SearchSelection = ({
   formState,

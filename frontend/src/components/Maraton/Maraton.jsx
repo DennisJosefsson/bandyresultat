@@ -1,18 +1,18 @@
 import { useContext, useState } from 'react'
 import { GenderContext } from '../../contexts/contexts'
 import { ErrorBoundary } from 'react-error-boundary'
-import { logError } from '../utilitycomponents/logError'
-import Table from '../Table/Table'
-import Record from '../Record/Record'
-import ErrorFallback from '../utilitycomponents/ErrorFallback'
+import { logError } from '../utilitycomponents/functions/logError'
+import Table from './Subcomponents/Table'
+import Record from './Subcomponents/Record'
+import ErrorFallback from '../utilitycomponents/Components/ErrorFallback'
 import {
   ListIcon,
   StatsIcon,
   ManIcon,
   WomanIcon,
   QuestionIcon,
-} from '../utilitycomponents/icons'
-import MaratonHelp from '../Table/MaratonHelp'
+} from '../utilitycomponents/Components/icons'
+import MaratonHelp from './Subcomponents/MaratonHelp'
 
 const Maraton = () => {
   const { women, dispatch } = useContext(GenderContext)

@@ -138,6 +138,44 @@ router.post('/search', async (req, res) => {
     }
   }
 
+  if (req.body.goalsScored) {
+    if (req.body.operator.value === 'gte') {
+      where.goalsScored = {
+        [Op.gte]: req.body.goalsScored,
+      }
+    } else if (req.body.operator.value === 'eq') {
+      where.goalsScored = {
+        [Op.eq]: req.body.goalsScored,
+      }
+    } else if (req.body.operator.value === 'lte') {
+      where.goalsScored = {
+        [Op.and]: {
+          [Op.lte]: req.body.goalsScored,
+          [Op.gte]: 0,
+        },
+      }
+    }
+  }
+
+  if (req.body.goalsConceded) {
+    if (req.body.operator.value === 'gte') {
+      where.goalsConceded = {
+        [Op.gte]: req.body.goalsConceded,
+      }
+    } else if (req.body.operator.value === 'eq') {
+      where.goalsConceded = {
+        [Op.eq]: req.body.goalsConceded,
+      }
+    } else if (req.body.operator.value === 'lte') {
+      where.goalsConceded = {
+        [Op.and]: {
+          [Op.lte]: req.body.goalsConceded,
+          [Op.gte]: 0,
+        },
+      }
+    }
+  }
+
   if (req.body.orderVar.value === 'goalDiff') {
     order.unshift(['goalDifference', req.body.order.value])
   }

@@ -1,11 +1,11 @@
-import { getStreaks } from '../../requests/games'
+import { getStreaks } from '../../../requests/games'
 import { useQuery } from 'react-query'
 import { useContext, useRef, useState, useEffect } from 'react'
-import { GenderContext } from '../../contexts/contexts'
+import { GenderContext } from '../../../contexts/contexts'
 
-import Spinner from '../utilitycomponents/spinner'
+import Spinner from '../../utilitycomponents/Components/spinner'
 
-import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
+import { ButtonComponent } from '../../utilitycomponents/Components/ButtonComponents'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 dayjs.locale('sv')

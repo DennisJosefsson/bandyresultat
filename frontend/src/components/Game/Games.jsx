@@ -6,12 +6,12 @@ import { useState, useContext, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { GenderContext, UserContext } from '../../contexts/contexts'
 
-import Spinner from '../utilitycomponents/spinner'
-import GamesList from './GamesList'
-import GameForm from './GameForm'
+import Spinner from '../utilitycomponents/Components/spinner'
+import GamesList from './Subcomponents/GamesList'
+import GameForm from './Subcomponents/GameForm'
 
-import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
-import { gameSortFunction } from '../utilitycomponents/sortFunction'
+import { ButtonComponent } from '../utilitycomponents/Components/ButtonComponents'
+import { gameSortFunction } from '../utilitycomponents/Functions/sortFunction'
 
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'

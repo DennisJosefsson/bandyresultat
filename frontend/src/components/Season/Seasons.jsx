@@ -3,7 +3,7 @@ import { getSeasons } from '../../requests/seasons'
 import { Link } from 'react-router-dom'
 import { useState, useRef, useEffect } from 'react'
 
-import Spinner from '../utilitycomponents/spinner'
+import Spinner from '../utilitycomponents/Components/spinner'
 
 const Seasons = () => {
   const [seasonFilter, setSeasonFilter] = useState('')

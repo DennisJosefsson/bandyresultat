@@ -1,7 +1,7 @@
-import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
+import { ButtonComponent } from '../../utilitycomponents/Components/ButtonComponents'
 import { useState } from 'react'
 import TeamsListHelp from './TeamsListHelpModal'
-import CompareHelp from '../Compare/CompareHelpModal'
+import CompareHelp from '../../Compare/CompareHelpModal'
 
 const Help = () => {
   const [help, setHelp] = useState('list')

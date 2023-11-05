@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { MenuContext } from '../../contexts/contexts'
+import { MenuContext } from '../../../contexts/contexts'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 

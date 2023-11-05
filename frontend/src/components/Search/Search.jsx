@@ -9,22 +9,22 @@ import {
   TeamPreferenceContext,
   MenuContext,
 } from '../../contexts/contexts'
-import Spinner from '../utilitycomponents/spinner'
+import Spinner from '../utilitycomponents/Components/spinner'
 import Select from 'react-select'
-import { selectStyles } from '../utilitycomponents/selectStyles'
-
-import ResultFormComponent from './ResultFormComponent'
-import OrderFormComponent from './OrderFormComponent'
-import SeasonFormComponent from './SeasonFormComponent'
-import PreferenceFormComponent from './PreferenceFormComponent'
-import SearchHelp from './SearchFormModal'
+import { selectStyles } from '../utilitycomponents/Components/selectStyles'
+import { ButtonComponent } from '../utilitycomponents/Components/ButtonComponents'
+import ResultFormComponent from './Subcomponents/ResultFormComponent'
+import OrderFormComponent from './Subcomponents/OrderFormComponent'
+import SeasonFormComponent from './Subcomponents/SeasonFormComponent'
+import PreferenceFormComponent from './Subcomponents/PreferenceFormComponent'
+import SearchHelp from './Subcomponents/SearchFormModal'
 import {
   ChevronDown,
   SearchIcon,
   QuestionIcon,
   ManIcon,
   WomanIcon,
-} from '../utilitycomponents/icons'
+} from '../utilitycomponents/Components/icons'
 
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
@@ -72,6 +72,8 @@ const Search = () => {
       order: { value: 'desc', label: 'Fallande' },
       limit: { value: 10, label: 10 },
       gameResult: 'all',
+      goalsScored: '',
+      goalsConceded: '',
       startSeason: '1907',
       endSeason: '2024',
       operator: { value: 'gte', label: 'Lika eller större än' },
@@ -205,6 +207,7 @@ const Search = () => {
             className="cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors"
             onClick={() => {
               dispatch({ type: 'TOGGLE' })
+              methods.reset()
             }}
           >
             {women ? 'Herrar' : 'Damer'}
@@ -240,6 +243,7 @@ const Search = () => {
             className="cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200"
             onClick={() => {
               dispatch({ type: 'TOGGLE' })
+              methods.reset()
             }}
           >
             {women ? <ManIcon /> : <WomanIcon />}
@@ -258,6 +262,9 @@ const Search = () => {
                   className="mb-4 w-[72px] cursor-pointer truncate rounded-md bg-[#011d29] px-1 py-0.5 text-center text-[10px] text-white transition-all duration-150 ease-in-out first:last:px-1 hover:bg-slate-600 xs:w-[84px] xs:text-sm lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
                 />
               </div>
+              <ButtonComponent clickFunctions={() => methods.reset()}>
+                Nollställ
+              </ButtonComponent>
             </div>
             <div className="ml-2 w-[70%] max-w-[800px] lg:ml-0 lg:w-full">
               <div>
@@ -389,7 +396,7 @@ const Search = () => {
               </div>
             </div>
           </div>
-          <div className="ml-2 w-[22rem] max-w-[800px] md:w-full lg:ml-0">
+          <div className="ml-2 w-[18rem] max-w-[800px] lg:ml-0 lg:w-full">
             <ErrorComponent errors={methods.formState.errors} />
 
             {searchResult && searchResult.hits === 0 && (

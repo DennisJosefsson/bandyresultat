@@ -1,20 +1,23 @@
 import { Link } from 'react-router-dom'
 import { useQuery } from 'react-query'
-import { getSeasonGames } from '../../requests/games'
-import { getSingleSeason } from '../../requests/seasons'
+import { getSeasonGames } from '../../../requests/games'
+import { getSingleSeason } from '../../../requests/seasons'
 import { useContext, useState, useEffect } from 'react'
-import { TeamPreferenceContext, GenderContext } from '../../contexts/contexts'
+import {
+  TeamPreferenceContext,
+  GenderContext,
+} from '../../../contexts/contexts'
 import {
   animationData,
   gameSortFunction,
-} from '../utilitycomponents/sortFunction'
-import Spinner from '../utilitycomponents/spinner'
+} from '../../utilitycomponents/Functions/sortFunction'
+import Spinner from '../../utilitycomponents/Components/spinner'
 import {
   LeftArrow,
   RightArrow,
   SmallArrowUpRight,
   SmallArrowDownRight,
-} from '../utilitycomponents/icons'
+} from '../../utilitycomponents/Components/icons'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 dayjs.locale('sv')

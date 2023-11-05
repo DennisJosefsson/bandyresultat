@@ -6,12 +6,12 @@ import {
   addToFavTeams,
   removeFromFavTeams,
 } from '../../reducers/favteamsReducer'
-import Spinner from '../utilitycomponents/spinner'
+import Spinner from '../utilitycomponents/Components/spinner'
+import TeamTable from './Subcomponents/TeamTable'
+
+import { ButtonComponent } from '../utilitycomponents/Components/ButtonComponents'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
-import TeamTable from './TeamTable'
-
-import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
 
 dayjs.locale('sv')
 

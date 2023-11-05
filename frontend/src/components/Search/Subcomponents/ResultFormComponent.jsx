@@ -1,7 +1,7 @@
 import { useFormContext, Controller } from 'react-hook-form'
 import Select from 'react-select'
-import { selectStyles } from '../utilitycomponents/selectStyles'
-import { ChevronUp } from '../utilitycomponents/icons'
+import { selectStyles } from '../../utilitycomponents/Components/selectStyles'
+import { ChevronUp } from '../../utilitycomponents/Components/icons'
 
 const operatorSelection = [
   { value: 'gte', label: 'Lika eller större än' },
@@ -13,7 +13,7 @@ const ResultFormComponent = ({ showResultForm, setShowResultForm }) => {
   const { register, control } = useFormContext()
   return (
     <div className="mb-2 flex w-[18rem] flex-col rounded bg-white p-2 text-sm shadow-md md:text-base lg:w-full">
-      <div className="w grid grid-cols-1 gap-2 lg:grid-cols-3">
+      <div className="w grid grid-cols-1 gap-2 lg:grid-cols-2">
         <div className="flex max-w-[16rem] flex-col">
           <div>Resultat</div>
           <div>
@@ -47,6 +47,37 @@ const ResultFormComponent = ({ showResultForm, setShowResultForm }) => {
                 pattern: {
                   value: '/[0-9]{1,2}',
                   message: 'Målskillnaden måste vara en eller två siffror.',
+                },
+              })}
+            />
+          </div>
+        </div>
+        <div className="flex max-w-[16rem] flex-col">
+          <div>Gjorda mål</div>
+          <div>
+            <input
+              className="w-full border-[#011d29] text-[#011d29] md:w-[16rem]"
+              type="text"
+              {...register('goalsScored', {
+                pattern: {
+                  value: '/[0-9]{1,2}',
+                  message: 'Antalet gjorda måste vara en eller två siffror.',
+                },
+              })}
+            />
+          </div>
+        </div>
+        <div className="flex max-w-[16rem] flex-col">
+          <div>Insläppta mål</div>
+          <div>
+            <input
+              className="w-full border-[#011d29] text-[#011d29] md:w-[16rem]"
+              type="text"
+              {...register('goalsConceded', {
+                pattern: {
+                  value: '/[0-9]{1,2}',
+                  message:
+                    'Antalet insläppta mål måste vara en eller två siffror.',
                 },
               })}
             />

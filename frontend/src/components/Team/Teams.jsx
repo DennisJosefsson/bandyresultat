@@ -6,15 +6,15 @@ import { useLocation, useParams } from 'react-router-dom'
 import { GenderContext, UserContext } from '../../contexts/contexts'
 
 import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
-import Spinner from '../utilitycomponents/spinner'
-import TeamsList from './TeamsList'
-import TeamForm from './TeamForm'
-import FormStateComponent from './FormStateComponent'
-import SearchSelection from './SearchSelectionModal'
-import Map from './Map'
+import Spinner from '../utilitycomponents/Components/spinner'
+import TeamsList from './Subcomponents/TeamsList'
+import TeamForm from './Subcomponents/TeamForm'
+import FormStateComponent from './Subcomponents/FormStateComponent'
+import SearchSelection from './Subcomponents/SearchSelectionModal'
+import Map from './Subcomponents/Map'
 import Compare from '../Compare/Compare'
 import Team from './Team'
-import Help from './Help'
+import Help from './Subcomponents/Help'
 
 import {
   ListIcon,
@@ -24,7 +24,7 @@ import {
   SearchIcon,
   SelectionIcon,
   QuestionIcon,
-} from '../utilitycomponents/icons'
+} from '../utilitycomponents/Components/icons'
 
 const Teams = () => {
   const location = useLocation()
@@ -36,6 +36,7 @@ const Teams = () => {
   const [tab, setTab] = useState('teams')
   const [teamId, setTeamId] = useState(null)
   const [showTeamFormModal, setShowTeamFormModal] = useState(false)
+  const [stateNull, setStateNull] = useState(false)
 
   const [teamFilter, setTeamFilter] = useState('')
   const [valueError, setValueError] = useState({ error: false })
@@ -73,20 +74,21 @@ const Teams = () => {
   })
 
   useEffect(() => {
-    if (location.state) {
+    if (location.state && !stateNull) {
       genderDispatch({
         type: 'SET',
         payload: location.state.compObject.women
           ? location.state.compObject.women
           : women,
       })
+      setStateNull(true)
       setTab('compare')
     }
     if (params.teamId) {
       setTeamId(params.teamId)
       setTab('singleTeam')
     }
-  }, [location.state, params.teamId, genderDispatch, women])
+  }, [location.state, params.teamId, genderDispatch, women, stateNull])
 
   if (isLoading || isSeasonsLoading) {
     return (
@@ -254,12 +256,13 @@ const Teams = () => {
           >
             Hjälp/Info
           </div>
+
           <div
             className="cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors"
             onClick={() => {
               genderDispatch({ type: 'TOGGLE' })
               compareDispatch({ type: 'RESET' })
-              setTab('teams')
+              tab !== 'map' && setTab('teams')
             }}
           >
             {women ? 'Herrar' : 'Damer'}
@@ -331,7 +334,7 @@ const Teams = () => {
             onClick={() => {
               genderDispatch({ type: 'TOGGLE' })
               compareDispatch({ type: 'RESET' })
-              setTab('teams')
+              tab !== 'map' && setTab('teams')
             }}
           >
             {women ? <ManIcon /> : <WomanIcon />}

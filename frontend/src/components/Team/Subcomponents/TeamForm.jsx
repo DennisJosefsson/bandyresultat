@@ -1,6 +1,6 @@
 import { useReducer } from 'react'
 import { useQueryClient } from 'react-query'
-import teamFormReducer from '../../reducers/teamFormReducer'
+import teamFormReducer from '../../../reducers/teamFormReducer'
 
 const initState = {
   city: '',

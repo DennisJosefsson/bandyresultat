@@ -2,15 +2,15 @@ import { useParams, Link, useLocation } from 'react-router-dom'
 import { useContext, useState, useEffect } from 'react'
 import { GenderContext } from '../../contexts/contexts'
 import { ErrorBoundary } from 'react-error-boundary'
-import { logError } from '../utilitycomponents/logError'
-import SeasonHelp from './SeasonHelpModal'
-import SeasonTables from './SeasonTables'
+import { logError } from '../utilitycomponents/functions/logError'
+import SeasonHelp from './Subcomponents/SeasonHelpModal'
+import SeasonTables from './Subcomponents/SeasonTables'
 import Games from '../Game/Games'
-import Playoff from './SeasonPlayoff'
-import SeasonStats from './SeasonStats'
-import Animation from '../Game/Animation'
-import Map from './Map'
-import ErrorFallback from '../utilitycomponents/ErrorFallback'
+import Playoff from './Subcomponents/SeasonPlayoff'
+import SeasonStats from './Subcomponents/SeasonStats'
+import Animation from '../Game/Subcomponents/Animation'
+import Map from './Subcomponents/Map'
+import ErrorFallback from '../utilitycomponents/Components/ErrorFallback'
 
 import {
   LeftArrow,
@@ -24,7 +24,7 @@ import {
   WomanIcon,
   MapIcon,
   QuestionIcon,
-} from '../utilitycomponents/icons'
+} from '../utilitycomponents/Components/icons'
 
 const Season = () => {
   const seasonId = parseInt(useParams().seasonId)

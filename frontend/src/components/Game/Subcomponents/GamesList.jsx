@@ -4,7 +4,7 @@ import {
   UserContext,
   TeamPreferenceContext,
   GenderContext,
-} from '../../contexts/contexts'
+} from '../../../contexts/contexts'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 
@@ -79,7 +79,10 @@ const GamesList = ({
                       <div className="w-full">
                         {date.games.map((game) => {
                           return (
-                            <div key={game.gameId}>
+                            <div
+                              key={game.gameId}
+                              className="flex flex-row items-center gap-1"
+                            >
                               <Link
                                 to="/teams"
                                 state={{

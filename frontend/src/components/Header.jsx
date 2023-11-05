@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useContext } from 'react'
 import { MenuContext, UserContext } from '../contexts/contexts'
-import useScrollDirection from './utilitycomponents/useScrollDirection'
+import useScrollDirection from './utilitycomponents/Functions/useScrollDirection'
 
 const Header = () => {
   const { user } = useContext(UserContext)

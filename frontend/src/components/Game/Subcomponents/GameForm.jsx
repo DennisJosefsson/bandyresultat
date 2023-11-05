@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
-import { postGame } from '../../requests/games'
+import { postGame } from '../../../requests/games'
 import { useQuery } from 'react-query'
 import Select from 'react-select'
-import { selectStyles } from '../utilitycomponents/selectStyles'
+import { selectStyles } from '../../utilitycomponents/Components/selectStyles'
 
 const ErrorComponent = ({ errors }) => {
   if (Object.keys(errors).length === 0) {
@@ -120,8 +120,6 @@ const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
   const onSubmit = (formData) => {
     setNewGameData(formData)
   }
-
-  
 
   return (
     <>

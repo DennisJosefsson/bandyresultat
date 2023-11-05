@@ -13,14 +13,11 @@ import Footer from './components/Footer'
 import Teams from './components/Team/Teams'
 import Season from './components/Season/Season'
 import Seasons from './components/Season/Seasons'
-import Games from './components/Game/Games'
 import Compare from './components/Compare/Compare'
 import Dashboard from './components/Dashboard/Dashboard'
 import About from './components/About/About'
 import Link from './components/Link/Link'
-import Record from './components/Record/Record'
 import Search from './components/Search/Search'
-import Map from './components/Team/Map'
 import { UserContext } from './contexts/contexts'
 import Maraton from './components/Maraton/Maraton'
 
@@ -45,12 +42,9 @@ const App = () => {
             <Route path="/season/:seasonId" element={<Season />} />
             <Route path="/seasons" element={<Seasons />} />
             <Route path="/tables" element={<Maraton />} />
-            <Route path="/games/:seasonId" element={<Games />} />
             <Route path="/link/:linkName" element={<Link />} />
             <Route path="/compare" element={<Compare />} />
-            <Route path="/records" element={<Record />} />
             <Route path="/search" element={<Search />} />
-            <Route path="/map" element={<Map />} />
             <Route
               path="/dashboard"
               element={

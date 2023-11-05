@@ -6,12 +6,11 @@ import {
   compareSortFunction,
   compareAllTeamData,
   filterOpposition,
-} from '../utilitycomponents/sortFunction'
-import { groupConstant } from '../utilitycomponents/constants'
+} from '../../components/utilitycomponents/Functions/sortFunction'
+import { groupConstant } from '../../components/utilitycomponents/Functions/constants'
+import Spinner from '../../components/utilitycomponents/Components/spinner'
 
-import Spinner from '../utilitycomponents/spinner'
-
-import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
+import { ButtonComponent } from '../../components/utilitycomponents/Components/ButtonComponents'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 
@@ -60,6 +59,8 @@ const Compare = ({ compObject, origin }) => {
       </div>
     )
   }
+
+  console.log(compObject)
 
   const copyText = async (url) => {
     if ('clipboard' in navigator) {
@@ -129,6 +130,10 @@ const Compare = ({ compObject, origin }) => {
     data.data.seasonNames[0].seasonId > data.data.seasonNames[1].seasonId
       ? data.data.seasonNames[0].year
       : data.data.seasonNames[1].year
+
+  const janFirstGames = compObject.women
+    ? 'Speldatum 1 januari från säsongerna 1988/1989 och 1989/1990 gäller enbart tillsvidare, de betyder att faktiskt datum saknas.'
+    : 'Obs! Speldatum 1 januari före 1931 gäller enbart tillsvidare, de betyder att faktiskt datum saknas.'
 
   return (
     <div className="mx-auto flex min-h-screen max-w-7xl flex-col pt-4 font-inter text-[#011d29]">
@@ -476,8 +481,7 @@ const Compare = ({ compObject, origin }) => {
                         </div>
                       </div>
                       <p className="my-2 w-full bg-white p-1 text-[8px] font-bold md:text-xs">
-                        Obs! Speldatum 1 januari före 1931 gäller enbart
-                        tillsvidare, de betyder att faktiskt datum saknas.{' '}
+                        {janFirstGames}
                       </p>
                     </div>
                     <div className="w-full">
@@ -533,29 +537,31 @@ const Compare = ({ compObject, origin }) => {
                         </tbody>
                       </table>
                     </div>
-                    <div className="w-full">
-                      <h3 className="text-sm font-semibold md:text-base lg:text-right">
-                        Säsonger sedan 1931
-                      </h3>
-                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm">
-                        <thead>
-                          <tr key={`head-seasons`}>
-                            <th scope="col" className="w-32 text-left"></th>
-                            <th scope="col" className="w-8 text-right"></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {seasons.map((team) => {
-                            return (
-                              <tr key={team.team} className="rounded">
-                                <td>{team.casual_name}</td>
-                                <td className="text-right">{team.seasons}</td>
-                              </tr>
-                            )
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
+                    {!compObject.women && (
+                      <div className="w-full">
+                        <h3 className="text-sm font-semibold md:text-base lg:text-right">
+                          Säsonger sedan 1931
+                        </h3>
+                        <table className="compareStats mb-3 w-full text-[8px] sm:text-sm">
+                          <thead>
+                            <tr key={`head-seasons`}>
+                              <th scope="col" className="w-32 text-left"></th>
+                              <th scope="col" className="w-8 text-right"></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {seasons.map((team) => {
+                              return (
+                                <tr key={team.team} className="rounded">
+                                  <td>{team.casual_name}</td>
+                                  <td className="text-right">{team.seasons}</td>
+                                </tr>
+                              )
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                     <div>
                       <h3 className="text-sm font-semibold md:text-base lg:text-right">
                         Slutspel
@@ -579,52 +585,58 @@ const Compare = ({ compObject, origin }) => {
                         </tbody>
                       </table>
                     </div>
-                    <div>
-                      <h3 className="text-sm font-semibold md:text-base lg:text-right">
-                        Slutspel sedan 1931
-                      </h3>
-                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm">
-                        <thead>
-                          <tr key={`head-playoffs`}>
-                            <th scope="col" className="w-32 text-left"></th>
-                            <th scope="col" className="w-8 text-right"></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {playoffs.map((team) => {
-                            return (
-                              <tr key={team.team} className="rounded">
-                                <td>{team.casual_name}</td>
-                                <td className="text-right">{team.playoffs}</td>
-                              </tr>
-                            )
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-semibold md:text-base lg:text-right">
-                        SM-Guld
-                      </h3>
-                      <table className="compareStats mb-3 w-full text-[8px] sm:text-sm">
-                        <thead>
-                          <tr key={`head-golds`}>
-                            <th scope="col" className="w-32"></th>
-                            <th scope="col" className="w-8"></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {golds.map((team) => {
-                            return (
-                              <tr key={team.team} className="rounded">
-                                <td>{team.casual_name}</td>
-                                <td className="text-right">{team.guld}</td>
-                              </tr>
-                            )
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
+                    {!compObject.women && (
+                      <div>
+                        <h3 className="text-sm font-semibold md:text-base lg:text-right">
+                          Slutspel sedan 1931
+                        </h3>
+                        <table className="compareStats mb-3 w-full text-[8px] sm:text-sm">
+                          <thead>
+                            <tr key={`head-playoffs`}>
+                              <th scope="col" className="w-32 text-left"></th>
+                              <th scope="col" className="w-8 text-right"></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {playoffs.map((team) => {
+                              return (
+                                <tr key={team.team} className="rounded">
+                                  <td>{team.casual_name}</td>
+                                  <td className="text-right">
+                                    {team.playoffs}
+                                  </td>
+                                </tr>
+                              )
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                    {golds.length > 0 && (
+                      <div>
+                        <h3 className="text-sm font-semibold md:text-base lg:text-right">
+                          SM-Guld
+                        </h3>
+                        <table className="compareStats mb-3 w-full text-[8px] sm:text-sm">
+                          <thead>
+                            <tr key={`head-golds`}>
+                              <th scope="col" className="w-32"></th>
+                              <th scope="col" className="w-8"></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {golds.map((team) => {
+                              return (
+                                <tr key={team.team} className="rounded">
+                                  <td>{team.casual_name}</td>
+                                  <td className="text-right">{team.guld}</td>
+                                </tr>
+                              )
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

@@ -1,11 +1,14 @@
 import { useQuery } from 'react-query'
 import { useContext, useState, useEffect, useRef } from 'react'
-import { maratonTabell } from '../../requests/tables'
-import { GenderContext, TeamPreferenceContext } from '../../contexts/contexts'
+import { maratonTabell } from '../../../requests/tables'
+import {
+  GenderContext,
+  TeamPreferenceContext,
+} from '../../../contexts/contexts'
 
-import Spinner from '../utilitycomponents/spinner'
+import Spinner from '../../utilitycomponents/Components/spinner'
 
-import { ButtonComponent } from '../utilitycomponents/ButtonComponents'
+import { ButtonComponent } from '../../utilitycomponents/Components/ButtonComponents'
 
 const Table = () => {
   const { women } = useContext(GenderContext)

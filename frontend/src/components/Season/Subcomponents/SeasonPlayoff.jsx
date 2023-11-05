@@ -1,18 +1,21 @@
 import { useQuery } from 'react-query'
 
-import { getSingleSeasonTable } from '../../requests/tables'
+import { getSingleSeasonTable } from '../../../requests/tables'
 import { Link } from 'react-router-dom'
 import { useContext, useState, useEffect } from 'react'
-import { GenderContext, TeamPreferenceContext } from '../../contexts/contexts'
-import { tableSortFunction } from '../utilitycomponents/sortFunction'
+import {
+  GenderContext,
+  TeamPreferenceContext,
+} from '../../../contexts/contexts'
+import { tableSortFunction } from '../../utilitycomponents/Functions/sortFunction'
 import PlayoffSeriesPopup from './PlayoffSeriesPopup'
-import Spinner from '../utilitycomponents/spinner'
+import Spinner from '../../utilitycomponents/Components/spinner'
 import {
   groupConstant,
   semiColStarts,
   quarterColStarts,
   eightColStarts,
-} from '../utilitycomponents/constants'
+} from '../../utilitycomponents/Functions/constants'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 

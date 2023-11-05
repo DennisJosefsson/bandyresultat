@@ -139,7 +139,7 @@ router.get('/maraton', async (req, res) => {
   res.json({ maratonTabell, maratonHemmaTabell, maratonBortaTabell })
 })
 
-router.post('/compare', async (req, res) => {
+router.post('/compare', async (req, res, next) => {
   const { teamArray, categoryArray, startSeason, endSeason } = req.body
   const searchString = JSON.stringify(req.body)
 

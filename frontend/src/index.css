@@ -194,7 +194,7 @@
   }
 
   .recordCard .record1st .name {
-    @apply w-32 font-semibold sm:w-48;
+    @apply w-32 truncate font-semibold lg:w-48;
   }
 
   .recordCard .record1st .count {

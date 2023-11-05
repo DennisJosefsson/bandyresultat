@@ -1,8 +1,8 @@
 import { useReducer, useState } from 'react'
 import { useQueryClient } from 'react-query'
-import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
+import teamArrayFormReducer from '../../../reducers/teamSeasonFormReducer'
 
-import { Plus, Minus } from '../utilitycomponents/icons'
+import { Plus, Minus } from '../../utilitycomponents/Components/icons'
 
 const TeamSeasonForm = ({ seasonId, mutation, setShowModal, teams, women }) => {
   const initState = { teamArray: [] }

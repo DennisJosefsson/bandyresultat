@@ -1,7 +1,7 @@
 import { useFormContext, Controller } from 'react-hook-form'
 import Select from 'react-select'
-import { selectStyles } from '../utilitycomponents/selectStyles'
-import { ChevronUp } from '../utilitycomponents/icons'
+import { selectStyles } from '../../utilitycomponents/Components/selectStyles'
+import { ChevronUp } from '../../utilitycomponents/Components/icons'
 
 const limitSelection = [
   { value: 5, label: '5' },
