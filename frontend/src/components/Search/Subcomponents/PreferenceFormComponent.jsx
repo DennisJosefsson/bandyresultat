@@ -18,6 +18,7 @@ const PreferenceFormComponent = ({
                 className="content-center border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="checkbox"
                 value="final"
+                id="final"
                 {...register('categoryArray', {
                   validate: {
                     validateArray: () =>
@@ -35,6 +36,7 @@ const PreferenceFormComponent = ({
                 className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="checkbox"
                 value="semi"
+                id="semi"
                 {...register('categoryArray', {
                   validate: {
                     validateArray: () =>
@@ -52,6 +54,7 @@ const PreferenceFormComponent = ({
                 className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="checkbox"
                 value="quarter"
+                id="quarter"
                 {...register('categoryArray', {
                   validate: {
                     validateArray: () =>
@@ -69,6 +72,7 @@ const PreferenceFormComponent = ({
                 className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="checkbox"
                 value="eight"
+                id="eight"
                 {...register('categoryArray', {
                   validate: {
                     validateArray: () =>
@@ -86,6 +90,7 @@ const PreferenceFormComponent = ({
                 className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="checkbox"
                 value="regular"
+                id="regular"
                 {...register('categoryArray', {
                   validate: {
                     validateArray: () =>
@@ -103,6 +108,7 @@ const PreferenceFormComponent = ({
                 className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="checkbox"
                 value="qualification"
+                id="qualification"
                 {...register('categoryArray', {
                   validate: {
                     validateArray: () =>
@@ -125,6 +131,7 @@ const PreferenceFormComponent = ({
                 className="content-center border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="radio"
                 value="win"
+                id="win"
                 {...register('gameResult')}
               />
               <label htmlFor="win" className="pl-2">
@@ -136,6 +143,7 @@ const PreferenceFormComponent = ({
                 className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="radio"
                 value="draw"
+                id="draw"
                 {...register('gameResult')}
               />
               <label htmlFor="draw" className="pl-2">
@@ -147,6 +155,7 @@ const PreferenceFormComponent = ({
                 className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="radio"
                 value="lost"
+                id="lost"
                 {...register('gameResult')}
               />
               <label htmlFor="lost" className="pl-2">
@@ -158,6 +167,7 @@ const PreferenceFormComponent = ({
                 className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="radio"
                 value="all"
+                id="all"
                 {...register('gameResult')}
               />
               <label htmlFor="all" className="pl-2">
@@ -174,6 +184,7 @@ const PreferenceFormComponent = ({
                 className="content-center border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="radio"
                 value="home"
+                id="home"
                 {...register('homeGame')}
               />
               <label htmlFor="home" className="pl-2">
@@ -185,6 +196,7 @@ const PreferenceFormComponent = ({
                 className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="radio"
                 value="away"
+                id="away"
                 {...register('homeGame')}
               />
               <label htmlFor="away" className="pl-2">
@@ -196,6 +208,7 @@ const PreferenceFormComponent = ({
                 className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="radio"
                 value="both"
+                id="both"
                 {...register('homeGame')}
               />
               <label htmlFor="both" className="pl-2">
@@ -213,6 +226,7 @@ const PreferenceFormComponent = ({
                 className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="radio"
                 value="men"
+                id="men"
                 {...register('selectedGender')}
               />
               <label htmlFor="men" className="pl-2">
@@ -224,6 +238,7 @@ const PreferenceFormComponent = ({
                 className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="radio"
                 value="women"
+                id="women"
                 {...register('selectedGender')}
               />
               <label htmlFor="women" className="pl-2">
@@ -235,6 +250,7 @@ const PreferenceFormComponent = ({
                 className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
                 type="radio"
                 value="all"
+                id="all"
                 {...register('selectedGender')}
               />
               <label htmlFor="all" className="pl-2">

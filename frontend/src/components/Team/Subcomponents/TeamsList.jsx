@@ -16,13 +16,13 @@ const TeamsList = ({
           return (
             <div
               key={team.teamId}
-              className="flex flex-row items-center justify-between bg-white px-2 py-1 text-[1.125rem]"
+              className="flex flex-row items-center justify-between bg-white px-2 py-1 text-base text-[#011d29]"
             >
               <div
                 className={
                   favTeams.includes(team.teamId)
-                    ? 'w-32 cursor-pointer font-bold text-blue-600'
-                    : 'w-32 cursor-pointer text-blue-600'
+                    ? 'w-32 cursor-pointer font-bold'
+                    : 'w-32 cursor-pointer'
                 }
                 onClick={() => {
                   setTeamId(team.teamId)

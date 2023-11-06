@@ -9,12 +9,24 @@ const operatorSelection = [
   { value: 'eq', label: 'Lika' },
 ]
 
+// const goalsScoredOperatorSelection = [
+//   { value: 'gte', label: 'Lika eller större än' },
+//   { value: 'lte', label: 'Lika eller mindre än' },
+//   { value: 'eq', label: 'Lika' },
+// ]
+
+// const goalsConcededOperatorSelection = [
+//   { value: 'gte', label: 'Lika eller större än' },
+//   { value: 'lte', label: 'Lika eller mindre än' },
+//   { value: 'eq', label: 'Lika' },
+// ]
+
 const ResultFormComponent = ({ showResultForm, setShowResultForm }) => {
   const { register, control } = useFormContext()
   return (
     <div className="mb-2 flex w-[18rem] flex-col rounded bg-white p-2 text-sm shadow-md md:text-base lg:w-full">
       <div className="w grid grid-cols-1 gap-2 lg:grid-cols-2">
-        <div className="flex max-w-[16rem] flex-col">
+        <div className="flex max-w-[16rem] flex-col lg:col-span-2">
           <div>Resultat</div>
           <div>
             <input
@@ -53,6 +65,29 @@ const ResultFormComponent = ({ showResultForm, setShowResultForm }) => {
           </div>
         </div>
         <div className="flex max-w-[16rem] flex-col">
+          <div>Jämförelse målskillnad</div>
+          <div>
+            <Controller
+              name="goalDiffOperator"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  placeholder="Lika eller större än"
+                  isSearchable={false}
+                  {...field}
+                  options={operatorSelection}
+                  styles={selectStyles}
+                  defaultValue={{
+                    value: 'gte',
+                    label: 'Lika eller större än',
+                  }}
+                  noOptionsMessage={() => 'Inga val'}
+                />
+              )}
+            />
+          </div>
+        </div>
+        <div className="flex max-w-[16rem] flex-col">
           <div>Gjorda mål</div>
           <div>
             <input
@@ -64,6 +99,29 @@ const ResultFormComponent = ({ showResultForm, setShowResultForm }) => {
                   message: 'Antalet gjorda måste vara en eller två siffror.',
                 },
               })}
+            />
+          </div>
+        </div>
+        <div className="flex max-w-[16rem] flex-col">
+          <div>Jämförelse gjorda mål</div>
+          <div>
+            <Controller
+              name="goalsScoredOperator"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  placeholder="Lika eller större än"
+                  isSearchable={false}
+                  {...field}
+                  options={operatorSelection}
+                  styles={selectStyles}
+                  defaultValue={{
+                    value: 'gte',
+                    label: 'Lika eller större än',
+                  }}
+                  noOptionsMessage={() => 'Inga val'}
+                />
+              )}
             />
           </div>
         </div>
@@ -84,10 +142,10 @@ const ResultFormComponent = ({ showResultForm, setShowResultForm }) => {
           </div>
         </div>
         <div className="flex max-w-[16rem] flex-col">
-          <div>Jämförelse</div>
+          <div>Jämförelse insläppta mål</div>
           <div>
             <Controller
-              name="operator"
+              name="goalsConcededOperator"
               control={control}
               render={({ field }) => (
                 <Select

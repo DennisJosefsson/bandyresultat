@@ -2,12 +2,12 @@ const router = require('express').Router()
 const { Serie, Season } = require('../models')
 const { authControl } = require('../utils/middleware')
 
-router.get('/:seasonId', async (req, res) => {
+router.get('/:seasonId', async (req, res, next) => {
   const series = await Serie.findAll({ where: { seasonId: seasonId } })
   res.json(series)
 })
 
-router.post('/', authControl, async (req, res) => {
+router.post('/', authControl, async (req, res, next) => {
   const seasonName =
     req.body.season < 1964
       ? req.body.season
@@ -27,7 +27,7 @@ router.post('/', authControl, async (req, res) => {
   res.json(newSerie)
 })
 
-router.delete('/:serieId', authControl, async (req, res) => {
+router.delete('/:serieId', authControl, async (req, res, next) => {
   const deletedSerie = Serie.findByPk(req.params.serieId)
   if (!deletedSerie) {
     throw new Error('Finns ingen sådan serie')

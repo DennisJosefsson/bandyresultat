@@ -5,7 +5,7 @@ const dayjs = require('dayjs')
 
 const jwtSecret = process.env.JWT_SECRET
 
-router.get('/logout', (req, res) => {
+router.get('/logout', (req, res, next) => {
   console.log(req.cookies)
   console.log('logga ut')
   res.clearCookie('bandykaka')

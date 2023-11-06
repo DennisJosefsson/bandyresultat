@@ -5,7 +5,7 @@ dayjs.locale('sv')
 
 const PlayoffSeriesPopup = ({ gameData, setShowPopup }) => {
   return (
-    <div className="fixed left-1/2 top-1/2 z-50 mx-auto h-auto w-auto -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded border-2 border-[#011d29] bg-white p-8 text-[10px] xs:text-sm md:text-base">
+    <div className="fixed left-1/2 top-1/2 z-50 mx-auto h-auto w-auto -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded border-2 border-[#011d29] bg-white p-8 text-[10px] xs:text-xs md:text-sm">
       <div className="mx-auto">
         <div>
           {gameData.map((game, index) => (

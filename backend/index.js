@@ -4,6 +4,7 @@ const express = require('express')
 require('express-async-errors')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
+
 const app = express()
 const { PORT } = require('./utils/config')
 const { connectToDb } = require('./utils/db')
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
   next()
 })
 app.use(cookieParser())
+
 const frontend = path.join(__dirname, 'dist')
 app.use('/', express.static(frontend))
 

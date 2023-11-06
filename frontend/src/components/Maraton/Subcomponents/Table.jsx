@@ -73,7 +73,7 @@ const Table = () => {
       </h2>
 
       <div className="mx-auto mt-4 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
-        <div className="flex flex-row justify-center gap-4">
+        <div className="mb-2 flex flex-row justify-center gap-4">
           <div>
             <ButtonComponent
               clickFunctions={() => {
@@ -106,7 +106,7 @@ const Table = () => {
           </div>
         </div>
         <div className="w-full">
-          <table className="w-full table-auto text-[10px] md:text-xs lg:text-base">
+          <table className="w-full table-auto text-[10px] md:text-sm">
             <thead>
               <tr className="maraton" key={'header'}>
                 <th scope="col" className="pos">

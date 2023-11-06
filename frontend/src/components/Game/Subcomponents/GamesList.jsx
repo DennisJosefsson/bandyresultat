@@ -47,7 +47,7 @@ const GamesList = ({
         {gamesArray.map((group) => {
           return (
             <div key={group.group} className="mb-6">
-              <h3 className="text-[0.75rem] font-bold md:text-base xl:text-xl">
+              <h3 className="text-[0.75rem] font-bold md:text-base xl:text-lg">
                 {gamesArray.length > 1
                   ? `${
                       seriesInfo.find(
@@ -72,7 +72,7 @@ const GamesList = ({
                   return (
                     <div key={`${date.date}-${Math.random()}`}>
                       {date.date !== 'null' && (
-                        <h3 className="text-[0.75rem] md:text-base">
+                        <h3 className="text-[0.75rem] md:text-sm">
                           {dayjs(date.date).format('D MMMM YYYY')}
                         </h3>
                       )}
@@ -99,7 +99,7 @@ const GamesList = ({
                                   origin: 'gamesList',
                                 }}
                               >
-                                <div className="mb-1 flex flex-row items-center justify-between bg-slate-300 px-2 py-0.5 text-[10px] md:text-base xl:mb-2 xl:w-[36rem] xl:py-1">
+                                <div className="mb-1 flex flex-row items-center justify-between bg-slate-300 px-2 py-0.5 text-[10px] md:text-sm xl:mb-2 xl:w-[36rem] xl:py-1">
                                   <span
                                     className={
                                       favTeams.includes(game.homeTeamId)
@@ -130,7 +130,7 @@ const GamesList = ({
 
                                   {game.halftimeResult && (
                                     <>
-                                      <span className="ml-2 text-right text-[8px] tabular-nums md:text-sm">
+                                      <span className="ml-2 text-right text-[8px] tabular-nums md:text-xs">
                                         ({game.halftimeResult})
                                       </span>
                                     </>

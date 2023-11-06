@@ -128,6 +128,8 @@ const Animation = ({ seasonId }) => {
     seasonId,
   )
 
+  console.log(seriesArray)
+
   const groupName = seriesArray.find((serie) => serie.serieGroupCode === group)
     ? seriesArray.find((serie) => serie.serieGroupCode === group).serieName
     : ''
@@ -246,7 +248,7 @@ const Animation = ({ seasonId }) => {
                   return (
                     <div
                       key={game.gameId}
-                      className="flex flex-row justify-between px-2 py-1 text-[10px] even:bg-slate-300 md:text-sm xl:py-2 xl:text-base"
+                      className="flex flex-row justify-between px-2 py-1 text-[10px] even:bg-slate-300 md:text-sm xl:py-2 "
                     >
                       <div>
                         <span
@@ -283,7 +285,7 @@ const Animation = ({ seasonId }) => {
                 })}
               </div>
               <div className="mx-2 mt-4 xl:mx-0">
-                <table className="season w-full text-xs md:text-sm xl:text-base">
+                <table className="season w-full text-xs md:text-sm ">
                   <thead>
                     <tr>
                       <th scope="col" className="pos"></th>
@@ -304,7 +306,15 @@ const Animation = ({ seasonId }) => {
                       return (
                         <tr
                           key={`${team.teamId}-${index}`}
-                          className="season odd:bg-slate-300"
+                          className={`season ${
+                            seriesArray
+                              .find((serie) => serie.serieGroupCode === group)
+                              .serieStructure?.includes(index + 1)
+                              ? 'border-b-2 border-black'
+                              : null
+                          } ${
+                            favTeams.includes(team.teamId) ? 'font-bold' : null
+                          } odd:bg-slate-300`}
                         >
                           <td className="pos">{team.position}</td>
                           <td className="team">{team.casualName}</td>

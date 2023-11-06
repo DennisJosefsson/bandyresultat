@@ -110,7 +110,7 @@ const Playoff = ({ seasonId }) => {
                         {dayjs(game.date).format('D MMMM YYYY')}
                       </h4>
                     </div>
-                    <div className="mt-1 text-base md:text-xl">
+                    <div className="mt-1 text-sm md:text-lg">
                       <span
                         className={
                           favTeams.includes(game.homeTeam.teamId)
@@ -137,7 +137,7 @@ const Playoff = ({ seasonId }) => {
               )
             })}
 
-            <div className="grid grid-cols-1 gap-2 text-sm md:grid-cols-5 md:text-base">
+            <div className="grid grid-cols-1 gap-2 text-xs md:grid-cols-5 md:text-sm">
               {semiTables.map((group, index) => {
                 return (
                   <div
@@ -186,7 +186,7 @@ const Playoff = ({ seasonId }) => {
             </div>
 
             {quarterTables.length !== 2 && (
-              <div className="grid grid-cols-1 gap-2 text-sm md:grid-cols-4 md:text-base">
+              <div className="grid grid-cols-1 gap-2 text-xs md:grid-cols-4 md:text-sm">
                 {quarterTables.map((group) => {
                   return (
                     <div
@@ -236,7 +236,7 @@ const Playoff = ({ seasonId }) => {
             )}
 
             {quarterTables.length === 2 && (
-              <div className="grid grid-cols-1 gap-2 text-sm md:grid-cols-5 md:text-base">
+              <div className="grid grid-cols-1 gap-2 text-xs md:grid-cols-5 md:text-sm">
                 {quarterTables.map((group) => {
                   return (
                     <div
@@ -283,7 +283,7 @@ const Playoff = ({ seasonId }) => {
               </div>
             )}
             {eightTables.length === 2 && (
-              <div className="grid grid-cols-1 gap-2 text-sm md:grid-cols-5 md:text-base">
+              <div className="grid grid-cols-1 gap-2 text-xs md:grid-cols-5 md:text-sm">
                 {eightTables.map((group) => {
                   return (
                     <div
@@ -335,7 +335,7 @@ const Playoff = ({ seasonId }) => {
               </div>
             )}
             {eightTables.length === 4 && (
-              <div className="grid grid-cols-1 gap-2 text-sm md:grid-cols-4 md:text-base">
+              <div className="grid grid-cols-1 gap-2 text-xs md:grid-cols-4 md:text-sm">
                 {eightTables.map((group) => {
                   return (
                     <div

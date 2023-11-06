@@ -54,7 +54,7 @@ const TableList = ({
               </h2>
             )}
             <div>
-              <table className="season w-full px-1 text-xs md:text-sm xl:text-base">
+              <table className="season w-full px-1 text-xs md:text-sm">
                 <thead>
                   <tr className="">
                     <th scope="col" className="pos">

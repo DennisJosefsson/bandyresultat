@@ -4,7 +4,7 @@ const { sequelize } = require('../utils/db')
 const { Team, Table, Season, TeamSeason, TeamGame } = require('../models')
 const { authControl } = require('../utils/middleware')
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   const teams = await Team.findAll({
     order: [[sequelize.literal(`casual_name collate "se-SE-x-icu"`), 'ASC']],
   })
@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
   res.json(teams)
 })
 
-router.get('/latest', async (req, res) => {
+router.get('/latest', async (req, res, next) => {
   let women = false
   const teams = await TeamSeason.findAll({
     where: {
@@ -28,7 +28,7 @@ router.get('/latest', async (req, res) => {
   res.json(teams)
 })
 
-router.get('/:teamId', async (req, res) => {
+router.get('/:teamId', async (req, res, next) => {
   const team = await Team.findByPk(req.params.teamId, {
     include: {
       model: Season,

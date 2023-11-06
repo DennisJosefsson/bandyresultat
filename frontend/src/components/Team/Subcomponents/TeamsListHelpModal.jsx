@@ -10,6 +10,11 @@ const TeamsListHelp = () => {
           </p>
           <p className="mb-4">
             För att se information om specifikt lag så klickar ni på lagnamnet.
+            Där går det också att välja lag som favoritlag, det innebär att
+            laget/lagen (du kan i princip välja hur många du vill) kommer anges
+            med <span className="font-bold">fetstil</span> i tabeller och
+            matchlistor. Informationen sparas i din webbläsare och används inte
+            på något annat vis.
           </p>
           <p className="mb-4">
             Kryssrutan är till för att välja ut lag för att jämföra. Valda lag

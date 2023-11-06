@@ -76,7 +76,7 @@ const Seasons = () => {
               return (
                 <div
                   key={season.seasonId}
-                  className="flex flex-row items-center justify-between bg-white px-2 py-1 text-sm lg:text-[1.125rem]"
+                  className="flex flex-row items-center justify-between bg-white px-2 py-1 text-sm lg:text-base"
                 >
                   <div className="w-28 font-semibold">{season.year}</div>
                   <div className="rounded-md bg-slate-300 px-2 py-1 text-center lg:bg-white xl:p-0">

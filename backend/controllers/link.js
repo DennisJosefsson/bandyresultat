@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const { Link } = require('../models')
 
-router.get('/:linkName', async (req, res) => {
+router.get('/:linkName', async (req, res, next) => {
   const result = await Link.findOne({
     where: { linkName: req.params.linkName },
   })

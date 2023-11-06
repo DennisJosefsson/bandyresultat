@@ -44,7 +44,7 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.post('/search', async (req, res) => {
+router.post('/search', async (req, res, next) => {
   let where = {}
   where.category = req.body.categoryArray
   where.played = true
@@ -120,15 +120,15 @@ router.post('/search', async (req, res) => {
   }
 
   if (req.body.goalDiff) {
-    if (req.body.operator.value === 'gte') {
+    if (req.body.goalDiffOperator.value === 'gte') {
       where.goalDifference = {
         [Op.gte]: req.body.goalDiff,
       }
-    } else if (req.body.operator.value === 'eq') {
+    } else if (req.body.goalDiffOperator.value === 'eq') {
       where.goalDifference = {
         [Op.eq]: req.body.goalDiff,
       }
-    } else if (req.body.operator.value === 'lte') {
+    } else if (req.body.goalDiffOperator.value === 'lte') {
       where.goalDifference = {
         [Op.and]: {
           [Op.lte]: req.body.goalDiff,
@@ -139,15 +139,15 @@ router.post('/search', async (req, res) => {
   }
 
   if (req.body.goalsScored) {
-    if (req.body.operator.value === 'gte') {
+    if (req.body.goalsScoredOperator.value === 'gte') {
       where.goalsScored = {
         [Op.gte]: req.body.goalsScored,
       }
-    } else if (req.body.operator.value === 'eq') {
+    } else if (req.body.goalsScoredOperator.value === 'eq') {
       where.goalsScored = {
         [Op.eq]: req.body.goalsScored,
       }
-    } else if (req.body.operator.value === 'lte') {
+    } else if (req.body.goalsScoredOperator.value === 'lte') {
       where.goalsScored = {
         [Op.and]: {
           [Op.lte]: req.body.goalsScored,
@@ -158,15 +158,15 @@ router.post('/search', async (req, res) => {
   }
 
   if (req.body.goalsConceded) {
-    if (req.body.operator.value === 'gte') {
+    if (req.body.goalsConcededOperator.value === 'gte') {
       where.goalsConceded = {
         [Op.gte]: req.body.goalsConceded,
       }
-    } else if (req.body.operator.value === 'eq') {
+    } else if (req.body.goalsConcededOperator.value === 'eq') {
       where.goalsConceded = {
         [Op.eq]: req.body.goalsConceded,
       }
-    } else if (req.body.operator.value === 'lte') {
+    } else if (req.body.goalsConcededOperator.value === 'lte') {
       where.goalsConceded = {
         [Op.and]: {
           [Op.lte]: req.body.goalsConceded,
@@ -262,7 +262,7 @@ router.post('/search', async (req, res) => {
   }
 })
 
-router.post('/streaks', async (req, res) => {
+router.post('/streaks', async (req, res, next) => {
   if (req.body.record === 'streaks' && req.body.women === true) {
     const womenLosingStreak = await sequelize.query(
       `with lost_values as (
@@ -2865,6 +2865,145 @@ limit 10;
       sumMinAway: sumGoalsConcededAwayMenMin,
     })
   }
+
+  if (req.body.record === 'generalStats' && req.body.women) {
+    const golds = await sequelize.query(
+      `
+  select count(distinct season_id) as guld, team, casual_name
+from teamgames
+join teams on teamgames.team = teams.team_id
+where teamgames.women = true and category = 'final' and win = true
+group by casual_name,team
+order by count(distinct season_id) desc;
+  `,
+      { type: QueryTypes.SELECT }
+    )
+
+    const finals = await sequelize.query(
+      `
+  select count(distinct season_id) as finals, team, casual_name
+from teamgames
+join teams on teamgames.team = teams.team_id
+where teamgames.women = true and category = 'final'
+group by casual_name,team
+order by count(distinct season_id) desc;
+  `,
+      { type: QueryTypes.SELECT }
+    )
+
+    const playoffs = await sequelize.query(
+      `
+  select count(distinct season_id) as playoffs, team, casual_name
+from teamgames
+join teams on teamgames.team = teams.team_id
+where teamgames.women = true and category = any(array['quarter','semi','final'])
+group by casual_name, team
+order by count(distinct season_id) desc
+limit 10;
+  `,
+      { type: QueryTypes.SELECT }
+    )
+
+    const seasons = await sequelize.query(
+      `
+  select count(distinct season_id) as seasons, team, casual_name
+from teamgames
+join teams on teamgames.team = teams.team_id
+where teamgames.women = true
+group by casual_name, team
+order by count(distinct season_id) desc
+limit 10;
+  `,
+      { type: QueryTypes.SELECT }
+    )
+
+    return res.json({ golds, finals, seasons, playoffs })
+  } else if (req.body.record === 'generalStats' && req.body.women === false) {
+    const golds = await sequelize.query(
+      `
+  select count(distinct season_id) as guld, team, casual_name
+from teamgames
+join teams on teamgames.team = teams.team_id
+where teamgames.women = false and category = 'final' and win = true
+group by casual_name,team
+order by count(distinct season_id) desc;
+  `,
+      { type: QueryTypes.SELECT }
+    )
+
+    const finals = await sequelize.query(
+      `
+  select count(distinct season_id) as finals, team, casual_name
+from teamgames
+join teams on teamgames.team = teams.team_id
+where teamgames.women = false and category = 'final'
+group by casual_name,team
+order by count(distinct season_id) desc;
+  `,
+      { type: QueryTypes.SELECT }
+    )
+
+    const playoffs = await sequelize.query(
+      `
+  select count(distinct season_id) as playoffs, team, casual_name
+from teamgames
+join teams on teamgames.team = teams.team_id
+where teamgames.women = false and category = any(array['quarter','semi','final']) and season_id >= 25
+group by casual_name, team
+order by count(distinct season_id) desc
+limit 10;
+  `,
+      { type: QueryTypes.SELECT }
+    )
+
+    const seasons = await sequelize.query(
+      `
+  select count(distinct season_id) as seasons, team, casual_name
+from teamgames
+join teams on teamgames.team = teams.team_id
+where teamgames.women = false and season_id >= 25
+group by casual_name, team
+order by count(distinct season_id) desc
+limit 10;
+  `,
+      { type: QueryTypes.SELECT }
+    )
+
+    const allPlayoffs = await sequelize.query(
+      `
+  select count(distinct season_id) as playoffs, team, casual_name
+from teamgames
+join teams on teamgames.team = teams.team_id
+where teamgames.women = false and category = any(array['quarter','semi','final'])
+group by casual_name, team
+order by count(distinct season_id) desc
+limit 10;
+  `,
+      { type: QueryTypes.SELECT }
+    )
+
+    const allSeasons = await sequelize.query(
+      `
+  select count(distinct season_id) as seasons, team, casual_name
+from teamgames
+join teams on teamgames.team = teams.team_id
+where teamgames.women = false
+group by casual_name, team
+order by count(distinct season_id) desc
+limit 10;
+  `,
+      { type: QueryTypes.SELECT }
+    )
+
+    return res.json({
+      golds,
+      finals,
+      seasons,
+      allSeasons,
+      playoffs,
+      allPlayoffs,
+    })
+  }
 })
 
 router.get('/season/:seasonId', async (req, res, next) => {
@@ -2909,7 +3048,7 @@ router.get('/season/:seasonId', async (req, res, next) => {
   }
 })
 
-router.get('/stats/:seasonId', async (req, res) => {
+router.get('/stats/:seasonId', async (req, res, next) => {
   const seasonName =
     req.params.seasonId < 1964
       ? req.params.seasonId

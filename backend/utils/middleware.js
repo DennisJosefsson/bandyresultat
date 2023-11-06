@@ -2,7 +2,12 @@ const jwt = require('jsonwebtoken')
 const jwtSecret = process.env.JWT_SECRET
 
 const errorHandler = (error, req, res, next) => {
-  console.log(error)
+  console.log(
+    `${new Date()}: ${error.name} - ${error.message} ---> ${error.stack
+      .split('\n')
+      .pop()}`
+  )
+
   if (error.message === 'Unauthorized') {
     res.status(403).json({ error: 'Unauthorized' })
   }

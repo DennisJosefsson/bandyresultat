@@ -73,10 +73,13 @@ const Search = () => {
       limit: { value: 10, label: 10 },
       gameResult: 'all',
       goalsScored: '',
+      goalsScoredOperator: { value: 'gte', label: 'Lika eller större än' },
       goalsConceded: '',
+      goalsConcededOperator: { value: 'gte', label: 'Lika eller större än' },
+      goalDiff: '',
+      goalDiffOperator: { value: 'gte', label: 'Lika eller större än' },
       startSeason: '1907',
       endSeason: '2024',
-      operator: { value: 'gte', label: 'Lika eller större än' },
       team: '',
       opponent: '',
       women: '',
@@ -142,6 +145,13 @@ const Search = () => {
   const scrollTo = (event, ref) => {
     event.preventDefault()
     window.scrollTo(0, ref.current.offsetTop)
+  }
+
+  const collapse = () => {
+    setShowOrderForm(false)
+    setShowPreferenceForm(false)
+    setShowResultForm(false)
+    setShowSeasonForm(false)
   }
 
   const filteredTeams = teams.filter((team) => team.women === women)
@@ -259,7 +269,8 @@ const Search = () => {
                   type="submit"
                   value="Sök"
                   form="search-form"
-                  className="mb-4 w-[72px] cursor-pointer truncate rounded-md bg-[#011d29] px-1 py-0.5 text-center text-[10px] text-white transition-all duration-150 ease-in-out first:last:px-1 hover:bg-slate-600 xs:w-[84px] xs:text-sm lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg"
+                  className="mb-4 w-[72px] cursor-pointer truncate rounded-md bg-[#011d29] px-1 py-0.5 text-center text-[10px] text-white transition-all duration-150 ease-in-out first:last:px-1 hover:bg-slate-600 xs:w-[84px] xs:text-sm lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-base"
+                  onClick={() => collapse()}
                 />
               </div>
               <ButtonComponent clickFunctions={() => methods.reset()}>

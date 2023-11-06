@@ -108,7 +108,7 @@ const Maraton = () => {
           </div>
         </div>
       </div>
-      <div>
+      <div className="mt-2">
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
           onError={logError}
