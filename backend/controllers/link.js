@@ -2,6 +2,7 @@ const router = require('express').Router()
 const { Link } = require('../models')
 
 router.get('/:linkName', async (req, res, next) => {
+  res.locals.origin = 'GET Comparelink router'
   const result = await Link.findOne({
     where: { linkName: req.params.linkName },
   })

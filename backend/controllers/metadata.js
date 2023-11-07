@@ -4,6 +4,7 @@ const { authControl } = require('../utils/middleware')
 const { Metadata, Season } = require('../models')
 
 router.get('/:seasonId', async (req, res, next) => {
+  res.locals.origin = 'GET Metadata router'
   const metadata = await Metadata.findOne({
     where: { seasonId: req.params.seasonId },
     include: { model: Season },
@@ -17,11 +18,13 @@ router.get('/:seasonId', async (req, res, next) => {
 })
 
 router.post('/', authControl, async (req, res, next) => {
+  res.locals.origin = 'POST Metadata router'
   const metadata = await Metadata.create(req.body)
   res.json(metadata)
 })
 
 router.delete('/:metadataId', authControl, async (req, res, next) => {
+  res.locals.origin = 'DELETE Metadata router'
   const metadata = await Metadata.findByPk(req.params.metadataId)
   if (!metadata) {
     throw new Error('No such metadata in the database')
@@ -32,6 +35,7 @@ router.delete('/:metadataId', authControl, async (req, res, next) => {
 })
 
 router.put('/:metadataId', authControl, async (req, res, next) => {
+  res.locals.origin = 'PUT Metadata router'
   const metadata = await Metadata.findByPk(req.params.metadataId)
   if (!metadata) {
     throw new Error('No such metadata in the database')

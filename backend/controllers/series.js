@@ -3,11 +3,15 @@ const { Serie, Season } = require('../models')
 const { authControl } = require('../utils/middleware')
 
 router.get('/:seasonId', async (req, res, next) => {
-  const series = await Serie.findAll({ where: { seasonId: seasonId } })
+  res.locals.origin = 'GET Season Series router'
+  const series = await Serie.findAll({
+    where: { seasonId: req.params.seasonId },
+  })
   res.json(series)
 })
 
 router.post('/', authControl, async (req, res, next) => {
+  res.locals.origin = 'POST Series router'
   const seasonName =
     req.body.season < 1964
       ? req.body.season
@@ -28,6 +32,7 @@ router.post('/', authControl, async (req, res, next) => {
 })
 
 router.delete('/:serieId', authControl, async (req, res, next) => {
+  res.locals.origin = 'DELETE Series router'
   const deletedSerie = Serie.findByPk(req.params.serieId)
   if (!deletedSerie) {
     throw new Error('Finns ingen sådan serie')

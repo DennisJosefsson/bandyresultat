@@ -6,6 +6,7 @@ const dayjs = require('dayjs')
 const jwtSecret = process.env.JWT_SECRET
 
 router.get('/logout', (req, res, next) => {
+  res.locals.origin = 'GET Logout router'
   console.log(req.cookies)
   console.log('logga ut')
   res.clearCookie('bandykaka')
@@ -13,6 +14,7 @@ router.get('/logout', (req, res, next) => {
 })
 
 router.post('/', async (req, res) => {
+  res.locals.origin = 'POST login router'
   const user = await User.findOne({ where: { userName: req.body.userName } })
   if (!user) {
     res.json({ success: false, message: 'User does not exist' })

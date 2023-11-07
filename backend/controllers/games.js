@@ -8,6 +8,7 @@ const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
 
 router.get('/', async (req, res, next) => {
+  res.locals.origin = 'GET Games router'
   const games = await Game.findAll({
     attributes: [
       'gameId',
@@ -45,6 +46,7 @@ router.get('/', async (req, res, next) => {
 })
 
 router.post('/search', async (req, res, next) => {
+  res.locals.origin = 'POST Search router'
   let where = {}
   where.category = req.body.categoryArray
   where.played = true
@@ -263,6 +265,7 @@ router.post('/search', async (req, res, next) => {
 })
 
 router.post('/streaks', async (req, res, next) => {
+  res.locals.origin = 'POST streaks router'
   if (req.body.record === 'streaks' && req.body.women === true) {
     const womenLosingStreak = await sequelize.query(
       `with lost_values as (
@@ -3007,6 +3010,7 @@ limit 10;
 })
 
 router.get('/season/:seasonId', async (req, res, next) => {
+  res.locals.origin = 'GET Single Season Games router'
   const seasonName =
     req.params.seasonId < 1964
       ? req.params.seasonId
@@ -3049,6 +3053,7 @@ router.get('/season/:seasonId', async (req, res, next) => {
 })
 
 router.get('/stats/:seasonId', async (req, res, next) => {
+  res.locals.origin = 'GET Single Season stats router'
   const seasonName =
     req.params.seasonId < 1964
       ? req.params.seasonId
@@ -3887,6 +3892,7 @@ join teams as away_team on max_diff.away = away_team.team_id;`,
 })
 
 router.get('/:gameId', async (req, res, next) => {
+  res.locals.origin = 'GET Single Game router'
   const game = await Game.findByPk(req.params.gameId, {
     attributes: ['date', 'result'],
     include: [
@@ -3911,6 +3917,7 @@ router.get('/:gameId', async (req, res, next) => {
 })
 
 router.post('/', authControl, async (req, res, next) => {
+  res.locals.origin = 'POST Game router'
   const { serieId } = await Serie.findOne({
     where: { seasonId: req.body.seasonId, serieGroupCode: req.body.group },
     raw: true,
@@ -3974,6 +3981,7 @@ router.post('/', authControl, async (req, res, next) => {
 })
 
 router.delete('/:gameId', authControl, async (req, res, next) => {
+  res.locals.origin = 'DELETE Game router'
   const game = await Game.findByPk(req.params.gameId)
   if (!game) {
     throw new Error('No such game in the database')
@@ -3984,6 +3992,7 @@ router.delete('/:gameId', authControl, async (req, res, next) => {
 })
 
 router.put('/:gameId', authControl, async (req, res, next) => {
+  res.locals.origin = 'PUT Game router'
   const game = await Game.findByPk(req.params.gameId)
   if (!game) {
     throw new Error('No such game in the database')

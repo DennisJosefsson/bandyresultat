@@ -11,6 +11,7 @@ const {
 } = require('../models')
 
 router.get('/', async (req, res, next) => {
+  res.locals.origin = 'GET Seasons router'
   const seasons = await Season.findAll({
     include: { model: Metadata, attributes: ['metadataId'] },
     order: [['seasonId', 'DESC']],
@@ -19,6 +20,7 @@ router.get('/', async (req, res, next) => {
 })
 
 router.get('/:seasonId', async (req, res, next) => {
+  res.locals.origin = 'GET Single Season router'
   const seasonName =
     req.params.seasonId < 1964
       ? req.params.seasonId
@@ -47,11 +49,13 @@ router.get('/:seasonId', async (req, res, next) => {
 })
 
 router.post('/', authControl, async (req, res, next) => {
+  res.locals.origin = 'POST Season router'
   const season = await Season.create(req.body)
   res.json(season)
 })
 
 router.post('/teamseason', authControl, async (req, res, next) => {
+  res.locals.origin = 'POST Teamseason router'
   const seasonId = req.body.seasonId
   const women = req.body.women
   const teamSeasons = req.body.formState.teamArray.map((teamId) => {
@@ -62,6 +66,7 @@ router.post('/teamseason', authControl, async (req, res, next) => {
 })
 
 router.delete('/:seasonId', authControl, async (req, res, next) => {
+  res.locals.origin = 'DELETE Season router'
   const season = await Season.findByPk(req.params.seasonId)
   if (!season) {
     throw new Error('No such season in the database')
@@ -72,6 +77,7 @@ router.delete('/:seasonId', authControl, async (req, res, next) => {
 })
 
 router.put('/:seasonId', authControl, async (req, res, next) => {
+  res.locals.origin = 'PUT Season router'
   const season = await Season.findByPk(req.params.seasonId)
   if (!season) {
     throw new Error('No such season in the database')

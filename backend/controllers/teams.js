@@ -5,6 +5,7 @@ const { Team, Table, Season, TeamSeason, TeamGame } = require('../models')
 const { authControl } = require('../utils/middleware')
 
 router.get('/', async (req, res, next) => {
+  res.locals.origin = 'GET All teams router'
   const teams = await Team.findAll({
     order: [[sequelize.literal(`casual_name collate "se-SE-x-icu"`), 'ASC']],
   })
@@ -13,6 +14,7 @@ router.get('/', async (req, res, next) => {
 })
 
 router.get('/latest', async (req, res, next) => {
+  res.locals.origin = 'GET Latest Season router'
   let women = false
   const teams = await TeamSeason.findAll({
     where: {
@@ -29,6 +31,7 @@ router.get('/latest', async (req, res, next) => {
 })
 
 router.get('/:teamId', async (req, res, next) => {
+  res.locals.origin = 'GET Single Team router'
   const team = await Team.findByPk(req.params.teamId, {
     include: {
       model: Season,
@@ -432,11 +435,13 @@ where team = $teamId and "category" = any(array['quarter', 'semi', 'final']) and
 })
 
 router.post('/', authControl, async (req, res, next) => {
+  res.locals.origin = 'POST Team router'
   const team = await Team.create(req.body)
   res.json(team)
 })
 
 router.delete('/:teamId', authControl, async (req, res, next) => {
+  res.locals.origin = 'DELETE Team router'
   const team = await Team.findByPk(req.params.teamId)
   if (!team) {
     throw new Error('No such team in the database')
@@ -447,6 +452,7 @@ router.delete('/:teamId', authControl, async (req, res, next) => {
 })
 
 router.put('/:teamId', authControl, async (req, res, next) => {
+  res.locals.origin = 'PUT Team router'
   const team = await Team.findByPk(req.params.teamId)
   if (!team) {
     throw new Error('No such team in the database')

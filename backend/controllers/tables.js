@@ -5,6 +5,7 @@ const { Table, Season, Team, TeamGame, Game, Link } = require('../models')
 const { authControl } = require('../utils/middleware')
 
 router.get('/maraton', async (req, res, next) => {
+  res.locals.origin = 'GET Maraton router'
   const maratonTabell = await TeamGame.findAll({
     where: { category: 'regular', played: true },
     attributes: [
@@ -140,6 +141,7 @@ router.get('/maraton', async (req, res, next) => {
 })
 
 router.post('/compare', async (req, res, next) => {
+  res.locals.origin = 'POST Compare router'
   const { teamArray, categoryArray, startSeason, endSeason } = req.body
   const searchString = JSON.stringify(req.body)
 
@@ -378,6 +380,7 @@ where ranked_first_games = 1 or ranked_last_games = 1;
 })
 
 router.get('/:seasonId', async (req, res, next) => {
+  res.locals.origin = 'GET Single Season Tables router'
   const seasonName =
     req.params.seasonId < 1964
       ? req.params.seasonId
@@ -656,11 +659,13 @@ router.get('/:seasonId', async (req, res, next) => {
 })
 
 router.post('/', authControl, async (req, res, next) => {
+  res.locals.origin = 'POST Tables router'
   const table = await Table.create(req.body)
   res.json(table)
 })
 
 router.delete('/:tableId', authControl, async (req, res, next) => {
+  res.locals.origin = 'DELETE Tables router'
   const table = await Table.findByPk(req.params.tableId)
   if (!table) {
     throw new Error('No such table in the database')
@@ -671,6 +676,7 @@ router.delete('/:tableId', authControl, async (req, res, next) => {
 })
 
 router.put('/:tableId', authControl, async (req, res, next) => {
+  res.locals.origin = 'PUT Tables router'
   const table = await Table.findByPk(req.params.tableId)
   if (!table) {
     throw new Error('No such table in the database')
