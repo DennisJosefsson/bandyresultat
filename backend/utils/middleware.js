@@ -4,7 +4,8 @@ const jwtSecret = process.env.JWT_SECRET
 const errorHandler = (error, req, res, next) => {
   console.log(' ')
   console.log('-------------- ERROR --------------')
-  console.log(`${new Date()}: ${error.name} - ${error.message}`)
+  console.log(`${new Date()}`)
+  console.log(`${error.name} - ${error.message}`)
   console.log('From', res.locals.origin)
   console.log('req.body', req.body)
   console.log('-------------- ERROR --------------')
