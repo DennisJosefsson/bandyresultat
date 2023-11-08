@@ -12,19 +12,9 @@ import Animation from '../Game/Subcomponents/Animation'
 import Map from './Subcomponents/Map'
 import ErrorFallback from '../utilitycomponents/Components/ErrorFallback'
 
-import {
-  LeftArrow,
-  RightArrow,
-  ListIcon,
-  DevIcon,
-  StatsIcon,
-  TrophyIcon,
-  CalendarIcon,
-  ManIcon,
-  WomanIcon,
-  MapIcon,
-  QuestionIcon,
-} from '../utilitycomponents/Components/icons'
+import { LeftArrow, RightArrow } from '../utilitycomponents/Components/icons'
+
+import { TabBarInline } from '../utilitycomponents/Components/TabBar'
 
 const Season = () => {
   const seasonId = parseInt(useParams().seasonId)
@@ -39,12 +29,57 @@ const Season = () => {
     }
   }, [state])
 
+  useEffect(() => {
+    if (seasonId.toString().match('^[0-9]{4}$'))
+      document.title =
+        seasonId < 1964
+          ? `Bandyresultat - ${seasonId}`
+          : `Bandyresultat - ${seasonId - 1}/${seasonId}`
+    return () => (document.title = 'Bandyresultat')
+  }, [seasonId])
+
   if (!seasonId.toString().match('^[0-9]{4}$') || seasonId > 2024) {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         Kolla länken, angivna årtalet är felaktigt.
       </div>
     )
+  }
+
+  const seasonTabBarObject = {
+    genderClickFunction: () => dispatch({ type: 'TOGGLE' }),
+    tabBarArray: [
+      {
+        name: 'Matcher',
+        tabName: 'games',
+        clickFunctions: () => setTab('games'),
+      },
+      {
+        name: 'Tabell',
+        tabName: 'tables',
+        clickFunctions: () => setTab('tables'),
+      },
+      {
+        name: 'Slutspel',
+        tabName: 'playoff',
+        clickFunctions: () => setTab('playoff'),
+      },
+      {
+        name: 'Utveckling',
+        tabName: 'roundForRound',
+        clickFunctions: () => setTab('roundForRound'),
+      },
+      {
+        name: 'Statistik',
+        tabName: 'stats',
+        clickFunctions: () => setTab('stats'),
+      },
+      {
+        name: 'Karta',
+        tabName: 'map',
+        clickFunctions: () => setTab('map'),
+      },
+    ],
   }
 
   return (
@@ -74,162 +109,12 @@ const Season = () => {
           </div>
         </div>
       </div>
-      <div className="hidden items-center bg-slate-300 text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
-        <div
-          className={`${
-            tab === 'games'
-              ? 'border-b-4 border-black'
-              : 'border-b-4 border-slate-300'
-          } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
-          onClick={() => setTab('games')}
-        >
-          Matcher
-        </div>
-        <div
-          className={`${
-            tab === 'tables'
-              ? 'border-b-4 border-black'
-              : 'border-b-4 border-slate-300'
-          } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
-          onClick={() => setTab('tables')}
-        >
-          Tabell
-        </div>
-        <div
-          className={`${
-            tab === 'playoff'
-              ? 'border-b-4 border-black'
-              : 'border-b-4 border-slate-300'
-          } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
-          onClick={() => setTab('playoff')}
-        >
-          Slutspel
-        </div>
-        <div
-          className={`${
-            tab === 'roundForRound'
-              ? 'border-b-4 border-black'
-              : 'border-b-4 border-slate-300'
-          } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
-          onClick={() => setTab('roundForRound')}
-        >
-          Utveckling
-        </div>
-        <div
-          className={`${
-            tab === 'stats'
-              ? 'border-b-4 border-black'
-              : 'border-b-4 border-slate-300'
-          } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
-          onClick={() => setTab('stats')}
-        >
-          Statistik
-        </div>
-        <div
-          className={`${
-            tab === 'map'
-              ? 'border-b-4 border-black'
-              : 'border-b-4 border-slate-300'
-          } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
-          onClick={() => setTab('map')}
-        >
-          Karta
-        </div>
-        <div
-          className={`${
-            tab === 'help'
-              ? 'border-b-4 border-black'
-              : 'border-b-4 border-slate-300'
-          } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
-          onClick={() => setTab('help')}
-        >
-          Hjälp/Info
-        </div>
-        <div
-          className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 duration-300 ease-in-out hover:border-black hover:bg-slate-200 hover:transition-colors"
-          onClick={() => dispatch({ type: 'TOGGLE' })}
-        >
-          {women ? 'Herrar' : 'Damer'}
-        </div>
-      </div>
-      <div className="flex flex-row justify-between gap-1 bg-slate-300 text-sm font-bold xs:mb-2 xs:hidden md:gap-2 md:text-lg">
-        <div
-          className={`${
-            tab === 'games'
-              ? 'border-b-4 border-black'
-              : 'border-b-4 border-slate-300'
-          } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
-          onClick={() => setTab('games')}
-        >
-          <CalendarIcon />
-        </div>
-        <div
-          className={`${
-            tab === 'tables'
-              ? 'border-b-4 border-black'
-              : 'border-b-4 border-slate-300'
-          } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
-          onClick={() => setTab('tables')}
-        >
-          <ListIcon />
-        </div>
-        <div
-          className={`${
-            tab === 'playoff'
-              ? 'border-b-4 border-black'
-              : 'border-b-4 border-slate-300'
-          } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
-          onClick={() => setTab('playoff')}
-        >
-          <TrophyIcon />
-        </div>
-        <div
-          className={`${
-            tab === 'roundForRound'
-              ? 'border-b-4 border-black'
-              : 'border-b-4 border-slate-300'
-          } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
-          onClick={() => setTab('roundForRound')}
-        >
-          <DevIcon />
-        </div>
-        <div
-          className={`${
-            tab === 'stats'
-              ? 'border-b-4 border-black'
-              : 'border-b-4 border-slate-300'
-          } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
-          onClick={() => setTab('stats')}
-        >
-          <StatsIcon />
-        </div>
-        <div
-          className={`${
-            tab === 'map'
-              ? 'border-b-4 border-black'
-              : 'border-b-4 border-slate-300'
-          } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
-          onClick={() => setTab('map')}
-        >
-          <MapIcon />
-        </div>
-        <div
-          className={`${
-            tab === 'help'
-              ? 'border-b-4 border-black'
-              : 'border-b-4 border-slate-300'
-          } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
-          onClick={() => setTab('help')}
-        >
-          <QuestionIcon />
-        </div>
-        <div
-          className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 hover:border-black hover:bg-slate-200"
-          onClick={() => dispatch({ type: 'TOGGLE' })}
-        >
-          {women ? <ManIcon /> : <WomanIcon />}
-        </div>
-      </div>
+
+      <TabBarInline
+        tabBarObject={seasonTabBarObject}
+        tab={tab}
+        setTab={setTab}
+      />
       <div>
         <ErrorBoundary
           FallbackComponent={ErrorFallback}

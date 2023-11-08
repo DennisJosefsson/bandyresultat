@@ -31,6 +31,12 @@ router.get('/latest', async (req, res, next) => {
 })
 
 router.get('/:teamId', async (req, res, next) => {
+  if (!req.params.teamId.toString().match('^[0-9]{1,3}$')) {
+    return res.json({
+      success: 'false',
+      message: 'Felaktig länk, teamId är fel.',
+    })
+  }
   res.locals.origin = 'GET Single Team router'
   const team = await Team.findByPk(req.params.teamId, {
     include: {

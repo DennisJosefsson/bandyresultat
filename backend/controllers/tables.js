@@ -356,7 +356,8 @@ where home_team_id = any($team_array) and away_team_id = any($team_array) and pl
 select game_id, "date", result, home.casual_name as home_name, away.casual_name as away_name, ranked_first_games, ranked_last_games from first_games 
 join teams as home on first_games.home_team_id = home.team_id
 join teams as away on first_games.away_team_id = away.team_id
-where ranked_first_games = 1 or ranked_last_games = 1;
+where ranked_first_games = 1 or ranked_last_games = 1
+order by "date" asc;
  `,
     { bind: { team_array: teamArray }, type: QueryTypes.SELECT }
   )

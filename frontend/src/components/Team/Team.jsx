@@ -24,6 +24,13 @@ const Team = ({ teamId }) => {
   const { data, isLoading, error } = useQuery(['teams', teamId], () =>
     getSingleTeam(teamId),
   )
+
+  useEffect(() => {
+    if (data?.team) document.title = `Bandyresultat - ${data?.team.name}`
+
+    return () => (document.title = 'Bandyresultat')
+  }, [data])
+
   if (isLoading) {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">

@@ -15,16 +15,7 @@ import Map from './Subcomponents/Map'
 import Compare from '../Compare/Compare'
 import Team from './Team'
 import Help from './Subcomponents/Help'
-
-import {
-  ListIcon,
-  MapIcon,
-  ManIcon,
-  WomanIcon,
-  SearchIcon,
-  SelectionIcon,
-  QuestionIcon,
-} from '../utilitycomponents/Components/icons'
+import { TabBarDivided } from '../utilitycomponents/Components/TabBar'
 
 const Teams = () => {
   const location = useLocation()
@@ -195,152 +186,61 @@ const Teams = () => {
 
   const unFilteredTeams = data
 
+  const teamsTabBarObject = {
+    genderClickFunction: () => {
+      genderDispatch({ type: 'TOGGLE' })
+      compareDispatch({ type: 'RESET' })
+      tab !== 'map' && setTab('teams')
+    },
+    tabBarArray: [
+      {
+        name: 'Laglista',
+        tabName: 'teams',
+        clickFunctions: () => setTab('teams'),
+        conditional: true,
+      },
+      {
+        name: 'Lagkarta',
+        tabName: 'map',
+        clickFunctions: () => setTab('map'),
+        conditional: true,
+      },
+      {
+        name: 'Sökval',
+        tabName: 'selection',
+        clickFunctions: () => setTab('selection'),
+        conditional: 'formStateSimple',
+      },
+      {
+        name: 'Jämför',
+        tabName: 'compare',
+        clickFunctions: (event) => handleSubmit(event),
+        conditional: 'formStateComplex',
+      },
+    ]
+      .filter((item) => {
+        if (formState.teamArray.length < 2) {
+          if (item.conditional !== 'formStateSimple') return item
+        } else {
+          return item
+        }
+      })
+      .filter((item) => {
+        if (formState.teamArray.length < 2 || formState.teamArray.length > 4) {
+          if (item.conditional !== 'formStateComplex') return item
+        } else {
+          return item
+        }
+      }),
+  }
+
   return (
     <div className="mx-auto mb-2 min-h-screen max-w-7xl px-1 font-inter text-[#011d29] lg:px-0">
-      <div className="hidden items-center bg-slate-300 text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
-        <div className="flex flex-row xs:gap-1 md:gap-2">
-          <div
-            className={`${
-              tab === 'teams'
-                ? 'border-b-4 border-black'
-                : 'border-b-4 border-slate-300'
-            } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
-            onClick={() => setTab('teams')}
-          >
-            Laglista
-          </div>
-
-          <div
-            className={`${
-              tab === 'map'
-                ? 'border-b-4 border-black'
-                : 'border-b-4 border-slate-300'
-            } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
-            onClick={() => setTab('map')}
-          >
-            Lagkarta
-          </div>
-          {formState.teamArray.length > 1 && (
-            <div
-              className={`${
-                tab === 'selection'
-                  ? 'border-b-4 border-black'
-                  : 'border-b-4 border-slate-300'
-              } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
-              onClick={() => setTab('selection')}
-            >
-              Sökval
-            </div>
-          )}
-          {formState.teamArray.length > 1 && formState.teamArray.length < 5 && (
-            <div
-              className={`${
-                tab === 'compare'
-                  ? 'border-b-4 border-black'
-                  : 'border-b-4 border-slate-300'
-              } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
-              onClick={handleSubmit}
-            >
-              Jämför
-            </div>
-          )}
-        </div>
-        <div className="flex flex-row xs:gap-1 md:gap-2">
-          <div
-            className={`${
-              tab === 'help'
-                ? 'border-b-4 border-black'
-                : 'border-b-4 border-slate-300'
-            } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
-            onClick={() => setTab('help')}
-          >
-            Hjälp/Info
-          </div>
-
-          <div
-            className="cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors"
-            onClick={() => {
-              genderDispatch({ type: 'TOGGLE' })
-              compareDispatch({ type: 'RESET' })
-              tab !== 'map' && setTab('teams')
-            }}
-          >
-            {women ? 'Herrar' : 'Damer'}
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-row justify-between gap-1 bg-slate-300 text-sm font-bold xs:mb-2 xs:hidden md:gap-2 md:text-lg">
-        <div className="flex flex-row justify-start xs:gap-1 md:gap-2">
-          <div
-            className={`${
-              tab === 'teams'
-                ? 'border-b-4 border-black'
-                : 'border-b-4 border-slate-300'
-            } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
-            onClick={() => setTab('teams')}
-          >
-            <ListIcon />
-          </div>
-
-          <div
-            className={`${
-              tab === 'map'
-                ? 'border-b-4 border-black'
-                : 'border-b-4 border-slate-300'
-            } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
-            onClick={() => setTab('map')}
-          >
-            <MapIcon />
-          </div>
-          {formState.teamArray.length > 1 && (
-            <div
-              className={`${
-                tab === 'selection'
-                  ? 'border-b-4 border-black'
-                  : 'border-b-4 border-slate-300'
-              } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
-              onClick={() => setTab('selection')}
-            >
-              <SelectionIcon />
-            </div>
-          )}
-          {formState.teamArray.length > 1 && formState.teamArray.length < 5 && (
-            <div
-              className={`${
-                tab === 'compare'
-                  ? 'border-b-4 border-black'
-                  : 'border-b-4 border-slate-300'
-              } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
-              onClick={handleSubmit}
-            >
-              <SearchIcon />
-            </div>
-          )}
-        </div>
-        <div className="flex flex-row justify-end xs:gap-1 md:gap-2">
-          <div
-            className={`${
-              tab === 'help'
-                ? 'border-b-4 border-black'
-                : 'border-b-4 border-slate-300'
-            } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
-            onClick={() => setTab('help')}
-          >
-            <QuestionIcon />
-          </div>
-
-          <div
-            className="cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200"
-            onClick={() => {
-              genderDispatch({ type: 'TOGGLE' })
-              compareDispatch({ type: 'RESET' })
-              tab !== 'map' && setTab('teams')
-            }}
-          >
-            {women ? <ManIcon /> : <WomanIcon />}
-          </div>
-        </div>
-      </div>
+      <TabBarDivided
+        tabBarObject={teamsTabBarObject}
+        tab={tab}
+        setTab={setTab}
+      />
       {(tab === 'teams' || tab === 'map') && (
         <div className="mt-2 w-full">
           <form>

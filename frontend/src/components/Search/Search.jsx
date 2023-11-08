@@ -18,13 +18,8 @@ import OrderFormComponent from './Subcomponents/OrderFormComponent'
 import SeasonFormComponent from './Subcomponents/SeasonFormComponent'
 import PreferenceFormComponent from './Subcomponents/PreferenceFormComponent'
 import SearchHelp from './Subcomponents/SearchFormModal'
-import {
-  ChevronDown,
-  SearchIcon,
-  QuestionIcon,
-  ManIcon,
-  WomanIcon,
-} from '../utilitycomponents/Components/icons'
+import { TabBarDivided } from '../utilitycomponents/Components/TabBar'
+import { ChevronDown } from '../utilitycomponents/Components/icons'
 
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
@@ -184,82 +179,30 @@ const Search = () => {
       }
     })
 
+  const searchTabBarObject = {
+    genderClickFunction: () => {
+      dispatch({ type: 'TOGGLE' })
+      methods.reset()
+    },
+    tabBarArray: [
+      {
+        name: 'Sök',
+        tabName: 'search',
+        clickFunctions: () => setTab('search'),
+      },
+    ],
+  }
+
   return (
     <div
       className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]"
       ref={topRef}
     >
-      <div className="hidden items-center bg-slate-300 text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
-        <div className="flex flex-row xs:gap-1 md:gap-2">
-          <div
-            className={`${
-              tab === 'search'
-                ? 'border-b-4 border-black'
-                : 'border-b-4 border-slate-300'
-            } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
-            onClick={() => setTab('search')}
-          >
-            Sök
-          </div>
-        </div>
-        <div className="flex flex-row xs:gap-1 md:gap-2">
-          <div
-            className={`${
-              tab === 'help'
-                ? 'border-b-4 border-black'
-                : 'border-b-4 border-slate-300'
-            } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
-            onClick={() => setTab('help')}
-          >
-            Hjälp/Info
-          </div>
-          <div
-            className="cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors"
-            onClick={() => {
-              dispatch({ type: 'TOGGLE' })
-              methods.reset()
-            }}
-          >
-            {women ? 'Herrar' : 'Damer'}
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-row justify-between gap-1 bg-slate-300 text-sm font-bold xs:mb-2 xs:hidden md:gap-2 md:text-lg">
-        <div className="flex flex-row justify-start xs:gap-1 md:gap-2">
-          <div
-            className={`${
-              tab === 'search'
-                ? 'border-b-4 border-black'
-                : 'border-b-4 border-slate-300'
-            } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
-            onClick={() => setTab('search')}
-          >
-            <SearchIcon />
-          </div>
-        </div>
-        <div className="flex flex-row justify-end xs:gap-1 md:gap-2">
-          <div
-            className={`${
-              tab === 'help'
-                ? 'border-b-4 border-black'
-                : 'border-b-4 border-slate-300'
-            } cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200`}
-            onClick={() => setTab('help')}
-          >
-            <QuestionIcon />
-          </div>
-
-          <div
-            className="cursor-pointer bg-slate-300 p-2 hover:border-b-4 hover:border-black hover:bg-slate-200"
-            onClick={() => {
-              dispatch({ type: 'TOGGLE' })
-              methods.reset()
-            }}
-          >
-            {women ? <ManIcon /> : <WomanIcon />}
-          </div>
-        </div>
-      </div>
+      <TabBarDivided
+        tabBarObject={searchTabBarObject}
+        tab={tab}
+        setTab={setTab}
+      />
       {!open && tab === 'search' && (
         <div className="mx-1 xl:mx-0">
           <div className="flex flex-row-reverse justify-between">

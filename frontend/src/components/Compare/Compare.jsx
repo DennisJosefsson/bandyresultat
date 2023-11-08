@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useQuery } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 import { compareTeams } from '../../requests/tables'
 import {
   compareSortFunction,
@@ -18,7 +18,7 @@ dayjs.locale('sv')
 
 const Compare = ({ compObject, origin }) => {
   const navigate = useNavigate()
-
+  const client = useQueryClient()
   const [isCopied, setIsCopied] = useState(false)
   const [width, setWidth] = useState(window.innerWidth)
   const breakpoint = 768
@@ -36,10 +36,18 @@ const Compare = ({ compObject, origin }) => {
     () => compareTeams(compObject),
   )
 
-  if (compObject === null) {
+  if (compObject === null || compObject === undefined) {
+    client.cancelQueries({ queryKey: ['compareTeams'] })
+
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
-        Ingen data.
+        <p className="mx-10 text-center">
+          Någon sköt högt över mål, och alla bollar i bollkorgarna är borta. Det
+          var nog inte meningen att det skulle länkas till denna sidan direkt,
+          så tyvärr har vi ingen information till dig. Om du kom hit från en
+          länk på bandyresultat.se, meddela gärna dennis@bandyresultat.se att
+          det finns en bugg han behöver fixa.
+        </p>
       </div>
     )
   }
@@ -59,8 +67,6 @@ const Compare = ({ compObject, origin }) => {
       </div>
     )
   }
-
-  console.log(compObject)
 
   const copyText = async (url) => {
     if ('clipboard' in navigator) {
@@ -92,9 +98,10 @@ const Compare = ({ compObject, origin }) => {
   const allSeasons = data.data.allSeasons
   const allPlayoffs = data.data.allPlayoffs
   const golds = data.data.golds
-  const firstGames = data.data.firstAndLatestGames.filter(
-    (game) => game.ranked_first_games === '1',
-  )
+  const firstGames = data.data.firstAndLatestGames
+    .filter((game) => game.ranked_first_games === '1')
+    .sort((a, b) => a.date < b.date)
+
   const latestGames = data.data.firstAndLatestGames.filter(
     (game) => game.ranked_last_games === '1',
   )

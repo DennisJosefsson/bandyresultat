@@ -81,7 +81,7 @@ const GamesList = ({
                           return (
                             <div
                               key={game.gameId}
-                              className="flex flex-row items-center gap-1"
+                              className="flex w-full flex-row items-center gap-1"
                             >
                               <Link
                                 to="/teams"
@@ -99,12 +99,12 @@ const GamesList = ({
                                   origin: 'gamesList',
                                 }}
                               >
-                                <div className="mb-1 flex flex-row items-center justify-between bg-slate-300 px-2 py-0.5 text-[10px] md:text-sm xl:mb-2 xl:w-[36rem] xl:py-1">
+                                <div className="mb-1 flex w-full flex-row items-center justify-between gap-1 bg-slate-300 px-2 py-0.5 text-[10px] xxs:gap-2 md:text-sm xl:mb-2 xl:w-[36rem] xl:py-1">
                                   <span
                                     className={
                                       favTeams.includes(game.homeTeamId)
-                                        ? 'w-1/3 font-bold sm:w-2/5 lg:w-40 xl:w-52'
-                                        : 'w-1/3 sm:w-2/5 lg:w-40 xl:w-52'
+                                        ? 'w-24 font-bold sm:w-40 lg:w-40 xl:w-52'
+                                        : 'w-24 sm:w-40 lg:w-40 xl:w-52'
                                     }
                                   >
                                     {width < breakpoint
@@ -115,8 +115,8 @@ const GamesList = ({
                                   <span
                                     className={
                                       favTeams.includes(game.awayTeamId)
-                                        ? 'w-1/3 font-bold sm:w-2/5 lg:w-40 xl:w-52'
-                                        : 'w-1/3 sm:w-2/5 lg:w-40 xl:w-52'
+                                        ? 'w-24 font-bold sm:w-40 lg:w-40 xl:w-52'
+                                        : 'w-24 sm:w-40 lg:w-40 xl:w-52'
                                     }
                                   >
                                     {width < breakpoint
