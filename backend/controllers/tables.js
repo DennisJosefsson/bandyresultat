@@ -363,7 +363,7 @@ order by "date" asc;
   )
 
   const link = await Link.findOrCreate({
-    where: { searchString: searchString },
+    where: { searchString: searchString, origin: 'compare' },
   })
 
   res.json({

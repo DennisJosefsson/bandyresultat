@@ -7,8 +7,8 @@ const jwtSecret = process.env.JWT_SECRET
 
 router.get('/logout', (req, res, next) => {
   res.locals.origin = 'GET Logout router'
-  console.log(req.cookies)
-  console.log('logga ut')
+
+  console.log('loggar ut')
   res.clearCookie('bandykaka')
   res.json({ success: true, message: 'Tillbakakaka' })
 })

@@ -10,10 +10,12 @@ const Link = () => {
   useEffect(() => {
     const getData = async () => {
       const linkData = await getLinkData(linkName)
-
+      console.log(linkData)
       if (!linkData.success) {
         setError(linkData)
-      } else if (linkData.success) {
+      } else if (linkData.success && linkData.origin === 'search') {
+        setError({ success: false, message: 'Felaktig länk, fel LänkId.' })
+      } else if (linkData.success && linkData.origin === 'compare') {
         setError({ sucess: linkData.success, message: linkData.message })
         navigate('/teams', { state: { compObject: linkData.searchString } })
       }

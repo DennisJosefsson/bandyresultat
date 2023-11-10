@@ -45,6 +45,7 @@ const App = () => {
             <Route path="/link/:linkName" element={<Link />} />
             <Route path="/compare" element={<Compare />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/search/:linkName" element={<Search />} />
             <Route
               path="/dashboard"
               element={

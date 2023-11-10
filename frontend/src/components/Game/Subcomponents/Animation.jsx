@@ -128,8 +128,6 @@ const Animation = ({ seasonId }) => {
     seasonId,
   )
 
-  console.log(seriesArray)
-
   const groupName = seriesArray.find((serie) => serie.serieGroupCode === group)
     ? seriesArray.find((serie) => serie.serieGroupCode === group).serieName
     : ''

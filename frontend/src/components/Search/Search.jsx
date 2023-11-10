@@ -1,14 +1,12 @@
 import { useForm, Controller, FormProvider } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { useQuery } from 'react-query'
+import { useParams } from 'react-router-dom'
 import { useState, useContext, useEffect, useRef } from 'react'
 import { getTeams } from '../../requests/teams'
 import { getSearch } from '../../requests/games'
-import {
-  GenderContext,
-  TeamPreferenceContext,
-  MenuContext,
-} from '../../contexts/contexts'
+import { getLinkData } from '../../requests/link'
+import { GenderContext, MenuContext } from '../../contexts/contexts'
 import Spinner from '../utilitycomponents/Components/spinner'
 import Select from 'react-select'
 import { selectStyles } from '../utilitycomponents/Components/selectStyles'
@@ -17,19 +15,17 @@ import ResultFormComponent from './Subcomponents/ResultFormComponent'
 import OrderFormComponent from './Subcomponents/OrderFormComponent'
 import SeasonFormComponent from './Subcomponents/SeasonFormComponent'
 import PreferenceFormComponent from './Subcomponents/PreferenceFormComponent'
+import ResultComponent from './Subcomponents/ResultComponent'
 import SearchHelp from './Subcomponents/SearchFormModal'
 import { TabBarDivided } from '../utilitycomponents/Components/TabBar'
 import { ChevronDown } from '../utilitycomponents/Components/icons'
-
-import dayjs from 'dayjs'
-import 'dayjs/locale/sv'
-
-dayjs.locale('sv')
+import { handleCopyClick } from '../utilitycomponents/Functions/copyLinkFunctions'
 
 const ErrorComponent = ({ errors }) => {
   if (Object.keys(errors).length === 0) {
     return null
   }
+
   return (
     <div className="mb-2 rounded border-red-700 bg-white p-2 text-sm font-semibold text-red-700 md:text-base">
       {Object.keys(errors).map((fieldName) => (
@@ -38,6 +34,12 @@ const ErrorComponent = ({ errors }) => {
           name={fieldName}
           as="div"
           key={fieldName}
+          render={({ messages }) =>
+            messages &&
+            Object.entries(messages).map(([type, message]) => (
+              <p key={type}>Fel: {message}</p>
+            ))
+          }
         />
       ))}
     </div>
@@ -51,6 +53,10 @@ const Search = () => {
   const [showSeasonForm, setShowSeasonForm] = useState(false)
   const [showPreferenceForm, setShowPreferenceForm] = useState(false)
   const [tab, setTab] = useState('search')
+  const [linkDataParams, setLinkDataParams] = useState(null)
+  const [isCopied, setIsCopied] = useState(false)
+  const [linkDataLoaded, setLinkDataLoaded] = useState(false)
+  const [linkError, setLinkError] = useState('')
 
   const topRef = useRef()
   const bottomRef = useRef()
@@ -89,9 +95,9 @@ const Search = () => {
   })
 
   const { women, dispatch } = useContext(GenderContext)
-  const { favTeams } = useContext(TeamPreferenceContext)
-  const { open } = useContext(MenuContext)
 
+  const { open } = useContext(MenuContext)
+  const linkName = useParams().linkName
   const {
     data: teams,
     isLoading: isTeamsLoading,
@@ -102,6 +108,12 @@ const Search = () => {
     queryKey: ['search', searchParams],
     queryFn: () => getSearch(searchParams),
     enabled: !!searchParams,
+  })
+
+  const { data: linkData } = useQuery({
+    queryKey: ['linkData', linkDataParams],
+    queryFn: () => getLinkData(linkDataParams),
+    enabled: !!linkDataParams,
   })
 
   useEffect(() => {
@@ -119,7 +131,40 @@ const Search = () => {
         message: searchResult.message,
       })
     }
-  }, [women, searchResult, methods])
+
+    if (linkData && !linkData?.success) {
+      methods.setError('root.random', {
+        type: 'random',
+        message: linkData.message,
+      })
+    } else if (linkData?.success && linkData.origin === 'compare') {
+      setLinkError({ error: true, message: 'Felaktig länk, fel LänkId.' })
+      setTimeout(() => {
+        setLinkError('')
+      }, 5000)
+    } else if (
+      linkData?.success &&
+      linkData.origin === 'search' &&
+      !linkDataLoaded
+    ) {
+      setSearchParams(linkData.searchString)
+      methods.reset(linkData.searchString)
+      setLinkDataLoaded(true)
+    }
+  }, [women, searchResult, methods, linkData, linkDataLoaded])
+
+  useEffect(() => {
+    const regex = /link\d{7,}/gm
+
+    if (linkName && !linkName.match(regex)) {
+      setLinkError({ error: true, message: 'Felaktig länk' })
+      setTimeout(() => {
+        setLinkError('')
+      }, 5000)
+    } else {
+      setLinkDataParams(linkName)
+    }
+  }, [linkName, methods])
 
   if (isTeamsLoading) {
     return (
@@ -192,6 +237,10 @@ const Search = () => {
       },
     ],
   }
+  const baseUrl = import.meta.env.PROD
+    ? 'https://bandyresultat.se'
+    : 'http://localhost:5173'
+  const searchLink = `${baseUrl}/search/${searchResult?.searchLink[0].linkName}`
 
   return (
     <div
@@ -206,19 +255,28 @@ const Search = () => {
       {!open && tab === 'search' && (
         <div className="mx-1 xl:mx-0">
           <div className="flex flex-row-reverse justify-between">
-            <div>
+            <div className="flex max-h-[160px] flex-col gap-4">
               <div>
                 <input
                   type="submit"
                   value="Sök"
                   form="search-form"
-                  className="mb-4 w-[72px] cursor-pointer truncate rounded-md bg-[#011d29] px-1 py-0.5 text-center text-[10px] text-white transition-all duration-150 ease-in-out first:last:px-1 hover:bg-slate-600 xs:w-[84px] xs:text-sm lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-base"
+                  className="w-[72px] cursor-pointer truncate rounded-md bg-[#011d29] px-1 py-0.5 text-center text-[10px] text-white transition-all duration-150 ease-in-out first:last:px-1 hover:bg-slate-600 xs:w-[84px] xs:text-sm lg:w-[128px] lg:px-2 lg:py-1 lg:text-base"
                   onClick={() => collapse()}
                 />
               </div>
               <ButtonComponent clickFunctions={() => methods.reset()}>
                 Nollställ
               </ButtonComponent>
+              {searchResult && (
+                <ButtonComponent
+                  clickFunctions={(event) =>
+                    handleCopyClick(event, searchLink, setIsCopied)
+                  }
+                >
+                  {isCopied ? 'Kopierad!' : `Länk: ${searchLink}`}
+                </ButtonComponent>
+              )}
             </div>
             <div className="ml-2 w-[70%] max-w-[800px] lg:ml-0 lg:w-full">
               <div>
@@ -227,7 +285,7 @@ const Search = () => {
                     onSubmit={methods.handleSubmit(onSubmit)}
                     id="search-form"
                   >
-                    <div className="grid grid-cols-1 gap-2 p-1 lg:grid-cols-3 lg:justify-between">
+                    <div className="grid grid-cols-1 gap-2 lg:grid-cols-3 lg:justify-between">
                       <div className="flex max-w-[18rem] flex-col text-sm md:text-base">
                         <div>Välj lag</div>
                         <div>
@@ -352,54 +410,17 @@ const Search = () => {
           </div>
           <div className="ml-2 w-[18rem] max-w-[800px] lg:ml-0 lg:w-full">
             <ErrorComponent errors={methods.formState.errors} />
-
+            {linkError.error && (
+              <div className="mb-2 rounded border-red-700 bg-white p-2 text-sm font-semibold text-red-700 md:text-base">
+                {linkError.message}
+              </div>
+            )}
             {searchResult && searchResult.hits === 0 && (
               <div className="rounded bg-white p-2">
                 <p className="">Din sökning gav inga träffar.</p>
               </div>
             )}
-            {searchResult && (
-              <div>
-                {gameArray?.map((game, index) => {
-                  return (
-                    <div className="recordCard" key={`${game.date}-${index}`}>
-                      <div className="pos">{index + 1}</div>
-                      <div className="flex flex-col">
-                        <div className="record1st">
-                          <div className="name">
-                            {game.homeTeam.casualName}-
-                            {game.awayTeam.casualName}
-                          </div>
-                          <div
-                            className={
-                              favTeams.includes(game.homeTeamId) ||
-                              favTeams.includes(game.awayTeamId)
-                                ? 'count font-bold'
-                                : 'count'
-                            }
-                          >
-                            {game.result}
-                          </div>
-                        </div>
-                        <div className="record2nd">
-                          <div className="dates">
-                            {game.date && (
-                              <span className="mr-1">
-                                {dayjs(game.date).format('D MMMM YYYY')}
-                              </span>
-                            )}
-                            {game.qualification && <span>(K)</span>}
-                            {!game.date && (
-                              <span className="invisible">Gömt datum </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
+            {searchResult && <ResultComponent gameArray={gameArray} />}
           </div>
           <div ref={bottomRef}></div>
           {searchResult && (

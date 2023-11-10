@@ -1,7 +1,7 @@
 export const selectStyles = {
   menu: (defaultStyles) => ({
     ...defaultStyles,
-    maxWidth: '256px',
+    maxWidth: '288px',
     zIndex: 9999,
   }),
   option: (defaultStyles, state) => ({
@@ -18,7 +18,7 @@ export const selectStyles = {
     borderColor: '#011d29',
     borderRadius: 'none',
     boxShadow: 'none',
-    maxWidth: '16rem',
+    maxWidth: '18rem',
     outline: 'none',
   }),
   singleValue: (defaultStyles) => ({ ...defaultStyles, color: '#011d29' }),
@@ -42,6 +42,6 @@ export const selectStyles = {
   menuList: (defaultStyles) => ({
     ...defaultStyles,
     maxHeight: '136px',
-    maxWidth: '256px',
+    maxWidth: '288px',
   }),
 }

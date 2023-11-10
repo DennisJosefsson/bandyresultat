@@ -17,6 +17,9 @@ Link.init(
     searchString: {
       type: DataTypes.STRING,
     },
+    origin: {
+      type: DataTypes.STRING,
+    },
   },
   {
     sequelize,

@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { Game, Team, Season, TeamGame, Serie } = require('../models')
+const { Game, Team, Season, TeamGame, Serie, Link } = require('../models')
 const { sequelize } = require('../utils/db')
 const { Op, QueryTypes, Model } = require('sequelize')
 const { authControl } = require('../utils/middleware')
@@ -47,6 +47,7 @@ router.get('/', async (req, res, next) => {
 
 router.post('/search', async (req, res, next) => {
   res.locals.origin = 'POST Search router'
+  const searchString = JSON.stringify(req.body)
   let where = {}
   where.category = req.body.categoryArray
   where.played = true
@@ -254,13 +255,21 @@ router.post('/search', async (req, res, next) => {
     order,
   })
 
+  const link = await Link.findOrCreate({
+    where: { searchString: searchString, origin: 'search' },
+  })
+
   if (!searchResult) {
     res.json({
       status: 404,
       message: 'Hittade ingen match som matchade sökningen.',
     })
   } else {
-    res.json({ hits: searchResult.count, searchResult: searchResult.rows })
+    res.json({
+      hits: searchResult.count,
+      searchResult: searchResult.rows,
+      searchLink: link,
+    })
   }
 })
 
@@ -3916,7 +3925,7 @@ router.get('/:gameId', async (req, res, next) => {
   }
 })
 
-router.post('/', authControl, async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   res.locals.origin = 'POST Game router'
   const { serieId } = await Serie.findOne({
     where: { seasonId: req.body.seasonId, serieGroupCode: req.body.group },

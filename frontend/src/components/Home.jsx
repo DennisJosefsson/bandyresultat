@@ -1,7 +1,7 @@
 const Home = () => {
   return (
-    <div className="mx-auto mb-2 flex h-[25rem] max-w-7xl flex-row justify-between">
-      <div className="my-20 flex flex-col font-inter">
+    <div className="mx-auto mb-2 flex h-[25rem] max-w-7xl flex-row justify-between font-inter">
+      <div className="my-20 flex flex-col">
         <div className="mb-6">
           <h1 className="pl-2 text-base font-bold sm:text-4xl">
             Ett stycke bandyhistoria

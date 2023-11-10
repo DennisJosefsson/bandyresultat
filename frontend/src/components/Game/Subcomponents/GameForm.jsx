@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { postGame } from '../../../requests/games'
-import { useQuery } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 import Select from 'react-select'
 import { selectStyles } from '../../utilitycomponents/Components/selectStyles'
 
@@ -78,11 +78,15 @@ const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
   const [playoff, setPlayoff] = useState(false)
   const [extraTime, setExtraTime] = useState(false)
   const [penalties, setPenalties] = useState(false)
+  const client = useQueryClient()
   const { data } = useQuery({
     queryKey: ['game', newGameData],
     queryFn: () => postGame(newGameData),
     enabled: !!newGameData,
+    onSuccess: () =>
+      client.invalidateQueries({ queryKey: ['singleSeasonGames'] }),
   })
+
   const teamSelection = season[0].teams.map((team) => {
     return { value: team.teamId, label: team.name }
   })
@@ -119,6 +123,9 @@ const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
 
   const onSubmit = (formData) => {
     setNewGameData(formData)
+    setTimeout(() => {
+      setShowModal(false)
+    }, 3000)
   }
 
   return (

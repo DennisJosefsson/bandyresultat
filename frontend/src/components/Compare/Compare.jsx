@@ -9,7 +9,7 @@ import {
 } from '../../components/utilitycomponents/Functions/sortFunction'
 import { groupConstant } from '../../components/utilitycomponents/Functions/constants'
 import Spinner from '../../components/utilitycomponents/Components/spinner'
-
+import { handleCopyClick } from '../utilitycomponents/Functions/copyLinkFunctions'
 import { ButtonComponent } from '../../components/utilitycomponents/Components/ButtonComponents'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
@@ -68,25 +68,6 @@ const Compare = ({ compObject, origin }) => {
     )
   }
 
-  const copyText = async (url) => {
-    if ('clipboard' in navigator) {
-      return await navigator.clipboard.writeText(url)
-    } else {
-      return document.execCommand('copy', true, url)
-    }
-  }
-
-  const handleCopyClick = (event) => {
-    event.preventDefault()
-    copyText(compareLink)
-      .then(() => {
-        setIsCopied(true)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
-
   const categoryData = compareSortFunction(data.data.tabeller)
   const allData =
     compObject.teamArray.length === 2
@@ -105,7 +86,11 @@ const Compare = ({ compObject, origin }) => {
   const latestGames = data.data.firstAndLatestGames.filter(
     (game) => game.ranked_last_games === '1',
   )
-  const compareLink = `https://bandyresultat.se/link/${data.data.link[0].linkName}`
+
+  const baseUrl = import.meta.env.PROD
+    ? 'https://bandyresultat.se'
+    : 'http://localhost:5173'
+  const compareLink = `${baseUrl}/link/${data.data.link[0].linkName}`
 
   const catStringArray = compObject.categoryArray.map(
     (cat) => groupConstant[cat],
@@ -205,7 +190,9 @@ const Compare = ({ compObject, origin }) => {
             )}
             {allData.length > 0 && (
               <ButtonComponent
-                clickFunctions={(event) => handleCopyClick(event)}
+                clickFunctions={(event) =>
+                  handleCopyClick(event, compareLink, setIsCopied)
+                }
               >
                 {isCopied ? 'Kopierad!' : `Länk: ${compareLink}`}
               </ButtonComponent>

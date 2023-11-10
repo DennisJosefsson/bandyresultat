@@ -9,18 +9,6 @@ const operatorSelection = [
   { value: 'eq', label: 'Lika' },
 ]
 
-// const goalsScoredOperatorSelection = [
-//   { value: 'gte', label: 'Lika eller större än' },
-//   { value: 'lte', label: 'Lika eller mindre än' },
-//   { value: 'eq', label: 'Lika' },
-// ]
-
-// const goalsConcededOperatorSelection = [
-//   { value: 'gte', label: 'Lika eller större än' },
-//   { value: 'lte', label: 'Lika eller mindre än' },
-//   { value: 'eq', label: 'Lika' },
-// ]
-
 const ResultFormComponent = ({ showResultForm, setShowResultForm }) => {
   const { register, control } = useFormContext()
   return (

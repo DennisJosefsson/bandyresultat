@@ -10,7 +10,12 @@ router.get('/:linkName', async (req, res, next) => {
   if (!searchString) {
     res.json({ success: false, message: 'Länk finns ej.' })
   } else {
-    res.json({ success: true, message: 'Länk finns.', searchString })
+    res.json({
+      success: true,
+      message: 'Länk finns.',
+      searchString,
+      origin: result.origin,
+    })
   }
 })
 
