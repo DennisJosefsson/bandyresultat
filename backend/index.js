@@ -20,6 +20,7 @@ const loginRouter = require('./controllers/login')
 const linkRouter = require('./controllers/link')
 const seriesRouter = require('./controllers/series')
 const mainRouter = require('./controllers/main')
+const errorRouter = require('./controllers/error')
 
 app.use(cors({ credentials: true }))
 app.use(express.json())
@@ -43,6 +44,7 @@ app.use('/api/metadata', metadataRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/links', linkRouter)
 app.use('/api/series', seriesRouter)
+app.use('/api/errors', errorRouter)
 
 app.use((req, res, next) => {
   res.sendFile(path.join(frontend, 'index.html'))

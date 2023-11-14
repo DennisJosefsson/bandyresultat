@@ -480,3 +480,66 @@ export const sortStatsCat = (array) => {
     }
   })
 }
+
+export const sortTenLatestGames = (latestGames, teamA, teamB) => {
+  let gameItem = {
+    game: `${teamA}-${teamB}`,
+    games: 0,
+    won: 0,
+    draw: 0,
+    lost: 0,
+    scored: 0,
+    conceded: 0,
+    points: 0,
+  }
+
+  const teamAObject = { team: teamA, result: [] }
+  const teamBObject = { team: teamB, result: [] }
+
+  latestGames.forEach((game) => {
+    const homeGoal = parseInt(game.result.split('-')[0])
+    const awayGoal = parseInt(game.result.split('-')[1])
+    gameItem['games'] += 1
+    if (game.home_name === teamA) {
+      if (homeGoal > awayGoal) {
+        gameItem['won'] += 1
+        gameItem['points'] += 2
+        teamAObject.result.push('V')
+        teamBObject.result.push('F')
+      } else if (homeGoal < awayGoal) {
+        gameItem['lost'] += 1
+        teamAObject.result.push('F')
+        teamBObject.result.push('V')
+      } else {
+        gameItem['draw'] += 1
+        gameItem['points'] += 1
+        teamAObject.result.push('O')
+        teamBObject.result.push('O')
+      }
+      gameItem['scored'] += homeGoal
+      gameItem['conceded'] += awayGoal
+    } else {
+      if (homeGoal < awayGoal) {
+        gameItem['won'] += 1
+        gameItem['points'] += 2
+        teamAObject.result.push('V')
+        teamBObject.result.push('F')
+      } else if (homeGoal > awayGoal) {
+        gameItem['lost'] += 1
+        teamAObject.result.push('F')
+        teamBObject.result.push('V')
+      } else {
+        gameItem['draw'] += 1
+        gameItem['points'] += 1
+        teamAObject.result.push('O')
+        teamBObject.result.push('O')
+      }
+      gameItem['conceded'] += homeGoal
+      gameItem['scored'] += awayGoal
+    }
+  })
+
+  const teamObjectArray = [teamAObject, teamBObject]
+
+  return { gameItem, teamObjectArray }
+}

@@ -1,7 +1,8 @@
+const { Error } = require('../models')
 const jwt = require('jsonwebtoken')
 const jwtSecret = process.env.JWT_SECRET
 
-const errorHandler = (error, req, res, next) => {
+const errorHandler = async (error, req, res, next) => {
   console.log(' ')
   console.log('-------------- ERROR --------------')
   console.log(`${new Date()}`)
@@ -10,6 +11,15 @@ const errorHandler = (error, req, res, next) => {
   console.log('req.body', req.body)
   console.log('-------------- ERROR --------------')
   console.log(' ')
+  await Error.create({
+    name: error.name,
+    message: error.message,
+    origin: res.locals.origin,
+    body: JSON.stringify(req.body),
+    production: process.env.NODE_ENV === 'development' ? false : true,
+    date: new Date().toString(),
+    backend: true,
+  })
   if (error.message === 'Unauthorized') {
     res.status(403).json({ error: 'Unauthorized' })
   }

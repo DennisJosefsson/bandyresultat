@@ -95,7 +95,7 @@ export const TabBarInline = ({ tabBarObject, tab, setTab }) => {
   )
 }
 
-export const TabBarDivided = ({ tabBarObject, tab, setTab }) => {
+export const TabBarDivided = ({ tabBarObject, tab, setTab, onlyDesktop }) => {
   const { women } = useContext(GenderContext)
   return (
     <div>
@@ -132,39 +132,41 @@ export const TabBarDivided = ({ tabBarObject, tab, setTab }) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-row justify-between gap-1 bg-slate-300 text-sm font-bold xs:mb-2 xs:hidden md:gap-2 md:text-lg">
-        <div className="flex flex-row xs:gap-1 md:gap-2">
-          {tabBarObject.tabBarArray.map((currTab, index) => {
-            return (
-              <div
-                key={`${currTab.name}-${index}`}
-                onClick={currTab.clickFunctions}
-                className={`${
-                  tab === currTab.tabName
-                    ? 'border-b-4 border-black'
-                    : 'border-b-4 border-slate-300'
-                } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
-              >
-                {tabIcons[currTab.tabName]}
-              </div>
-            )
-          })}
-        </div>
-        <div className="flex flex-row xs:gap-1 md:gap-2">
-          <div
-            onClick={() => setTab('help')}
-            className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 duration-300 ease-in-out hover:border-black hover:bg-slate-200 hover:transition-colors"
-          >
-            <QuestionIcon />
+      {!onlyDesktop && (
+        <div className="flex flex-row justify-between gap-1 bg-slate-300 text-sm font-bold xs:mb-2 xs:hidden md:gap-2 md:text-lg">
+          <div className="flex flex-row xs:gap-1 md:gap-2">
+            {tabBarObject.tabBarArray.map((currTab, index) => {
+              return (
+                <div
+                  key={`${currTab.name}-${index}`}
+                  onClick={currTab.clickFunctions}
+                  className={`${
+                    tab === currTab.tabName
+                      ? 'border-b-4 border-black'
+                      : 'border-b-4 border-slate-300'
+                  } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
+                >
+                  {tabIcons[currTab.tabName]}
+                </div>
+              )
+            })}
           </div>
-          <div
-            className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 hover:border-black hover:bg-slate-200"
-            onClick={tabBarObject.genderClickFunction}
-          >
-            {women ? <ManIcon /> : <WomanIcon />}
+          <div className="flex flex-row xs:gap-1 md:gap-2">
+            <div
+              onClick={() => setTab('help')}
+              className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 duration-300 ease-in-out hover:border-black hover:bg-slate-200 hover:transition-colors"
+            >
+              <QuestionIcon />
+            </div>
+            <div
+              className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 hover:border-black hover:bg-slate-200"
+              onClick={tabBarObject.genderClickFunction}
+            >
+              {women ? <ManIcon /> : <WomanIcon />}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

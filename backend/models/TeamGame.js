@@ -78,6 +78,9 @@ TeamGame.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    currInoffChamp: {
+      type: DataTypes.BOOLEAN,
+    },
   },
   {
     sequelize,

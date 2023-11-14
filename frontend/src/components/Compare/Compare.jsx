@@ -74,6 +74,8 @@ const Compare = ({ compObject, origin }) => {
       ? data.data.compareAllGames
       : compareAllTeamData(data.data.compareAllGames)
 
+  console.log(data.data.compareAllGames.slice(1))
+
   const seasons = data.data.seasons
   const playoffs = data.data.playoffs
   const allSeasons = data.data.allSeasons
@@ -83,9 +85,14 @@ const Compare = ({ compObject, origin }) => {
     .filter((game) => game.ranked_first_games === '1')
     .sort((a, b) => a.date < b.date)
 
-  const latestGames = data.data.firstAndLatestGames.filter(
-    (game) => game.ranked_last_games === '1',
-  )
+  const latestGames =
+    compObject.teamArray.length === 2
+      ? data.data.firstAndLatestGames
+          .filter((game) => game.ranked_first_games !== '1')
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+      : data.data.firstAndLatestGames
+          .filter((game) => game.ranked_last_games === '1')
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
 
   const baseUrl = import.meta.env.PROD
     ? 'https://bandyresultat.se'
@@ -324,7 +331,7 @@ const Compare = ({ compObject, origin }) => {
               <div className="w-full">
                 <div>
                   <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>
-                  <table className="compareGames mb-6 w-full table-fixed text-[8px] sm:text-sm xl:w-[36rem]">
+                  <table className="compareGames mb-2 w-full table-fixed text-[8px] sm:text-sm xl:w-[36rem]">
                     <thead>
                       <tr key={`tableheadAllgames`}>
                         <th scope="col" className="team">
@@ -372,6 +379,7 @@ const Compare = ({ compObject, origin }) => {
                     </tbody>
                   </table>
                 </div>
+
                 <div className="mb-6">
                   <h3 className="text-sm font-bold md:text-lg">Detaljerat</h3>
                   {categoryData.map((category, index) => {
@@ -478,34 +486,37 @@ const Compare = ({ compObject, origin }) => {
                         {janFirstGames}
                       </p>
                     </div>
-                    <div className="w-full">
-                      <h3 className="text-sm font-semibold md:text-base">
-                        Senaste matcherna
-                      </h3>
-                      <div className="compareFirstLast mb-3 w-full text-[8px] sm:text-sm">
-                        <div>
-                          {latestGames.map((game) => {
-                            return (
-                              <div key={game.game_id} className="card">
-                                <div className="line1">
-                                  {game.date && (
-                                    <span>
-                                      {dayjs(game.date).format('D MMMM YYYY')}:
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="line2">
-                                  <div>
-                                    {game.home_name}-{game.away_name}
+                    {latestGames.length > 0 && (
+                      <div className="w-full">
+                        <h3 className="text-sm font-semibold md:text-base">
+                          Senaste matcherna
+                        </h3>
+                        <div className="compareFirstLast mb-3 w-full text-[8px] sm:text-sm">
+                          <div>
+                            {latestGames.map((game) => {
+                              return (
+                                <div key={game.game_id} className="card">
+                                  <div className="line1">
+                                    {game.date && (
+                                      <span>
+                                        {dayjs(game.date).format('D MMMM YYYY')}
+                                        :
+                                      </span>
+                                    )}
                                   </div>
-                                  <div className="result">{game.result}</div>
+                                  <div className="line2">
+                                    <div>
+                                      {game.home_name}-{game.away_name}
+                                    </div>
+                                    <div className="result">{game.result}</div>
+                                  </div>
                                 </div>
-                              </div>
-                            )
-                          })}
+                              )
+                            })}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                   <div className="w-full md:w-80">
                     <div className="w-full">

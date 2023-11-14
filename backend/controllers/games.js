@@ -276,6 +276,24 @@ router.post('/search', async (req, res, next) => {
 router.post('/streaks', async (req, res, next) => {
   res.locals.origin = 'POST streaks router'
   if (req.body.record === 'streaks' && req.body.women === true) {
+    const currInoffChamps = await TeamGame.findAndCountAll({
+      where: { currInoffChamp: true, women: true },
+      include: [
+        {
+          model: Team,
+          attributes: ['name', 'casualName', 'shortName'],
+          as: 'lag',
+        },
+        {
+          model: Team,
+          attributes: ['name', 'casualName', 'shortName'],
+          as: 'opp',
+        },
+      ],
+      order: [['date', 'desc']],
+      limit: 10,
+    })
+
     const womenLosingStreak = await sequelize.query(
       `with lost_values as (
 select 
@@ -537,8 +555,27 @@ limit 10;
       winStreak: womenWinStreak,
       noWinStreak: womenNoWinStreak,
       unbeatenStreak: womenUnbeatenStreak,
+      currInoffChamps: currInoffChamps,
     })
   } else if (req.body.record === 'streaks' && req.body.women === false) {
+    const currInoffChamps = await TeamGame.findAndCountAll({
+      where: { currInoffChamp: true, women: false },
+      include: [
+        {
+          model: Team,
+          attributes: ['name', 'casualName', 'shortName'],
+          as: 'lag',
+        },
+        {
+          model: Team,
+          attributes: ['name', 'casualName', 'shortName'],
+          as: 'opp',
+        },
+      ],
+      order: [['date', 'desc']],
+      limit: 10,
+    })
+
     const menLosingStreak = await sequelize.query(
       `with lost_values as (
 select 
@@ -799,6 +836,7 @@ limit 10;
       winStreak: menWinStreak,
       noWinStreak: menNoWinStreak,
       unbeatenStreak: menUnbeatenStreak,
+      currInoffChamps: currInoffChamps,
     })
   } else if (req.body.record === 'points' && req.body.women === true) {
     const averagePointsWomenMax = await TeamGame.findAll({
@@ -3932,6 +3970,12 @@ router.post('/', async (req, res, next) => {
     raw: true,
   })
 
+  const currChamp = await TeamGame.findOne({
+    where: { currInoffChamp: true, women: req.body.women },
+    order: [['date', 'desc']],
+    limit: 1,
+  })
+
   const gameData = {
     ...req.body,
     serieId,
@@ -3954,8 +3998,8 @@ router.post('/', async (req, res, next) => {
 
   let homeTeamGame
   let awayTeamGame
-  const homeTeamGameData = homeTeam(game)
-  const awayTeamGameData = awayTeam(game)
+  const homeTeamGameData = homeTeam(game, currChamp)
+  const awayTeamGameData = awayTeam(game, currChamp)
 
   const teamGames = await TeamGame.findAll({
     where: { gameId: game.gameId },
@@ -4012,8 +4056,8 @@ router.put('/:gameId', authControl, async (req, res, next) => {
   }
 })
 
-const homeTeam = (gameData) => {
-  let points, win, lost, draw
+const homeTeam = (gameData, currChamp) => {
+  let points, win, lost, draw, currInoffChamp
   const {
     gameId,
     homeTeamId,
@@ -4056,6 +4100,9 @@ const homeTeam = (gameData) => {
     win = true
     lost = false
     draw = false
+    if (currChamp === awayTeamId) {
+      currInoffChamp = true
+    }
   } else if (homeGoal < awayGoal) {
     points = 0
     win = false
@@ -4087,6 +4134,7 @@ const homeTeam = (gameData) => {
     women,
     date,
     played,
+    currInoffChamp,
     homeGame: true,
   }
 }
@@ -4133,6 +4181,9 @@ const awayTeam = (gameData) => {
     win = true
     lost = false
     draw = false
+    if (currChamp === homeTeamId) {
+      currInoffChamp = true
+    }
   } else if (awayGoal < homeGoal) {
     points = 0
     win = false
@@ -4164,6 +4215,7 @@ const awayTeam = (gameData) => {
     women,
     date,
     played,
+    currInoffChamp,
     homeGame: false,
   }
 }

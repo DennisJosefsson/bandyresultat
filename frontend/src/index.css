@@ -202,11 +202,11 @@
   }
 
   .recordCard .record2nd {
-    @apply flex flex-row;
+    @apply flex flex-row items-center justify-between text-[10px] md:text-xs;
   }
 
   .recordCard .record2nd .dates {
-    @apply w-48 text-[10px] sm:w-64 md:text-xs;
+    @apply w-48 sm:w-64;
   }
 
   .statsCard {

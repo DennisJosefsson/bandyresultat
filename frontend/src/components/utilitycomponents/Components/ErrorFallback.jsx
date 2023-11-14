@@ -1,4 +1,30 @@
+import { postError } from '../../../requests/errors'
+import { useQuery } from 'react-query'
+import Spinner from './spinner'
+
 const ErrorFallback = ({ error }) => {
+  const origin = error.stack.split('\n')[1]
+  const frontendError = {
+    name: error.name,
+    message: error.message,
+    backend: false,
+    origin: origin,
+    date: new Date().toString(),
+    production: import.meta.env.PROD,
+  }
+
+  const { isLoading } = useQuery(['errors', frontendError], () =>
+    postError(frontendError),
+  )
+
+  if (isLoading) {
+    return (
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+        <Spinner />
+      </div>
+    )
+  }
+
   return (
     <div className="mx-auto mt-10 flex items-center justify-center font-inter text-[#011d29]">
       <div className="mx-2 max-w-3xl">

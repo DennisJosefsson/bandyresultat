@@ -24,6 +24,8 @@ const Record = () => {
     setParams((params) => ({ ...params, women: women }))
   }, [women])
 
+  console.log(data)
+
   if (isLoading) {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
@@ -850,6 +852,53 @@ const Record = () => {
                         </div>
                       )
                     })}
+                  </div>
+                </div>
+                <div className="p-2">
+                  <h3 className="mb-2 text-sm font-bold leading-4 sm:text-lg lg:text-xl">
+                    Inofficiella Svenska Mästare
+                  </h3>
+                  <div className="table">
+                    {data.currInoffChamps.rows.map((team, index) => {
+                      return (
+                        <div
+                          className="recordCard"
+                          key={`${team.name}-${Math.random()}`}
+                        >
+                          <div className="pos">{index + 1}</div>
+                          <div className="flex flex-col">
+                            <div className="record1st">
+                              <div className="name">{team.lag.name}</div>
+                              <div className="count">
+                                {team.goalsScored}-{team.goalsConceded}
+                              </div>
+                            </div>
+                            <div className="record2nd">
+                              <div className="dates">
+                                {dayjs(team.date).format('D MMMM YYYY')}
+                              </div>
+                              <div className="text-right">
+                                {team.opp.shortName}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  <div>
+                    <p className="w-[292px] bg-white p-1 text-xs font-bold md:w-[22rem]">
+                      Totalt {data.currInoffChamps.count + 1}{' '}
+                      <a
+                        href="https://sv.wikipedia.org/wiki/Inofficiella_v%C3%A4rldsm%C3%A4sterskapet_i_fotboll"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-600"
+                      >
+                        &quot;mästare&quot;
+                      </a>{' '}
+                      sedan finalen 2000.
+                    </p>
                   </div>
                 </div>
               </div>

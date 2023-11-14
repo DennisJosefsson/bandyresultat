@@ -3,7 +3,7 @@ import { useState, useReducer, useContext, useEffect } from 'react'
 import { getTeams, postTeam } from '../../requests/teams'
 import { getSeasons } from '../../requests/seasons'
 import { useLocation, useParams } from 'react-router-dom'
-import { GenderContext, UserContext } from '../../contexts/contexts'
+import { GenderContext } from '../../contexts/contexts'
 
 import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
 import Spinner from '../utilitycomponents/Components/spinner'
@@ -22,7 +22,6 @@ const Teams = () => {
   const params = useParams()
 
   const { women, dispatch: genderDispatch } = useContext(GenderContext)
-  const { user } = useContext(UserContext)
 
   const [tab, setTab] = useState('teams')
   const [teamId, setTeamId] = useState(null)
@@ -262,13 +261,6 @@ const Teams = () => {
       )}
 
       <div>
-        {user && (
-          <p className="text-sm">
-            <button onClick={() => setShowTeamFormModal(true)}>
-              Lägg till lag
-            </button>
-          </p>
-        )}
         {showTeamFormModal ? (
           <>
             <TeamForm

@@ -6,10 +6,11 @@ import { GenderContext } from '../../contexts/contexts'
 import MetadataForm from '../Metadata/MetadataForm'
 import TeamSeasonForm from '../Season/Subcomponents/TeamSeasonForm'
 import TeamForm from '../Team/Subcomponents/TeamForm'
-import GenderButtonComponent from '../utilitycomponents/Components/GenderButtonComponent'
+import Errors from './Errors'
 import { getSeasons } from '../../requests/seasons'
 import { getTeams, postTeam } from '../../requests/teams'
 import SeriesModal from './SeriesModal'
+import { TabBarDivided } from '../utilitycomponents/Components/TabBar'
 
 const Dashboard = () => {
   const {
@@ -22,12 +23,10 @@ const Dashboard = () => {
     isLoading: isTeamsLoading,
     error: teamsError,
   } = useQuery(['teams'], getTeams)
-  const [showMetadataModal, setShowMetadataModal] = useState(false)
-  const [showTeamSeasonModal, setShowTeamSeasonModal] = useState(false)
-  const [showNewTeamFormModal, setShowNewTeamFormModal] = useState(false)
-  const [showSeriesModal, setShowSeriesModal] = useState(false)
+
   const [seasonId, setSeasonId] = useState('')
   const [seasonFilter, setSeasonFilter] = useState('')
+  const [tab, setTab] = useState('error')
 
   const metadataMutation = useMutation({
     mutationFn: postMetadata,
@@ -54,17 +53,69 @@ const Dashboard = () => {
     .filter((season) => season.year.includes(seasonFilter))
   const teamsArray = teams.filter((season) => season.women === women)
 
+  const dashboardTabBarObject = {
+    genderClickFunction: () => dispatch({ type: 'TOGGLE' }),
+    tabBarArray: [
+      {
+        name: 'Error',
+        tabName: 'error',
+        clickFunctions: () => setTab('error'),
+        conditional: true,
+      },
+      {
+        name: 'Lägg till lag',
+        tabName: 'addteams',
+        clickFunctions: () => setTab('addteams'),
+        conditional: true,
+      },
+      {
+        name: 'Serie',
+        tabName: 'serie',
+        clickFunctions: () => setTab('serie'),
+        conditional: true,
+      },
+      {
+        name: 'Teamseason',
+        tabName: 'teamseason',
+        clickFunctions: () => setTab('teamseason'),
+        conditional: false,
+      },
+      {
+        name: 'Metadata',
+        tabName: 'metadata',
+        clickFunctions: () => setTab('metadata'),
+        conditional: false,
+      },
+    ].filter((item) => {
+      if (seasonId === '') {
+        if (item.conditional !== false) return item
+      } else {
+        return item
+      }
+    }),
+  }
+
+  const handleSeasonChange = (checkedSeasonId) => {
+    if (seasonId === checkedSeasonId) {
+      setSeasonId('')
+    } else {
+      setSeasonId(checkedSeasonId)
+    }
+  }
+
   return (
     <div className="mx-auto min-h-screen max-w-7xl font-inter text-[#011d29]">
       <h2 className="text-2xl font-bold">
         Dashboard {women ? 'Damer' : 'Herrar'}
       </h2>
+      <TabBarDivided
+        tabBarObject={dashboardTabBarObject}
+        tab={tab}
+        setTab={setTab}
+        onlyDesktop
+      />
       <div className=" flex flex-row-reverse justify-between">
         <div>
-          <GenderButtonComponent
-            women={women}
-            clickFunctions={() => dispatch({ type: 'TOGGLE' })}
-          />
           <div>
             <input
               type="text"
@@ -73,13 +124,11 @@ const Dashboard = () => {
             />
           </div>
         </div>
+
         <div className="justify-self-center">
-          <p>
-            <button onClick={() => setShowMetadataModal(true)}>
-              Redigera metadata
-            </button>
-          </p>
-          {showMetadataModal ? (
+          {tab === 'error' && <Errors />}
+
+          {tab === 'metadata' && (
             <>
               <MetadataForm
                 teams={teamsArray}
@@ -89,45 +138,28 @@ const Dashboard = () => {
                   seasons.find((season) => season.seasonId === seasonId).year
                 }
                 mutation={metadataMutation}
-                setShowModal={setShowMetadataModal}
               />
             </>
-          ) : null}
-          <p>
-            <button onClick={() => setShowSeriesModal(true)}>Serie</button>
-          </p>
-          {showSeriesModal && (
-            <SeriesModal women={women} setShowModal={setShowSeriesModal} />
           )}
-          <p>
-            <button onClick={() => setShowTeamSeasonModal(true)}>
-              Lägg till lag till säsong
-            </button>
-          </p>
-          {showTeamSeasonModal ? (
+
+          {tab === 'serie' && <SeriesModal women={women} />}
+
+          {tab === 'teamseason' && (
             <>
               <TeamSeasonForm
                 teams={teamsArray}
                 seasonId={seasonId}
                 women={women}
                 mutation={teamSeasonMutation}
-                setShowModal={setShowTeamSeasonModal}
               />
             </>
-          ) : null}
-          <p>
-            <button onClick={() => setShowNewTeamFormModal(true)}>
-              Lägg till lag
-            </button>
-          </p>
-          {showNewTeamFormModal ? (
+          )}
+
+          {tab === 'addteams' && (
             <>
-              <TeamForm
-                mutation={teamFormMutation}
-                setShowModal={setShowNewTeamFormModal}
-              />
+              <TeamForm mutation={teamFormMutation} />
             </>
-          ) : null}
+          )}
           <ul>
             {filteredSeasons.length < 12 &&
               filteredSeasons.map((season) => {
@@ -138,7 +170,8 @@ const Dashboard = () => {
                       <div>
                         <input
                           type="checkbox"
-                          onChange={() => setSeasonId(season.seasonId)}
+                          onChange={() => handleSeasonChange(season.seasonId)}
+                          checked={season.seasonId === seasonId}
                         />
                       </div>
                     </div>
