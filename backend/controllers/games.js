@@ -4138,8 +4138,8 @@ const homeTeam = (gameData, currChamp) => {
     homeGame: true,
   }
 }
-const awayTeam = (gameData) => {
-  let points, win, lost, draw
+const awayTeam = (gameData, currChamp) => {
+  let points, win, lost, draw, currInoffChamp
   const {
     gameId,
     homeTeamId,
