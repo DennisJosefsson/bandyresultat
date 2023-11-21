@@ -1,4 +1,4 @@
-import { useParams, Link, useLocation } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import { useContext, useState, useEffect } from 'react'
 import { GenderContext } from '../../contexts/contexts'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -11,8 +11,7 @@ import SeasonStats from './Subcomponents/SeasonStats'
 import Animation from '../Game/Subcomponents/Animation'
 import Map from './Subcomponents/Map'
 import ErrorFallback from '../utilitycomponents/Components/ErrorFallback'
-
-import { LeftArrow, RightArrow } from '../utilitycomponents/Components/icons'
+import SeasonHeader from './Subcomponents/SeasonHeader'
 
 import { TabBarInline } from '../utilitycomponents/Components/TabBar'
 
@@ -82,33 +81,37 @@ const Season = () => {
     ],
   }
 
+  let pageContent
+  switch (tab) {
+    case 'tables':
+      pageContent = <SeasonTables seasonId={seasonId} />
+      break
+    case 'games':
+      pageContent = <Games seasonId={seasonId} />
+      break
+    case 'playoff':
+      pageContent = <Playoff seasonId={seasonId} />
+      break
+    case 'roundForRound':
+      pageContent = <Animation seasonId={seasonId} />
+      break
+    case 'stats':
+      pageContent = <SeasonStats seasonId={seasonId} />
+      break
+    case 'map':
+      pageContent = <Map seasonId={seasonId} />
+      break
+    case 'help':
+      pageContent = <SeasonHelp />
+      break
+    default:
+      pageContent = <div>Något gick fel, ingen sida.</div>
+      break
+  }
+
   return (
     <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
-      <div className="flex flex-row justify-center">
-        <div className="mx-auto mb-4 flex w-full flex-1 flex-row items-center justify-center">
-          <div className={seasonId - 1 === 1906 ? 'invisible' : null}>
-            <Link to={`/season/${seasonId - 1}`} state={{ resetRound: true }}>
-              <div className="flex flex-row items-center gap-1">
-                <LeftArrow />
-              </div>
-            </Link>
-          </div>
-          <div className="mx-16">
-            <h2 className="text-center text-[12px] font-bold sm:text-xl lg:text-2xl">
-              Säsong{' '}
-              {seasonId < 1964 ? `${seasonId}` : `${seasonId - 1}/${seasonId}`}{' '}
-              {women ? 'Damer' : 'Herrar'}
-            </h2>
-          </div>
-          <div className={seasonId + 1 === 2025 ? 'invisible' : null}>
-            <Link to={`/season/${seasonId + 1}`} state={{ resetRound: true }}>
-              <div className="flex flex-row items-center gap-1">
-                <RightArrow />
-              </div>
-            </Link>
-          </div>
-        </div>
-      </div>
+      <SeasonHeader seasonId={seasonId} women={women} />
 
       <TabBarInline
         tabBarObject={seasonTabBarObject}
@@ -121,21 +124,7 @@ const Season = () => {
           onError={logError}
           resetKeys={[tab]}
         >
-          {tab === 'tables' && seasonId < 2025 && (
-            <SeasonTables seasonId={seasonId} />
-          )}
-          {tab === 'games' && seasonId < 2025 && <Games seasonId={seasonId} />}
-          {tab === 'playoff' && seasonId < 2025 && (
-            <Playoff seasonId={seasonId} />
-          )}
-          {tab === 'roundForRound' && seasonId < 2025 && (
-            <Animation seasonId={seasonId} />
-          )}
-          {tab === 'stats' && seasonId < 2025 && (
-            <SeasonStats seasonId={seasonId} />
-          )}
-          {tab === 'map' && seasonId < 2025 && <Map seasonId={seasonId} />}
-          {tab === 'help' && <SeasonHelp />}
+          {seasonId < 2025 && pageContent}
         </ErrorBoundary>
       </div>
     </div>

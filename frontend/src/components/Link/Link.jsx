@@ -10,7 +10,7 @@ const Link = () => {
   useEffect(() => {
     const getData = async () => {
       const linkData = await getLinkData(linkName)
-      console.log(linkData)
+      
       if (!linkData.success) {
         setError(linkData)
       } else if (linkData.success && linkData.origin === 'search') {

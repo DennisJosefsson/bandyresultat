@@ -5,9 +5,10 @@ import { Link } from 'react-router-dom'
 import { useContext, useState, useEffect } from 'react'
 import { GenderContext } from '../../../contexts/contexts'
 import { tableSortFunction } from '../../utilitycomponents/Functions/sortFunction'
-import Spinner from '../../utilitycomponents/Components/spinner'
-import TableList from './TableList'
-import StaticTableList from './StaticTableList'
+import LoadingOrError from '../../utilitycomponents/Components/LoadingOrError'
+import TableList from './TablesSubComponents/TableList'
+import StaticTableList from './TablesSubComponents/StaticTableList'
+import SeasonTablesButtonList from './TablesSubComponents/SeasonTablesButtonList'
 
 const SeasonTables = ({ seasonId }) => {
   const { women } = useContext(GenderContext)
@@ -30,21 +31,13 @@ const SeasonTables = ({ seasonId }) => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }, [])
 
-  if (isLoading || isTableLoading) {
+  if (isLoading || isTableLoading || error || tableError)
     return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
-        <Spinner />
-      </div>
+      <LoadingOrError
+        isLoading={isLoading || isTableLoading}
+        error={error || tableError}
+      />
     )
-  }
-
-  if (error || tableError) {
-    return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
-        Något gick fel.
-      </div>
-    )
-  }
 
   if (data?.success === 'false' || season?.success === 'false') {
     return (
@@ -129,38 +122,10 @@ const SeasonTables = ({ seasonId }) => {
 
         {seasonTables.length === 0 && seasonId < 2025 && (
           <div>
-            <div className="mt-2 grid w-full grid-cols-3 justify-center gap-4 px-6 sm:px-2 md:flex md:flex-row lg:px-0">
-              <div
-                onClick={() => {
-                  setSelectedTable('all')
-                  setHomeAwayTitle('')
-                }}
-              >
-                <div className="mb-2 max-w-[80px] cursor-pointer rounded-md bg-[#011d29] px-0.5 py-0.5 text-center text-[10px] text-white transition-all duration-150 ease-in-out hover:bg-slate-600 sm:max-w-none sm:px-1 sm:text-sm lg:px-2 lg:py-1 xl:mb-6 xl:w-[128px] xl:text-lg">
-                  Alla matcher
-                </div>
-              </div>
-              <div
-                onClick={() => {
-                  setSelectedTable('home')
-                  setHomeAwayTitle('Hemma')
-                }}
-              >
-                <div className="mb-2 max-w-[80px] cursor-pointer rounded-md bg-[#011d29] px-0.5 py-0.5 text-center text-[10px] text-white transition-all duration-150 ease-in-out hover:bg-slate-600 sm:max-w-none sm:px-1 sm:text-sm lg:px-2 lg:py-1 xl:mb-6 xl:w-[128px] xl:text-lg">
-                  Hemmatabell
-                </div>
-              </div>
-              <div
-                onClick={() => {
-                  setSelectedTable('away')
-                  setHomeAwayTitle('Borta')
-                }}
-              >
-                <div className="mb-2 max-w-[80px] cursor-pointer rounded-md bg-[#011d29] px-0.5 py-0.5 text-center text-[10px] text-white transition-all duration-150 ease-in-out hover:bg-slate-600 sm:max-w-none sm:px-1 sm:text-sm lg:px-2 lg:py-1 xl:mb-6 xl:w-[128px] xl:text-lg">
-                  Bortatabell
-                </div>
-              </div>
-            </div>
+            <SeasonTablesButtonList
+              setHomeAwayTitle={setHomeAwayTitle}
+              setSelectedTable={setSelectedTable}
+            />
 
             <div>
               {regularTables.length > 0 && (

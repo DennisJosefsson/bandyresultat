@@ -6,15 +6,16 @@ import { useState, useContext, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { GenderContext, UserContext } from '../../contexts/contexts'
 
-import Spinner from '../utilitycomponents/Components/spinner'
+import ScrollRefComponent from '../utilitycomponents/Components/ScrollRefComponent'
 import GamesList from './Subcomponents/GamesList'
 import GameForm from './Subcomponents/GameForm'
-
+import LoadingOrError from '../utilitycomponents/Components/LoadingOrError'
 import { ButtonComponent } from '../utilitycomponents/Components/ButtonComponents'
 import { gameSortFunction } from '../utilitycomponents/Functions/sortFunction'
 
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
+import FilterComponent from './Subcomponents/FilterComponent'
 
 dayjs.locale('sv')
 
@@ -34,6 +35,10 @@ const Games = ({ seasonId }) => {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }, [])
+
+  useEffect(() => {
+    setTeamFilter('')
+  }, [seasonId])
 
   const { data, isLoading, error } = useQuery(
     ['singleSeasonGames', seasonId],
@@ -56,27 +61,20 @@ const Games = ({ seasonId }) => {
     mutationFn: postGame,
   })
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault()
-    }
-  }
-
-  if (isLoading || isSeasonLoading || isAllSeasonsLoading) {
+  if (
+    isLoading ||
+    isSeasonLoading ||
+    isAllSeasonsLoading ||
+    error ||
+    seasonError ||
+    allSeasonsError
+  )
     return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
-        <Spinner />
-      </div>
+      <LoadingOrError
+        isLoading={isLoading || isSeasonLoading || isAllSeasonsLoading}
+        error={error || seasonError || allSeasonsError}
+      />
     )
-  }
-
-  if (error || seasonError || allSeasonsError) {
-    return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
-        Något gick fel.
-      </div>
-    )
-  }
 
   if (!seasonId.toString().match('^[0-9]{4}$')) {
     return (
@@ -84,11 +82,6 @@ const Games = ({ seasonId }) => {
         Kolla länken, angivna årtalet är felaktigt.
       </div>
     )
-  }
-
-  const scrollTo = (event, ref) => {
-    event.preventDefault()
-    window.scrollTo(0, ref.current.offsetTop)
   }
 
   const allSeasons = unFilteredSeasons.filter(
@@ -181,24 +174,11 @@ const Games = ({ seasonId }) => {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
-      <div className="w-full" ref={topRef}>
-        <form>
-          <input
-            className="w-full border-[#011d29] focus:border-[#011d29]"
-            type="text"
-            placeholder="Filter"
-            value={teamFilter}
-            name="teamFilter"
-            onChange={(event) =>
-              setTeamFilter(
-                event.target.value.replace(/[^a-z0-9\u00C0-\u017F]/gi, ''),
-              )
-            }
-            onKeyDown={handleKeyDown}
-          />
-        </form>
-      </div>
+    <div
+      className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]"
+      ref={topRef}
+    >
+      <FilterComponent setTeamFilter={setTeamFilter} teamFilter={teamFilter} />
 
       {seasonId === 2025 && (
         <div>
@@ -299,15 +279,6 @@ const Games = ({ seasonId }) => {
                     played
                   />
                 )}
-                {user && (
-                  <div>
-                    <ButtonComponent
-                      clickFunctions={() => setShowAddGameModal(true)}
-                    >
-                      Lägg till Match
-                    </ButtonComponent>
-                  </div>
-                )}
               </div>
             </div>
           )}
@@ -384,15 +355,6 @@ const Games = ({ seasonId }) => {
                     endSeason={endSeason}
                   />
                 )}
-                {user && (
-                  <div>
-                    <ButtonComponent
-                      clickFunctions={() => setShowAddGameModal(true)}
-                    >
-                      Lägg till Match
-                    </ButtonComponent>
-                  </div>
-                )}
               </div>
             </div>
           )}
@@ -412,20 +374,7 @@ const Games = ({ seasonId }) => {
       ) : null}
 
       <div ref={bottomRef}></div>
-      <div className="sticky bottom-0 z-20 flex flex-row items-center justify-center gap-2 bg-[#f4f5f5]">
-        <div
-          onClick={(event) => scrollTo(event, topRef)}
-          className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
-        >
-          Scrolla upp
-        </div>
-        <div
-          onClick={(event) => scrollTo(event, bottomRef)}
-          className="my-2 cursor-pointer select-none rounded-md bg-[#93B8C1] px-1 py-0.5 text-center text-[10px] text-[#011d29] lg:px-2 lg:py-1 lg:text-sm"
-        >
-          Scrolla ner
-        </div>
-      </div>
+      <ScrollRefComponent bottomRef={bottomRef} topRef={topRef} />
     </div>
   )
 }

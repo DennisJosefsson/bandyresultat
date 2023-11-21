@@ -1,7 +1,7 @@
 import {
   groupConstant,
   sortOrder,
-} from '../../utilitycomponents/Functions/constants'
+} from '../../../utilitycomponents/Functions/constants'
 
 const TeamTable = ({ tableArray }) => {
   const sortedTables = tableArray.sort((a, b) => {

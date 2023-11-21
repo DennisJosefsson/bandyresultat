@@ -1,6 +1,6 @@
-import { useQuery, useMutation } from 'react-query'
+import { useQuery } from 'react-query'
 import { useState, useReducer, useContext, useEffect } from 'react'
-import { getTeams, postTeam } from '../../requests/teams'
+import { getTeams } from '../../requests/teams'
 import { getSeasons } from '../../requests/seasons'
 import { useLocation, useParams } from 'react-router-dom'
 import { GenderContext } from '../../contexts/contexts'
@@ -8,7 +8,7 @@ import { GenderContext } from '../../contexts/contexts'
 import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
 import Spinner from '../utilitycomponents/Components/spinner'
 import TeamsList from './Subcomponents/TeamsList'
-import TeamForm from './Subcomponents/TeamForm'
+
 import FormStateComponent from './Subcomponents/FormStateComponent'
 import SearchSelection from './Subcomponents/SearchSelectionModal'
 import Map from './Subcomponents/Map'
@@ -25,7 +25,7 @@ const Teams = () => {
 
   const [tab, setTab] = useState('teams')
   const [teamId, setTeamId] = useState(null)
-  const [showTeamFormModal, setShowTeamFormModal] = useState(false)
+
   const [stateNull, setStateNull] = useState(false)
 
   const [teamFilter, setTeamFilter] = useState('')
@@ -58,10 +58,6 @@ const Teams = () => {
     isLoading: isSeasonsLoading,
     error: seasonError,
   } = useQuery(['seasons'], getSeasons)
-
-  const teamFormMutation = useMutation({
-    mutationFn: postTeam,
-  })
 
   useEffect(() => {
     if (location.state && !stateNull) {
@@ -233,6 +229,70 @@ const Teams = () => {
       }),
   }
 
+  let pageContent
+  switch (tab) {
+    case 'teams':
+      pageContent = (
+        <TeamsList
+          teams={teams}
+          handleTeamArrayChange={handleTeamArrayChange}
+          formState={formState}
+          setTab={setTab}
+          setTeamId={setTeamId}
+          valueError={valueError}
+          setValueError={setValueError}
+          unFilteredTeams={unFilteredTeams}
+          dispatch={compareDispatch}
+        />
+      )
+      break
+    case 'map':
+      pageContent = (
+        <Map
+          teams={teams}
+          handleTeamArrayChange={handleTeamArrayChange}
+          formState={formState}
+          setTab={setTab}
+          setTeamId={setTeamId}
+          valueError={valueError}
+          setValueError={setValueError}
+          unFilteredTeams={unFilteredTeams}
+          dispatch={compareDispatch}
+        />
+      )
+      break
+    case 'compare':
+      pageContent = (
+        <Compare compObject={formState} origin={location.state?.origin} />
+      )
+      break
+    case 'singleTeam':
+      pageContent = <Team teamId={teamId} />
+      break
+    case 'help':
+      pageContent = <Help />
+      break
+    case 'selection':
+      pageContent = (
+        <SearchSelection
+          formState={formState}
+          handleCategoryArrayChange={handleCategoryArrayChange}
+          handleEndSeasonChange={handleEndSeasonChange}
+          handleStartSeasonChange={handleStartSeasonChange}
+          endOptions={endOptions}
+          startOptions={startOptions}
+          dispatch={compareDispatch}
+          women={women}
+          valueError={valueError}
+          setValueError={setValueError}
+          unFilteredTeams={unFilteredTeams}
+        />
+      )
+      break
+    default:
+      pageContent = <div>Något gick fel, tom sida</div>
+  }
+
   return (
     <div className="mx-auto mb-2 min-h-screen max-w-7xl px-1 font-inter text-[#011d29] lg:px-0">
       <TabBarDivided
@@ -261,14 +321,6 @@ const Teams = () => {
       )}
 
       <div>
-        {showTeamFormModal ? (
-          <>
-            <TeamForm
-              mutation={teamFormMutation}
-              setShowModal={setShowTeamFormModal}
-            />
-          </>
-        ) : null}
         {(tab === 'teams' || tab === 'map' || tab === 'selection') && (
           <FormStateComponent
             valueError={valueError}
@@ -280,52 +332,7 @@ const Teams = () => {
             tab={tab}
           />
         )}
-        {tab === 'teams' && (
-          <TeamsList
-            teams={teams}
-            handleTeamArrayChange={handleTeamArrayChange}
-            formState={formState}
-            setTab={setTab}
-            setTeamId={setTeamId}
-            valueError={valueError}
-            setValueError={setValueError}
-            unFilteredTeams={unFilteredTeams}
-            dispatch={compareDispatch}
-          />
-        )}
-        {tab === 'map' && (
-          <Map
-            teams={teams}
-            handleTeamArrayChange={handleTeamArrayChange}
-            formState={formState}
-            setTab={setTab}
-            setTeamId={setTeamId}
-            valueError={valueError}
-            setValueError={setValueError}
-            unFilteredTeams={unFilteredTeams}
-            dispatch={compareDispatch}
-          />
-        )}
-        {tab === 'compare' && (
-          <Compare compObject={formState} origin={location.state?.origin} />
-        )}
-        {tab === 'singleTeam' && <Team teamId={teamId} />}
-        {tab === 'help' && <Help />}
-        {tab === 'selection' && (
-          <SearchSelection
-            formState={formState}
-            handleCategoryArrayChange={handleCategoryArrayChange}
-            handleEndSeasonChange={handleEndSeasonChange}
-            handleStartSeasonChange={handleStartSeasonChange}
-            endOptions={endOptions}
-            startOptions={startOptions}
-            dispatch={compareDispatch}
-            women={women}
-            valueError={valueError}
-            setValueError={setValueError}
-            unFilteredTeams={unFilteredTeams}
-          />
-        )}
+        {pageContent}
       </div>
     </div>
   )

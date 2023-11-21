@@ -29,6 +29,23 @@ const Maraton = () => {
     ],
   }
 
+  let pageContent
+  switch (tab) {
+    case 'maraton':
+      pageContent = <Table />
+      break
+    case 'records':
+      pageContent = <Record />
+      break
+
+    case 'help':
+      pageContent = <MaratonHelp />
+      break
+    default:
+      pageContent = <div>Något gick fel, ingen sida.</div>
+      break
+  }
+
   return (
     <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
       <TabBarDivided
@@ -42,9 +59,7 @@ const Maraton = () => {
           onError={logError}
           resetKeys={[tab]}
         >
-          {tab === 'maraton' && <Table />}
-          {tab === 'records' && <Record />}
-          {tab === 'help' && <MaratonHelp />}
+          {pageContent}
         </ErrorBoundary>
       </div>
     </div>

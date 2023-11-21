@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
-import { TeamPreferenceContext } from '../../../contexts/contexts'
+import { TeamPreferenceContext } from '../../../../contexts/contexts'
 
 const TableList = ({
   tableArray,
