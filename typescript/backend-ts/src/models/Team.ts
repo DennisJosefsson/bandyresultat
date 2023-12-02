@@ -22,7 +22,7 @@ interface TeamAttributes {
   city: string
   casualName: string
   shortName: string
-  women: boolean
+  women?: boolean
   lat?: number
   long?: number
   createdAt?: Date
@@ -40,7 +40,7 @@ export interface TeamOutput extends Required<TeamAttributes> {}
 class Team extends Model<TeamAttributes, TeamInput> {
   @PrimaryKey
   @Column
-  declare teamId: number
+  declare teamId?: number
 
   @AllowNull(false)
   @Column

@@ -5,6 +5,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { config, connectToDb } from './utils/index.js'
 import teamRouter from './controllers/team.js'
+import seasonRouter from './controllers/season.js'
 const app = express()
 const PORT = config['PORT']
 
@@ -22,6 +23,7 @@ app.get('/', (_req: Request, res: Response) => {
 })
 
 app.use('/api/teams', teamRouter)
+app.use('/api/seasons', seasonRouter)
 
 const start: () => Promise<void> = async () => {
   await connectToDb()

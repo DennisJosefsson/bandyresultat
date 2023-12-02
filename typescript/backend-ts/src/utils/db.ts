@@ -19,26 +19,24 @@ const dbUrl: string =
     ? (process.env.ELEPHANTSQL_URL_DEVELOPMENT as string)
     : (process.env.ELEPHANTSQL_URL as string)
 
-export const sequelize = new Sequelize(dbUrl, {
-  models: [
-    Error,
-    Season,
-    Game,
-    Team,
-    TeamGame,
-    TeamSeason,
-    TeamTable,
-    TableSeason,
-    Serie,
-    Metadata,
-    User,
-    Link,
-  ],
-  logging: true,
-})
+export const sequelize = new Sequelize(dbUrl, { omitNull: true })
 
 export const connectToDb = async () => {
   try {
+    sequelize.addModels([
+      Error,
+      Season,
+      Game,
+      Team,
+      TeamGame,
+      TeamSeason,
+      TeamTable,
+      TableSeason,
+      Serie,
+      Metadata,
+      User,
+      Link,
+    ])
     await sequelize.authenticate()
 
     console.log(
