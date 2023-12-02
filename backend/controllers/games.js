@@ -4100,7 +4100,7 @@ const homeTeam = (gameData, currChamp) => {
     win = true
     lost = false
     draw = false
-    if (currChamp === awayTeamId) {
+    if (currChamp.team === awayTeamId) {
       currInoffChamp = true
     }
   } else if (homeGoal < awayGoal) {
@@ -4181,7 +4181,7 @@ const awayTeam = (gameData, currChamp) => {
     win = true
     lost = false
     draw = false
-    if (currChamp === homeTeamId) {
+    if (currChamp.team === homeTeamId) {
       currInoffChamp = true
     }
   } else if (awayGoal < homeGoal) {
