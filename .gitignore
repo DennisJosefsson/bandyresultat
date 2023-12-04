@@ -3,3 +3,6 @@
 *.json
 *.csv
 TODO.md
+/typescript/backend-ts/.env
+/typescript/backend-ts/node_modules
+/typescript/backend-ts/backend
