@@ -19,10 +19,10 @@ interface SerieAttributes {
   serieGroupCode: string
   serieCategory: string
   serieName: string
-  serieStructure: number[]
+  serieStructure?: number[]
   seasonId: number
-  bonusPoints: string
-  comment: string
+  bonusPoints?: string
+  comment?: string
 }
 
 export interface SerieInput extends Optional<SerieAttributes, 'serieId'> {}
@@ -30,7 +30,7 @@ export interface SerieOutput extends Required<SerieAttributes> {}
 
 @Table({
   underscored: true,
-  timestamps: true,
+  timestamps: false,
   modelName: 'serie',
 })
 class Serie extends Model<SerieAttributes, SerieInput> {

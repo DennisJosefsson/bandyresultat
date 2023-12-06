@@ -20,28 +20,24 @@ interface TeamGameAttributes {
   serieId: number
   team: number
   opponent: number
-  goalsScored: number
-  goalsConceded: number
-  totalGoals: number
-  goalDifference: number
-  points: number
-  date: Date
+  goalsScored?: number
+  goalsConceded?: number
+  totalGoals?: number
+  goalDifference?: number
+  points?: number
+  date: Date | string
   category: string
   group: string
-  playoff: boolean
-  extraTime: boolean
-  penalties: boolean
-  mix: boolean
-  played: boolean
-  women: boolean
-  win: boolean
-  draw: boolean
-  lost: boolean
-  qualificationGame: boolean
-  homeGame: boolean
-  currInoffChamp: boolean
-  createdAt?: Date
-  updatedAt?: Date
+  playoff?: boolean
+  mix?: boolean
+  played?: boolean
+  women?: boolean
+  win?: boolean
+  draw?: boolean
+  lost?: boolean
+  qualificationGame?: boolean
+  homeGame?: boolean
+  currInoffChamp?: boolean
 }
 
 export interface TeamGameInput
@@ -50,8 +46,8 @@ export interface GTeamameOutput extends Required<TeamGameAttributes> {}
 
 @Table({
   underscored: true,
-  timestamps: true,
-  modelName: 'game',
+  timestamps: false,
+  modelName: 'teamgame',
 })
 class TeamGame extends Model<TeamGameAttributes, TeamGameInput> {
   @PrimaryKey
@@ -87,10 +83,10 @@ class TeamGame extends Model<TeamGameAttributes, TeamGameInput> {
   declare goalDifference: number
 
   @Column
-  declare date: Date
+  declare totalGoals: number
 
   @Column
-  declare round: number
+  declare date: Date
 
   @Column
   declare category: string
@@ -101,14 +97,6 @@ class TeamGame extends Model<TeamGameAttributes, TeamGameInput> {
   @Default(false)
   @Column
   declare playoff: boolean
-
-  @Default(false)
-  @Column
-  declare extraTime: boolean
-
-  @Default(false)
-  @Column
-  declare penalties: boolean
 
   @Default(false)
   @Column
@@ -144,12 +132,6 @@ class TeamGame extends Model<TeamGameAttributes, TeamGameInput> {
   @Default(false)
   @Column
   declare currInoffChamp: boolean
-
-  @Column
-  declare createdAt?: Date
-
-  @Column
-  declare updatedAt?: Date
 
   @BelongsTo(() => Season, 'seasonId')
   declare season: ReturnType<() => Season>

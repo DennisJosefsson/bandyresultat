@@ -1,9 +1,15 @@
 import { TeamInput } from '../../models/Team.js'
 import { parseString, parseLatLong, parseWomen } from './parsers.js'
+import BadRequestError from '../middleware/errors/BadRequestError.js'
 
 const newTeamEntry = (object: unknown): TeamInput => {
   if (!object || typeof object !== 'object') {
-    throw new Error('Incorrect or missing data')
+    throw new BadRequestError({
+      code: 400,
+      message: 'Incorrect or missing data',
+      logging: true,
+      context: { origin: 'NewTeamEntry' },
+    })
   }
 
   if (
@@ -25,7 +31,12 @@ const newTeamEntry = (object: unknown): TeamInput => {
     return newTeam
   }
 
-  throw new Error('Incorrect data: some fields are missing')
+  throw new BadRequestError({
+    code: 400,
+    message: 'Missing fields',
+    logging: true,
+    context: { origin: 'NewTeamEntry' },
+  })
 }
 
 export default newTeamEntry

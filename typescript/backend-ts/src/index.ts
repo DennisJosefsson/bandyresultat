@@ -2,10 +2,15 @@ import express, { NextFunction, Request, Response } from 'express'
 import dotenv from 'dotenv'
 dotenv.config()
 import cors from 'cors'
+import 'express-async-errors'
 import cookieParser from 'cookie-parser'
 import { config, connectToDb } from './utils/index.js'
+import { errorHandler } from './utils/middleware/errors/errorhandler.js'
 import teamRouter from './controllers/team.js'
 import seasonRouter from './controllers/season.js'
+import teamSeasonRouter from './controllers/teamSeason.js'
+import seriesRouter from './controllers/series.js'
+import gameRouter from './controllers/games.js'
 const app = express()
 const PORT = config['PORT']
 
@@ -24,6 +29,10 @@ app.get('/', (_req: Request, res: Response) => {
 
 app.use('/api/teams', teamRouter)
 app.use('/api/seasons', seasonRouter)
+app.use('/api/teamSeasons', teamSeasonRouter)
+app.use('/api/series', seriesRouter)
+app.use('/api/games', gameRouter)
+app.use(errorHandler)
 
 const start: () => Promise<void> = async () => {
   await connectToDb()

@@ -21,22 +21,22 @@ interface GameAttributes {
   serieId: number
   homeTeamId: number
   awayTeamId: number
-  result: string
-  halftimeResult: string
-  homeGoal: number
-  awayGoal: number
-  halftimeHomeGoal: number
-  halftimeAwayGoal: number
-  date: Date
-  round: number
+  result?: string
+  halftimeResult?: string
+  homeGoal?: number
+  awayGoal?: number
+  halftimeHomeGoal?: number
+  halftimeAwayGoal?: number
+  date: Date | string
+  round?: number
   category: string
   group: string
-  playoff: boolean
-  extraTime: boolean
-  penalties: boolean
-  mix: boolean
-  played: boolean
-  women: boolean
+  playoff?: boolean
+  extraTime?: boolean
+  penalties?: boolean
+  mix?: boolean
+  played?: boolean
+  women?: boolean
   createdAt?: Date
   updatedAt?: Date
 }
