@@ -11,6 +11,8 @@ import seasonRouter from './controllers/season.js'
 import teamSeasonRouter from './controllers/teamSeason.js'
 import seriesRouter from './controllers/series.js'
 import gameRouter from './controllers/games.js'
+import tableRouter from './controllers/tables.js'
+import metadataRouter from './controllers/metadata.js'
 const app = express()
 const PORT = config['PORT']
 
@@ -32,6 +34,8 @@ app.use('/api/seasons', seasonRouter)
 app.use('/api/teamSeasons', teamSeasonRouter)
 app.use('/api/series', seriesRouter)
 app.use('/api/games', gameRouter)
+app.use('/api/tables', tableRouter)
+app.use('/api/metadata', metadataRouter)
 app.use(errorHandler)
 
 const start: () => Promise<void> = async () => {

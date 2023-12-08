@@ -127,8 +127,8 @@ export const newTeamGameAwayEntry = (
   ) {
     let newTeamGameEntry: TeamGameInput = {
       gameId: parseNumber(object.gameId),
-      team: parseNumber(object.homeTeamId),
-      opponent: parseNumber(object.awayTeamId),
+      team: parseNumber(object.awayTeamId),
+      opponent: parseNumber(object.homeTeamId),
       date: parseDate(object.date),
       group: parseString(object.group),
       category: parseString(object.category),
@@ -162,8 +162,8 @@ export const newTeamGameAwayEntry = (
       const awayGoal = parseNumber(object.awayGoal)
       newTeamGameEntry = {
         ...newTeamGameEntry,
-        goalsScored: homeGoal,
-        goalsConceded: awayGoal,
+        goalsScored: awayGoal,
+        goalsConceded: homeGoal,
         goalDifference: awayGoal - homeGoal,
         played: true,
         qualificationGame,

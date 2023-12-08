@@ -1,13 +1,13 @@
-type TeamId = number
+type ID = number
 import BadRequestError from '../middleware/errors/BadRequestError.js'
 
-const teamIdCheck = (value: unknown): TeamId => {
+const IDCheck = (value: unknown): ID => {
   if (!value) {
     throw new BadRequestError({
       code: 400,
-      message: 'Missing teamId value',
+      message: 'Missing ID value',
       logging: true,
-      context: { origin: 'TeamId check' },
+      context: { origin: 'ID check' },
     })
   }
   const num = Number(value)
@@ -16,10 +16,10 @@ const teamIdCheck = (value: unknown): TeamId => {
   }
   throw new BadRequestError({
     code: 400,
-    message: 'Wrong teamId value',
+    message: 'Wrong ID value',
     logging: true,
-    context: { origin: 'TeamId check' },
+    context: { origin: 'ID check' },
   })
 }
 
-export default teamIdCheck
+export default IDCheck

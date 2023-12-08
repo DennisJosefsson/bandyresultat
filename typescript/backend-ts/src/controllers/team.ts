@@ -7,7 +7,7 @@ import {
 } from 'express'
 import Team from '../models/Team.js'
 import newTeamEntry from '../utils/postFunctions/newTeamEntry.js'
-import teamIdCheck from '../utils/postFunctions/teamIdCheck.js'
+import IDCheck from '../utils/postFunctions/IDCheck.js'
 import NotFoundError from '../utils/middleware/errors/NotFoundError.js'
 const teamRouter = Router()
 
@@ -16,7 +16,7 @@ teamRouter.get('/:id', (async (
   res: Response,
   _next: NextFunction
 ) => {
-  const teamId = teamIdCheck(req.params.id)
+  const teamId = IDCheck(req.params.id)
   const team = await Team.findByPk(teamId)
   if (!team) {
     throw new NotFoundError({

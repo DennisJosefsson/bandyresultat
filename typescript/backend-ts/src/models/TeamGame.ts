@@ -83,6 +83,9 @@ class TeamGame extends Model<TeamGameAttributes, TeamGameInput> {
   declare goalDifference: number
 
   @Column
+  declare points: number
+
+  @Column
   declare totalGoals: number
 
   @Column

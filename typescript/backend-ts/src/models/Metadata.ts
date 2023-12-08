@@ -16,8 +16,8 @@ interface MetadataAttributes {
   seasonId: number
   name: string
   year: string
-  winnerId: number
-  winnerName: string
+  winnerId?: number
+  winnerName?: string
   hostCity: string
   finalDate: string
   northSouth: boolean
@@ -26,7 +26,7 @@ interface MetadataAttributes {
   quarter: boolean
   semi: boolean
   final: boolean
-  comment: string
+  comment?: string
 }
 
 export interface MetadataInput
