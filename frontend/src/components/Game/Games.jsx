@@ -358,6 +358,17 @@ const Games = ({ seasonId }) => {
               </div>
             </div>
           )}
+          <div>
+            {user && (
+              <div>
+                <ButtonComponent
+                  clickFunctions={() => setShowAddGameModal(true)}
+                >
+                  Lägg till Match
+                </ButtonComponent>
+              </div>
+            )}
+          </div>
         </div>
       )}
       {showAddGameModal ? (

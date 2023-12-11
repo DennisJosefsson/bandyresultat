@@ -3981,17 +3981,15 @@ router.post('/', async (req, res, next) => {
     serieId,
     homeTeamId: req.body.homeTeamId.value,
     awayTeamId: req.body.awayTeamId.value,
-    homeGoal:
-      req.body.result !== null ? parseInt(req.body.result.split('-')[0]) : null,
-    awayGoal:
-      req.body.result !== null ? parseInt(req.body.result.split('-')[1]) : null,
+    homeGoal: req.body.result ? parseInt(req.body.result.split('-')[0]) : null,
+    awayGoal: req.body.result ? parseInt(req.body.result.split('-')[1]) : null,
     halftimeHomeGoal: req.body.halftimeResult
       ? parseInt(req.body.halftimeResult.split('-')[0])
       : null,
     halftimeAwayGoal: req.body.halftimeResult
       ? parseInt(req.body.halftimeResult.split('-')[1])
       : null,
-    played: req.body.result !== null ? true : false,
+    played: req.body.result ? true : false,
   }
 
   const [game, created] = await Game.upsert({ ...gameData })

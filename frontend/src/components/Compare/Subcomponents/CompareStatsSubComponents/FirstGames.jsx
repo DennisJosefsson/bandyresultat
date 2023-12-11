@@ -4,10 +4,6 @@ import 'dayjs/locale/sv'
 dayjs.locale('sv')
 
 const FirstGames = ({ firstGames, compObject }) => {
-  const janFirstGames = compObject.women
-    ? 'Speldatum 1 januari från säsongerna 1988/1989 och 1989/1990 gäller enbart tillsvidare, de betyder att faktiskt datum saknas.'
-    : 'Obs! Speldatum 1 januari före 1931 gäller enbart tillsvidare, de betyder att faktiskt datum saknas.'
-
   return (
     <div className="w-full">
       <h3 className="text-sm font-semibold md:text-base">Första matcherna</h3>
@@ -32,9 +28,12 @@ const FirstGames = ({ firstGames, compObject }) => {
           })}
         </div>
       </div>
-      <p className="my-2 w-full bg-white p-1 text-[8px] font-bold md:text-xs">
-        {janFirstGames}
-      </p>
+      {!compObject.women && (
+        <p className="my-2 w-full bg-white p-1 text-[8px] font-bold md:text-xs">
+          Obs! Speldatum 1 januari före 1931 gäller enbart tillsvidare, de
+          betyder att faktiskt datum saknas.
+        </p>
+      )}
     </div>
   )
 }

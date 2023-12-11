@@ -93,7 +93,6 @@ const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
 
   const groupSelection = [
     { value: 'elitserien', label: 'Elitserien' },
-    { value: 'allsvenskan', label: 'Allsvenskan' },
     { value: 'KvalA', label: 'Kvalgrupp A' },
     { value: 'KvalB', label: 'Kvalgrupp B' },
     { value: 'E1', label: 'Åttondel 1' },
@@ -124,8 +123,9 @@ const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
   const onSubmit = (formData) => {
     setNewGameData(formData)
     setTimeout(() => {
+      setGameData(null)
       setShowModal(false)
-    }, 3000)
+    }, 2000)
   }
 
   return (
