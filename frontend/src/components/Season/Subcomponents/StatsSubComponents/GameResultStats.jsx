@@ -92,7 +92,7 @@ const GameResultStats = ({ data, women }) => {
             <GameResultStatsCard
               title="Oavgjort"
               count={`${(
-                (drawCount?.count / gamesCountTotal?.count) *
+                (drawCount?.count / 2 / gamesCountTotal?.count) *
                 100
               ).toFixed(1)}%`}
             />
@@ -105,34 +105,38 @@ const GameResultStats = ({ data, women }) => {
             Resultatstatistik kategori
           </h4>
           <div className="grid grid-cols-1 gap-y-4 pt-2 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:gap-x-44">
-            <div>
-              <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
-                Vinst hemmalag
-              </h5>
-              {sortStatsCat(winCountHomeTeamCat).map((cat) => {
-                return (
-                  <GameResultStatsCard
-                    key={`${cat.category}-${Math.random()}`}
-                    title={groupConstant[cat.category]}
-                    count={cat.count}
-                  />
-                )
-              })}
-            </div>
-            <div>
-              <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
-                Vinst bortalag
-              </h5>
-              {sortStatsCat(winCountAwayTeamCat).map((cat) => {
-                return (
-                  <GameResultStatsCard
-                    key={`${cat.category}-${Math.random()}`}
-                    title={groupConstant[cat.category]}
-                    count={cat.count}
-                  />
-                )
-              })}
-            </div>
+            {winCountHomeTeamCat.length > 0 && (
+              <div>
+                <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
+                  Vinst hemmalag
+                </h5>
+                {sortStatsCat(winCountHomeTeamCat).map((cat) => {
+                  return (
+                    <GameResultStatsCard
+                      key={`${cat.category}-${Math.random()}`}
+                      title={groupConstant[cat.category]}
+                      count={cat.count}
+                    />
+                  )
+                })}
+              </div>
+            )}
+            {winCountAwayTeamCat.length > 0 && (
+              <div>
+                <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
+                  Vinst bortalag
+                </h5>
+                {sortStatsCat(winCountAwayTeamCat).map((cat) => {
+                  return (
+                    <GameResultStatsCard
+                      key={`${cat.category}-${Math.random()}`}
+                      title={groupConstant[cat.category]}
+                      count={cat.count}
+                    />
+                  )
+                })}
+              </div>
+            )}
             {drawCountCat.length > 0 && (
               <div>
                 <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
@@ -158,46 +162,50 @@ const GameResultStats = ({ data, women }) => {
             Resultatstatistik kategori genomsnitt
           </h4>
           <div className="grid grid-cols-1 gap-y-4 pt-2 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:gap-x-44">
-            <div>
-              <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
-                Vinst hemmalag
-              </h5>
-              {sortStatsCat(winCountHomeTeamCat).map((cat) => {
-                return (
-                  <GameResultStatsCard
-                    key={`${cat.category}-${Math.random()}`}
-                    title={groupConstant[cat.category]}
-                    count={`${(
-                      (cat?.count /
-                        gamesCountTotalCat.find(
-                          (category) => category.category === cat.category,
-                        ).count) *
-                      100
-                    ).toFixed(1)}%`}
-                  />
-                )
-              })}
-            </div>
-            <div>
-              <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
-                Vinst bortalag
-              </h5>
-              {sortStatsCat(winCountAwayTeamCat).map((cat) => {
-                return (
-                  <GameResultStatsCard
-                    key={`${cat.category}-${Math.random()}`}
-                    title={groupConstant[cat.category]}
-                    count={`${(
-                      (cat?.count /
-                        gamesCountTotalCat.find(
-                          (category) => category.category === cat.category,
-                        ).count) *
-                      100
-                    ).toFixed(1)}%`}
-                  />
-                )
-              })}
-            </div>
+            {winCountHomeTeamCat.length > 0 && (
+              <div>
+                <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
+                  Vinst hemmalag
+                </h5>
+                {sortStatsCat(winCountHomeTeamCat).map((cat) => {
+                  return (
+                    <GameResultStatsCard
+                      key={`${cat.category}-${Math.random()}`}
+                      title={groupConstant[cat.category]}
+                      count={`${(
+                        (cat?.count /
+                          gamesCountTotalCat.find(
+                            (category) => category.category === cat.category,
+                          ).count) *
+                        100
+                      ).toFixed(1)}%`}
+                    />
+                  )
+                })}
+              </div>
+            )}
+            {winCountAwayTeamCat.length > 0 && (
+              <div>
+                <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
+                  Vinst bortalag
+                </h5>
+                {sortStatsCat(winCountAwayTeamCat).map((cat) => {
+                  return (
+                    <GameResultStatsCard
+                      key={`${cat.category}-${Math.random()}`}
+                      title={groupConstant[cat.category]}
+                      count={`${(
+                        (cat?.count /
+                          gamesCountTotalCat.find(
+                            (category) => category.category === cat.category,
+                          ).count) *
+                        100
+                      ).toFixed(1)}%`}
+                    />
+                  )
+                })}
+              </div>
+            )}
             {drawCountCat.length > 0 && (
               <div>
                 <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
@@ -210,6 +218,7 @@ const GameResultStats = ({ data, women }) => {
                       title={groupConstant[cat.category]}
                       count={`${(
                         (cat?.count /
+                          2 /
                           gamesCountTotalCat.find(
                             (category) => category.category === cat.category,
                           ).count) *
