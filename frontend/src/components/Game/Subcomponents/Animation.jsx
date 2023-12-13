@@ -153,6 +153,7 @@ const Animation = ({ seasonId }) => {
           setRound={setRound}
           setGroup={setGroup}
           groupName={groupName}
+          groupId={group}
         />
       )}
 

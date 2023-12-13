@@ -2916,7 +2916,7 @@ limit 10;
     })
   }
 
-  if (req.body.record === 'generalStats' && req.body.women) {
+  if (req.body.record === 'general' && req.body.women) {
     const golds = await sequelize.query(
       `
   select count(distinct season_id) as guld, team, casual_name
@@ -2968,7 +2968,7 @@ limit 10;
     )
 
     return res.json({ golds, finals, seasons, playoffs })
-  } else if (req.body.record === 'generalStats' && req.body.women === false) {
+  } else if (req.body.record === 'general' && req.body.women === false) {
     const golds = await sequelize.query(
       `
   select count(distinct season_id) as guld, team, casual_name

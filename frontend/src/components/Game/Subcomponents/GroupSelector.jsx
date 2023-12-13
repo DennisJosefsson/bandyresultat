@@ -1,19 +1,30 @@
-const GroupSelector = ({ gamesArray, setRound, setGroup, groupName }) => {
+import { ButtonComponent } from '../../utilitycomponents/Components/ButtonComponents'
+const GroupSelector = ({
+  gamesArray,
+  setRound,
+  setGroup,
+  groupName,
+  groupId,
+}) => {
   return (
     <>
       <div className="flex flex-row justify-center gap-1">
         {gamesArray.map((group) => {
           return (
-            <div
+            <ButtonComponent
+              active={`${
+                groupId === group.group
+                  ? 'ring-2 ring-cyan-600 ring-inset'
+                  : null
+              }`}
               key={group.group}
-              onClick={() => {
+              clickFunctions={() => {
                 setGroup(group.group)
                 setRound(0)
               }}
-              className="cursor-pointer truncate rounded bg-slate-400 p-1 text-xs text-white md:text-sm lg:text-base"
             >
               {group.serieName}
-            </div>
+            </ButtonComponent>
           )
         })}
       </div>

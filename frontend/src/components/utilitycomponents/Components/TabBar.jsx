@@ -29,7 +29,7 @@ const tabIcons = {
   selection: <SelectionIcon />,
 }
 
-export const TabBarInline = ({ tabBarObject, tab, setTab }) => {
+export const TabBarInline = ({ tabBarObject, tab }) => {
   const { women } = useContext(GenderContext)
   return (
     <div>
@@ -50,7 +50,7 @@ export const TabBarInline = ({ tabBarObject, tab, setTab }) => {
           )
         })}
         <div
-          onClick={() => setTab('help')}
+          onClick={tabBarObject.helpClickFunction}
           className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 duration-300 ease-in-out hover:border-black hover:bg-slate-200 hover:transition-colors"
         >
           Hjälp
@@ -79,7 +79,7 @@ export const TabBarInline = ({ tabBarObject, tab, setTab }) => {
           )
         })}
         <div
-          onClick={() => setTab('help')}
+          onClick={tabBarObject.helpClickFunction}
           className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 duration-300 ease-in-out hover:border-black hover:bg-slate-200 hover:transition-colors"
         >
           <QuestionIcon />
@@ -95,7 +95,7 @@ export const TabBarInline = ({ tabBarObject, tab, setTab }) => {
   )
 }
 
-export const TabBarDivided = ({ tabBarObject, tab, setTab, onlyDesktop }) => {
+export const TabBarDivided = ({ tabBarObject, tab, onlyDesktop }) => {
   const { women } = useContext(GenderContext)
   return (
     <div>
@@ -119,7 +119,7 @@ export const TabBarDivided = ({ tabBarObject, tab, setTab, onlyDesktop }) => {
         </div>
         <div className="flex flex-row xs:gap-1 md:gap-2">
           <div
-            onClick={() => setTab('help')}
+            onClick={tabBarObject.helpClickFunction}
             className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 duration-300 ease-in-out hover:border-black hover:bg-slate-200 hover:transition-colors"
           >
             Hjälp
@@ -153,7 +153,7 @@ export const TabBarDivided = ({ tabBarObject, tab, setTab, onlyDesktop }) => {
           </div>
           <div className="flex flex-row xs:gap-1 md:gap-2">
             <div
-              onClick={() => setTab('help')}
+              onClick={tabBarObject.helpClickFunction}
               className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 duration-300 ease-in-out hover:border-black hover:bg-slate-200 hover:transition-colors"
             >
               <QuestionIcon />

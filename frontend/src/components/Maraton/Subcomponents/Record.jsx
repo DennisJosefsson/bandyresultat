@@ -1,6 +1,7 @@
 import { getStreaks } from '../../../requests/games'
 import { useQuery } from 'react-query'
 import { useContext, useRef, useState, useEffect } from 'react'
+import { useSearchParams, useLocation } from 'react-router-dom'
 import { GenderContext } from '../../../contexts/contexts'
 import RecordHeader from './RecordSubComponents/RecordHeader'
 
@@ -10,10 +11,28 @@ import Streaks from './RecordSubComponents/Streaks'
 import LoadingOrError from '../../utilitycomponents/Components/LoadingOrError'
 import ScrollRefComponent from '../../utilitycomponents/Components/ScrollRefComponent'
 
+const titles = {
+  points: 'Poäng Elitserien',
+  conceded: 'Insläppta mål Elitserien',
+  scored: 'Gjorda mål Elitserien',
+  general: 'Statistik',
+  streaks: 'Rekordsviter',
+}
+
+const fields = ['points', 'conceded', 'scored', 'general', 'streaks']
+
 const Record = () => {
+  const location = useLocation()
+  const [searchParams, setSearchParams] = useSearchParams(location.search)
+  const record = searchParams.get('record')
   const { women } = useContext(GenderContext)
-  const [params, setParams] = useState({ record: 'generalStats', women: women })
-  const [title, setTitle] = useState('Statistik')
+  const [params, setParams] = useState({
+    record: record && fields.includes(record) ? record : 'general',
+    women: women,
+  })
+  const [title, setTitle] = useState(
+    record && fields.includes(record) ? titles[record] : 'Statistik',
+  )
 
   const { data, isLoading, error } = useQuery(['streaks', params], () =>
     getStreaks(params),
@@ -35,14 +54,14 @@ const Record = () => {
     case 'conceded':
       pageContent = <PointsGoals data={data} />
       break
-    case 'generalStats':
+    case 'general':
       pageContent = <GeneralStats data={data} women={women} />
       break
     case 'streaks':
       pageContent = <Streaks data={data} />
       break
     default:
-      pageContent = <div>Något är fel, tom sida.</div>
+      pageContent = <GeneralStats data={data} women={women} />
   }
 
   return (
@@ -56,6 +75,8 @@ const Record = () => {
           women={women}
           title={title}
           setTitle={setTitle}
+          setSeachParams={setSearchParams}
+          record={record}
         />
         <div className="flex flex-col">{pageContent}</div>
       </div>

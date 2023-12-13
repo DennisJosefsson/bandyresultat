@@ -125,6 +125,7 @@ const SeasonTables = ({ seasonId }) => {
             <SeasonTablesButtonList
               setHomeAwayTitle={setHomeAwayTitle}
               setSelectedTable={setSelectedTable}
+              table={selectedTable}
             />
 
             <div>

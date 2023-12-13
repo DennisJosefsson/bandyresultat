@@ -66,7 +66,7 @@ const Header = () => {
                     </Link>
                   </li>
                   <li onClick={() => dispatch({ type: 'CLOSE' })}>
-                    <Link to="/tables" className="hover:opacity-90">
+                    <Link to="/tables?tab=maraton" className="hover:opacity-90">
                       Maratontabeller
                     </Link>
                   </li>
@@ -95,7 +95,7 @@ const Header = () => {
               <Link to="/search" className="hover:opacity-90">
                 Sök
               </Link>
-              <Link to="/tables" className="hover:opacity-90">
+              <Link to="/tables?tab=maraton" className="hover:opacity-90">
                 Maratontabeller
               </Link>
               {user && (

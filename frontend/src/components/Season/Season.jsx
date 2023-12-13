@@ -1,5 +1,5 @@
-import { useParams, useLocation } from 'react-router-dom'
-import { useContext, useState, useEffect } from 'react'
+import { useParams, useLocation, useSearchParams } from 'react-router-dom'
+import { useContext, useEffect } from 'react'
 import { GenderContext } from '../../contexts/contexts'
 import { ErrorBoundary } from 'react-error-boundary'
 import { logError } from '../utilitycomponents/functions/logError'
@@ -16,17 +16,11 @@ import SeasonHeader from './Subcomponents/SeasonHeader'
 import { TabBarInline } from '../utilitycomponents/Components/TabBar'
 
 const Season = () => {
+  const location = useLocation()
+  const [searchParams, setSearchParams] = useSearchParams(location.search)
+  const tab = searchParams.get('tab')
   const seasonId = parseInt(useParams().seasonId)
   const { women, dispatch } = useContext(GenderContext)
-  const [tab, setTab] = useState('tables')
-
-  const { state } = useLocation()
-
-  useEffect(() => {
-    if (state && state.tab === 'games') {
-      setTab('games')
-    }
-  }, [state])
 
   useEffect(() => {
     if (seasonId.toString().match('^[0-9]{4}$'))
@@ -47,36 +41,37 @@ const Season = () => {
 
   const seasonTabBarObject = {
     genderClickFunction: () => dispatch({ type: 'TOGGLE' }),
+    helpClickFunction: () => setSearchParams({ tab: 'help' }),
     tabBarArray: [
       {
         name: 'Matcher',
         tabName: 'games',
-        clickFunctions: () => setTab('games'),
+        clickFunctions: () => setSearchParams({ tab: 'games' }),
       },
       {
         name: 'Tabell',
         tabName: 'tables',
-        clickFunctions: () => setTab('tables'),
+        clickFunctions: () => setSearchParams({ tab: 'tables' }),
       },
       {
         name: 'Slutspel',
         tabName: 'playoff',
-        clickFunctions: () => setTab('playoff'),
+        clickFunctions: () => setSearchParams({ tab: 'playoff' }),
       },
       {
         name: 'Utveckling',
         tabName: 'roundForRound',
-        clickFunctions: () => setTab('roundForRound'),
+        clickFunctions: () => setSearchParams({ tab: 'roundForRound' }),
       },
       {
         name: 'Statistik',
         tabName: 'stats',
-        clickFunctions: () => setTab('stats'),
+        clickFunctions: () => setSearchParams({ tab: 'stats' }),
       },
       {
         name: 'Karta',
         tabName: 'map',
-        clickFunctions: () => setTab('map'),
+        clickFunctions: () => setSearchParams({ tab: 'map' }),
       },
     ],
   }
@@ -105,18 +100,18 @@ const Season = () => {
       pageContent = <SeasonHelp />
       break
     default:
-      pageContent = <div>Något gick fel, ingen sida.</div>
+      pageContent = <SeasonTables seasonId={seasonId} />
       break
   }
 
   return (
     <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
-      <SeasonHeader seasonId={seasonId} women={women} />
+      <SeasonHeader seasonId={seasonId} women={women} tab={tab} />
 
       <TabBarInline
         tabBarObject={seasonTabBarObject}
         tab={tab}
-        setTab={setTab}
+        setSearchParams={setSearchParams}
       />
       <div>
         <ErrorBoundary

@@ -1,5 +1,6 @@
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { GenderContext } from '../../contexts/contexts'
+import { useSearchParams, useLocation } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 import { logError } from '../utilitycomponents/functions/logError'
 import Table from './Subcomponents/Table'
@@ -10,21 +11,25 @@ import MaratonHelp from './Subcomponents/MaratonHelp'
 import { TabBarDivided } from '../utilitycomponents/Components/TabBar'
 
 const Maraton = () => {
+  const location = useLocation
   const { dispatch } = useContext(GenderContext)
-  const [tab, setTab] = useState('maraton')
+  const [searchParams, setSearchParams] = useSearchParams(location.search)
+  const tab = searchParams.get('tab')
 
   const maratonTabBarObject = {
     genderClickFunction: () => dispatch({ type: 'TOGGLE' }),
+    helpClickFunction: () => setSearchParams({ tab: 'help' }),
     tabBarArray: [
       {
         name: 'Maratontabeller',
         tabName: 'maraton',
-        clickFunctions: () => setTab('maraton'),
+        clickFunctions: () => setSearchParams({ tab: 'maraton', table: 'all' }),
       },
       {
         name: 'Rekord',
         tabName: 'records',
-        clickFunctions: () => setTab('records'),
+        clickFunctions: () =>
+          setSearchParams({ tab: 'records', record: 'general' }),
       },
     ],
   }
@@ -42,7 +47,7 @@ const Maraton = () => {
       pageContent = <MaratonHelp />
       break
     default:
-      pageContent = <div>Något gick fel, ingen sida.</div>
+      pageContent = <Table />
       break
   }
 
@@ -51,7 +56,7 @@ const Maraton = () => {
       <TabBarDivided
         tabBarObject={maratonTabBarObject}
         tab={tab}
-        setTab={setTab}
+        setSearchParams={setSearchParams}
       />
       <div className="mt-2">
         <ErrorBoundary

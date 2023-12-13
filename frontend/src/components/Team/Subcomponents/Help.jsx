@@ -8,10 +8,20 @@ const Help = () => {
   return (
     <div className="mt-2">
       <div className="flex flex-row justify-center gap-2">
-        <ButtonComponent clickFunctions={() => setHelp('list')}>
+        <ButtonComponent
+          active={`${
+            help === 'list' ? 'ring-2 ring-cyan-600 ring-inset' : null
+          }`}
+          clickFunctions={() => setHelp('list')}
+        >
           Lista/Karta
         </ButtonComponent>
-        <ButtonComponent clickFunctions={() => setHelp('compare')}>
+        <ButtonComponent
+          active={`${
+            help === 'compare' ? 'ring-2 ring-cyan-600 ring-inset' : null
+          }`}
+          clickFunctions={() => setHelp('compare')}
+        >
           Jämförelse
         </ButtonComponent>
       </div>

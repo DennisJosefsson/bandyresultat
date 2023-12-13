@@ -187,6 +187,7 @@ const Teams = () => {
       compareDispatch({ type: 'RESET' })
       tab !== 'map' && setTab('teams')
     },
+    helpClickFunction: () => setTab('help'),
     tabBarArray: [
       {
         name: 'Laglista',

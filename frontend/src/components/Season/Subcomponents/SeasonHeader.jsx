@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom'
 import { LeftArrow, RightArrow } from '../../utilitycomponents/Components/icons'
 
-const SeasonHeader = ({ seasonId, women }) => {
+const SeasonHeader = ({ seasonId, women, tab }) => {
   return (
     <div className="flex flex-row justify-center">
       <div className="mx-auto mb-4 flex w-full flex-1 flex-row items-center justify-center">
         <div className={seasonId - 1 === 1906 ? 'invisible' : null}>
-          <Link to={`/season/${seasonId - 1}`} state={{ resetRound: true }}>
+          <Link
+            to={`/season/${seasonId - 1}?tab=${tab}`}
+            state={{ resetRound: true }}
+          >
             <div className="flex flex-row items-center gap-1">
               <LeftArrow />
             </div>
@@ -20,7 +23,10 @@ const SeasonHeader = ({ seasonId, women }) => {
           </h2>
         </div>
         <div className={seasonId + 1 === 2025 ? 'invisible' : null}>
-          <Link to={`/season/${seasonId + 1}`} state={{ resetRound: true }}>
+          <Link
+            to={`/season/${seasonId + 1}?tab=${tab}`}
+            state={{ resetRound: true }}
+          >
             <div className="flex flex-row items-center gap-1">
               <RightArrow />
             </div>
