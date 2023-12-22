@@ -5,8 +5,7 @@ const TeamsList = ({
   formState,
   teams,
   handleTeamArrayChange,
-  setTeamId,
-  setTab,
+  setSearchParams,
 }) => {
   const { favTeams } = useContext(TeamPreferenceContext)
   return (
@@ -25,8 +24,7 @@ const TeamsList = ({
                     : 'w-32 cursor-pointer'
                 }
                 onClick={() => {
-                  setTeamId(team.teamId)
-                  setTab('singleTeam')
+                  setSearchParams({ teamId: team.teamId })
                 }}
               >
                 {team.casualName}

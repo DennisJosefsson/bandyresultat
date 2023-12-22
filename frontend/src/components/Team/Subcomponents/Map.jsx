@@ -5,13 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 import 'leaflet/dist/leaflet.css'
 
-const Map = ({
-  teams,
-  formState,
-  handleTeamArrayChange,
-  setTab,
-  setTeamId,
-}) => {
+const Map = ({ teams, formState, handleTeamArrayChange, setSearchParams }) => {
   const { open } = useContext(MenuContext)
 
   return (
@@ -38,8 +32,7 @@ const Map = ({
                         <div
                           className="cursor-pointer text-blue-600"
                           onClick={() => {
-                            setTeamId(team.teamId)
-                            setTab('singleTeam')
+                            setSearchParams({ teamId: team.teamId })
                           }}
                         >
                           {team.name} {team.women ? 'Dam' : 'Herr'}

@@ -36,10 +36,10 @@ const EightCard = ({
                 {team.lag.casualName}
               </span>
               <span className="mr-2 w-6 text-right tabular-nums">
-                {team.total_points}
+                {team.totalPoints}
               </span>
               <span className="w-6 text-right tabular-nums">
-                {team.total_goal_difference}
+                {team.totalGoalDifference}
               </span>
             </div>
           )

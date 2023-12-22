@@ -3,13 +3,13 @@ import 'dayjs/locale/sv'
 
 dayjs.locale('sv')
 
-const LatestGames = ({ latestGames }) => {
+const LatestAwayWin = ({ latestAwayWin }) => {
   return (
     <div className="w-full">
-      <h3 className="text-sm font-semibold md:text-base">Senaste matcherna</h3>
+      <h3 className="text-sm font-semibold md:text-base">Senaste bortavinst</h3>
       <div className="compareFirstLast mb-3 w-full text-[8px] sm:text-sm">
         <div>
-          {latestGames.map((game) => {
+          {latestAwayWin.map((game) => {
             return (
               <div key={game.game_id} className="card">
                 <div className="line1">
@@ -32,4 +32,4 @@ const LatestGames = ({ latestGames }) => {
   )
 }
 
-export default LatestGames
+export default LatestAwayWin

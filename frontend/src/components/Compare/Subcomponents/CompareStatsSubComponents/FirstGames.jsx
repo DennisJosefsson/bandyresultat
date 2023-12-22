@@ -14,7 +14,7 @@ const FirstGames = ({ firstGames, compObject }) => {
               <div key={game.game_id} className="card">
                 <div className="line1">
                   {game.date && (
-                    <span>{dayjs(game.date).format('D MMMM YYYY')}:</span>
+                    <span>{dayjs(game.date).format('D MMMM YYYY')}</span>
                   )}
                 </div>
                 <div className="line2">

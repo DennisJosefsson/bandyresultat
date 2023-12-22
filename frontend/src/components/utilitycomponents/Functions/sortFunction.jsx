@@ -121,35 +121,31 @@ export const compareAllTeamData = (allDataArray) => {
       newArray.push({
         team: team.team,
         lag: team.lag,
-        total_games: 0,
-        total_wins: 0,
-        total_draws: 0,
-        total_lost: 0,
-        total_goal_difference: 0,
-        total_goals_scored: 0,
-        total_goals_conceded: 0,
-        total_points: 0,
+        totalGames: 0,
+        totalWins: 0,
+        totalDraws: 0,
+        totalLost: 0,
+        totalGoalDifference: 0,
+        totalGoalsScored: 0,
+        totalGoalsConceded: 0,
+        totalPoints: 0,
       })
     }
     const teamIndex = newArray.findIndex(
       (teamItem) => team.team === teamItem.team,
     )
-    newArray[teamIndex].total_games += Number(team.total_games)
-    newArray[teamIndex].total_wins += Number(team.total_wins)
-    newArray[teamIndex].total_draws += Number(team.total_draws)
-    newArray[teamIndex].total_lost += Number(team.total_lost)
-    newArray[teamIndex].total_goals_scored += Number(team.total_goals_scored)
-    newArray[teamIndex].total_goals_conceded += Number(
-      team.total_goals_conceded,
-    )
-    newArray[teamIndex].total_goal_difference += Number(
-      team.total_goal_difference,
-    )
-    newArray[teamIndex].total_points += Number(team.total_points)
+    newArray[teamIndex].totalGames += Number(team.totalGames)
+    newArray[teamIndex].totalWins += Number(team.totalWins)
+    newArray[teamIndex].totalDraws += Number(team.totalDraws)
+    newArray[teamIndex].totalLost += Number(team.totalLost)
+    newArray[teamIndex].totalGoalsScored += Number(team.totalGoalsScored)
+    newArray[teamIndex].totalGoalsConceded += Number(team.totalGoalsConceded)
+    newArray[teamIndex].totalGoalDifference += Number(team.totalGoalDifference)
+    newArray[teamIndex].totalPoints += Number(team.totalPoints)
   })
 
   return newArray.sort((a, b) => {
-    if (a.total_points < b.total_points) {
+    if (a.totalPoints < b.totalPoints) {
       return 1
     }
     return -1

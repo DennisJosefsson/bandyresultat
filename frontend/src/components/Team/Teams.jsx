@@ -2,7 +2,7 @@ import { useQuery } from 'react-query'
 import { useState, useReducer, useContext, useEffect } from 'react'
 import { getTeams } from '../../requests/teams'
 import { getSeasons } from '../../requests/seasons'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import { GenderContext } from '../../contexts/contexts'
 
 import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
@@ -19,12 +19,12 @@ import { TabBarDivided } from '../utilitycomponents/Components/TabBar'
 
 const Teams = () => {
   const location = useLocation()
-  const params = useParams()
+  const [searchParams, setSearchParams] = useSearchParams(location.search)
+  const teamId = searchParams.get('teamId')
 
   const { women, dispatch: genderDispatch } = useContext(GenderContext)
 
   const [tab, setTab] = useState('teams')
-  const [teamId, setTeamId] = useState(null)
 
   const [stateNull, setStateNull] = useState(false)
 
@@ -70,11 +70,10 @@ const Teams = () => {
       setStateNull(true)
       setTab('compare')
     }
-    if (params.teamId) {
-      setTeamId(params.teamId)
+    if (teamId) {
       setTab('singleTeam')
     }
-  }, [location.state, params.teamId, genderDispatch, women, stateNull])
+  }, [location.state, teamId, genderDispatch, women, stateNull])
 
   if (isLoading || isSeasonsLoading) {
     return (
@@ -181,36 +180,59 @@ const Teams = () => {
 
   const unFilteredTeams = data
 
+  const removeTeamIdParam = () => {
+    if (searchParams.has('teamId')) {
+      searchParams.delete('teamId')
+      setSearchParams(searchParams)
+    }
+  }
+
   const teamsTabBarObject = {
     genderClickFunction: () => {
       genderDispatch({ type: 'TOGGLE' })
       compareDispatch({ type: 'RESET' })
       tab !== 'map' && setTab('teams')
+      removeTeamIdParam()
     },
-    helpClickFunction: () => setTab('help'),
+    helpClickFunction: () => {
+      setTab('help')
+      removeTeamIdParam()
+    },
     tabBarArray: [
       {
         name: 'Laglista',
         tabName: 'teams',
-        clickFunctions: () => setTab('teams'),
+        clickFunctions: () => {
+          setTab('teams')
+          removeTeamIdParam()
+        },
         conditional: true,
       },
       {
         name: 'Lagkarta',
         tabName: 'map',
-        clickFunctions: () => setTab('map'),
+        clickFunctions: () => {
+          setTab('map')
+          removeTeamIdParam()
+        },
         conditional: true,
       },
       {
         name: 'Sökval',
         tabName: 'selection',
-        clickFunctions: () => setTab('selection'),
+        clickFunctions: () => {
+          setTab('selection')
+          removeTeamIdParam()
+        },
         conditional: 'formStateSimple',
       },
       {
         name: 'Jämför',
         tabName: 'compare',
-        clickFunctions: (event) => handleSubmit(event),
+        clickFunctions: (event) => {
+          handleSubmit(event)
+          removeTeamIdParam()
+        },
         conditional: 'formStateComplex',
       },
     ]
@@ -239,7 +261,7 @@ const Teams = () => {
           handleTeamArrayChange={handleTeamArrayChange}
           formState={formState}
           setTab={setTab}
-          setTeamId={setTeamId}
+          setSearchParams={setSearchParams}
           valueError={valueError}
           setValueError={setValueError}
           unFilteredTeams={unFilteredTeams}
@@ -254,7 +276,7 @@ const Teams = () => {
           handleTeamArrayChange={handleTeamArrayChange}
           formState={formState}
           setTab={setTab}
-          setTeamId={setTeamId}
+          setSearchParams={setSearchParams}
           valueError={valueError}
           setValueError={setValueError}
           unFilteredTeams={unFilteredTeams}
@@ -268,7 +290,23 @@ const Teams = () => {
       )
       break
     case 'singleTeam':
-      pageContent = <Team teamId={teamId} />
+      if (teamId) {
+        pageContent = <Team teamId={teamId} setTab={setTab} />
+      } else {
+        pageContent = (
+          <TeamsList
+            teams={teams}
+            handleTeamArrayChange={handleTeamArrayChange}
+            formState={formState}
+            setTab={setTab}
+            setSearchParams={setSearchParams}
+            valueError={valueError}
+            setValueError={setValueError}
+            unFilteredTeams={unFilteredTeams}
+            dispatch={compareDispatch}
+          />
+        )
+      }
       break
     case 'help':
       pageContent = <Help />
@@ -291,7 +329,19 @@ const Teams = () => {
       )
       break
     default:
-      pageContent = <div>Något gick fel, tom sida</div>
+      pageContent = (
+        <TeamsList
+          teams={teams}
+          handleTeamArrayChange={handleTeamArrayChange}
+          formState={formState}
+          setTab={setTab}
+          setSearchParams={setSearchParams}
+          valueError={valueError}
+          setValueError={setValueError}
+          unFilteredTeams={unFilteredTeams}
+          dispatch={compareDispatch}
+        />
+      )
   }
 
   return (
@@ -301,7 +351,7 @@ const Teams = () => {
         tab={tab}
         setTab={setTab}
       />
-      {(tab === 'teams' || tab === 'map') && (
+      {(tab === 'teams' || tab === 'map' || tab === 'singleTeam') && (
         <div className="mt-2 w-full">
           <form>
             <input

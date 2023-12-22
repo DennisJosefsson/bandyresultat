@@ -1,5 +1,10 @@
 import { useState, useEffect, useContext } from 'react'
 import { TeamPreferenceContext } from '../../../../contexts/contexts'
+import {
+  sortTitles,
+  sortFunctions,
+  calculateBonusPoints,
+} from '../../../utilitycomponents/Functions/tableSortFunctions'
 
 const TableList = ({
   tableArray,
@@ -9,6 +14,7 @@ const TableList = ({
   selectedTable,
 }) => {
   const [width, setWidth] = useState(window.innerWidth)
+  const [sortColumn, setSortColumn] = useState('tablePointsDesc')
   const { favTeams } = useContext(TeamPreferenceContext)
   const breakpoint = 576
 
@@ -19,39 +25,34 @@ const TableList = ({
     return () => window.removeEventListener('resize', handleWindowResize)
   }, [])
 
-  const calculateBonusPoints = (group, teamId) => {
-    if (selectedTable !== 'all') return 0
-    const bonus = bonusPoints.find((points) => points.group === group)
-    if (bonus.bonusPoints === null) {
-      return 0
-    }
-    const points = bonus.bonusPoints[Number(teamId)]
-
-    if (points === null) {
-      return 0
-    } else {
-      return Number(points)
-    }
-  }
-
   return (
     <div className="mb-6">
       {tableArray.map((group) => {
         return (
           <div key={group.group} className="mb-6">
             {group.group.includes('Kval') && tableArray.length === 1 ? (
-              <h2 className="ml-1 text-[0.75rem] font-bold lg:text-[1rem] xl:ml-0 xl:text-xl">
-                Kvalgrupp {homeAwayTitle}
-              </h2>
+              <>
+                <h2 className="ml-1 text-[0.75rem] font-bold lg:text-[1rem] xl:ml-0 xl:text-xl">
+                  Kvalgrupp {homeAwayTitle}
+                </h2>
+                <p className="m-1 text-[8px] sm:text-xs xl:m-0">
+                  Sorteras efter {sortTitles[sortColumn]}
+                </p>
+              </>
             ) : (
-              <h2 className="ml-1 text-sm font-bold lg:text-base xl:ml-0 xl:text-xl">
-                {
-                  seriesInfo.find(
-                    (serie) => serie.serieGroupCode === group.group,
-                  ).serieName
-                }{' '}
-                {homeAwayTitle}
-              </h2>
+              <>
+                <h2 className="ml-1 text-sm font-bold lg:text-base xl:ml-0 xl:text-xl">
+                  {
+                    seriesInfo.find(
+                      (serie) => serie.serieGroupCode === group.group,
+                    ).serieName
+                  }{' '}
+                  {homeAwayTitle}
+                </h2>
+                <p className="m-1 text-[8px] sm:text-xs xl:m-0">
+                  Sorteras efter {sortTitles[sortColumn]}
+                </p>
+              </>
             )}
             <div>
               <table className="season w-full px-1 text-xs md:text-sm">
@@ -63,47 +64,113 @@ const TableList = ({
                     <th scope="col" className="team">
                       Lag
                     </th>
-                    <th scope="col">M</th>
-                    <th scope="col">V</th>
-                    <th scope="col">O</th>
-                    <th scope="col">F</th>
-                    <th scope="col" className="twelve">
+                    <th
+                      className="cursor-pointer"
+                      scope="col"
+                      onClick={() =>
+                        setSortColumn(
+                          sortColumn !== 'gamesDesc' ? 'gamesDesc' : 'gamesAsc',
+                        )
+                      }
+                    >
+                      M
+                    </th>
+                    <th
+                      className="cursor-pointer"
+                      scope="col"
+                      onClick={() =>
+                        setSortColumn(
+                          sortColumn !== 'winDesc' ? 'winDesc' : 'winAsc',
+                        )
+                      }
+                    >
+                      V
+                    </th>
+                    <th
+                      className="cursor-pointer"
+                      scope="col"
+                      onClick={() =>
+                        setSortColumn(
+                          sortColumn !== 'drawDesc' ? 'drawDesc' : 'drawAsc',
+                        )
+                      }
+                    >
+                      O
+                    </th>
+                    <th
+                      className="cursor-pointer"
+                      scope="col"
+                      onClick={() =>
+                        setSortColumn(
+                          sortColumn !== 'lostDesc' ? 'lostDesc' : 'lostAsc',
+                        )
+                      }
+                    >
+                      F
+                    </th>
+                    <th
+                      scope="col"
+                      className="twelve cursor-pointer"
+                      onClick={() =>
+                        setSortColumn(
+                          sortColumn !== 'scoredDesc'
+                            ? 'scoredDesc'
+                            : 'scoredAsc',
+                        )
+                      }
+                    >
                       GM
                     </th>
-                    <th scope="col" className="twelve">
+                    <th
+                      scope="col"
+                      className="twelve cursor-pointer"
+                      onClick={() =>
+                        setSortColumn(
+                          sortColumn !== 'concededDesc'
+                            ? 'concededDesc'
+                            : 'concededAsc',
+                        )
+                      }
+                    >
                       IM
                     </th>
-                    <th scope="col" className="twelve">
+                    <th
+                      scope="col"
+                      className="twelve cursor-pointer"
+                      onClick={() =>
+                        setSortColumn(
+                          sortColumn !== 'goalDiffDesc'
+                            ? 'goalDiffDesc'
+                            : 'goalDiffAsc',
+                        )
+                      }
+                    >
                       MS
                     </th>
-                    <th scope="col" className="points">
+                    <th
+                      scope="col"
+                      className="points group cursor-pointer"
+                      onClick={() =>
+                        setSortColumn(
+                          sortColumn !== 'tablePointsDesc'
+                            ? 'tablePointsDesc'
+                            : 'tablePointsAsc',
+                        )
+                      }
+                    >
                       P
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {group.tables
-                    .sort((teamA, teamB) => {
-                      if (
-                        Number(teamA.total_points) +
-                          Number(
-                            calculateBonusPoints(group.group, teamA.team),
-                          ) ===
-                        Number(teamB.total_points) +
-                          Number(calculateBonusPoints(group.group, teamB.team))
-                      ) {
-                        return (
-                          teamB.total_goal_difference -
-                          teamA.total_goal_difference
-                        )
-                      }
-                      return (
-                        Number(teamB.total_points) +
-                        Number(calculateBonusPoints(group.group, teamB.team)) -
-                        (Number(teamA.total_points) +
-                          Number(calculateBonusPoints(group.group, teamA.team)))
-                      )
-                    })
+                    .sort(
+                      sortFunctions[sortColumn](
+                        bonusPoints,
+                        group.group,
+                        selectedTable,
+                      ),
+                    )
                     .map((team, index) => {
                       return (
                         <tr
@@ -127,21 +194,22 @@ const TableList = ({
                               : `${team.lag.name}`}
                           </td>
 
-                          <td>
-                            {parseInt(team.total_wins) +
-                              parseInt(team.total_draws) +
-                              parseInt(team.total_lost)}
-                          </td>
-                          <td>{team.total_wins}</td>
-                          <td>{team.total_draws}</td>
-                          <td>{team.total_lost}</td>
-                          <td>{team.total_goals_scored}</td>
-                          <td>{team.total_goals_conceded}</td>
-                          <td>{team.total_goal_difference}</td>
+                          <td>{team.totalGames}</td>
+                          <td>{team.totalWins}</td>
+                          <td>{team.totalDraws}</td>
+                          <td>{team.totalLost}</td>
+                          <td>{team.totalGoalsScored}</td>
+                          <td>{team.totalGoalsConceded}</td>
+                          <td>{team.totalGoalDifference}</td>
                           <td className="points">
-                            {Number(team.total_points) +
+                            {Number(team.totalPoints) +
                               Number(
-                                calculateBonusPoints(group.group, team.team),
+                                calculateBonusPoints(
+                                  bonusPoints,
+                                  selectedTable,
+                                  group.group,
+                                  team.team,
+                                ),
                               )}
                           </td>
                         </tr>

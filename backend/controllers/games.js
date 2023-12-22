@@ -45,6 +45,45 @@ router.get('/', async (req, res, next) => {
   }
 })
 
+router.post('/searchTest', async (req, res) => {
+  const searchResult = await TeamGame.findAndCountAll({
+    where: { seasonId: 1 },
+    attributes: [
+      [
+        sequelize.literal(
+          'DISTINCT on ("teamgame"."game_id") "teamgame"."game_id"'
+        ),
+        'gameId',
+      ],
+      'team',
+      'opponent',
+      'teamGameId',
+      'date',
+      'qualificationGame',
+      'homeGame',
+    ],
+    include: [
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+      {
+        model: Team,
+        attributes: ['name', 'casualName', 'shortName'],
+        as: 'opp',
+      },
+      {
+        model: Game,
+        attributes: ['result'],
+      },
+    ],
+    limit: 10,
+  })
+
+  res.json(searchResult)
+})
+
 router.post('/search', async (req, res, next) => {
   res.locals.origin = 'POST Search router'
   const searchString = JSON.stringify(req.body)
@@ -52,7 +91,7 @@ router.post('/search', async (req, res, next) => {
   where.category = req.body.categoryArray
   where.played = true
 
-  let limit = req.body.limit.value || 10
+  let limit = req.body.limit?.value || 10
 
   const startSeasonName =
     req.body.startSeason < 1964
@@ -75,7 +114,11 @@ router.post('/search', async (req, res, next) => {
       attributes: ['name', 'casualName', 'shortName'],
       as: 'opp',
     },
-    { model: Game, attributes: ['result'] },
+    {
+      model: Game,
+      attributes: ['result'],
+    },
+
     {
       model: Season,
       where: {
@@ -90,7 +133,7 @@ router.post('/search', async (req, res, next) => {
     },
   ]
 
-  let order = [['date', req.body.order.value]]
+  let order = [['date', req.body.order?.value || 'desc']]
 
   if (req.body.team) {
     where.team = req.body.team.value
@@ -152,10 +195,7 @@ router.post('/search', async (req, res, next) => {
       }
     } else if (req.body.goalsScoredOperator.value === 'lte') {
       where.goalsScored = {
-        [Op.and]: {
-          [Op.lte]: req.body.goalsScored,
-          [Op.gte]: 0,
-        },
+        [Op.lte]: req.body.goalsScored,
       }
     }
   }
@@ -171,28 +211,25 @@ router.post('/search', async (req, res, next) => {
       }
     } else if (req.body.goalsConcededOperator.value === 'lte') {
       where.goalsConceded = {
-        [Op.and]: {
-          [Op.lte]: req.body.goalsConceded,
-          [Op.gte]: 0,
-        },
+        [Op.lte]: req.body.goalsConceded,
       }
     }
   }
 
-  if (req.body.orderVar.value === 'goalDiff') {
-    order.unshift(['goalDifference', req.body.order.value])
+  if (req.body.orderVar?.value === 'goalDiff') {
+    order.splice(1, 0, ['goalDifference', req.body.order.value])
   }
 
-  if (req.body.orderVar.value === 'totalGoals') {
-    order.unshift(['totalGoals', req.body.order.value])
+  if (req.body.orderVar?.value === 'totalGoals') {
+    order.splice(1, 0, ['totalGoals', req.body.order.value])
   }
 
-  if (req.body.orderVar.value === 'goalsScored') {
-    order.unshift(['goalsScored', req.body.order.value])
+  if (req.body.orderVar?.value === 'goalsScored') {
+    order.splice(1, 0, ['goalsScored', req.body.order.value])
   }
 
-  if (req.body.orderVar.value === 'goalsConceded') {
-    order.unshift(['goalsConceded', req.body.order.value])
+  if (req.body.orderVar?.value === 'goalsConceded') {
+    order.splice(1, 0, ['goalsConceded', req.body.order.value])
   }
 
   if (req.body.homeGame === 'home') {
@@ -242,10 +279,10 @@ router.post('/search', async (req, res, next) => {
     ((req.body.team === '' || req.body.team === null) &&
       req.body.gameResult === 'draw') ||
     ((req.body.team === '' || req.body.team === null) &&
-      req.body.orderVar.value === 'totalGoals') ||
+      req.body.orderVar?.value === 'totalGoals') ||
     (req.body.goalDiff && req.body.goalDiff === 0)
   ) {
-    limit = req.body.limit.value * 2 || 20
+    limit = req.body.limit?.value * 2 || 20
   }
 
   const searchResult = await TeamGame.findAndCountAll({

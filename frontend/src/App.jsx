@@ -20,6 +20,7 @@ import Link from './components/Link/Link'
 import Search from './components/Search/Search'
 import { UserContext } from './contexts/contexts'
 import Maraton from './components/Maraton/Maraton'
+import NoMatch from './components/utilitycomponents/Components/NoMatch'
 
 const ProtectedRoute = ({ user, children }) => {
   if (!user) {
@@ -37,6 +38,7 @@ const App = () => {
         <Header />
         <main className="mb-4">
           <Routes>
+            <Route path="/" element={<Home />} />
             <Route path="/teams/:teamId" element={<Teams />} />
             <Route path="/teams" element={<Teams />} />
             <Route path="/season/:seasonId" element={<Season />} />
@@ -55,7 +57,7 @@ const App = () => {
               }
             />
             <Route path="/about" element={<About />} />
-            <Route path="*" element={<Home />} />
+            <Route path="*" element={<NoMatch />} />
           </Routes>
         </main>
         <Footer />

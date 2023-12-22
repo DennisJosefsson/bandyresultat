@@ -63,6 +63,8 @@ const Compare = ({ compObject, origin }) => {
     compareAllGames,
     seasonNames,
     link,
+    latestHomeWin,
+    latestAwayWin,
   } = data
 
   return (
@@ -98,6 +100,8 @@ const Compare = ({ compObject, origin }) => {
                   allPlayoffs={allPlayoffs}
                   seasons={seasons}
                   allSeasons={allSeasons}
+                  latestHomeWin={latestHomeWin}
+                  latestAwayWin={latestAwayWin}
                 />
               </div>
             </>

@@ -1,6 +1,8 @@
 import FirstGames from './CompareStatsSubComponents/FirstGames'
 import Golds from './CompareStatsSubComponents/Golds'
+import LatestAwayWin from './CompareStatsSubComponents/LatestAwayWin'
 import LatestGames from './CompareStatsSubComponents/LatestGames'
+import LatestHomeWin from './CompareStatsSubComponents/LatestHomeWin'
 import Playoffs from './CompareStatsSubComponents/Playoffs'
 import Seasons from './CompareStatsSubComponents/Seasons'
 
@@ -13,6 +15,8 @@ const CompareStats = ({
   allPlayoffs,
   seasons,
   allSeasons,
+  latestHomeWin,
+  latestAwayWin,
 }) => {
   return (
     <div>
@@ -21,6 +25,12 @@ const CompareStats = ({
         <div className="w-full md:w-80">
           <FirstGames compObject={compObject} firstGames={firstGames} />
           {latestGames.length > 0 && <LatestGames latestGames={latestGames} />}
+          {latestHomeWin.length > 0 && (
+            <LatestHomeWin latestHomeWin={latestHomeWin} />
+          )}
+          {latestAwayWin.length > 0 && (
+            <LatestAwayWin latestAwayWin={latestAwayWin} />
+          )}
         </div>
         <div className="w-full md:w-80">
           <div className="w-full">

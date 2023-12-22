@@ -31,7 +31,11 @@ const Season = () => {
     return () => (document.title = 'Bandyresultat')
   }, [seasonId])
 
-  if (!seasonId.toString().match('^[0-9]{4}$') || seasonId > 2024) {
+  if (
+    !seasonId.toString().match('^[0-9]{4}$') ||
+    seasonId < 1907 ||
+    seasonId > 2024
+  ) {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         Kolla länken, angivna årtalet är felaktigt.

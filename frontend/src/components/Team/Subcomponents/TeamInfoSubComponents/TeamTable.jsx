@@ -18,7 +18,7 @@ const TeamTable = ({ tableArray }) => {
       {sortedTables.map((category, index) => {
         return (
           <div key={category.category} className="mb-6">
-            <h2 className="text-sm font-bold xs:text-base md:text-xl">
+            <h2 className="text-sm font-bold xs:text-base md:text-lg">
               {groupConstant[category.category]}
             </h2>
 
@@ -79,28 +79,28 @@ const TeamTable = ({ tableArray }) => {
                 <tbody>
                   <tr key={index} className="rounded odd:bg-slate-300">
                     <td className="px-1 py-2 text-right tabular-nums">
-                      {category.total_games}
+                      {category.totalGames}
                     </td>
                     <td className="px-1 py-2 text-right tabular-nums">
-                      {category.total_wins}
+                      {category.totalWins}
                     </td>
                     <td className="px-1 py-2 text-right tabular-nums">
-                      {category.total_draws}
+                      {category.totalDraws}
                     </td>
                     <td className="px-1 py-2 text-right tabular-nums">
-                      {category.total_lost}
+                      {category.totalLost}
                     </td>
                     <td className="px-1 py-2 text-right tabular-nums">
-                      {category.total_goals_scored}
+                      {category.totalGoalsScored}
                     </td>
                     <td className="px-1 py-2 text-right tabular-nums">
-                      {category.total_goals_conceded}
+                      {category.totalGoalsConceded}
                     </td>
                     <td className="px-1 py-2 text-right tabular-nums">
-                      {category.total_goal_difference}
+                      {category.totalGoalDifference}
                     </td>
                     <td className="p px-1 py-2 text-right tabular-nums">
-                      {category.total_points}
+                      {category.totalPoints}
                     </td>
                   </tr>
                 </tbody>

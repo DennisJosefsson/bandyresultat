@@ -1,8 +1,13 @@
 import { useState, useEffect, useContext } from 'react'
 import { TeamPreferenceContext } from '../../../../contexts/contexts'
+import {
+  sortTitles,
+  sortFunctions,
+} from '../../../utilitycomponents/Functions/tableSortFunctions'
 
 const MaratonTables = ({ tabell }) => {
   const { favTeams } = useContext(TeamPreferenceContext)
+  const [sortColumn, setSortColumn] = useState('maratonPointsDesc')
   const [width, setWidth] = useState(window.innerWidth)
   const breakpoint = 576
 
@@ -12,8 +17,12 @@ const MaratonTables = ({ tabell }) => {
 
     return () => window.removeEventListener('resize', handleWindowResize)
   }, [])
+
   return (
     <div className="w-full">
+      <p className="m-2 text-[8px] sm:text-xs xl:m-0">
+        Sorteras efter {sortTitles[sortColumn]}
+      </p>
       <table className="w-full table-auto text-[10px] md:text-sm">
         <thead>
           <tr className="maraton" key={'header'}>
@@ -23,18 +32,102 @@ const MaratonTables = ({ tabell }) => {
             <th scope="col" className="team">
               Lag
             </th>
-            <th scope="col">M</th>
-            <th scope="col">V</th>
-            <th scope="col">O</th>
-            <th scope="col">F</th>
-            <th scope="col">GM</th>
-            <th scope="col">IM</th>
-            <th scope="col">MS</th>
-            <th scope="col">Poä</th>
+            <th
+              scope="col"
+              className="cursor-pointer"
+              onClick={() =>
+                setSortColumn(
+                  sortColumn !== 'gamesDesc' ? 'gamesDesc' : 'gamesAsc',
+                )
+              }
+            >
+              M
+            </th>
+            <th
+              scope="col"
+              className="cursor-pointer"
+              onClick={() =>
+                setSortColumn(sortColumn !== 'winDesc' ? 'winDesc' : 'winAsc')
+              }
+            >
+              V
+            </th>
+            <th
+              scope="col"
+              className="cursor-pointer"
+              onClick={() =>
+                setSortColumn(
+                  sortColumn !== 'drawDesc' ? 'drawDesc' : 'drawAsc',
+                )
+              }
+            >
+              O
+            </th>
+            <th
+              scope="col"
+              className="cursor-pointer"
+              onClick={() =>
+                setSortColumn(
+                  sortColumn !== 'lostDesc' ? 'lostDesc' : 'lostAsc',
+                )
+              }
+            >
+              F
+            </th>
+            <th
+              scope="col"
+              className="cursor-pointer"
+              onClick={() =>
+                setSortColumn(
+                  sortColumn !== 'scoredDesc' ? 'scoredDesc' : 'scoredAsc',
+                )
+              }
+            >
+              GM
+            </th>
+            <th
+              scope="col"
+              className="cursor-pointer"
+              onClick={() =>
+                setSortColumn(
+                  sortColumn !== 'concededDesc'
+                    ? 'concededDesc'
+                    : 'concededAsc',
+                )
+              }
+            >
+              IM
+            </th>
+            <th
+              scope="col"
+              className="cursor-pointer"
+              onClick={() =>
+                setSortColumn(
+                  sortColumn !== 'goalDiffDesc'
+                    ? 'goalDiffDesc'
+                    : 'goalDiffAsc',
+                )
+              }
+            >
+              MS
+            </th>
+            <th
+              scope="col"
+              className="cursor-pointer"
+              onClick={() =>
+                setSortColumn(
+                  sortColumn !== 'maratonPointsDesc'
+                    ? 'maratonPointsDesc'
+                    : 'maratonPointsAsc',
+                )
+              }
+            >
+              Poä
+            </th>
           </tr>
         </thead>
         <tbody>
-          {tabell.map((team, index) => {
+          {tabell.sort(sortFunctions[sortColumn]()).map((team, index) => {
             return (
               <tr
                 key={`${team.team}-${index}`}
@@ -50,14 +143,14 @@ const MaratonTables = ({ tabell }) => {
                     ? `${team.lag.shortName}`
                     : `${team.lag.name}`}
                 </td>
-                <td>{team.total_games}</td>
-                <td>{team.total_wins}</td>
-                <td>{team.total_draws}</td>
-                <td>{team.total_lost}</td>
-                <td>{team.total_goals_scored}</td>
-                <td>{team.total_goals_conceded}</td>
-                <td>{team.total_goal_difference}</td>
-                <td>{team.total_points}</td>
+                <td>{team.totalGames}</td>
+                <td>{team.totalWins}</td>
+                <td>{team.totalDraws}</td>
+                <td>{team.totalLost}</td>
+                <td>{team.totalGoalsScored}</td>
+                <td>{team.totalGoalsConceded}</td>
+                <td>{team.totalGoalDifference}</td>
+                <td>{team.totalPoints}</td>
               </tr>
             )
           })}

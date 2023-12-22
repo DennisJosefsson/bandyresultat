@@ -61,32 +61,43 @@ router.get('/:teamId', async (req, res, next) => {
     },
     attributes: [
       'category',
-      [sequelize.fn('count', sequelize.col('team_game_id')), 'total_games'],
-      [sequelize.fn('sum', sequelize.col('points')), 'total_points'],
-      [
-        sequelize.fn('sum', sequelize.col('goals_scored')),
-        'total_goals_scored',
-      ],
-      [
-        sequelize.fn('sum', sequelize.col('goals_conceded')),
-        'total_goals_conceded',
-      ],
-      [
-        sequelize.fn('sum', sequelize.col('goal_difference')),
-        'total_goal_difference',
-      ],
-      [sequelize.literal(`(count(*) filter (where win))`), 'total_wins'],
-      [sequelize.literal(`(count(*) filter (where draw))`), 'total_draws'],
-      [sequelize.literal(`(count(*) filter (where lost))`), 'total_lost'],
+      [sequelize.literal('count(*)'), 'totalGames'],
+      [sequelize.literal('sum (points)'), 'totalPoints'],
+      [sequelize.literal('sum(goals_scored)'), 'totalGoalsScored'],
+      [sequelize.literal('sum(goals_conceded)'), 'totalGoalsConceded'],
+      [sequelize.literal('sum(goal_difference)'), 'totalGoalDifference'],
+      [sequelize.literal(`(count(*) filter (where win))`), 'totalWins'],
+      [sequelize.literal(`(count(*) filter (where draw))`), 'totalDraws'],
+      [sequelize.literal(`(count(*) filter (where lost))`), 'totalLost'],
     ],
     group: ['category'],
-    order: [
-      ['category'],
-      ['total_points', 'DESC'],
-      ['total_goal_difference', 'DESC'],
-      ['total_goals_scored', 'DESC'],
-    ],
+    order: [['category']],
   })
+
+  const latestFiveSeasons = await TeamGame.findAll({
+    where: {
+      team: req.params.teamId,
+      played: true,
+    },
+    attributes: [
+      'seasonId',
+      'category',
+      [sequelize.literal('count(*)'), 'totalGames'],
+      [sequelize.literal('sum (points)'), 'totalPoints'],
+      [sequelize.literal('sum(goals_scored)'), 'totalGoalsScored'],
+      [sequelize.literal('sum(goals_conceded)'), 'totalGoalsConceded'],
+      [sequelize.literal('sum(goal_difference)'), 'totalGoalDifference'],
+      [sequelize.literal(`(count(*) filter (where win))`), 'totalWins'],
+      [sequelize.literal(`(count(*) filter (where draw))`), 'totalDraws'],
+      [sequelize.literal(`(count(*) filter (where lost))`), 'totalLost'],
+    ],
+    include: Season,
+    group: ['teamgame.season_id', 'category', 'season.season_id'],
+    order: [['seasonId', 'DESC'], ['category']],
+    limit: 20,
+  })
+
+  const sortedFiveSeasons = tableSortFunction(latestFiveSeasons)
 
   const finalsAndWins = await TeamGame.findAll({
     where: { team: req.params.teamId, category: 'final' },
@@ -436,6 +447,7 @@ where team = $teamId and "category" = any(array['quarter', 'semi', 'final']) and
       finalsAndWins,
       playoffStreak,
       playoffCount,
+      sortedFiveSeasons,
     })
   }
 })
@@ -468,5 +480,33 @@ router.put('/:teamId', authControl, async (req, res, next) => {
     res.json(team)
   }
 })
+
+const tableSortFunction = (tableArray) => {
+  const seasonArray = tableArray.reduce((seasons, table) => {
+    if (!seasons[table.season.year]) {
+      seasons[table.season.year] = []
+    }
+    seasons[table.season.year].push(table)
+    return seasons
+  }, {})
+
+  const sortedTables = Object.keys(seasonArray).map((season) => {
+    return {
+      season,
+      tables: seasonArray[season],
+    }
+  })
+  return sortedTables
+    .sort((a, b) => {
+      if (a.season > b.season) {
+        return 1
+      }
+
+      if (a.season < b.season) {
+        return -1
+      }
+    })
+    .slice(-5)
+}
 
 module.exports = router

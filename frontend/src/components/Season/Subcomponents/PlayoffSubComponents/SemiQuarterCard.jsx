@@ -33,7 +33,7 @@ const SemiQuarterCard = ({
               >
                 {team.lag.casualName}
               </span>
-              <span className="text-right tabular-nums">{team.total_wins}</span>
+              <span className="text-right tabular-nums">{team.totalWins}</span>
             </div>
           )
         })}
