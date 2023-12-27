@@ -43,13 +43,17 @@ const CompareHeader = ({
   const teamString = teamStringArray.join(', ') + ' och ' + lastTeam
 
   const startSeasonName =
-    seasonNames[0].seasonId < seasonNames[1].seasonId
-      ? seasonNames[0].year
-      : seasonNames[1].year
+    seasonNames.length > 1
+      ? seasonNames[0].seasonId < seasonNames[1].seasonId
+        ? seasonNames[0].year
+        : seasonNames[1].year
+      : seasonNames[0].year
   const endSeasonName =
-    seasonNames[0].seasonId > seasonNames[1].seasonId
-      ? seasonNames[0].year
-      : seasonNames[1].year
+    seasonNames.length > 1
+      ? seasonNames[0].seasonId > seasonNames[1].seasonId
+        ? seasonNames[0].year
+        : seasonNames[1].year
+      : null
   return (
     <>
       {length === 0 && (
@@ -85,8 +89,8 @@ const CompareHeader = ({
               </h2>
               <p className="mb-2 w-[90%] text-xs font-bold md:text-sm lg:mb-4 xl:w-[36rem]">
                 Möten mellan {teamString} {catString}{' '}
-                {compObject.startSeason === compObject.endSeason
-                  ? `säsongen ${seasonNames[0].year}`
+                {seasonNames.length === 1
+                  ? `säsongen ${startSeasonName}`
                   : `${startSeasonName}-${endSeasonName}.`}
               </p>
             </div>
@@ -98,8 +102,8 @@ const CompareHeader = ({
               </h2>
               <p className="mb-2 w-[90%] text-xs font-bold md:text-sm lg:mb-4 xl:w-[36rem]">
                 Möten mellan {teamString} {catString}{' '}
-                {compObject.startSeason === compObject.endSeason
-                  ? `säsongen ${seasonNames[0].year}`
+                {seasonNames.length === 1
+                  ? `säsongen ${startSeasonName}`
                   : `${startSeasonName}-${endSeasonName}.`}
               </p>
             </div>
