@@ -1,4 +1,5 @@
-import { Optional } from 'sequelize'
+import { z } from 'zod'
+
 import {
   Model,
   Column,
@@ -7,17 +8,22 @@ import {
   AutoIncrement,
 } from 'sequelize-typescript'
 
-interface ErrorAttributes {
-  errorId?: number
-  date: string
-  name: string
-  message: string
-  origin: string
-  body: string
-  production: boolean
-  backend: boolean
-}
-export interface ErrorInput extends Optional<ErrorAttributes, 'errorId'> {}
+const errorAttributes = z.object({
+  errorId: z.number().optional(),
+  date: z.string(),
+  name: z.string(),
+  message: z.string(),
+  origin: z.string(),
+  body: z.string(),
+  production: z.boolean(),
+  backend: z.boolean(),
+})
+
+const errorInput = errorAttributes.omit({ errorId: true })
+
+export type ErrorAttributes = z.infer<typeof errorAttributes>
+export type ErrorInput = z.infer<typeof errorInput>
+
 export interface ErrorOutput extends Required<ErrorAttributes> {}
 
 @Table({

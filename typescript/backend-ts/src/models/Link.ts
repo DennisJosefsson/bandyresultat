@@ -1,14 +1,19 @@
-import { Optional } from 'sequelize'
+import { z } from 'zod'
+
 import { Model, Table, PrimaryKey, Column } from 'sequelize-typescript'
 
-interface LinkAttributes {
-  linkId?: number
-  linkName: string
-  searchString: string
-  origin: string
-}
+export const linkAttributes = z.object({
+  linkId: z.number().optional(),
+  linkName: z.string(),
+  searchString: z.string(),
+  origin: z.string(),
+})
 
-export interface LinkInput extends Optional<LinkAttributes, 'linkId'> {}
+const linkInput = linkAttributes.omit({ linkId: true })
+
+export type LinkAttributes = z.infer<typeof linkAttributes>
+export type LinkInput = z.infer<typeof linkInput>
+
 export interface LinkOutput extends Required<LinkAttributes> {}
 
 @Table({

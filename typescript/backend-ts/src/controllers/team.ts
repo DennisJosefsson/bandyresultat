@@ -11,12 +11,12 @@ import IDCheck from '../utils/postFunctions/IDCheck.js'
 import NotFoundError from '../utils/middleware/errors/NotFoundError.js'
 const teamRouter = Router()
 
-teamRouter.get('/:id', (async (
+teamRouter.get('/:teamId', (async (
   req: Request,
   res: Response,
   _next: NextFunction
 ) => {
-  const teamId = IDCheck(req.params.id)
+  const teamId = IDCheck.parse(req.params.teamId)
   const team = await Team.findByPk(teamId)
   if (!team) {
     throw new NotFoundError({

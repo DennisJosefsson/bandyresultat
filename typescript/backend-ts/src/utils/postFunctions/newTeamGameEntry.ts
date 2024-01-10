@@ -1,12 +1,15 @@
-import { TeamGameInput } from '../../models/TeamGame.js'
-import { GameInput } from '../../models/Game.js'
+import {
+  TeamGameAttributes,
+  teamGameAttributes,
+} from '../../models/TeamGame.js'
+import { GameAttributes } from '../../models/Game.js'
 import BadRequestError from '../middleware/errors/BadRequestError.js'
-import { parseDate, parseNumber, parseString, parseBool } from './parsers.js'
+import { parseNumber } from './parsers.js'
 
 export const newTeamGameHomeEntry = (
-  object: GameInput,
+  object: GameAttributes,
   currChamp: number | null
-): TeamGameInput => {
+): TeamGameAttributes => {
   if (!object || typeof object !== 'object') {
     throw new BadRequestError({
       code: 400,
@@ -16,96 +19,81 @@ export const newTeamGameHomeEntry = (
     })
   }
 
-  if (
-    'gameId' in object &&
-    'homeTeamId' in object &&
-    'awayTeamId' in object &&
-    'date' in object &&
-    'group' in object &&
-    'category' in object &&
-    'serieId' in object &&
-    'seasonId' in object
-  ) {
-    let newTeamGameEntry: TeamGameInput = {
-      gameId: parseNumber(object.gameId),
-      team: parseNumber(object.homeTeamId),
-      opponent: parseNumber(object.awayTeamId),
-      date: parseDate(object.date),
-      group: parseString(object.group),
-      category: parseString(object.category),
-      serieId: parseNumber(object.serieId),
-      seasonId: parseNumber(object.seasonId),
-      homeGame: true,
-    }
-    const qualificationGame = object.category === 'qualification' ? true : false
-    if ('women' in object)
-      newTeamGameEntry = { ...newTeamGameEntry, women: parseBool(object.women) }
-    if ('mix' in object)
-      newTeamGameEntry = { ...newTeamGameEntry, mix: parseBool(object.mix) }
-
-    if (
-      !('played' in object) ||
-      ('played' in object && object.played === false)
-    ) {
-      return (newTeamGameEntry = {
-        ...newTeamGameEntry,
-        qualificationGame,
-        goalsScored: 0,
-        goalsConceded: 0,
-        goalDifference: 0,
-        points: 0,
-        played: false,
-      })
-    }
-
-    if ('homeGoal' in object && 'awayGoal' in object) {
-      const homeGoal = parseNumber(object.homeGoal)
-      const awayGoal = parseNumber(object.awayGoal)
-      newTeamGameEntry = {
-        ...newTeamGameEntry,
-        goalsScored: homeGoal,
-        goalsConceded: awayGoal,
-        goalDifference: homeGoal - awayGoal,
-        played: true,
-        qualificationGame,
-      }
-      if (homeGoal > awayGoal) {
-        newTeamGameEntry = {
-          ...newTeamGameEntry,
-          points: 2,
-          win: true,
-          currInoffChamp: object.awayTeamId === currChamp ? true : false,
-        }
-      } else if (homeGoal < awayGoal) {
-        newTeamGameEntry = {
-          ...newTeamGameEntry,
-          points: 0,
-          lost: true,
-        }
-      } else {
-        newTeamGameEntry = {
-          ...newTeamGameEntry,
-          points: 1,
-          draw: true,
-        }
-      }
-    }
-
-    return newTeamGameEntry
+  let teamGameEntry = {
+    gameId: object.gameId,
+    seasonId: object.seasonId,
+    serieId: object.serieId,
+    date: object.date,
+    category: object.category,
+    group: object.group,
+    team: object.homeTeamId,
+    opponent: object.awayTeamId,
+    qualificationGame: object.category === 'qualification' ? true : false,
+    homeGame: true,
+    women: false,
+    mix: false,
+    goalsScored: 0,
+    goalsConceded: 0,
+    goalDifference: 0,
+    points: 0,
+    played: false,
+    win: false,
+    draw: false,
+    lost: false,
+    currInoffChamp: false,
   }
 
-  throw new BadRequestError({
-    code: 400,
-    message: 'Missing fields',
-    logging: true,
-    context: { origin: 'NewTeamGameHomeEntry' },
-  })
+  if ('women' in object && typeof object['women'] === 'boolean') {
+    teamGameEntry = { ...teamGameEntry, women: object.women }
+  }
+
+  if ('mix' in object && typeof object['mix'] === 'boolean') {
+    teamGameEntry = { ...teamGameEntry, mix: object.mix }
+  }
+
+  if ('homeGoal' in object && 'awayGoal' in object) {
+    const goalsScored = parseNumber(object.homeGoal)
+    const goalsConceded = parseNumber(object.awayGoal)
+    const goalDifference = goalsScored - goalsConceded
+    teamGameEntry = {
+      ...teamGameEntry,
+      goalsScored,
+      goalsConceded,
+      goalDifference,
+      played: true,
+    }
+
+    if (goalsScored > goalsConceded) {
+      teamGameEntry = {
+        ...teamGameEntry,
+        points: 2,
+        win: true,
+        currInoffChamp: object.awayTeamId === currChamp ? true : false,
+      }
+    } else if (goalsScored < goalsConceded) {
+      teamGameEntry = {
+        ...teamGameEntry,
+        points: 0,
+        lost: true,
+      }
+    } else {
+      teamGameEntry = {
+        ...teamGameEntry,
+        points: 1,
+        draw: true,
+      }
+    }
+  }
+
+  const newTeamGameEntry = teamGameAttributes.parse(teamGameEntry)
+
+  return newTeamGameEntry
 }
 
 export const newTeamGameAwayEntry = (
-  object: GameInput,
+  object: GameAttributes,
   currChamp: number | null
-): TeamGameInput => {
+): TeamGameAttributes => {
   if (!object || typeof object !== 'object') {
     throw new BadRequestError({
       code: 400,
@@ -115,88 +103,73 @@ export const newTeamGameAwayEntry = (
     })
   }
 
-  if (
-    'gameId' in object &&
-    'homeTeamId' in object &&
-    'awayTeamId' in object &&
-    'date' in object &&
-    'group' in object &&
-    'category' in object &&
-    'serieId' in object &&
-    'seasonId' in object
-  ) {
-    let newTeamGameEntry: TeamGameInput = {
-      gameId: parseNumber(object.gameId),
-      team: parseNumber(object.awayTeamId),
-      opponent: parseNumber(object.homeTeamId),
-      date: parseDate(object.date),
-      group: parseString(object.group),
-      category: parseString(object.category),
-      serieId: parseNumber(object.serieId),
-      seasonId: parseNumber(object.seasonId),
-      homeGame: false,
-    }
-    const qualificationGame = object.category === 'qualification' ? true : false
-    if ('women' in object)
-      newTeamGameEntry = { ...newTeamGameEntry, women: parseBool(object.women) }
-    if ('mix' in object)
-      newTeamGameEntry = { ...newTeamGameEntry, mix: parseBool(object.mix) }
-
-    if (
-      !('played' in object) ||
-      ('played' in object && object.played === false)
-    ) {
-      return (newTeamGameEntry = {
-        ...newTeamGameEntry,
-        qualificationGame,
-        goalsScored: 0,
-        goalsConceded: 0,
-        goalDifference: 0,
-        points: 0,
-        played: false,
-      })
-    }
-
-    if ('homeGoal' in object && 'awayGoal' in object) {
-      const homeGoal = parseNumber(object.homeGoal)
-      const awayGoal = parseNumber(object.awayGoal)
-      newTeamGameEntry = {
-        ...newTeamGameEntry,
-        goalsScored: awayGoal,
-        goalsConceded: homeGoal,
-        goalDifference: awayGoal - homeGoal,
-        played: true,
-        qualificationGame,
-      }
-      if (homeGoal < awayGoal) {
-        newTeamGameEntry = {
-          ...newTeamGameEntry,
-          points: 2,
-          win: true,
-          currInoffChamp: object.homeTeamId === currChamp ? true : false,
-        }
-      } else if (homeGoal > awayGoal) {
-        newTeamGameEntry = {
-          ...newTeamGameEntry,
-          points: 0,
-          lost: true,
-        }
-      } else {
-        newTeamGameEntry = {
-          ...newTeamGameEntry,
-          points: 1,
-          draw: true,
-        }
-      }
-    }
-
-    return newTeamGameEntry
+  let teamGameEntry = {
+    gameId: object.gameId,
+    seasonId: object.seasonId,
+    serieId: object.serieId,
+    date: object.date,
+    category: object.category,
+    group: object.group,
+    team: object.awayTeamId,
+    opponent: object.homeTeamId,
+    qualificationGame: object.category === 'qualification' ? true : false,
+    homeGame: false,
+    women: false,
+    mix: false,
+    goalsScored: 0,
+    goalsConceded: 0,
+    goalDifference: 0,
+    points: 0,
+    played: false,
+    win: false,
+    draw: false,
+    lost: false,
+    currInoffChamp: false,
   }
 
-  throw new BadRequestError({
-    code: 400,
-    message: 'Missing fields',
-    logging: true,
-    context: { origin: 'NewTeamGameAwayEntry' },
-  })
+  if ('women' in object && typeof object['women'] === 'boolean') {
+    teamGameEntry = { ...teamGameEntry, women: object.women }
+  }
+
+  if ('mix' in object && typeof object['mix'] === 'boolean') {
+    teamGameEntry = { ...teamGameEntry, mix: object.mix }
+  }
+
+  if ('homeGoal' in object && 'awayGoal' in object) {
+    const goalsScored = parseNumber(object.awayGoal)
+    const goalsConceded = parseNumber(object.homeGoal)
+    const goalDifference = goalsScored - goalsConceded
+    teamGameEntry = {
+      ...teamGameEntry,
+      goalsScored,
+      goalsConceded,
+      goalDifference,
+      played: true,
+    }
+
+    if (goalsScored > goalsConceded) {
+      teamGameEntry = {
+        ...teamGameEntry,
+        points: 2,
+        win: true,
+        currInoffChamp: object.homeTeamId === currChamp ? true : false,
+      }
+    } else if (goalsScored < goalsConceded) {
+      teamGameEntry = {
+        ...teamGameEntry,
+        points: 0,
+        lost: true,
+      }
+    } else {
+      teamGameEntry = {
+        ...teamGameEntry,
+        points: 1,
+        draw: true,
+      }
+    }
+  }
+
+  const newTeamGameEntry = teamGameAttributes.parse(teamGameEntry)
+
+  return newTeamGameEntry
 }

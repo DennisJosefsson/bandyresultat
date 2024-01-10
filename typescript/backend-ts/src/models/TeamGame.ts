@@ -1,4 +1,5 @@
-import { Optional } from 'sequelize'
+import { z } from 'zod'
+
 import {
   Model,
   Column,
@@ -13,36 +14,37 @@ import Team from './Team.js'
 import Game from './Game.js'
 import Serie from './Serie.js'
 
-interface TeamGameAttributes {
-  teamGameId?: number
-  gameId: number
-  seasonId: number
-  serieId: number
-  team: number
-  opponent: number
-  goalsScored?: number
-  goalsConceded?: number
-  totalGoals?: number
-  goalDifference?: number
-  points?: number
-  date: Date | string
-  category: string
-  group: string
-  playoff?: boolean
-  mix?: boolean
-  played?: boolean
-  women?: boolean
-  win?: boolean
-  draw?: boolean
-  lost?: boolean
-  qualificationGame?: boolean
-  homeGame?: boolean
-  currInoffChamp?: boolean
-}
+export const teamGameAttributes = z.object({
+  teamGameId: z.number().optional(),
+  gameId: z.number(),
+  seasonId: z.number(),
+  serieId: z.number(),
+  team: z.number(),
+  opponent: z.number(),
+  goalsScored: z.number().optional(),
+  goalsConceded: z.number().optional(),
+  totalGoals: z.number().optional(),
+  goalDifference: z.number().optional(),
+  points: z.number().optional(),
+  date: z.string(),
+  category: z.string(),
+  group: z.string(),
+  playoff: z.boolean().optional(),
+  mix: z.boolean().optional(),
+  played: z.boolean().optional(),
+  women: z.boolean().optional(),
+  win: z.boolean().optional(),
+  draw: z.boolean().optional(),
+  lost: z.boolean().optional(),
+  qualificationGame: z.boolean().optional(),
+  homeGame: z.boolean().optional(),
+  currInoffChamp: z.boolean().optional(),
+})
 
-export interface TeamGameInput
-  extends Optional<TeamGameAttributes, 'teamGameId'> {}
-export interface GTeamameOutput extends Required<TeamGameAttributes> {}
+const teamGameInput = teamGameAttributes.omit({ teamGameId: true })
+
+export type TeamGameAttributes = z.infer<typeof teamGameAttributes>
+export type TeamGameInput = z.infer<typeof teamGameInput>
 
 @Table({
   underscored: true,

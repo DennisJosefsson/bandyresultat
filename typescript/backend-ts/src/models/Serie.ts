@@ -1,4 +1,5 @@
-import { Optional } from 'sequelize'
+import { z } from 'zod'
+
 import {
   Table,
   Column,
@@ -14,18 +15,22 @@ import Season from './Season.js'
 import Game from './Game.js'
 import TeamGame from './TeamGame.js'
 
-interface SerieAttributes {
-  serieId?: number
-  serieGroupCode: string
-  serieCategory: string
-  serieName: string
-  serieStructure?: number[]
-  seasonId: number
-  bonusPoints?: string
-  comment?: string
-}
+const serieAttributes = z.object({
+  serieId: z.string().optional(),
+  serieGroupCode: z.string(),
+  serieCategory: z.string(),
+  serieName: z.string(),
+  serieStructure: z.array(z.number()).optional(),
+  seasonId: z.number(),
+  bonusPoints: z.string().optional(),
+  comment: z.string().optional(),
+})
 
-export interface SerieInput extends Optional<SerieAttributes, 'serieId'> {}
+const serieInput = serieAttributes.omit({ serieId: true })
+
+export type SerieAttributes = z.infer<typeof serieAttributes>
+export type SerieInput = z.infer<typeof serieInput>
+
 export interface SerieOutput extends Required<SerieAttributes> {}
 
 @Table({

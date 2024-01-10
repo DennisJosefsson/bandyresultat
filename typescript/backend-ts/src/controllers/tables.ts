@@ -18,7 +18,7 @@ tableRouter.get('/season/:seasonId', (async (
   res: Response,
   _next: NextFunction
 ) => {
-  const seasonYear = seasonIdCheck(req.params.seasonId)
+  const seasonYear = seasonIdCheck.parse(req.params.seasonId)
 
   const tabell = await TeamGame.findAll({
     attributes: [

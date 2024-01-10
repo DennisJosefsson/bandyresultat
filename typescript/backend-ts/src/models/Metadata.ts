@@ -1,4 +1,5 @@
-import { Optional } from 'sequelize'
+import { z } from 'zod'
+
 import {
   Model,
   Table,
@@ -11,26 +12,29 @@ import {
 import Season from './Season.js'
 import Team from './Team.js'
 
-interface MetadataAttributes {
-  metadataId?: number
-  seasonId: number
-  name: string
-  year: string
-  winnerId?: number
-  winnerName?: string
-  hostCity: string
-  finalDate: string
-  northSouth: boolean
-  multipleGroupStages: boolean
-  eight: boolean
-  quarter: boolean
-  semi: boolean
-  final: boolean
-  comment?: string
-}
+export const metadataAttributes = z.object({
+  metadataId: z.number().optional(),
+  seasonId: z.number(),
+  name: z.string(),
+  year: z.string(),
+  winnerId: z.number().optional(),
+  winnerName: z.string().optional(),
+  hostCity: z.string(),
+  finalDate: z.string(),
+  northSouth: z.boolean(),
+  multipleGroupStages: z.boolean(),
+  eight: z.boolean(),
+  quarter: z.boolean(),
+  semi: z.boolean(),
+  final: z.boolean(),
+  comment: z.string().optional(),
+})
 
-export interface MetadataInput
-  extends Optional<MetadataAttributes, 'metadataId'> {}
+const metadataInput = metadataAttributes.omit({ metadataId: true })
+
+export type MetadataAttributes = z.infer<typeof metadataAttributes>
+type MetadataInput = z.infer<typeof metadataInput>
+
 export interface MetadataOutput extends Required<MetadataAttributes> {}
 
 @Table({

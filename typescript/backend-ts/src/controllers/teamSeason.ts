@@ -19,10 +19,13 @@ teamSeasonRouter.get('/:id', (async (
   res: Response,
   _next: NextFunction
 ) => {
-  const season = seasonIdCheck(req.params.id)
+  const seasonYear = seasonIdCheck.safeParse(req.params.seasonId)
 
   const teamSeasons = await TeamSeason.findAll({
-    include: { model: Season, where: { year: { [Op.eq]: season } } },
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonYear.success && seasonYear.data } },
+    },
   })
   if (!teamSeasons || teamSeasons.length === 0) {
     throw new NotFoundError({

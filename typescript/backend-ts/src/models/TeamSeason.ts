@@ -1,4 +1,5 @@
-import { Optional } from 'sequelize'
+import { z } from 'zod'
+
 import {
   Model,
   Table,
@@ -11,17 +12,20 @@ import Team from './Team.js'
 import Season from './Season.js'
 import TeamTable from './TeamTable.js'
 
-interface TeamSeasonAttributes {
-  teamseasonId: number
-  seasonId: number
-  teamId: number
-  tableId?: number
-  women: boolean
-  qualification: boolean
-}
+export const teamSeasonAttributes = z.object({
+  teamseasonId: z.number(),
+  seasonId: z.number(),
+  teamId: z.number(),
+  tableId: z.number().optional(),
+  women: z.boolean(),
+  qualification: z.boolean(),
+})
 
-export interface TeamSeasonInput
-  extends Optional<TeamSeasonAttributes, 'teamseasonId'> {}
+const teamSeasonInput = teamSeasonAttributes.omit({ teamseasonId: true })
+
+export type TeamSeasonAttributes = z.infer<typeof teamSeasonAttributes>
+export type TeamSeasonInput = z.infer<typeof teamSeasonInput>
+
 export interface TeamSeasonOutput extends Required<TeamSeasonAttributes> {}
 
 @Table({

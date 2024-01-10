@@ -14,14 +14,15 @@ import Team from '../models/Team.js'
 import Serie from '../models/Serie.js'
 const seasonRouter = Router()
 
-seasonRouter.get('/:id', (async (
+seasonRouter.get('/:seasonId', (async (
   req: Request,
   res: Response,
   _next: NextFunction
 ) => {
-  const seasonId = seasonIdCheck(req.params.id)
+  const seasonYear = seasonIdCheck.parse(req.params.seasonId)
+
   const season = await Season.findAll({
-    where: { year: { [Op.eq]: seasonId } },
+    where: { year: { [Op.eq]: seasonYear } },
     include: [Team, Serie],
   })
   if (!season) {

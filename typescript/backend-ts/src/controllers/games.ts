@@ -21,17 +21,54 @@ import {
   newTeamGameAwayEntry,
   newTeamGameHomeEntry,
 } from '../utils/postFunctions/newTeamGameEntry.js'
+
 const gameRouter = Router()
+
+gameRouter.get('/', (async (
+  _req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
+  const games = await Game.findAll({
+    include: [
+      {
+        model: Season,
+      },
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'homeTeam',
+      },
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'awayTeam',
+      },
+    ],
+  })
+  if (!games || games.length === 0) {
+    throw new NotFoundError({
+      code: 404,
+      message: 'No games',
+      logging: false,
+      context: { origin: 'GET All Games Router' },
+    })
+  }
+  res.status(200).json(games)
+}) as RequestHandler)
 
 gameRouter.get('/season/:seasonId', (async (
   req: Request,
   res: Response,
   _next: NextFunction
 ) => {
-  const seasonYear = seasonIdCheck(req.params.seasonId)
+  const seasonYear = seasonIdCheck.parse(req.params.seasonId)
   const games = await Game.findAll({
     include: [
-      { model: Season, where: { year: { [Op.eq]: seasonYear } } },
+      {
+        model: Season,
+        where: { year: { [Op.eq]: seasonYear } },
+      },
       {
         model: Team,
         attributes: ['name', 'teamId', 'casualName', 'shortName'],
@@ -60,7 +97,7 @@ gameRouter.post('/', (async (
   res: Response,
   _next: NextFunction
 ) => {
-  const introData = simpleGameData(req.body)
+  const introData = simpleGameData.parse(req.body)
   const serie = await Serie.findOne({
     where: { seasonId: introData.seasonId, serieGroupCode: introData.group },
     raw: true,

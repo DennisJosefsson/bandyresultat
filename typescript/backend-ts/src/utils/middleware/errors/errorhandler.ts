@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { CustomError } from './CustomError.js'
+import { ZodError } from 'zod'
 
 export const errorHandler = (
   error: Error,
@@ -24,6 +25,9 @@ export const errorHandler = (
     }
 
     return res.status(statusCode).json({ errors })
+  } else if (error instanceof ZodError) {
+    console.error(JSON.stringify(error.issues, null, 2))
+    return res.status(400).json({ errors: error.issues })
   }
 
   console.error(JSON.stringify(error, null, 2))

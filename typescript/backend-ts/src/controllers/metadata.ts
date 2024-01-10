@@ -19,10 +19,13 @@ metadataRouter.get('/:seasonId', (async (
   res: Response,
   _next: NextFunction
 ) => {
-  const seasonYear = seasonIdCheck(req.params.seasonId)
+  const seasonYear = seasonIdCheck.parse(req.params.seasonId)
   const metadata = await Metadata.findAll({
     where: { seasonId: req.params.seasonId },
-    include: { model: Season, where: { year: { [Op.eq]: seasonYear } } },
+    include: {
+      model: Season,
+      where: { year: { [Op.eq]: seasonYear } },
+    },
   })
 
   if (!metadata || metadata.length === 0) {
@@ -52,8 +55,10 @@ metadataRouter.delete('/:metadataId', (async (
   res: Response,
   _next: NextFunction
 ) => {
-  const metadataId = IDCheck(req.params.metadataId)
-  const metadata = await Metadata.findByPk(metadataId)
+  const metadataId = IDCheck.parse(req.params.metadataId)
+  const metadata = await Metadata.findOne({
+    where: { metadataId: metadataId },
+  })
   if (!metadata) {
     throw new NotFoundError({
       code: 404,
@@ -72,8 +77,10 @@ metadataRouter.put('/:metadataId', (async (
   res: Response,
   _next: NextFunction
 ) => {
-  const metadataId = IDCheck(req.params.metadataId)
-  const metadata = await Metadata.findByPk(metadataId)
+  const metadataId = IDCheck.parse(req.params.metadataId)
+  const metadata = await Metadata.findOne({
+    where: { metadataId: metadataId },
+  })
   if (!metadata) {
     throw new NotFoundError({
       code: 404,

@@ -1,4 +1,5 @@
-import { Optional } from 'sequelize'
+import { z } from 'zod'
+// import { Optional } from 'sequelize'
 import {
   Model,
   Column,
@@ -15,34 +16,65 @@ import Team from './Team.js'
 import TeamGame from './TeamGame.js'
 import Serie from './Serie.js'
 
-interface GameAttributes {
-  gameId?: number
-  seasonId: number
-  serieId: number
-  homeTeamId: number
-  awayTeamId: number
-  result?: string
-  halftimeResult?: string
-  homeGoal?: number
-  awayGoal?: number
-  halftimeHomeGoal?: number
-  halftimeAwayGoal?: number
-  date: Date | string
-  round?: number
-  category: string
-  group: string
-  playoff?: boolean
-  extraTime?: boolean
-  penalties?: boolean
-  mix?: boolean
-  played?: boolean
-  women?: boolean
-  createdAt?: Date
-  updatedAt?: Date
-}
+export const gameAttributes = z.object({
+  gameId: z.number().optional(),
+  seasonId: z.number(),
+  serieId: z.number(),
+  homeTeamId: z.object({ value: z.number() }).transform((value) => value.value),
+  awayTeamId: z.object({ value: z.number() }).transform((value) => value.value),
+  result: z.string().optional(),
+  halftimeResult: z.string().optional(),
+  homeGoal: z.coerce.number().optional(),
+  awayGoal: z.coerce.number().optional(),
+  halftimeHomeGoal: z.coerce.number().optional(),
+  halftimeAwayGoal: z.coerce.number().optional(),
+  date: z.string(),
+  round: z.number().optional(),
+  category: z.string(),
+  group: z.string(),
+  playoff: z.boolean().optional(),
+  extraTime: z.boolean().optional(),
+  penalties: z.boolean().optional(),
+  mix: z.boolean().optional(),
+  played: z.boolean().optional(),
+  women: z.boolean().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+})
 
-export interface GameInput extends Optional<GameAttributes, 'gameId'> {}
-export interface GameOutput extends Required<GameAttributes> {}
+const gameInput = gameAttributes.omit({ gameId: true })
+
+export type GameAttributes = z.infer<typeof gameAttributes>
+export type GameInput = z.infer<typeof gameInput>
+
+// interface GameAttributes {
+//   gameId?: number
+//   seasonId: number
+//   serieId: number
+//   homeTeamId: number
+//   awayTeamId: number
+//   result?: string
+//   halftimeResult?: string
+//   homeGoal?: number
+//   awayGoal?: number
+//   halftimeHomeGoal?: number
+//   halftimeAwayGoal?: number
+//   date: Date | string
+//   round?: number
+//   category: string
+//   group: string
+//   playoff?: boolean
+//   extraTime?: boolean
+//   penalties?: boolean
+//   mix?: boolean
+//   played?: boolean
+//   women?: boolean
+//   createdAt?: Date
+//   updatedAt?: Date
+// }
+
+// export interface GameInput extends Optional<GameAttributes, 'gameId'> {}
+// export interface GameOutput extends Required<GameAttributes> {}
 
 @Table({
   underscored: true,
@@ -90,7 +122,7 @@ class Game extends Model<GameAttributes, GameInput> {
   declare halftimeAwayGoal: number
 
   @Column
-  declare date: Date
+  declare date: string
 
   @Column
   declare round: number

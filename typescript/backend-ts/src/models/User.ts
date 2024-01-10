@@ -1,4 +1,5 @@
-import { Optional } from 'sequelize'
+import { z } from 'zod'
+
 import {
   Table,
   Column,
@@ -8,15 +9,19 @@ import {
 } from 'sequelize-typescript'
 import { compare } from 'bcrypt-ts'
 
-interface UserAttributes {
-  userId?: number
-  userName: string
-  email: string
-  admin: boolean
-  password: string
-}
+export const userAttributes = z.object({
+  userId: z.number(),
+  userName: z.string(),
+  email: z.string().email(),
+  admin: z.boolean(),
+  password: z.string(),
+})
 
-export interface UserInput extends Optional<UserAttributes, 'userId'> {}
+export const userInput = userAttributes.omit({ userId: true })
+
+export type UserAttributes = z.infer<typeof userAttributes>
+export type UserInput = z.infer<typeof userInput>
+
 export interface UserOutput extends Required<UserAttributes> {}
 
 @Table({
