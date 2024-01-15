@@ -32,7 +32,7 @@ export const seasonAttributes = z.object({
 const seasonInput = seasonAttributes.omit({ seasonId: true })
 
 export type SeasonAttributes = z.infer<typeof seasonAttributes>
-type SeasonInput = z.infer<typeof seasonInput>
+export type SeasonInput = z.infer<typeof seasonInput>
 
 export interface SeasonOutput extends Required<SeasonAttributes> {}
 

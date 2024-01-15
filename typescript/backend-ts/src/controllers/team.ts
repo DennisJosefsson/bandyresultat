@@ -47,7 +47,7 @@ teamRouter.post('/', (async (
   _next: NextFunction
 ) => {
   const newTeamObject = newTeamEntry(req.body)
-  const newTeam = await Team.create(newTeamObject)
+  const [newTeam] = await Team.upsert(newTeamObject)
   return res.json(newTeam)
 }) as RequestHandler)
 

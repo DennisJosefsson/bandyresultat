@@ -27,7 +27,7 @@ export const metadataAttributes = z.object({
   quarter: z.boolean(),
   semi: z.boolean(),
   final: z.boolean(),
-  comment: z.string().optional(),
+  comment: z.string().optional().nullable(),
 })
 
 const metadataInput = metadataAttributes.omit({ metadataId: true })

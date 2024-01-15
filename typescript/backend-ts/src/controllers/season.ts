@@ -59,7 +59,7 @@ seasonRouter.post('/', (async (
   _next: NextFunction
 ) => {
   const newSeasonObject = newSeasonEntry(req.body)
-  const newSeason = await Season.create(newSeasonObject)
+  const [newSeason] = await Season.upsert(newSeasonObject)
   return res.json(newSeason)
 }) as RequestHandler)
 

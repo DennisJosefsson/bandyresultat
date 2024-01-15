@@ -21,7 +21,6 @@ metadataRouter.get('/:seasonId', (async (
 ) => {
   const seasonYear = seasonIdCheck.parse(req.params.seasonId)
   const metadata = await Metadata.findAll({
-    where: { seasonId: req.params.seasonId },
     include: {
       model: Season,
       where: { year: { [Op.eq]: seasonYear } },
@@ -46,7 +45,7 @@ metadataRouter.post('/', (async (
   _next: NextFunction
 ) => {
   const metadataEntry = newMetadataEntry(req.body)
-  const metadata = await Metadata.create(metadataEntry)
+  const [metadata] = await Metadata.upsert(metadataEntry)
   res.json(metadata)
 }) as RequestHandler)
 
@@ -69,30 +68,6 @@ metadataRouter.delete('/:metadataId', (async (
   } else {
     await metadata.destroy()
     res.status(200).json({ message: 'Metadata deleted' })
-  }
-}) as RequestHandler)
-
-metadataRouter.put('/:metadataId', (async (
-  req: Request,
-  res: Response,
-  _next: NextFunction
-) => {
-  const metadataId = IDCheck.parse(req.params.metadataId)
-  const metadata = await Metadata.findOne({
-    where: { metadataId: metadataId },
-  })
-  if (!metadata) {
-    throw new NotFoundError({
-      code: 404,
-      message: 'No metadata',
-      logging: false,
-      context: { origin: 'PUT metadata Router' },
-    })
-  } else {
-    const metadataEntry = newMetadataEntry(req.body)
-    metadata.set(metadataEntry)
-    await metadata.save()
-    res.json(metadata)
   }
 }) as RequestHandler)
 

@@ -1,8 +1,7 @@
-import { TeamInput } from '../../models/Team.js'
-import { parseString, parseLatLong, parseWomen } from './parsers.js'
+import { TeamAttributes, teamAttributes } from '../../models/Team.js'
 import BadRequestError from '../middleware/errors/BadRequestError.js'
 
-const newTeamEntry = (object: unknown): TeamInput => {
+const newTeamEntry = (object: unknown): TeamAttributes => {
   if (!object || typeof object !== 'object') {
     throw new BadRequestError({
       code: 400,
@@ -12,31 +11,9 @@ const newTeamEntry = (object: unknown): TeamInput => {
     })
   }
 
-  if (
-    'name' in object &&
-    'casualName' in object &&
-    'shortName' in object &&
-    'city' in object
-  ) {
-    const newTeam: TeamInput = {
-      name: parseString(object.name),
-      shortName: parseString(object.shortName),
-      casualName: parseString(object.casualName),
-      city: parseString(object.city),
-      lat: parseLatLong(object, 'lat'),
-      long: parseLatLong(object, 'long'),
-      women: parseWomen(object),
-    }
+  const newTeam = teamAttributes.parse(object)
 
-    return newTeam
-  }
-
-  throw new BadRequestError({
-    code: 400,
-    message: 'Missing fields',
-    logging: true,
-    context: { origin: 'NewTeamEntry' },
-  })
+  return newTeam
 }
 
 export default newTeamEntry

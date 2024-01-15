@@ -15,7 +15,7 @@ import Season from './Season.js'
 import Game from './Game.js'
 import TeamGame from './TeamGame.js'
 
-const serieAttributes = z.object({
+export const serieAttributes = z.object({
   serieId: z.string().optional(),
   serieGroupCode: z.string(),
   serieCategory: z.string(),
