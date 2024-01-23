@@ -62,7 +62,7 @@ teamSeasonRouter.post('/', (async (
 ) => {
   const newTeamSeasonObject = newTeamSeasonEntry(req.body)
   const newTeamSeason = await TeamSeason.create(newTeamSeasonObject)
-  return res.json(newTeamSeason)
+  return res.status(201).json(newTeamSeason)
 }) as RequestHandler)
 
 export default teamSeasonRouter

@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 dotenv.config()
 import { Sequelize } from 'sequelize-typescript'
-import Error from '../models/Error.js'
+import BandyError from '../models/BandyError.js'
 import Game from '../models/Game.js'
 import Link from '../models/Link.js'
 import Metadata from '../models/Metadata.js'
@@ -24,7 +24,7 @@ export const sequelize = new Sequelize(dbUrl, { omitNull: true })
 export const connectToDb = async () => {
   try {
     sequelize.addModels([
-      Error,
+      BandyError,
       Season,
       Game,
       Team,

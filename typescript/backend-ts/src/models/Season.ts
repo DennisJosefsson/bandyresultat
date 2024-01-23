@@ -22,9 +22,40 @@ import TableSeason from './TableSeason.js'
 
 export const seasonAttributes = z.object({
   seasonId: z.number().optional(),
-  year: z.string(),
+  year: z.string().superRefine((val, ctx) => {
+    if (!val.match(/\d{4}/) || !val.match(/\d{4}\/\d{4}/)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Wrong year format`,
+        fatal: true,
+      })
+
+      return z.NEVER
+    }
+
+    if (val.match(/\d{4}/)) {
+      if (Number(val) > 1963) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Wrong year format, single year can't be higher than 1963`,
+          fatal: true,
+        })
+        return z.NEVER
+      }
+    }
+
+    if (val.match(/\d{4}\/\d{4}/)) {
+      const yearArray = val.split('/')
+      if (Number(yearArray[1]) - Number(yearArray[0]) !== 1) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Wrong year format, xxxx/xxxx+1`,
+        })
+      }
+    }
+  }),
   women: z.boolean(),
-  seasonStructure: z.string(),
+  seasonStructure: z.string().optional(),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 })

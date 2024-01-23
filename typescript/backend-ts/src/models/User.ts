@@ -18,10 +18,20 @@ export const userAttributes = z.object({
 })
 
 export const userInput = userAttributes.omit({ userId: true })
+export const userForAdmin = userAttributes.omit({
+  userId: true,
+  email: true,
+  password: true,
+})
 
+export const userFromLoginForm = userAttributes.omit({
+  userId: true,
+  email: true,
+  admin: true,
+})
 export type UserAttributes = z.infer<typeof userAttributes>
 export type UserInput = z.infer<typeof userInput>
-
+export type UserForAdmin = z.infer<typeof userForAdmin>
 export interface UserOutput extends Required<UserAttributes> {}
 
 @Table({

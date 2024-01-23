@@ -1,12 +1,6 @@
 import { z } from 'zod'
 
-import {
-  Model,
-  Column,
-  Table,
-  PrimaryKey,
-  AutoIncrement,
-} from 'sequelize-typescript'
+import { Model, Column, Table } from 'sequelize-typescript'
 
 const errorAttributes = z.object({
   errorId: z.number().optional(),
@@ -31,10 +25,8 @@ export interface ErrorOutput extends Required<ErrorAttributes> {}
   timestamps: false,
   modelName: 'error',
 })
-class Error extends Model<ErrorAttributes, ErrorInput> {
-  @PrimaryKey
-  @AutoIncrement
-  @Column
+class BandyError extends Model<ErrorAttributes, ErrorInput> {
+  @Column({ primaryKey: true })
   declare errorId: number
 
   @Column
@@ -59,4 +51,4 @@ class Error extends Model<ErrorAttributes, ErrorInput> {
   declare backend: boolean
 }
 
-export default Error
+export default BandyError

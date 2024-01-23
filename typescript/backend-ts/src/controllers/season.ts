@@ -12,6 +12,9 @@ import seasonIdCheck from '../utils/postFunctions/seasonIdCheck.js'
 import { Op } from 'sequelize'
 import Team from '../models/Team.js'
 import Serie from '../models/Serie.js'
+import IDCheck from '../utils/postFunctions/IDCheck.js'
+import authControl from '../utils/middleware/authControl.js'
+
 const seasonRouter = Router()
 
 seasonRouter.get('/:seasonId', (async (
@@ -24,8 +27,10 @@ seasonRouter.get('/:seasonId', (async (
   const season = await Season.findAll({
     where: { year: { [Op.eq]: seasonYear } },
     include: [Team, Serie],
+    order: [['seasonId', 'asc']],
   })
-  if (!season) {
+  console.log(season)
+  if (!season || season.length === 0) {
     throw new NotFoundError({
       code: 404,
       message: 'No such season',
@@ -53,14 +58,34 @@ seasonRouter.get('/', (async (
   res.status(200).json(seasons)
 }) as RequestHandler)
 
-seasonRouter.post('/', (async (
+seasonRouter.post('/', authControl, (async (
   req: Request,
   res: Response,
   _next: NextFunction
 ) => {
   const newSeasonObject = newSeasonEntry(req.body)
   const [newSeason] = await Season.upsert(newSeasonObject)
-  return res.json(newSeason)
+  return res.status(201).json(newSeason)
+}) as RequestHandler)
+
+seasonRouter.delete('/:seasonId', (async (
+  req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
+  const seasonId = IDCheck.parse(req.params.seasonId)
+  const season = await Season.findByPk(seasonId)
+  if (!season) {
+    throw new NotFoundError({
+      code: 404,
+      message: 'No season',
+      logging: false,
+      context: { origin: 'Delete season Router' },
+    })
+  } else {
+    await season.destroy()
+    res.status(200).json({ message: 'Season deleted' })
+  }
 }) as RequestHandler)
 
 export default seasonRouter

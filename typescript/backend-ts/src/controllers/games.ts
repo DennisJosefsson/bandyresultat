@@ -180,7 +180,7 @@ gameRouter.post('/', (async (
       ...awayTeamGameData,
     })
   }
-  res.status(200).json({ game, homeTeamGame, awayTeamGame })
+  res.status(201).json({ game, homeTeamGame, awayTeamGame })
 }) as RequestHandler)
 
 export default gameRouter

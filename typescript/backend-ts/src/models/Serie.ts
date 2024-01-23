@@ -16,14 +16,14 @@ import Game from './Game.js'
 import TeamGame from './TeamGame.js'
 
 export const serieAttributes = z.object({
-  serieId: z.string().optional(),
+  serieId: z.number().optional(),
   serieGroupCode: z.string(),
   serieCategory: z.string(),
   serieName: z.string(),
-  serieStructure: z.array(z.number()).optional(),
+  serieStructure: z.array(z.number()).nullable().optional(),
   seasonId: z.number(),
-  bonusPoints: z.string().optional(),
-  comment: z.string().optional(),
+  bonusPoints: z.string().nullable().optional(),
+  comment: z.string().nullable().optional(),
 })
 
 const serieInput = serieAttributes.omit({ serieId: true })

@@ -16,7 +16,7 @@ export const teamSeasonAttributes = z.object({
   teamseasonId: z.number(),
   seasonId: z.number(),
   teamId: z.number(),
-  tableId: z.number().optional(),
+  tableId: z.number().nullable().optional(),
   women: z.boolean(),
   qualification: z.boolean(),
 })

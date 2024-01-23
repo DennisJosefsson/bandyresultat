@@ -67,7 +67,7 @@ metadataRouter.delete('/:metadataId', (async (
     })
   } else {
     await metadata.destroy()
-    res.status(200).json({ message: 'Metadata deleted' })
+    res.status(204).json({ message: 'Metadata deleted' })
   }
 }) as RequestHandler)
 

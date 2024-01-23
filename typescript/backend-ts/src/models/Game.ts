@@ -1,5 +1,4 @@
 import { z } from 'zod'
-// import { Optional } from 'sequelize'
 import {
   Model,
   Column,
@@ -29,7 +28,7 @@ export const gameAttributes = z.object({
   halftimeHomeGoal: z.coerce.number().optional(),
   halftimeAwayGoal: z.coerce.number().optional(),
   date: z.string(),
-  round: z.number().optional(),
+  round: z.number().nullable().optional(),
   category: z.string(),
   group: z.string(),
   playoff: z.boolean().optional(),
@@ -46,35 +45,6 @@ const gameInput = gameAttributes.omit({ gameId: true })
 
 export type GameAttributes = z.infer<typeof gameAttributes>
 export type GameInput = z.infer<typeof gameInput>
-
-// interface GameAttributes {
-//   gameId?: number
-//   seasonId: number
-//   serieId: number
-//   homeTeamId: number
-//   awayTeamId: number
-//   result?: string
-//   halftimeResult?: string
-//   homeGoal?: number
-//   awayGoal?: number
-//   halftimeHomeGoal?: number
-//   halftimeAwayGoal?: number
-//   date: Date | string
-//   round?: number
-//   category: string
-//   group: string
-//   playoff?: boolean
-//   extraTime?: boolean
-//   penalties?: boolean
-//   mix?: boolean
-//   played?: boolean
-//   women?: boolean
-//   createdAt?: Date
-//   updatedAt?: Date
-// }
-
-// export interface GameInput extends Optional<GameAttributes, 'gameId'> {}
-// export interface GameOutput extends Required<GameAttributes> {}
 
 @Table({
   underscored: true,
