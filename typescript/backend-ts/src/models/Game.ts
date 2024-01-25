@@ -19,24 +19,30 @@ export const gameAttributes = z.object({
   gameId: z.number().optional(),
   seasonId: z.number(),
   serieId: z.number(),
-  homeTeamId: z.object({ value: z.number() }).transform((value) => value.value),
-  awayTeamId: z.object({ value: z.number() }).transform((value) => value.value),
-  result: z.string().optional(),
-  halftimeResult: z.string().optional(),
+  homeTeamId: z.number(),
+  awayTeamId: z.number(),
+  result: z
+    .string()
+    .regex(/^\d{1,2}-\d{1,2}$/)
+    .optional(),
+  halftimeResult: z
+    .string()
+    .regex(/^\d{1,2}-\d{1,2}$/)
+    .optional(),
   homeGoal: z.coerce.number().optional(),
   awayGoal: z.coerce.number().optional(),
   halftimeHomeGoal: z.coerce.number().optional(),
   halftimeAwayGoal: z.coerce.number().optional(),
-  date: z.string(),
+  date: z.string().regex(/^\d{4}-\d{1,2}-\d{1,2}$/),
   round: z.number().nullable().optional(),
   category: z.string(),
   group: z.string(),
-  playoff: z.boolean().optional(),
-  extraTime: z.boolean().optional(),
-  penalties: z.boolean().optional(),
-  mix: z.boolean().optional(),
+  playoff: z.boolean().default(false),
+  extraTime: z.boolean().default(false),
+  penalties: z.boolean().default(false),
+  mix: z.boolean().default(false),
   played: z.boolean().optional(),
-  women: z.boolean().optional(),
+  women: z.boolean().default(false),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 })

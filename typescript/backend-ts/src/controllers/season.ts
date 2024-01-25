@@ -6,7 +6,9 @@ import {
   RequestHandler,
 } from 'express'
 import Season from '../models/Season.js'
-import newSeasonEntry from '../utils/postFunctions/newSeasonEntry.js'
+import newSeasonEntry, {
+  updateSeasonEntry,
+} from '../utils/postFunctions/newSeasonEntry.js'
 import NotFoundError from '../utils/middleware/errors/NotFoundError.js'
 import seasonIdCheck from '../utils/postFunctions/seasonIdCheck.js'
 import { Op } from 'sequelize'
@@ -14,6 +16,7 @@ import Team from '../models/Team.js'
 import Serie from '../models/Serie.js'
 import IDCheck from '../utils/postFunctions/IDCheck.js'
 import authControl from '../utils/middleware/authControl.js'
+import Metadata from '../models/Metadata.js'
 
 const seasonRouter = Router()
 
@@ -26,10 +29,10 @@ seasonRouter.get('/:seasonId', (async (
 
   const season = await Season.findAll({
     where: { year: { [Op.eq]: seasonYear } },
-    include: [Team, Serie],
+    include: [Team, Serie, Metadata],
     order: [['seasonId', 'asc']],
   })
-  console.log(season)
+
   if (!season || season.length === 0) {
     throw new NotFoundError({
       code: 404,
@@ -68,7 +71,26 @@ seasonRouter.post('/', authControl, (async (
   return res.status(201).json(newSeason)
 }) as RequestHandler)
 
-seasonRouter.delete('/:seasonId', (async (
+seasonRouter.put('/', authControl, (async (
+  req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
+  const updateSeasonObject = updateSeasonEntry(req.body)
+  const season = await Season.findByPk(updateSeasonObject.seasonId)
+  if (!season) {
+    throw new NotFoundError({
+      code: 404,
+      message: 'No such season',
+      logging: true,
+      context: { origin: 'Update Season Router' },
+    })
+  }
+  const [updateSeason] = await Season.upsert(updateSeasonObject)
+  return res.status(201).json(updateSeason)
+}) as RequestHandler)
+
+seasonRouter.delete('/:seasonId', authControl, (async (
   req: Request,
   res: Response,
   _next: NextFunction

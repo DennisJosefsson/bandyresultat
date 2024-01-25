@@ -2,18 +2,23 @@ import { describe, test, beforeAll, expect } from 'vitest'
 import { app } from '../utils'
 import supertest from 'supertest'
 import { resetDb } from './testFunctions/resetDb'
+import { loginFunction } from './testFunctions/loginFunction'
 import {
   teamData,
   newTeam,
   newTeamWithMissingName,
   updateTeamData,
+  updateTeamDataWrongId,
 } from './testData/teamData'
 import { newTeamSeason } from './testData/teamSeasonData'
 
 const api = supertest(app)
 
+let cookie: string
+
 beforeAll(async () => {
   await resetDb()
+  cookie = await loginFunction()
 })
 
 describe('Testing Teams router', () => {
@@ -37,7 +42,10 @@ describe('Testing Teams router', () => {
   })
   describe('POST', () => {
     test('Post new team', async () => {
-      const response = await api.post('/api/teams').send(newTeam)
+      const response = await api
+        .post('/api/teams')
+        .send(newTeam)
+        .set('Cookie', cookie)
       expect(response.statusCode).toBe(201)
       const allResponse = await api.get('/api/teams')
       expect(allResponse.body).toHaveLength(teamData.length + 1)
@@ -47,10 +55,12 @@ describe('Testing Teams router', () => {
       const response1 = await api
         .post('/api/teamSeasons')
         .send(newTeamSeason[0])
+        .set('Cookie', cookie)
       expect(response1.statusCode).toBe(201)
       const response2 = await api
         .post('/api/teamSeasons')
         .send(newTeamSeason[1])
+        .set('Cookie', cookie)
       expect(response2.statusCode).toBe(201)
       const response = await api.get('/api/seasons/2023')
 
@@ -58,13 +68,19 @@ describe('Testing Teams router', () => {
       expect(response.body[1].teams).toHaveLength(8)
     })
     test('Post New Team with Missing Name', async () => {
-      const response = await api.post('/api/teams').send(newTeamWithMissingName)
+      const response = await api
+        .post('/api/teams')
+        .send(newTeamWithMissingName)
+        .set('Cookie', cookie)
       expect(response.statusCode).toBe(400)
     })
   })
   describe('PUT', () => {
     test('Update Team data', async () => {
-      const response = await api.put('/api/teams').send(updateTeamData)
+      const response = await api
+        .put('/api/teams')
+        .send(updateTeamData)
+        .set('Cookie', cookie)
       expect(response.statusCode).toBe(201)
       expect(response.body).toMatchObject({ lat: 62, long: 15 })
       const teamResponse = await api.get('/api/teams/1')
@@ -87,7 +103,8 @@ describe('Testing Teams router', () => {
     test('Update Team data Wrong Id', async () => {
       const response = await api
         .put('/api/teams')
-        .send({ teamId: 999, lat: 62, long: 15 })
+        .send(updateTeamDataWrongId)
+        .set('Cookie', cookie)
       expect(response.statusCode).toBe(404)
     })
   })

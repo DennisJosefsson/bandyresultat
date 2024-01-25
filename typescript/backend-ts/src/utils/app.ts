@@ -14,6 +14,7 @@ import gameRouter from '../controllers/games.js'
 import tableRouter from '../controllers/tables.js'
 import metadataRouter from '../controllers/metadata.js'
 import loginRouter from '../controllers/login.js'
+import teamgameRouter from '../controllers/teamGames.js'
 const app: Application = express()
 
 app.use(express.json())
@@ -37,6 +38,7 @@ app.use('/api/games', gameRouter)
 app.use('/api/tables', tableRouter)
 app.use('/api/metadata', metadataRouter)
 app.use('/api/login', loginRouter)
+app.use('/api/teamgames', teamgameRouter)
 app.use(errorHandler)
 
 const startDB: () => Promise<void> = async () => {

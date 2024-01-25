@@ -10,8 +10,11 @@ import Season from '../models/Season.js'
 import { Op } from 'sequelize'
 import NotFoundError from '../utils/middleware/errors/NotFoundError.js'
 import seasonIdCheck from '../utils/postFunctions/seasonIdCheck.js'
-import newMetadataEntry from '../utils/postFunctions/newMetaDataEntry.js'
+import newMetadataEntry, {
+  updateMetadataEntry,
+} from '../utils/postFunctions/newMetaDataEntry.js'
 import IDCheck from '../utils/postFunctions/IDCheck.js'
+import authControl from '../utils/middleware/authControl.js'
 const metadataRouter = Router()
 
 metadataRouter.get('/:seasonId', (async (
@@ -39,14 +42,33 @@ metadataRouter.get('/:seasonId', (async (
   }
 }) as RequestHandler)
 
-metadataRouter.post('/', (async (
+metadataRouter.post('/', authControl, (async (
   req: Request,
   res: Response,
   _next: NextFunction
 ) => {
   const metadataEntry = newMetadataEntry(req.body)
   const [metadata] = await Metadata.upsert(metadataEntry)
-  res.json(metadata)
+  res.status(201).json(metadata)
+}) as RequestHandler)
+
+metadataRouter.put('/', authControl, (async (
+  req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
+  const updateMetadataObject = updateMetadataEntry(req.body)
+  const metadata = await Metadata.findByPk(updateMetadataObject.metadataId)
+  if (!metadata) {
+    throw new NotFoundError({
+      code: 404,
+      message: 'No such metadata',
+      logging: true,
+      context: { origin: 'Update metadata Router' },
+    })
+  }
+  const [updateMetadata] = await Metadata.upsert(updateMetadataObject)
+  return res.status(200).json(updateMetadata)
 }) as RequestHandler)
 
 metadataRouter.delete('/:metadataId', (async (

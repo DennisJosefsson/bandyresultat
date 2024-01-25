@@ -10,6 +10,10 @@ import { seasonData } from '../testData/seasonData.js'
 import { seriesData } from '../testData/seriesData.js'
 import { teamData } from '../testData/teamData.js'
 import { teamSeasonData } from '../testData/teamSeasonData.js'
+import { metadataData } from '../testData/metadataData.js'
+import Metadata from '../../models/Metadata.js'
+import { gameData } from '../testData/gameData.js'
+import { teamGameData } from '../testData/teamGameData.js'
 
 export const resetDb = async () => {
   await TeamGame.truncate({ cascade: true })
@@ -24,4 +28,7 @@ export const resetDb = async () => {
   await Serie.bulkCreate(seriesData)
   await Team.bulkCreate(teamData)
   await TeamSeason.bulkCreate(teamSeasonData)
+  await Metadata.bulkCreate(metadataData)
+  await Game.bulkCreate(gameData)
+  await TeamGame.bulkCreate(teamGameData)
 }

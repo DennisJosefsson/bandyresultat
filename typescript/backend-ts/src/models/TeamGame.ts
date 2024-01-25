@@ -91,7 +91,7 @@ class TeamGame extends Model<TeamGameAttributes, TeamGameInput> {
   declare totalGoals: number
 
   @Column
-  declare date: Date
+  declare date: string
 
   @Column
   declare category: string

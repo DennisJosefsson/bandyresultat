@@ -18,19 +18,19 @@ import Game from './Game.js'
 import TeamTable from './TeamTable.js'
 
 export const teamAttributes = z.object({
-  teamId: z.number().optional(),
+  teamId: z.number(),
   name: z.string(),
   city: z.string(),
   casualName: z.string(),
   shortName: z.string(),
   women: z.boolean().optional(),
-  lat: z.number().optional(),
-  long: z.number().optional(),
+  lat: z.number().optional().nullable(),
+  long: z.number().optional().nullable(),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 })
 
-const teamInput = teamAttributes.omit({ teamId: true })
+export const teamInput = teamAttributes.partial({ teamId: true })
 
 export type TeamAttributes = z.infer<typeof teamAttributes>
 export type TeamInput = z.infer<typeof teamInput>

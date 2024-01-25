@@ -13,12 +13,12 @@ import Season from './Season.js'
 import Team from './Team.js'
 
 export const metadataAttributes = z.object({
-  metadataId: z.number().optional(),
+  metadataId: z.number(),
   seasonId: z.number(),
   name: z.string(),
   year: z.string(),
-  winnerId: z.number().optional(),
-  winnerName: z.string().optional(),
+  winnerId: z.number().optional().nullable(),
+  winnerName: z.string().optional().nullable(),
   hostCity: z.string(),
   finalDate: z.string(),
   northSouth: z.boolean(),
@@ -30,10 +30,10 @@ export const metadataAttributes = z.object({
   comment: z.string().optional().nullable(),
 })
 
-const metadataInput = metadataAttributes.omit({ metadataId: true })
+export const metadataInput = metadataAttributes.partial({ metadataId: true })
 
 export type MetadataAttributes = z.infer<typeof metadataAttributes>
-type MetadataInput = z.infer<typeof metadataInput>
+export type MetadataInput = z.infer<typeof metadataInput>
 
 export interface MetadataOutput extends Required<MetadataAttributes> {}
 

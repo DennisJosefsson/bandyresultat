@@ -21,7 +21,7 @@ import TeamTable from './TeamTable.js'
 import TableSeason from './TableSeason.js'
 
 export const seasonAttributes = z.object({
-  seasonId: z.number().optional(),
+  seasonId: z.number(),
   year: z.string().superRefine((val, ctx) => {
     if (!val.match(/\d{4}/) || !val.match(/\d{4}\/\d{4}/)) {
       ctx.addIssue({
@@ -60,7 +60,7 @@ export const seasonAttributes = z.object({
   updatedAt: z.date().optional(),
 })
 
-const seasonInput = seasonAttributes.omit({ seasonId: true })
+export const seasonInput = seasonAttributes.partial({ seasonId: true })
 
 export type SeasonAttributes = z.infer<typeof seasonAttributes>
 export type SeasonInput = z.infer<typeof seasonInput>

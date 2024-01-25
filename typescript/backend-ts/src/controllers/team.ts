@@ -11,6 +11,7 @@ import newTeamEntry, {
 } from '../utils/postFunctions/newTeamEntry.js'
 import IDCheck from '../utils/postFunctions/IDCheck.js'
 import NotFoundError from '../utils/middleware/errors/NotFoundError.js'
+import authControl from '../utils/middleware/authControl.js'
 const teamRouter = Router()
 
 teamRouter.get('/:teamId', (async (
@@ -45,7 +46,7 @@ teamRouter.get('/', (async (
   res.status(200).json(teams)
 }) as RequestHandler)
 
-teamRouter.post('/', (async (
+teamRouter.post('/', authControl, (async (
   req: Request,
   res: Response,
   _next: NextFunction
@@ -55,7 +56,7 @@ teamRouter.post('/', (async (
   return res.status(201).json(newTeam)
 }) as RequestHandler)
 
-teamRouter.put('/', (async (
+teamRouter.put('/', authControl, (async (
   req: Request,
   res: Response,
   _next: NextFunction
@@ -70,25 +71,12 @@ teamRouter.put('/', (async (
       context: { origin: 'Update Team Router' },
     })
   }
-  const entry = {
-    teamId: updateTeamObject.teamId,
-    name: updateTeamObject.name ? updateTeamObject.name : team.name,
-    shortName: updateTeamObject.shortName
-      ? updateTeamObject.shortName
-      : team.shortName,
-    casualName: updateTeamObject.casualName
-      ? updateTeamObject.casualName
-      : team.casualName,
-    women: updateTeamObject.women ? updateTeamObject.women : team.women,
-    city: updateTeamObject.city ? updateTeamObject.city : team.city,
-    lat: updateTeamObject.lat ? updateTeamObject.lat : team.lat,
-    long: updateTeamObject.long ? updateTeamObject.long : team.long,
-  }
-  const [updateTeam] = await Team.upsert(entry)
+
+  const [updateTeam] = await Team.upsert(updateTeamObject)
   return res.status(201).json(updateTeam)
 }) as RequestHandler)
 
-teamRouter.delete('/:seasonId', (async (
+teamRouter.delete('/:seasonId', authControl, (async (
   req: Request,
   res: Response,
   _next: NextFunction

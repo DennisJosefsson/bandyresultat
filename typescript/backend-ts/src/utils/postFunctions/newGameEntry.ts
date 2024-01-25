@@ -11,6 +11,7 @@ const newGameEntry = (object: unknown, serieId: number): GameAttributes => {
       context: { origin: 'NewGameEntry' },
     })
   }
+
   let homeGoal = undefined
   let awayGoal = undefined
   let played = false
@@ -30,7 +31,8 @@ const newGameEntry = (object: unknown, serieId: number): GameAttributes => {
     halftimeHomeGoal = object.halftimeResult.split('-')[0]
     halftimeAwayGoal = object.halftimeResult.split('-')[1]
   }
-  const gameEntry = gameAttributes.parse({
+
+  const newGameObject = {
     ...object,
     serieId,
     homeGoal,
@@ -38,7 +40,8 @@ const newGameEntry = (object: unknown, serieId: number): GameAttributes => {
     halftimeAwayGoal,
     halftimeHomeGoal,
     played,
-  })
+  }
+  const gameEntry = gameAttributes.parse(newGameObject)
 
   return gameEntry
 

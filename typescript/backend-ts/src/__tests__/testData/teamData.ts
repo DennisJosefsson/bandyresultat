@@ -176,6 +176,22 @@ export const newTeamWithMissingName = {
 
 export const updateTeamData = {
   teamId: 1,
+  name: 'Villa Lidköpings BK',
+  city: 'Lidköping',
+  casualName: 'Villa Lidköping',
+  shortName: 'VLBK',
+  women: false,
   lat: 62,
   long: 15,
+}
+
+export const updateTeamDataWrongId = {
+  teamId: 999,
+  name: 'Villa Lidköpings BK',
+  city: 'Lidköping',
+  casualName: 'Villa Lidköping',
+  shortName: 'VLBK',
+  women: false,
+  lat: 15,
+  long: 62,
 }

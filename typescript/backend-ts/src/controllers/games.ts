@@ -21,6 +21,7 @@ import {
   newTeamGameAwayEntry,
   newTeamGameHomeEntry,
 } from '../utils/postFunctions/newTeamGameEntry.js'
+import authControl from '../utils/middleware/authControl.js'
 
 const gameRouter = Router()
 
@@ -80,6 +81,10 @@ gameRouter.get('/season/:seasonId', (async (
         as: 'awayTeam',
       },
     ],
+    order: [
+      ['group', 'ASC'],
+      ['date', 'ASC'],
+    ],
   })
   if (!games || games.length === 0) {
     throw new NotFoundError({
@@ -92,7 +97,7 @@ gameRouter.get('/season/:seasonId', (async (
   res.status(200).json(games)
 }) as RequestHandler)
 
-gameRouter.post('/', (async (
+gameRouter.post('/', authControl, (async (
   req: Request,
   res: Response,
   _next: NextFunction

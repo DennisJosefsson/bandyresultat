@@ -16,7 +16,7 @@ import Game from './Game.js'
 import TeamGame from './TeamGame.js'
 
 export const serieAttributes = z.object({
-  serieId: z.number().optional(),
+  serieId: z.number(),
   serieGroupCode: z.string(),
   serieCategory: z.string(),
   serieName: z.string(),
@@ -26,7 +26,7 @@ export const serieAttributes = z.object({
   comment: z.string().nullable().optional(),
 })
 
-const serieInput = serieAttributes.omit({ serieId: true })
+export const serieInput = serieAttributes.partial({ serieId: true })
 
 export type SerieAttributes = z.infer<typeof serieAttributes>
 export type SerieInput = z.infer<typeof serieInput>
