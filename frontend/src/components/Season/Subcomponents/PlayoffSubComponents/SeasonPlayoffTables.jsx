@@ -3,11 +3,12 @@ import { useContext } from 'react'
 import { TeamPreferenceContext } from '../../../../contexts/contexts'
 import FinalCard from './FinalCard'
 import SemiQuarterCard from './SemiQuarterCard'
-import EightCard from './EightCard'
+
 import {
   semiColStarts,
   quarterColStarts,
   eightColStarts,
+  eightColStartsFourTeams,
 } from '../../../utilitycomponents/Functions/constants'
 
 const SeasonPlayoffTables = ({
@@ -90,7 +91,7 @@ const SeasonPlayoffTables = ({
           <div className="grid grid-cols-1 gap-2 text-xs md:grid-cols-5 md:text-sm">
             {eightTables.map((group) => {
               return (
-                <EightCard
+                <SemiQuarterCard
                   key={group.group}
                   group={group}
                   colStarts={eightColStarts}
@@ -107,9 +108,10 @@ const SeasonPlayoffTables = ({
           <div className="grid grid-cols-1 gap-2 text-xs md:grid-cols-4 md:text-sm">
             {eightTables.map((group) => {
               return (
-                <EightCard
+                <SemiQuarterCard
                   key={group.group}
                   group={group}
+                  colStarts={eightColStartsFourTeams}
                   playoffGames={playoffGames}
                   setShowPopup={setShowPopup}
                   setGameData={setGameData}
