@@ -24,7 +24,7 @@ seriesRouter.get('/', (async (
     throw new NotFoundError({
       code: 404,
       message: 'No series',
-      logging: true,
+      logging: false,
       context: { origin: 'GET All series Router' },
     })
   }
@@ -52,7 +52,7 @@ seriesRouter.put('/', authControl, (async (
     throw new NotFoundError({
       code: 404,
       message: 'No such serie',
-      logging: true,
+      logging: false,
       context: { origin: 'Update Serie Router' },
     })
   }

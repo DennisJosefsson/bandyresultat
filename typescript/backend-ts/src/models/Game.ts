@@ -19,20 +19,22 @@ export const gameAttributes = z.object({
   gameId: z.number().optional(),
   seasonId: z.number(),
   serieId: z.number(),
-  homeTeamId: z.number(),
-  awayTeamId: z.number(),
+  homeTeamId: z.number().optional().nullable(),
+  awayTeamId: z.number().optional().nullable(),
   result: z
     .string()
     .regex(/^\d{1,2}-\d{1,2}$/)
-    .optional(),
+    .optional()
+    .nullable(),
   halftimeResult: z
     .string()
     .regex(/^\d{1,2}-\d{1,2}$/)
-    .optional(),
-  homeGoal: z.coerce.number().optional(),
-  awayGoal: z.coerce.number().optional(),
-  halftimeHomeGoal: z.coerce.number().optional(),
-  halftimeAwayGoal: z.coerce.number().optional(),
+    .optional()
+    .nullable(),
+  homeGoal: z.coerce.number().optional().nullable(),
+  awayGoal: z.coerce.number().optional().nullable(),
+  halftimeHomeGoal: z.coerce.number().optional().nullable(),
+  halftimeAwayGoal: z.coerce.number().optional().nullable(),
   date: z.string().regex(/^\d{4}-\d{1,2}-\d{1,2}$/),
   round: z.number().nullable().optional(),
   category: z.string(),

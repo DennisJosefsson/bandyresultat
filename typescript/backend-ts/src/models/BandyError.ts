@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { Model, Column, Table } from 'sequelize-typescript'
 
-const errorAttributes = z.object({
+export const errorAttributes = z.object({
   errorId: z.number().optional(),
   date: z.string(),
   name: z.string(),

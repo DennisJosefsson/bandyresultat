@@ -5,32 +5,16 @@ import {
   NextFunction,
   RequestHandler,
 } from 'express'
-import Team from '../models/Team.js'
+import { sequelize } from '../../utils/db.js'
+import Team from '../../models/Team.js'
+import TeamSeason from '../../models/TeamSeason.js'
 import newTeamEntry, {
   updateTeamEntry,
-} from '../utils/postFunctions/newTeamEntry.js'
-import IDCheck from '../utils/postFunctions/IDCheck.js'
-import NotFoundError from '../utils/middleware/errors/NotFoundError.js'
-import authControl from '../utils/middleware/authControl.js'
+} from '../../utils/postFunctions/newTeamEntry.js'
+import IDCheck from '../../utils/postFunctions/IDCheck.js'
+import NotFoundError from '../../utils/middleware/errors/NotFoundError.js'
+import authControl from '../../utils/middleware/authControl.js'
 const teamRouter = Router()
-
-teamRouter.get('/:teamId', (async (
-  req: Request,
-  res: Response,
-  _next: NextFunction
-) => {
-  const teamId = IDCheck.parse(req.params.teamId)
-  const team = await Team.findByPk(teamId)
-  if (!team) {
-    throw new NotFoundError({
-      code: 404,
-      message: 'No such team',
-      logging: true,
-      context: { origin: 'GET Single Team Router' },
-    })
-  }
-  res.status(200).json(team)
-}) as RequestHandler)
 
 teamRouter.get('/', (async (
   _req: Request,
@@ -41,8 +25,30 @@ teamRouter.get('/', (async (
     order: [['teamId', 'asc']],
   })
   if (!teams || teams.length === 0) {
-    throw new Error('No teams')
+    throw new NotFoundError({
+      code: 404,
+      message: 'No teams',
+      logging: false,
+      context: { origin: 'Get All Teams Router' },
+    })
   }
+  res.status(200).json(teams)
+}) as RequestHandler)
+
+teamRouter.get('/latest', (async (_req, res, _next) => {
+  res.locals.origin = 'GET Latest Season router'
+  const women = false
+  const teams = await TeamSeason.findAll({
+    where: {
+      seasonId: [
+        sequelize.literal(
+          `SELECT MAX("season_id") FROM "teamseasons" WHERE "women" = $women`
+        ),
+      ],
+    },
+    bind: { women },
+  })
+
   res.status(200).json(teams)
 }) as RequestHandler)
 
@@ -67,7 +73,7 @@ teamRouter.put('/', authControl, (async (
     throw new NotFoundError({
       code: 404,
       message: 'No such team',
-      logging: true,
+      logging: false,
       context: { origin: 'Update Team Router' },
     })
   }

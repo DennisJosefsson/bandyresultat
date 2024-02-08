@@ -31,7 +31,7 @@ teamSeasonRouter.get('/:id', (async (
     throw new NotFoundError({
       code: 404,
       message: 'No teamseasons',
-      logging: true,
+      logging: false,
       context: { origin: 'Get Single Season Teamseasons' },
     })
   }
@@ -48,7 +48,7 @@ teamSeasonRouter.get('/', (async (
     throw new NotFoundError({
       code: 404,
       message: 'No teamseasons',
-      logging: true,
+      logging: false,
       context: { origin: 'Get All Teamseasons' },
     })
   }

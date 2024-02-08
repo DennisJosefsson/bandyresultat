@@ -33,11 +33,20 @@ describe('Testing Teams router', () => {
       const response = await api.get('/api/teams/2')
 
       expect(response.statusCode).toBe(200)
-      expect(response.body).toMatchObject(teamData[1])
+      expect(response.body.team).toMatchObject(teamData[1])
+      expect(response.body.tabeller).toBeDefined()
     })
     test('Throw 404 for specific team', async () => {
       const response = await api.get('/api/teams/999')
       expect(response.statusCode).toBe(404)
+    })
+    test('Throw 400 for wrong id 1', async () => {
+      const response = await api.get('/api/teams/1999')
+      expect(response.statusCode).toBe(400)
+    })
+    test('Throw 400 for wrong id 2', async () => {
+      const response = await api.get('/api/teams/aaa')
+      expect(response.statusCode).toBe(400)
     })
   })
   describe('POST', () => {
@@ -84,12 +93,12 @@ describe('Testing Teams router', () => {
       expect(response.statusCode).toBe(201)
       expect(response.body).toMatchObject({ lat: 62, long: 15 })
       const teamResponse = await api.get('/api/teams/1')
-      expect(teamResponse.body).not.toMatchObject({
+      expect(teamResponse.body.team).not.toMatchObject({
         teamId: 1,
         lat: 15,
         long: 62,
       })
-      expect(teamResponse.body).toMatchObject({
+      expect(teamResponse.body.team).toMatchObject({
         teamId: 1,
         name: 'Villa Lidköpings BK',
         city: 'Lidköping',

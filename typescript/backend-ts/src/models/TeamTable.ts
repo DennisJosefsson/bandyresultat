@@ -35,7 +35,7 @@ export const teamTableAttributes = z.object({
   updatedAt: z.date().optional(),
 })
 
-const teamTableInput = teamTableAttributes.omit({ tableId: true })
+export const teamTableInput = teamTableAttributes.partial({ tableId: true })
 
 export type TeamTableAttributes = z.infer<typeof teamTableAttributes>
 export type TeamTableInput = z.infer<typeof teamTableInput>

@@ -5,23 +5,24 @@ import {
   NextFunction,
   RequestHandler,
 } from 'express'
-import Season from '../models/Season.js'
+import Season from '../../models/Season.js'
 import newGameEntry, {
   simpleGameData,
-} from '../utils/postFunctions/newGameEntry.js'
-import NotFoundError from '../utils/middleware/errors/NotFoundError.js'
-import seasonIdCheck from '../utils/postFunctions/seasonIdCheck.js'
+} from '../../utils/postFunctions/newGameEntry.js'
+import NotFoundError from '../../utils/middleware/errors/NotFoundError.js'
+import seasonIdCheck from '../../utils/postFunctions/seasonIdCheck.js'
 import { Op } from 'sequelize'
-import Team from '../models/Team.js'
-import TeamGame from '../models/TeamGame.js'
-import Serie from '../models/Serie.js'
-import Game from '../models/Game.js'
-import { parseNumber } from '../utils/postFunctions/parsers.js'
+import Team from '../../models/Team.js'
+import TeamGame from '../../models/TeamGame.js'
+import Serie from '../../models/Serie.js'
+import Game from '../../models/Game.js'
+
+import { parseNumber } from '../../utils/postFunctions/parsers.js'
 import {
   newTeamGameAwayEntry,
   newTeamGameHomeEntry,
-} from '../utils/postFunctions/newTeamGameEntry.js'
-import authControl from '../utils/middleware/authControl.js'
+} from '../../utils/postFunctions/newTeamGameEntry.js'
+import authControl from '../../utils/middleware/authControl.js'
 
 const gameRouter = Router()
 
@@ -138,9 +139,13 @@ gameRouter.post('/', authControl, (async (
     throw new NotFoundError({
       code: 404,
       message: 'No game',
-      logging: true,
+      logging: false,
       context: { origin: 'POST Game Router' },
     })
+  }
+
+  if (!game.homeTeamId || !game.awayTeamId) {
+    res.status(201).json(game)
   }
 
   const gameId = parseNumber(game.gameId)
@@ -169,7 +174,7 @@ gameRouter.post('/', authControl, (async (
       throw new NotFoundError({
         code: 404,
         message: 'No teamgames',
-        logging: true,
+        logging: false,
         context: { origin: 'POST Game Router' },
       })
     }

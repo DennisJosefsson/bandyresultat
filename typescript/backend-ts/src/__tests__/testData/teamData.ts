@@ -151,21 +151,31 @@ export const teamData: TeamAttributes[] = [
     lat: 15,
     long: 62,
   },
+  {
+    teamId: 16,
+    name: 'Sandvikens AIK',
+    city: 'Sandviken',
+    casualName: 'Sandviken',
+    shortName: 'SAIK',
+    women: true,
+    lat: 15,
+    long: 62,
+  },
 ]
 
 export const newTeam: TeamAttributes = {
-  teamId: 16,
-  name: 'Sandvikens AIK',
-  city: 'Sandviken',
-  casualName: 'Sandviken',
-  shortName: 'SAIK',
+  teamId: 17,
+  name: 'Test Team',
+  city: 'Test city',
+  casualName: 'Test',
+  shortName: 'TT',
   women: true,
   lat: 15,
   long: 62,
 }
 
 export const newTeamWithMissingName = {
-  teamId: 17,
+  teamId: 18,
   city: 'Sandviken',
   casualName: 'Sandviken',
   shortName: 'SAIK',

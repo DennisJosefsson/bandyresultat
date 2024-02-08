@@ -37,7 +37,7 @@ seasonRouter.get('/:seasonId', (async (
     throw new NotFoundError({
       code: 404,
       message: 'No such season',
-      logging: true,
+      logging: false,
       context: { origin: 'GET Single Season Router' },
     })
   }
@@ -54,7 +54,7 @@ seasonRouter.get('/', (async (
     throw new NotFoundError({
       code: 404,
       message: 'No seasons',
-      logging: true,
+      logging: false,
       context: { origin: 'GET All Seasons Router' },
     })
   }
@@ -82,7 +82,7 @@ seasonRouter.put('/', authControl, (async (
     throw new NotFoundError({
       code: 404,
       message: 'No such season',
-      logging: true,
+      logging: false,
       context: { origin: 'Update Season Router' },
     })
   }

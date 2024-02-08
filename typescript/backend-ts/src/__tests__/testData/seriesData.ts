@@ -221,25 +221,26 @@ export const seriesData: SerieAttributes[] = [
     bonusPoints: null,
     comment: null,
   },
+
   {
-    serieId: 23,
+    serieId: 24,
     serieGroupCode: 'elitserien',
     serieCategory: 'regular',
     serieName: 'Elitserien',
     serieStructure: [2, 6],
-    seasonId: 3,
+    seasonId: 4,
     bonusPoints: null,
     comment: null,
   },
 ]
 
 export const newSerie = {
-  serieId: 24,
+  serieId: 23,
   serieGroupCode: 'elitserien',
   serieCategory: 'regular',
   serieName: 'Elitserien',
   serieStructure: [2, 6],
-  seasonId: 4,
+  seasonId: 3,
   bonusPoints: null,
   comment: null,
 }

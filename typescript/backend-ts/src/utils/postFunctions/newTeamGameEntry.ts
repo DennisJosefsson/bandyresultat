@@ -51,7 +51,12 @@ export const newTeamGameHomeEntry = (
     teamGameEntry = { ...teamGameEntry, mix: object.mix }
   }
 
-  if ('homeGoal' in object && 'awayGoal' in object) {
+  if (
+    'homeGoal' in object &&
+    'awayGoal' in object &&
+    object['homeGoal'] !== null &&
+    object['awayGoal'] !== null
+  ) {
     const goalsScored = parseNumber(object.homeGoal)
     const goalsConceded = parseNumber(object.awayGoal)
     const goalDifference = goalsScored - goalsConceded
@@ -135,7 +140,12 @@ export const newTeamGameAwayEntry = (
     teamGameEntry = { ...teamGameEntry, mix: object.mix }
   }
 
-  if ('homeGoal' in object && 'awayGoal' in object) {
+  if (
+    'homeGoal' in object &&
+    'awayGoal' in object &&
+    object['homeGoal'] !== null &&
+    object['awayGoal'] !== null
+  ) {
     const goalsScored = parseNumber(object.awayGoal)
     const goalsConceded = parseNumber(object.homeGoal)
     const goalDifference = goalsScored - goalsConceded

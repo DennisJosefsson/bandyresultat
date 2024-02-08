@@ -14,6 +14,7 @@ import { metadataData } from '../testData/metadataData.js'
 import Metadata from '../../models/Metadata.js'
 import { gameData } from '../testData/gameData.js'
 import { teamGameData } from '../testData/teamGameData.js'
+import BandyError from '../../models/BandyError.js'
 
 export const resetDb = async () => {
   await TeamGame.truncate({ cascade: true })
@@ -24,6 +25,7 @@ export const resetDb = async () => {
   await Team.truncate({ cascade: true })
   await Season.truncate({ cascade: true })
   await Serie.truncate({ cascade: true })
+  await BandyError.truncate({ cascade: true })
   await Season.bulkCreate(seasonData)
   await Serie.bulkCreate(seriesData)
   await Team.bulkCreate(teamData)

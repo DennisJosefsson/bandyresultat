@@ -63,7 +63,7 @@ metadataRouter.put('/', authControl, (async (
     throw new NotFoundError({
       code: 404,
       message: 'No such metadata',
-      logging: true,
+      logging: false,
       context: { origin: 'Update metadata Router' },
     })
   }
