@@ -1,10 +1,20 @@
 import { postError } from '../../../requests/errors'
 import { useQuery } from 'react-query'
-import Spinner from './spinner'
+import Spinner from './Spinner'
+import { FallbackProps } from 'react-error-boundary'
 
-const ErrorFallback = ({ error }) => {
+export interface FrontendError {
+  name: string
+  message: string
+  backend: boolean
+  origin: string
+  date: string
+  production: boolean
+}
+
+const ErrorFallback = ({ error }: FallbackProps) => {
   const origin = error.stack.split('\n')[1]
-  const frontendError = {
+  const frontendError: FrontendError = {
     name: error.name,
     message: error.message,
     backend: false,

@@ -1,32 +1,34 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getLinkData } from '../../requests/link'
+import { link, LinkState } from '../types/link'
 
 const Link = () => {
-  const [error, setError] = useState({ success: false, message: 'Väntar...' })
+  const [error, setError] = useState<LinkState>({
+    success: false,
+    message: 'Väntar...',
+  })
   const navigate = useNavigate()
-  const linkName = useParams().linkName
+  const linkName = link.safeParse(useParams().linkName)
 
   useEffect(() => {
-    const getData = async () => {
-      const linkData = await getLinkData(linkName)
-      
+    const getData = async (linkParam: string) => {
+      const linkData = await getLinkData(linkParam)
+
       if (!linkData.success) {
         setError(linkData)
       } else if (linkData.success && linkData.origin === 'search') {
         setError({ success: false, message: 'Felaktig länk, fel LänkId.' })
       } else if (linkData.success && linkData.origin === 'compare') {
-        setError({ sucess: linkData.success, message: linkData.message })
+        setError({ success: linkData.success, message: linkData.message })
         navigate('/teams', { state: { compObject: linkData.searchString } })
       }
     }
 
-    const regex = /link\d{7,}/gm
-
-    if (!linkName.match(regex)) {
-      setError({ success: false, message: 'Felaktig länk' })
+    if (!linkName.success) {
+      setError({ success: false, message: 'Felaktig länk, fel LänkId.' })
     } else {
-      getData()
+      getData(linkName.data)
     }
   }, [linkName, navigate])
 
