@@ -45,13 +45,13 @@ const Playoff = ({ seasonId }) => {
     )
   }
 
-  if (playoffGames.length === 0) {
-    return (
-      <div className="mx-auto mt-4 grid place-items-center font-inter font-bold text-[#011d29]">
-        Inga slutspelsmatcher än.
-      </div>
-    )
-  }
+  // if (playoffGames.length === 0) {
+  //   return (
+  //     <div className="mx-auto mt-4 grid place-items-center font-inter font-bold text-[#011d29]">
+  //       Inga slutspelsmatcher än.
+  //     </div>
+  //   )
+  // }
 
   return (
     <div>
@@ -62,6 +62,8 @@ const Playoff = ({ seasonId }) => {
           final={final}
           setGameData={setGameData}
           setShowPopup={setShowPopup}
+          women={women}
+          seasonId={seasonId}
         />
       )}
       {showPopup && (

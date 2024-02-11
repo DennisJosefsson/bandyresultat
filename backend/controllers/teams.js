@@ -394,7 +394,7 @@ where season_id >= 25),
 
 playoff_seasons as (
 select distinct season_id from teamgames
-where team = $teamId and category in ('quarter', 'semi', 'final')
+where team = $teamId and playoff = true
 ),
 
 selected_rows as (select 
@@ -429,7 +429,7 @@ order by streak_length desc, start_year asc;`,
   const playoffCount = await sequelize.query(
     `select count(distinct season_id) as playoff_count
 from teamgames
-where team = $teamId and "category" = any(array['quarter', 'semi', 'final']) and season_id >= 25;`,
+where team = $teamId and playoff = true and season_id >= 25;`,
     { bind: { teamId: req.params.teamId }, type: QueryTypes.SELECT }
   )
 

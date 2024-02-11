@@ -116,6 +116,11 @@ export const quarterColStarts = {
   Q4: 'md:col-start-4',
 }
 
+export const quarterColStartsTwoQuarter = {
+  Q1: 'md:col-start-2',
+  Q2: 'md:col-start-4',
+}
+
 export const eightColStarts = {
   E1: 'md:col-start-2',
   E2: 'md:col-start-4',

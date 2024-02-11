@@ -261,7 +261,7 @@ group by casual_name,team;
   select count(distinct season_id) as playoffs, team, casual_name
 from teamgames
 join teams on teamgames.team = teams.team_id
-where team = any($team_array) and category = any(array['quarter','semi','final']) and season_id >= 25
+where team = any($team_array) and playoff = true and season_id >= 25
 group by casual_name, team;
   `,
     { bind: { team_array: teamArray }, type: QueryTypes.SELECT }
@@ -283,7 +283,7 @@ group by casual_name, team;
   select count(distinct season_id) as playoffs, team, casual_name
 from teamgames
 join teams on teamgames.team = teams.team_id
-where team = any($team_array) and category = any(array['quarter','semi','final'])
+where team = any($team_array) and playoff = true
 group by casual_name, team;
   `,
     { bind: { team_array: teamArray }, type: QueryTypes.SELECT }
@@ -388,7 +388,7 @@ router.get('/:seasonId', async (req, res, next) => {
   }
 
   const playoffGames = await Game.findAll({
-    where: { playoff: true },
+    where: { playoff: true, category: ['eight', 'quarter', 'semi', 'final'] },
     include: [
       {
         model: Team,

@@ -2983,7 +2983,7 @@ order by count(distinct season_id) desc;
   select count(distinct season_id) as playoffs, team, casual_name
 from teamgames
 join teams on teamgames.team = teams.team_id
-where teamgames.women = true and category = any(array['quarter','semi','final'])
+where teamgames.women = true and playoff = true
 group by casual_name, team
 order by count(distinct season_id) desc
 limit 10;
@@ -3035,7 +3035,7 @@ order by count(distinct season_id) desc;
   select count(distinct season_id) as playoffs, team, casual_name
 from teamgames
 join teams on teamgames.team = teams.team_id
-where teamgames.women = false and category = any(array['quarter','semi','final']) and season_id >= 25
+where teamgames.women = false and playoff = true and season_id >= 25
 group by casual_name, team
 order by count(distinct season_id) desc
 limit 10;
@@ -3061,7 +3061,7 @@ limit 10;
   select count(distinct season_id) as playoffs, team, casual_name
 from teamgames
 join teams on teamgames.team = teams.team_id
-where teamgames.women = false and category = any(array['quarter','semi','final'])
+where teamgames.women = false and playoff = true
 group by casual_name, team
 order by count(distinct season_id) desc
 limit 10;
