@@ -19,16 +19,25 @@ import FilterComponent from './Subcomponents/FilterComponent'
 
 dayjs.locale('sv')
 
-const Games = ({ seasonId }) => {
-  const { women } = useContext(GenderContext)
-  const { user } = useContext(UserContext)
+const Games = ({ seasonId }: { seasonId: number }) => {
+  const genderContext = useContext(GenderContext)
+  if (!genderContext) {
+    throw new Error('No gender context')
+  }
+  const { women } = genderContext
 
-  const topRef = useRef(null)
-  const bottomRef = useRef(null)
+  const userContext = useContext(UserContext)
+  if (!userContext) {
+    throw new Error('No user context')
+  }
+  const { user } = userContext
 
-  const [teamFilter, setTeamFilter] = useState('')
+  const topRef = useRef<HTMLDivElement>(null)
+  const bottomRef = useRef<HTMLDivElement>(null)
 
-  const [showAddGameModal, setShowAddGameModal] = useState(false)
+  const [teamFilter, setTeamFilter] = useState<string>('')
+
+  const [showAddGameModal, setShowAddGameModal] = useState<boolean>(false)
 
   const [gameData, setGameData] = useState(null)
 
@@ -78,7 +87,7 @@ const Games = ({ seasonId }) => {
 
   if (!seasonId.toString().match('^[0-9]{4}$')) {
     return (
-      <div className="font-inter mx-auto grid h-screen place-items-center text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         Kolla länken, angivna årtalet är felaktigt.
       </div>
     )
@@ -161,7 +170,7 @@ const Games = ({ seasonId }) => {
 
   if (women && seasonId < 1973) {
     return (
-      <div className="font-inter mx-auto mt-4 grid place-items-center py-5 text-sm font-bold text-[#011d29] md:text-base">
+      <div className="mx-auto mt-4 grid place-items-center py-5 font-inter text-sm font-bold text-[#011d29] md:text-base">
         <p className="mx-10 text-center">
           Första säsongen för damernas högsta serie var{' '}
           <Link to="/season/1973" className="font-bold">
@@ -175,14 +184,14 @@ const Games = ({ seasonId }) => {
 
   return (
     <div
-      className="font-inter mx-auto flex min-h-screen max-w-7xl flex-col text-[#011d29]"
+      className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]"
       ref={topRef}
     >
       <FilterComponent setTeamFilter={setTeamFilter} teamFilter={teamFilter} />
 
       {seasonId === 2025 && (
         <div>
-          <div className="font-inter mx-auto grid place-items-center text-[#011d29]">
+          <div className="mx-auto grid place-items-center font-inter text-[#011d29]">
             <p>Inga matcher än.</p>
           </div>
           <div>

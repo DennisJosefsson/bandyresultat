@@ -1,13 +1,29 @@
 import { sortOrder } from './constants'
+import { GameObjectType } from '../../types/games/games'
+import { TableObjectType } from '../../types/tables/tables'
 
-export const gameSortFunction = (gamesArray, played = false) => {
+type SortedGameGroups = {
+  [key:string]: GameObjectType[]
+}
+
+type SortedDates = {
+  [key:string]: GameObjectType[]
+}
+
+type SortedTableGroups = {
+  [key:string]: TableObjectType[]
+}
+
+
+
+export const gameSortFunction = (gamesArray: GameObjectType[], played = false) => {
   const sortGroups = gamesArray.reduce((groups, game) => {
     if (!groups[game.group]) {
       groups[game.group] = []
     }
     groups[game.group].push(game)
     return groups
-  }, {})
+  }, {} as SortedGameGroups)
 
   const sortedGames = Object.keys(sortGroups).map((group) => {
     return {
@@ -23,7 +39,7 @@ export const gameSortFunction = (gamesArray, played = false) => {
       }
       dates[game.date].push(game)
       return dates
-    }, {})
+    }, {} as SortedDates)
 
     const sortedGameDates = Object.keys(sortDates).map((date) => {
       return {
@@ -40,14 +56,14 @@ export const gameSortFunction = (gamesArray, played = false) => {
   return sortGroupsAndDates
 }
 
-export const tableSortFunction = (gamesArray) => {
-  const groupArray = gamesArray.reduce((groups, table) => {
+export const tableSortFunction = (tableArray: TableObjectType[]) => {
+  const groupArray = tableArray.reduce((groups, table) => {
     if (!groups[table.group]) {
       groups[table.group] = []
     }
     groups[table.group].push(table)
     return groups
-  }, {})
+  }, {} as SortedTableGroups)
 
   const sortedTables = Object.keys(groupArray).map((group) => {
     return {
@@ -59,10 +75,10 @@ export const tableSortFunction = (gamesArray) => {
   return sortedTables.sort((a, b) => {
     if (sortOrder.indexOf(a.group) > sortOrder.indexOf(b.group)) {
       return 1
-    }
-
-    if (sortOrder.indexOf(a.group) < sortOrder.indexOf(b.group)) {
+    } else if (sortOrder.indexOf(a.group) < sortOrder.indexOf(b.group)) {
       return -1
+    } else {
+      return 0
     }
   })
 }
@@ -86,15 +102,15 @@ export const compareSortFunction = (compareArray) => {
   return sortedCategories.sort((a, b) => {
     if (sortOrder.indexOf(a.category) > sortOrder.indexOf(b.category)) {
       return 1
-    }
-
-    if (sortOrder.indexOf(a.category) < sortOrder.indexOf(b.category)) {
+    } else if (sortOrder.indexOf(a.category) < sortOrder.indexOf(b.category)) {
       return -1
+    } else {
+      return 0
     }
   })
 }
 
-export const roundForRoundSortFunction = (gamesArray) => {
+export const roundForRoundSortFunction = (gamesArray: GameObjectType[]) => {
   const sortTeams = gamesArray.reduce((teams, game) => {
     if (!teams[game.casual_name]) {
       teams[game.casual_name] = []

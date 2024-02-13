@@ -1,6 +1,12 @@
-import Spinner from './spinner'
+import Spinner from './Spinner'
 
-const LoadingOrError = ({ isLoading, error }) => {
+const LoadingOrError = ({
+  isLoading,
+  error,
+}: {
+  isLoading: boolean
+  error: unknown
+}) => {
   if (isLoading) {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">

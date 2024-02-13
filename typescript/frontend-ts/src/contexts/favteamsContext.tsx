@@ -1,8 +1,8 @@
-import { useReducer, useEffect } from 'react'
+import { useReducer, useEffect, ReactNode } from 'react'
 import { TeamPreferenceContext } from './contexts'
 import { favTeamsReducer, initializer } from '../reducers/favteamsReducer'
 
-const FavTeamsContextProvider = ({ children }) => {
+const FavTeamsContextProvider = ({ children }: { children: ReactNode }) => {
   const [favTeams, favTeamsDispatch] = useReducer(
     favTeamsReducer,
     [],

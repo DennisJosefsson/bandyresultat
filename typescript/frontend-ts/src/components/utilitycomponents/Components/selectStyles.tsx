@@ -1,4 +1,6 @@
-export const selectStyles = {
+import { StylesConfig } from 'react-select'
+
+export const selectStyles: StylesConfig = {
   menu: (defaultStyles) => ({
     ...defaultStyles,
     maxWidth: '288px',

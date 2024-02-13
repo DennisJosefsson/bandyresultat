@@ -5,6 +5,7 @@ import { postGame } from '../../../requests/games'
 import { useQuery, useQueryClient } from 'react-query'
 import Select from 'react-select'
 import { selectStyles } from '../../utilitycomponents/Components/selectStyles'
+import { gameObject, GameObjectType } from '../../types/games/games'
 
 const ErrorComponent = ({ errors }) => {
   if (Object.keys(errors).length === 0) {
@@ -24,28 +25,34 @@ const ErrorComponent = ({ errors }) => {
   )
 }
 
-const initAdd = (initData) => {
+const initAdd = ({
+  seasonId,
+  women,
+}: {
+  seasonId: number
+  women: boolean
+}): GameObjectType => {
   return {
-    seasonId: initData.seasonId,
-    homeTeamId: '',
-    awayTeamId: '',
+    seasonId: seasonId,
+    homeTeamId: undefined,
+    awayTeamId: undefined,
     result: '',
     halftimeResult: '',
-    homeGoal: '',
-    awayGoal: '',
-    halftimeHomeGoal: '',
-    halftimeAwayGoal: '',
+    homeGoal: undefined,
+    awayGoal: undefined,
+    halftimeHomeGoal: undefined,
+    halftimeAwayGoal: undefined,
     date: '',
     category: 'regular',
     group: 'elitserien',
     playoff: false,
     extraTime: false,
     penalties: false,
-    women: initData.women,
+    women: women,
   }
 }
 
-const initEdit = (gameData) => {
+const initEdit = (gameData): GameObjectType => {
   return {
     gameId: gameData.gameId,
     seasonId: gameData.seasonId,

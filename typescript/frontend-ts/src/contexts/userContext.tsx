@@ -1,7 +1,7 @@
-import { useReducer } from 'react'
-import { UserContext } from './contexts'
+import { ReactNode, useReducer } from 'react'
+import { UserContext, UserType, UserActionType } from './contexts'
 
-const userReducer = (state, action) => {
+const userReducer = (state: UserType, action: UserActionType) => {
   switch (action.type) {
     case 'LOGIN':
       return (state = true)
@@ -12,7 +12,7 @@ const userReducer = (state, action) => {
   }
 }
 
-const UserContextProvider = ({ children }) => {
+const UserContextProvider = ({ children }: { children: ReactNode }) => {
   const [user, dispatch] = useReducer(userReducer, false)
 
   return (

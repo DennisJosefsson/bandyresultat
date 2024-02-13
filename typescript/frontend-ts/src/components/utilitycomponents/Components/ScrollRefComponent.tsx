@@ -1,7 +1,19 @@
-const ScrollRefComponent = ({ bottomRef, topRef }) => {
-  const scrollTo = (event, ref) => {
+import { FormEvent, RefObject } from 'react'
+
+const ScrollRefComponent = ({
+  bottomRef,
+  topRef,
+}: {
+  bottomRef: RefObject<HTMLDivElement>
+  topRef: RefObject<HTMLDivElement>
+}) => {
+  const scrollTo = (event: FormEvent, ref: RefObject<HTMLDivElement>) => {
     event.preventDefault()
-    window.scrollTo(0, ref.current.offsetTop)
+    if (ref && 'current' in ref && ref.current) {
+      if (ref.current.offsetTop) {
+        window.scrollTo(0, ref.current.offsetTop)
+      }
+    }
   }
   return (
     <div className="sticky bottom-0 z-20 flex flex-row items-center justify-center gap-2 bg-[#f4f5f5]">

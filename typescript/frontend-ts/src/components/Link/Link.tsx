@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getLinkData } from '../../requests/link'
-import { link, LinkState } from '../types/link'
+import { link, LinkState } from '../types/link/link'
 
 const Link = () => {
   const [error, setError] = useState<LinkState>({

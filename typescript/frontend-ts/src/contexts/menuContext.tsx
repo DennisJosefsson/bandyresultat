@@ -1,7 +1,7 @@
-import { useReducer } from 'react'
-import { MenuContext } from './contexts'
+import { ReactNode, useReducer } from 'react'
+import { MenuContext, MenuActionType, MenuType } from './contexts'
 
-const menuReducer = (state, action) => {
+const menuReducer = (state: MenuType, action: MenuActionType) => {
   switch (action.type) {
     case 'TOGGLE':
       return !state
@@ -12,7 +12,7 @@ const menuReducer = (state, action) => {
   }
 }
 
-const MenuContextProvider = ({ children }) => {
+const MenuContextProvider = ({ children }: { children: ReactNode }) => {
   const [open, dispatch] = useReducer(menuReducer, false)
 
   return (

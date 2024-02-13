@@ -1,4 +1,11 @@
-export const ButtonComponent = ({ children, clickFunctions }) => {
+import { ReactNode } from 'react'
+
+type ButtonProps = {
+  children: ReactNode
+  clickFunctions: () => void
+}
+
+export const ButtonComponent = ({ children, clickFunctions }: ButtonProps) => {
   return (
     <div
       onClick={clickFunctions}
@@ -8,7 +15,10 @@ export const ButtonComponent = ({ children, clickFunctions }) => {
     </div>
   )
 }
-export const HiddenButtonComponent = ({ children, clickFunctions }) => {
+export const HiddenButtonComponent = ({
+  children,
+  clickFunctions,
+}: ButtonProps) => {
   return (
     <div
       onClick={clickFunctions}
