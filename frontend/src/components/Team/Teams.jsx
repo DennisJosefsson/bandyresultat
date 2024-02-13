@@ -163,6 +163,7 @@ const Teams = () => {
   }
 
   const teams = data
+    .filter((team) => team.teamId !== 176)
     .filter((team) => team.women === women)
     .filter((team) =>
       team.name.toLowerCase().includes(teamFilter.toLowerCase()),

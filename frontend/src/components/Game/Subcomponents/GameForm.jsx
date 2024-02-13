@@ -91,6 +91,8 @@ const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
     return { value: team.teamId, label: team.name }
   })
 
+  teamSelection.push({ value: 176, label: 'Ej Bestämt' })
+
   const groupSelection = [
     { value: 'elitserien', label: 'Elitserien' },
     { value: 'KvalA', label: 'Kvalgrupp A' },

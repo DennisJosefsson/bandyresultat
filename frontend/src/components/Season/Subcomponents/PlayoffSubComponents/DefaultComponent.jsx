@@ -13,22 +13,26 @@ const DefaultComponent = ({
     ? `${colStarts[group.group]} cursor-pointer rounded bg-white p-2 shadow-md`
     : 'cursor-pointer rounded bg-white p-2 shadow-md md:col-start-4 md:odd:col-start-2'
 
-  const resultString =
-    tables.length === 0
-      ? '0-0'
-      : `${
-          tables
-            .filter((tableGroup) => tableGroup.group === group.group)[0]
-            .tables.find(
-              (team) => team.team === group.dates[0].games[0].homeTeamId,
-            ).totalWins
-        }-${
-          tables
-            .filter((tableGroup) => tableGroup.group === group.group)[0]
-            .tables.find(
-              (team) => team.team === group.dates[0].games[0].awayTeamId,
-            ).totalWins
-        }`
+  let resultString
+  if (tables.length === 0) {
+    resultString = '0-0'
+  } else if (
+    tables.find((tableGroup) => tableGroup.group === group.group).tables
+  ) {
+    resultString = `${
+      tables
+        .filter((tableGroup) => tableGroup.group === group.group)[0]
+        .tables.find((team) => team.team === group.dates[0].games[0].homeTeamId)
+        .totalWins
+    }-${
+      tables
+        .filter((tableGroup) => tableGroup.group === group.group)[0]
+        .tables.find((team) => team.team === group.dates[0].games[0].awayTeamId)
+        .totalWins
+    }`
+  } else {
+    resultString = ''
+  }
 
   return (
     <div
