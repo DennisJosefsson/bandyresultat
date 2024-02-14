@@ -3,8 +3,8 @@ dotenv.config()
 import { z } from 'zod'
 import jwt, { Secret } from 'jsonwebtoken'
 import { Request, Response, NextFunction } from 'express'
-import { userForAdmin } from '../../models/User'
-import LoginError from './errors/LoginError'
+import { userForAdmin } from '../../models/User.js'
+import LoginError from './errors/LoginError.js'
 
 const checkString = z.string()
 

@@ -5,9 +5,9 @@ import {
   NextFunction,
   RequestHandler,
 } from 'express'
-import { link, resultObject } from '../utils/postFunctions/linkNameCheck'
-import Link from '../models/Link'
-import NotFoundError from '../utils/middleware/errors/NotFoundError'
+import { link, resultObject } from '../utils/postFunctions/linkNameCheck.js'
+import Link from '../models/Link.js'
+import NotFoundError from '../utils/middleware/errors/NotFoundError.js'
 const linkRouter = Router()
 
 linkRouter.get('/:linkName', (async (

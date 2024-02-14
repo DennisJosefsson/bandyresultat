@@ -7,10 +7,10 @@ import {
 } from 'express'
 import { sequelize } from '../../utils/db.js'
 import { QueryTypes, Op } from 'sequelize'
-import TeamGame from '../../models/TeamGame'
-import Team from '../../models/Team'
-import Season from '../../models/Season'
-import { streakRequest } from '../../utils/postFunctions/gameRequest'
+import TeamGame from '../../models/TeamGame.js'
+import Team from '../../models/Team.js'
+import Season from '../../models/Season.js'
+import { streakRequest } from '../../utils/postFunctions/gameRequest.js'
 
 const streakRouter = Router()
 

@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
 import { CustomError } from './CustomError.js'
 import { ZodError } from 'zod'
-import { JsonWebTokenError } from 'jsonwebtoken'
+import jsonwebtoken from 'jsonwebtoken'
 import BandyError from '../../../models/BandyError.js'
+const { JsonWebTokenError } = jsonwebtoken
 
 export const errorHandler = (
   error: Error,

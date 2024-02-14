@@ -8,12 +8,12 @@ import {
 import { Op, QueryTypes } from 'sequelize'
 import { sequelize } from '../../utils/db.js'
 
-import Season from '../../models/Season'
-import TeamGame from '../../models/TeamGame'
+import Season from '../../models/Season.js'
+import TeamGame from '../../models/TeamGame.js'
 import Game from '../../models/Game.js'
 
-import NotFoundError from '../../utils/middleware/errors/NotFoundError'
-import seasonIdCheck from '../../utils/postFunctions/seasonIdCheck'
+import NotFoundError from '../../utils/middleware/errors/NotFoundError.js'
+import seasonIdCheck from '../../utils/postFunctions/seasonIdCheck.js'
 const statsRouter = Router()
 
 statsRouter.get('/stats/:seasonId', (async (

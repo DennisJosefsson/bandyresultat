@@ -7,13 +7,13 @@ import {
   NextFunction,
   RequestHandler,
 } from 'express'
-import User, { userFromLoginForm } from '../models/User'
+import User, { userFromLoginForm } from '../models/User.js'
 import { compare } from 'bcrypt-ts'
 import jwt, { Secret } from 'jsonwebtoken'
 import { z } from 'zod'
 import dayjs from 'dayjs'
-import LoginError from '../utils/middleware/errors/LoginError'
-import NotFoundError from '../utils/middleware/errors/NotFoundError'
+import LoginError from '../utils/middleware/errors/LoginError.js'
+import NotFoundError from '../utils/middleware/errors/NotFoundError.js'
 
 const checkString = z.string()
 
