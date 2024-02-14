@@ -1,4 +1,6 @@
-const copyText = async (url) => {
+import { Dispatch, SetStateAction } from 'react'
+
+const copyText = async (url: string) => {
   if ('clipboard' in navigator) {
     return await navigator.clipboard.writeText(url)
   } else {
@@ -6,7 +8,11 @@ const copyText = async (url) => {
   }
 }
 
-export const handleCopyClick = (event, compareLink, setIsCopied) => {
+export const handleCopyClick = (
+  event: Event,
+  compareLink: string,
+  setIsCopied: Dispatch<SetStateAction<boolean>>,
+) => {
   event.preventDefault()
   copyText(compareLink)
     .then(() => {

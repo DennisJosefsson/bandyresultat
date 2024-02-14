@@ -1,7 +1,37 @@
+import { TeamPreference } from '../../../../contexts/contexts'
+import { GameObjectType } from '../../../types/games/games'
+import { SerieAttributes } from '../../../types/series/series'
 import {
   SmallArrowDownRight,
   SmallArrowUpRight,
 } from '../../../utilitycomponents/Components/icons'
+
+type DateArrayObject = {
+  date: string
+  games: GameObjectType[]
+  table: {
+    teamId: number
+    casualName: string
+    table: {
+      position: number
+      games: number
+      wins: number
+      draws: number
+      lost: number
+      scoredGoals: number
+      concededGoals: number
+      points: number
+    }
+  }[]
+}
+
+type AnimationTableProps = {
+  dateArray: DateArrayObject[]
+  round: number
+  seriesArray: SerieAttributes[]
+  favTeams: TeamPreference
+  group: string | null
+}
 
 const AnimationTable = ({
   dateArray,
@@ -9,15 +39,25 @@ const AnimationTable = ({
   seriesArray,
   favTeams,
   group,
-  seriesInfo,
-}) => {
-  const displayArrow = (teamId) => {
-    const prevPos = dateArray[round - 1].table.find(
+}: AnimationTableProps) => {
+  const displayArrow = (teamId: number) => {
+    const prevPosObject = dateArray[round - 1].table.find(
       (team) => team.teamId === teamId,
-    ).position
-    const currPos = dateArray[round].table.find(
+    )
+    const currPosObject = dateArray[round].table.find(
       (team) => team.teamId === teamId,
-    ).position
+    )
+
+    if (
+      !prevPosObject ||
+      !currPosObject ||
+      !prevPosObject.table ||
+      !currPosObject.table
+    ) {
+      throw new Error('Missing position objects')
+    }
+    const prevPos = prevPosObject.table.position
+    const currPos = currPosObject.table.position
 
     if (prevPos === currPos) {
       return ''
@@ -27,6 +67,10 @@ const AnimationTable = ({
       return <SmallArrowUpRight />
     }
   }
+
+  const serieObject = seriesArray.find(
+    (serie) => serie.serieGroupCode === group,
+  )
 
   return (
     <div className="mx-2 mt-4 xl:mx-0">
@@ -52,16 +96,14 @@ const AnimationTable = ({
               <tr
                 key={`${team.teamId}-${index}`}
                 className={`season ${
-                  seriesArray
-                    .find((serie) => serie.serieGroupCode === group)
-                    .serieStructure?.includes(index + 1)
+                  serieObject?.serieStructure?.includes(index + 1)
                     ? 'border-b-2 border-black'
                     : null
                 } ${
                   favTeams.includes(team.teamId) ? 'font-bold' : null
                 } odd:bg-slate-300`}
               >
-                <td className="pos">{team.position}</td>
+                <td className="pos">{team.table.position}</td>
                 <td className="team">{team.casualName}</td>
                 <td className="text-slate-100">
                   {round > 0 &&
@@ -83,10 +125,8 @@ const AnimationTable = ({
           })}
         </tbody>
       </table>
-      {seriesInfo.find((serie) => serie.serieGroupCode === group).comment && (
-        <p className="bg-white p-1 text-xs font-bold">
-          {seriesInfo.find((serie) => serie.serieGroupCode === group).comment}
-        </p>
+      {serieObject?.comment && (
+        <p className="bg-white p-1 text-xs font-bold">{serieObject?.comment}</p>
       )}
     </div>
   )

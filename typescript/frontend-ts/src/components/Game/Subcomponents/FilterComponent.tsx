@@ -1,5 +1,13 @@
-const FilterComponent = ({ teamFilter, setTeamFilter }) => {
-  const handleKeyDown = (event) => {
+import { Dispatch, SetStateAction, KeyboardEvent } from 'react'
+
+const FilterComponent = ({
+  teamFilter,
+  setTeamFilter,
+}: {
+  teamFilter: string
+  setTeamFilter: Dispatch<SetStateAction<string>>
+}) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault()
     }

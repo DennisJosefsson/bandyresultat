@@ -1,13 +1,32 @@
-import { useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { Dispatch, SetStateAction, useState } from 'react'
+import {
+  useForm,
+  Controller,
+  FieldErrors,
+  SubmitHandler,
+} from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { postGame } from '../../../requests/games'
 import { useQuery, useQueryClient } from 'react-query'
 import Select from 'react-select'
 import { selectStyles } from '../../utilitycomponents/Components/selectStyles'
-import { gameObject, GameObjectType } from '../../types/games/games'
+import {
+  inputGameObject,
+  InputGameObjectType,
+  GameObjectType,
+} from '../../types/games/games'
+import { SeasonObjectType } from '../../types/season/seasons'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-const ErrorComponent = ({ errors }) => {
+type GameFormPropTypes = {
+  season: SeasonObjectType[]
+  gameData: GameObjectType | null
+  setShowModal: Dispatch<SetStateAction<boolean>>
+  setGameData: Dispatch<SetStateAction<GameObjectType | null>>
+  women: boolean
+}
+
+const ErrorComponent = ({ errors }: { errors: FieldErrors }) => {
   if (Object.keys(errors).length === 0) {
     return null
   }
@@ -31,17 +50,13 @@ const initAdd = ({
 }: {
   seasonId: number
   women: boolean
-}): GameObjectType => {
+}): InputGameObjectType => {
   return {
     seasonId: seasonId,
     homeTeamId: undefined,
     awayTeamId: undefined,
     result: '',
     halftimeResult: '',
-    homeGoal: undefined,
-    awayGoal: undefined,
-    halftimeHomeGoal: undefined,
-    halftimeAwayGoal: undefined,
     date: '',
     category: 'regular',
     group: 'elitserien',
@@ -52,7 +67,10 @@ const initAdd = ({
   }
 }
 
-const initEdit = (gameData): GameObjectType => {
+const initEdit = (gameData: GameObjectType): InputGameObjectType => {
+  if (!gameData.homeTeam || !gameData.awayTeam) {
+    throw new Error('Missing game data')
+  }
   return {
     gameId: gameData.gameId,
     seasonId: gameData.seasonId,
@@ -66,10 +84,6 @@ const initEdit = (gameData): GameObjectType => {
     },
     result: gameData.result,
     halftimeResult: gameData.halftimeResult,
-    homeGoal: gameData.homeGoal,
-    awayGoal: gameData.awayGoal,
-    halftimeHomeGoal: gameData.halftimeHomeGoal,
-    halftimeAwayGoal: gameData.halftimeAwayGoal,
     date: gameData.date,
     category: gameData.category,
     group: gameData.group,
@@ -80,11 +94,17 @@ const initEdit = (gameData): GameObjectType => {
   }
 }
 
-const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
-  const [newGameData, setNewGameData] = useState(null)
-  const [playoff, setPlayoff] = useState(false)
-  const [extraTime, setExtraTime] = useState(false)
-  const [penalties, setPenalties] = useState(false)
+const GameForm = ({
+  season,
+  setShowModal,
+  gameData,
+  setGameData,
+  women,
+}: GameFormPropTypes) => {
+  const [newGameData, setNewGameData] = useState<GameObjectType | null>(null)
+  const [playoff, setPlayoff] = useState<boolean>(false)
+  const [extraTime, setExtraTime] = useState<boolean>(false)
+  const [penalties, setPenalties] = useState<boolean>(false)
   const client = useQueryClient()
   const { data } = useQuery({
     queryKey: ['game', newGameData],
@@ -120,16 +140,30 @@ const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<InputGameObjectType>({
     defaultValues: gameData
       ? initEdit(gameData)
       : initAdd({ seasonId: season[0].seasonId, women }),
     criteriaMode: 'all',
     mode: 'onBlur',
+    resolver: zodResolver(inputGameObject),
   })
 
-  const onSubmit = (formData) => {
-    setNewGameData(formData)
+  const onSubmit: SubmitHandler<InputGameObjectType> = (formData) => {
+    if (
+      !formData.homeTeamId ||
+      !formData.homeTeamId.value ||
+      !formData.awayTeamId ||
+      !formData.awayTeamId.value
+    ) {
+      throw new Error('Missing teamId formData')
+    }
+    const gameData = {
+      ...formData,
+      homeTeamId: formData.homeTeamId.value,
+      awayTeamId: formData.awayTeamId.value,
+    }
+    setNewGameData(gameData)
     setTimeout(() => {
       setShowModal(false)
     }, 3000)
@@ -212,21 +246,7 @@ const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
                           <input
                             className="w-24 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
                             type="text"
-                            {...register('result', {
-                              minLength: {
-                                value: 3,
-                                message: 'Fel format på resultat',
-                              },
-                              maxLength: {
-                                value: 5,
-                                message: 'Fel format på resultat',
-                              },
-                              pattern: {
-                                value: '/[0-9]{1,2}-[0-9]{1,2}',
-                                message:
-                                  'Resultatet måste vara i formatet n-n, t.ex. 2-1.',
-                              },
-                            })}
+                            {...register('result')}
                           />
                         </div>
                       </label>
@@ -241,21 +261,7 @@ const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
                           <input
                             className="w-24 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
                             type="text"
-                            {...register('halftimeResult', {
-                              minLength: {
-                                value: 3,
-                                message: 'Fel format på halvtidsresultat',
-                              },
-                              maxLength: {
-                                value: 5,
-                                message: 'Fel format på halvtidsresultat',
-                              },
-                              pattern: {
-                                value: '/[0-9]{1,2}-[0-9]{1,2}',
-                                message:
-                                  'Halvtidsresultatet måste vara i formatet n-n, t.ex. 2-1.',
-                              },
-                            })}
+                            {...register('halftimeResult')}
                           />
                         </div>
                       </label>
@@ -270,21 +276,7 @@ const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
                           <input
                             className="w-32 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
                             type="text"
-                            {...register('date', {
-                              minLength: {
-                                value: 10,
-                                message: 'Fel format på datumet',
-                              },
-                              maxLength: {
-                                value: 10,
-                                message: 'Fel format på datumet',
-                              },
-                              pattern: {
-                                value: '/[0-9]{4}-[0-9]{2}-[0-9]{2}',
-                                message:
-                                  'Datumet måste vara i formatet ÅÅÅÅ-MM-DD, t.ex. 1978-03-16.',
-                              },
-                            })}
+                            {...register('date')}
                           />
                         </div>
                       </label>
@@ -407,7 +399,6 @@ const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
                           <input
                             className="text-gray-900 focus:ring-gray-500"
                             type="checkbox"
-                            name="playoff"
                             {...register('playoff')}
                             checked={playoff}
                             onChange={(event) => {
@@ -432,7 +423,6 @@ const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
                           <input
                             className="text-gray-900 focus:ring-gray-500"
                             type="checkbox"
-                            name="extraTime"
                             {...register('extraTime')}
                             checked={extraTime}
                             onChange={(event) => {
@@ -458,7 +448,6 @@ const GameForm = ({ season, setShowModal, gameData, setGameData, women }) => {
                           <input
                             className="text-gray-900 focus:ring-gray-500"
                             type="checkbox"
-                            name="penalties"
                             {...register('penalties')}
                             checked={penalties}
                             onChange={(event) => {

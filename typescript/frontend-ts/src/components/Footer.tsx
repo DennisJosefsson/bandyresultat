@@ -1,15 +1,20 @@
 import { getLogin, logout } from '../requests/login'
-import { useContext, useState } from 'react'
+import { SyntheticEvent, useContext, useState } from 'react'
 import { UserContext } from '../contexts/contexts'
 import LoginForm from './LoginForm/LoginForm'
 
 const Footer = () => {
-  const { user, dispatch } = useContext(UserContext)
-  const [userName, setUserName] = useState('')
-  const [password, setPassword] = useState('')
-  const [showLoginModal, setShowLoginModal] = useState(false)
+  const userContext = useContext(UserContext)
+  if (!userContext) {
+    throw new Error('No user context')
+  }
 
-  const handleResponse = async (event) => {
+  const { user, dispatch } = userContext
+  const [userName, setUserName] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
+
+  const handleResponse = async (event: SyntheticEvent) => {
     event.preventDefault()
     setShowLoginModal(false)
     const response = await getLogin(userName, password)
@@ -34,20 +39,20 @@ const Footer = () => {
   }
 
   return (
-    <footer className="bg-[#93B8C1] mt-auto h-[10rem] font-inter text-[#011d29]">
-      <div className="max-w-7xl mx-auto flex flex-row justify-end">
+    <footer className="mt-auto h-[10rem] bg-[#93B8C1] font-inter text-[#011d29]">
+      <div className="mx-auto flex max-w-7xl flex-row justify-end">
         <div className="pt-2">
           {!user ? (
             <div
               onClick={() => setShowLoginModal(true)}
-              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 mr-2 xl:mr-0"
+              className="mb-4 mr-2 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mr-0"
             >
               Logga in
             </div>
           ) : (
             <div
               onClick={() => loggaUt()}
-              className="w-[84px] lg:w-[128px] cursor-pointer rounded-md px-1 py-0.5 lg:px-2 lg:py-1 bg-[#011d29] text-sm lg:text-lg text-white text-center mb-4 lg:mb-6 mr-2 xl:mr-0"
+              className="mb-4 mr-2 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mr-0"
             >
               Logga ut
             </div>

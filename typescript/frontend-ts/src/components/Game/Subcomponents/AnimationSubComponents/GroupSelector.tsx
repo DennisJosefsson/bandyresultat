@@ -1,4 +1,23 @@
-const GroupSelector = ({ gamesArray, setRound, setGroup, groupName }) => {
+import { Dispatch, SetStateAction } from 'react'
+
+type GameArrayObject = {
+  group: string
+  serieName: string
+}
+
+type GroupSelectorProps = {
+  groupName: string
+  setRound: Dispatch<SetStateAction<number>>
+  setGroup: Dispatch<SetStateAction<string | null>>
+  gamesArray: GameArrayObject[]
+}
+
+const GroupSelector = ({
+  gamesArray,
+  setRound,
+  setGroup,
+  groupName,
+}: GroupSelectorProps) => {
   return (
     <>
       <div className="flex flex-row justify-center gap-1">

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { baseUrl, mobileBaseUrl, header } from './config'
-
+import { GameObjectType } from '../components/types/games/games'
 const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
 
 const gamesApi = axios.create({
@@ -23,7 +23,9 @@ export const getSearch = async (searchParams) => {
   return response.data
 }
 
-export const getSeasonGames = async (seasonId) => {
+export const getSeasonGames = async (
+  seasonId: number,
+): Promise<GameObjectType[]> => {
   const response = await gamesApi.get(`/season/${seasonId}`)
   return response.data
 }

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { baseUrl, mobileBaseUrl, header } from './config'
+import { SeasonObjectType } from '../components/types/season/seasons'
 
 const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
 
@@ -8,12 +9,14 @@ const seasonsApi = axios.create({
   headers: header,
 })
 
-export const getSeasons = async () => {
+export const getSeasons = async (): Promise<SeasonObjectType[]> => {
   const response = await seasonsApi.get('/')
   return response.data
 }
 
-export const getSingleSeason = async (seasonId) => {
+export const getSingleSeason = async (
+  seasonId: number,
+): Promise<SeasonObjectType[]> => {
   const response = await seasonsApi.get(`/${seasonId}`)
   return response.data
 }

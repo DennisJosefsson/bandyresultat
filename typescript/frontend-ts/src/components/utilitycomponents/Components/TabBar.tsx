@@ -11,10 +11,23 @@ import {
   QuestionIcon,
   SearchIcon,
 } from './icons'
-import { useContext } from 'react'
+import { Dispatch, SetStateAction, useContext } from 'react'
 import { GenderContext } from '../../../contexts/contexts'
 
-const tabIcons = {
+type TabBarObject = {
+  tabBarArray: {
+    name: string
+    tabName: string
+    clickFunctions: () => void
+  }[]
+  genderClickFunction: () => void
+}
+
+type TabIcons = {
+  [key: string]: JSX.Element
+}
+
+const tabIcons: TabIcons = {
   games: <CalendarIcon />,
   tables: <ListIcon />,
   maraton: <ListIcon />,
@@ -29,8 +42,20 @@ const tabIcons = {
   selection: <SelectionIcon />,
 }
 
-export const TabBarInline = ({ tabBarObject, tab, setTab }) => {
-  const { women } = useContext(GenderContext)
+export const TabBarInline = ({
+  tabBarObject,
+  tab,
+  setTab,
+}: {
+  tabBarObject: TabBarObject
+  tab: string
+  setTab: Dispatch<SetStateAction<string>>
+}) => {
+  const genderContext = useContext(GenderContext)
+  if (!genderContext) {
+    throw new Error('Missing gender context')
+  }
+  const { women } = genderContext
   return (
     <div>
       <div className="hidden items-center bg-slate-300 text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
@@ -95,8 +120,22 @@ export const TabBarInline = ({ tabBarObject, tab, setTab }) => {
   )
 }
 
-export const TabBarDivided = ({ tabBarObject, tab, setTab, onlyDesktop }) => {
-  const { women } = useContext(GenderContext)
+export const TabBarDivided = ({
+  tabBarObject,
+  tab,
+  setTab,
+  onlyDesktop,
+}: {
+  tabBarObject: TabBarObject
+  tab: string
+  setTab: Dispatch<SetStateAction<string>>
+  onlyDesktop: boolean
+}) => {
+  const genderContext = useContext(GenderContext)
+  if (!genderContext) {
+    throw new Error('Missing gender context')
+  }
+  const { women } = genderContext
   return (
     <div>
       <div className="hidden items-center bg-slate-300 text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">

@@ -16,12 +16,12 @@ import LoadingOrError from '../../utilitycomponents/Components/LoadingOrError'
 import AnimationClicker from './AnimationSubComponents/AnimationClicker'
 import AnimationGamesList from './AnimationSubComponents/AnimationGamesList'
 import AnimationTable from './AnimationSubComponents/AnimationTable'
-import GroupSelector from './GroupSelector'
+import GroupSelector from './AnimationSubComponents/GroupSelector'
 
-const Animation = ({ seasonId }) => {
-  const [group, setGroup] = useState()
-  const [round, setRound] = useState(0)
-  const { data, isLoading, error } = useQuery(
+const Animation = ({ seasonId }: { seasonId: number }) => {
+  const [group, setGroup] = useState<string | null>(null)
+  const [round, setRound] = useState<number>(0)
+  const { data, isLoading, error, isSuccess } = useQuery(
     ['singleSeasonGames', seasonId],
     () => getSeasonGames(seasonId),
   )
@@ -30,13 +30,22 @@ const Animation = ({ seasonId }) => {
     data: season,
     isLoading: isSeasonLoading,
     error: seasonError,
+    isSuccess: isSeasonSuccess,
   } = useQuery(['singleSeason', seasonId], () => getSingleSeason(seasonId))
 
-  const { favTeams } = useContext(TeamPreferenceContext)
-  const { women } = useContext(GenderContext)
+  const teamPreferenceContext = useContext(TeamPreferenceContext)
+  const genderContext = useContext(GenderContext)
+  if (!teamPreferenceContext) {
+    throw new Error('Missing team preference context')
+  }
+  if (!genderContext) {
+    throw new Error('Missing gender context')
+  }
+  const { favTeams } = teamPreferenceContext
+  const { women } = genderContext
 
   useEffect(() => {
-    if (!isLoading && !error) {
+    if (isSuccess) {
       const unsortedRegularGames = data
         .filter((table) => table.women === women)
         .filter((game) => game.category === 'regular')
@@ -63,25 +72,23 @@ const Animation = ({ seasonId }) => {
       />
     )
 
-  const seriesArray = season.find((season) => season.women === women)
-    ? season.find((season) => season.women === women).series
-    : []
+  const seasonData = isSeasonSuccess ? season : []
 
-  const teamArray = season.find((season) => season.women === women)
-    ? season.find((season) => season.women === women).teams
-    : []
+  const seasonObject = seasonData.find((season) => season.women === women)
 
-  const unsortedRegularGames = data
-    .filter((table) => table.women === women)
-    .filter((game) => game.category === 'regular')
+  const seriesArray = seasonObject ? seasonObject.series : []
 
-  const seriesInfo = season.find((season) => season.women === women)
-    ? season.find((season) => season.women === women).series
+  const teamArray = seasonObject ? seasonObject.teams : []
+
+  const unsortedRegularGames = isSuccess
+    ? data
+        .filter((table) => table.women === women)
+        .filter((game) => game.category === 'regular')
     : []
 
   if (women && seasonId < 1973) {
     return (
-      <div className="font-inter mx-auto mt-4 grid place-items-center py-5 text-sm font-bold text-[#011d29] md:text-base">
+      <div className="mx-auto mt-4 grid place-items-center py-5 font-inter text-sm font-bold text-[#011d29] md:text-base">
         <p className="mx-10 text-center">
           Första säsongen för damernas högsta serie var{' '}
           <Link to="/season/1973" className="font-bold">
@@ -97,7 +104,7 @@ const Animation = ({ seasonId }) => {
     unsortedRegularGames.filter((game) => game.result !== null).length === 0
   ) {
     return (
-      <div className="font-inter mx-auto mt-4 grid place-items-center py-5 text-sm font-bold text-[#011d29] md:text-base">
+      <div className="mx-auto mt-4 grid place-items-center py-5 font-inter text-sm font-bold text-[#011d29] md:text-base">
         <p className="mx-10 text-center">
           Data över serieutvecklingen saknas för denna säsong.
         </p>
@@ -116,25 +123,39 @@ const Animation = ({ seasonId }) => {
     seasonId,
   )
 
-  const groupName = seriesArray.find((serie) => serie.serieGroupCode === group)
-    ? seriesArray.find((serie) => serie.serieGroupCode === group).serieName
-    : ''
+  const serieObject = seriesArray.find(
+    (serie) => serie.serieGroupCode === group,
+  )
+
+  const groupName = serieObject ? serieObject.serieName : ''
 
   const gamesArray = regularGames
     .filter((group) => group.group !== 'mix')
     .map((group) => {
+      const animationObject = animationArray.find(
+        (aniGroup) => aniGroup.group === group.group,
+      )
+      if (
+        !animationObject ||
+        !animationObject.serieName ||
+        !animationObject.tables
+      ) {
+        throw new Error('Missing data from Animation')
+      }
       return {
         group: group.group,
-        serieName: animationArray.find(
-          (aniGroup) => aniGroup.group === group.group,
-        ).serieName,
+        serieName: animationObject.serieName,
         dates: group.dates.map((date) => {
+          const tableObject = animationObject.tables.find(
+            (tableDate) => tableDate.date === date.date,
+          )
+          if (!tableObject || !tableObject.table) {
+            throw new Error('Missing table data from Animation')
+          }
           return {
             date: date.date,
             games: [...date.games],
-            table: animationArray
-              .find((tableGroup) => tableGroup.group === group.group)
-              .tables.find((tableDate) => tableDate.date === date.date).table,
+            table: tableObject.table,
           }
         }),
       }
@@ -146,7 +167,7 @@ const Animation = ({ seasonId }) => {
       : []
 
   return (
-    <div className="font-inter mx-auto flex flex-col pt-4 text-[#011d29]">
+    <div className="mx-auto flex flex-col pt-4 font-inter text-[#011d29]">
       {gamesArray.length > 1 && (
         <GroupSelector
           gamesArray={gamesArray}
@@ -177,7 +198,6 @@ const Animation = ({ seasonId }) => {
                 seriesArray={seriesArray}
                 favTeams={favTeams}
                 group={group}
-                seriesInfo={seriesInfo}
               />
             </div>
           </div>

@@ -1,7 +1,7 @@
-import { useQuery, useMutation } from 'react-query'
+import { useQuery } from 'react-query'
 import { getSeasonGames } from '../../requests/games'
 import { getSingleSeason, getSeasons } from '../../requests/seasons'
-import { postGame } from '../../requests/games'
+
 import { useState, useContext, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { GenderContext, UserContext } from '../../contexts/contexts'
@@ -16,6 +16,7 @@ import { gameSortFunction } from '../utilitycomponents/functions/sortFunction'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 import FilterComponent from './Subcomponents/FilterComponent'
+import { GameObjectType } from '../types/games/games'
 
 dayjs.locale('sv')
 
@@ -39,7 +40,7 @@ const Games = ({ seasonId }: { seasonId: number }) => {
 
   const [showAddGameModal, setShowAddGameModal] = useState<boolean>(false)
 
-  const [gameData, setGameData] = useState(null)
+  const [gameData, setGameData] = useState<GameObjectType | null>(null)
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
@@ -49,7 +50,7 @@ const Games = ({ seasonId }: { seasonId: number }) => {
     setTeamFilter('')
   }, [seasonId])
 
-  const { data, isLoading, error } = useQuery(
+  const { data, isLoading, error, isSuccess } = useQuery(
     ['singleSeasonGames', seasonId],
     () => getSeasonGames(seasonId),
   )
@@ -58,17 +59,19 @@ const Games = ({ seasonId }: { seasonId: number }) => {
     data: season,
     isLoading: isSeasonLoading,
     error: seasonError,
+    isSuccess: isSeasonSuccess,
   } = useQuery(['singleSeason', seasonId], () => getSingleSeason(seasonId))
 
   const {
     data: unFilteredSeasons,
     isLoading: isAllSeasonsLoading,
     error: allSeasonsError,
+    isSuccess: isAllSeasonSuccess,
   } = useQuery(['seasons'], getSeasons)
 
-  const postGameMutation = useMutation({
-    mutationFn: postGame,
-  })
+  // const postGameMutation = useMutation({
+  //   mutationFn: postGame,
+  // })
 
   if (
     isLoading ||
@@ -93,19 +96,31 @@ const Games = ({ seasonId }: { seasonId: number }) => {
     )
   }
 
-  const allSeasons = unFilteredSeasons.filter(
-    (season) => season.women === women,
-  )
-  const startSeason = allSeasons.pop().seasonId
-  const endSeason = allSeasons.shift().seasonId
+  const allSeasons = isAllSeasonSuccess
+    ? unFilteredSeasons.filter((season) => season.women === women)
+    : []
 
-  const games = data
-    .filter((table) => table.women === women)
-    .filter(
-      (game) =>
-        game.homeTeam.name.toLowerCase().includes(teamFilter.toLowerCase()) ||
-        game.awayTeam.name.toLowerCase().includes(teamFilter.toLowerCase()),
-    )
+  const startSeasonObject = allSeasons.pop()
+  const endSeasonObject = allSeasons.shift()
+
+  const startSeason = startSeasonObject ? startSeasonObject.seasonId : null
+  const endSeason = endSeasonObject ? endSeasonObject.seasonId : null
+
+  const singleSeason = isSeasonSuccess ? season : []
+
+  const games = isSuccess
+    ? data
+        .filter((table) => table.women === women)
+        .filter(
+          (game) =>
+            game.homeTeam?.name
+              .toLowerCase()
+              .includes(teamFilter.toLowerCase()) ||
+            game.awayTeam?.name
+              .toLowerCase()
+              .includes(teamFilter.toLowerCase()),
+        )
+    : []
 
   const unsortedPlayedFinalGames = games
     .filter((game) => game.category === 'final')
@@ -162,11 +177,14 @@ const Games = ({ seasonId }: { seasonId: number }) => {
     unsortedUnplayedQualificationGames,
   )
 
-  const genderSeason = season.filter((indSeason) => indSeason.women === women)
+  const genderSeason = singleSeason.filter(
+    (indSeason) => indSeason.women === women,
+  )
 
-  const seriesInfo = season.find((season) => season.women === women)
-    ? season.find((season) => season.women === women).series
-    : []
+  const genderSeasonObject = singleSeason.find(
+    (season) => season.women === women,
+  )
+  const seriesInfo = genderSeasonObject ? genderSeasonObject.series : []
 
   if (women && seasonId < 1973) {
     return (
@@ -224,7 +242,6 @@ const Games = ({ seasonId }: { seasonId: number }) => {
                     seriesInfo={seriesInfo}
                     startSeason={startSeason}
                     endSeason={endSeason}
-                    played
                   />
                 )}
                 {playedSemiGames.length > 0 && (
@@ -236,7 +253,6 @@ const Games = ({ seasonId }: { seasonId: number }) => {
                     seriesInfo={seriesInfo}
                     startSeason={startSeason}
                     endSeason={endSeason}
-                    played
                   />
                 )}
                 {playedQuarterGames.length > 0 && (
@@ -248,7 +264,6 @@ const Games = ({ seasonId }: { seasonId: number }) => {
                     seriesInfo={seriesInfo}
                     startSeason={startSeason}
                     endSeason={endSeason}
-                    played
                   />
                 )}
                 {playedEightGames.length > 0 && (
@@ -260,7 +275,6 @@ const Games = ({ seasonId }: { seasonId: number }) => {
                     seriesInfo={seriesInfo}
                     startSeason={startSeason}
                     endSeason={endSeason}
-                    played
                   />
                 )}
                 {playedRegularGames.length > 0 && (
@@ -272,7 +286,6 @@ const Games = ({ seasonId }: { seasonId: number }) => {
                     seriesInfo={seriesInfo}
                     startSeason={startSeason}
                     endSeason={endSeason}
-                    played
                   />
                 )}
 
@@ -285,7 +298,6 @@ const Games = ({ seasonId }: { seasonId: number }) => {
                     seriesInfo={seriesInfo}
                     startSeason={startSeason}
                     endSeason={endSeason}
-                    played
                   />
                 )}
               </div>
@@ -374,7 +386,6 @@ const Games = ({ seasonId }: { seasonId: number }) => {
           <GameForm
             women={women}
             season={genderSeason}
-            mutation={postGameMutation}
             setShowModal={setShowAddGameModal}
             gameData={gameData}
             setGameData={setGameData}
