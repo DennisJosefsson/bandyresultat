@@ -38,7 +38,7 @@ singleTeamRouter.get('/:teamId', (async (
   if (!team) {
     throw new NotFoundError({
       code: 404,
-      message: 'No such team',
+      message: 'Inget sådant lag finns.',
       logging: false,
       context: { origin: 'GET Single Team Router' },
     })

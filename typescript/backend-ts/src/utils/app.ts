@@ -20,6 +20,7 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
 app.use(cookieParser())
 
 app.get('/healthcheck', (_req: Request, res: Response) => {
+  console.log('Mode:', process.env.NODE_ENV)
   res.status(200).send({ message: 'Hello world!' })
 })
 

@@ -14,10 +14,21 @@ import TeamSeason from '../models/TeamSeason.js'
 import TeamTable from '../models/TeamTable.js'
 import User from '../models/User.js'
 
-const dbUrl: string =
-  process.env.NODE_ENV === 'development'
-    ? (process.env.ELEPHANTSQL_URL_DEVELOPMENT as string)
-    : (process.env.ELEPHANTSQL_URL as string)
+let dbUrl: string
+let mode: string
+switch (process.env.NODE_ENV) {
+  case 'development':
+    dbUrl = process.env.ELEPHANTSQL_URL_DEVELOPMENT as string
+    mode = 'development'
+    break
+  case 'test':
+    dbUrl = process.env.ELEPHANTSQL_URL_TESTING as string
+    mode = 'test'
+    break
+  default:
+    dbUrl = process.env.ELEPHANTSQL_URL as string
+    mode = 'production'
+}
 
 export const sequelize = new Sequelize(dbUrl, { omitNull: true })
 
@@ -39,18 +50,10 @@ export const connectToDb = async () => {
     ])
     await sequelize.authenticate()
 
-    console.log(
-      `Connected to the ${
-        process.env.NODE_ENV === 'development' ? 'development' : 'production'
-      } database.`
-    )
+    console.log(`Connected to the ${mode} database.`)
   } catch (error) {
     console.log(error)
-    console.log(
-      `Unable to connect to the ${
-        process.env.NODE_ENV === 'development' ? 'development' : 'production'
-      } database.`
-    )
+    console.log(`Unable to connect to the ${mode} database.`)
     return process.exit(1)
   }
   return null
