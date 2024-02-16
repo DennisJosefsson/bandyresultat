@@ -16,19 +16,18 @@ const DefaultComponent = ({
   let resultString
   if (tables.length === 0) {
     resultString = '0-0'
-  } else if (
-    tables.find((tableGroup) => tableGroup.group === group.group).tables
-  ) {
+  } else if (tables.find((tableGroup) => tableGroup.group === group.group)) {
+    const tableObject = tables.find(
+      (tableGroup) => tableGroup.group === group.group,
+    )
     resultString = `${
-      tables
-        .filter((tableGroup) => tableGroup.group === group.group)[0]
-        .tables.find((team) => team.team === group.dates[0].games[0].homeTeamId)
-        .totalWins
+      tableObject.tables.find(
+        (team) => team.team === group.dates[0].games[0].homeTeamId,
+      ).totalWins
     }-${
-      tables
-        .filter((tableGroup) => tableGroup.group === group.group)[0]
-        .tables.find((team) => team.team === group.dates[0].games[0].awayTeamId)
-        .totalWins
+      tableObject.tables.find(
+        (team) => team.team === group.dates[0].games[0].awayTeamId,
+      ).totalWins
     }`
   } else {
     resultString = ''

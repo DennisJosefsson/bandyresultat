@@ -47,8 +47,8 @@ export const updateGame = async (game) => {
   return await gamesApi.put(`/${game.gameId}`, game)
 }
 
-export const deleteGame = async ({ gameId }) => {
-  return await gamesApi.delete(`/${gameId}`, gameId)
+export const deleteGame = async (gameId) => {
+  return await gamesApi.delete(`/${gameId}`)
 }
 
 export default gamesApi

@@ -4000,7 +4000,7 @@ router.get('/:gameId', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', authControl, async (req, res, next) => {
   res.locals.origin = 'POST Game router'
   const { serieId } = await Serie.findOne({
     where: { seasonId: req.body.seasonId, serieGroupCode: req.body.group },
@@ -4070,6 +4070,12 @@ router.post('/', async (req, res, next) => {
 
 router.delete('/:gameId', authControl, async (req, res, next) => {
   res.locals.origin = 'DELETE Game router'
+  const teamGames = await TeamGame.findAll({
+    where: { gameId: req.params.gameId },
+  })
+  if (teamGames.length > 0) {
+    await TeamGame.destroy({ where: { gameId: req.params.gameId } })
+  }
   const game = await Game.findByPk(req.params.gameId)
   if (!game) {
     throw new Error('No such game in the database')
