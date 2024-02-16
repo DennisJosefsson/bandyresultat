@@ -83,3 +83,17 @@ export const newCompareObject = z.object({
   totalWins: z.coerce.number(),
 })
 export type NewCompareObject = z.infer<typeof newCompareObject>
+
+export const singleTeamTable = z.object({
+  category: z.string(),
+  totalGames: z.number(),
+  totalWins: z.number(),
+  totalDraws: z.number(),
+  totalLost: z.number(),
+  totalGoalsScored: z.number(),
+  totalGoalsConceded: z.number(),
+  totalGoalDifference: z.number(),
+  totalPoints: z.number(),
+})
+
+export type SingleTeamTable = z.infer<typeof singleTeamTable>

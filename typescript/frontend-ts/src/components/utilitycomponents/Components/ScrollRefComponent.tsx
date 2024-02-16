@@ -1,4 +1,4 @@
-import { FormEvent, RefObject } from 'react'
+import { RefObject, MouseEvent } from 'react'
 
 const ScrollRefComponent = ({
   bottomRef,
@@ -7,7 +7,7 @@ const ScrollRefComponent = ({
   bottomRef: RefObject<HTMLDivElement>
   topRef: RefObject<HTMLDivElement>
 }) => {
-  const scrollTo = (event: FormEvent, ref: RefObject<HTMLDivElement>) => {
+  const scrollTo = (event: MouseEvent, ref: RefObject<HTMLDivElement>) => {
     event.preventDefault()
     if (ref && 'current' in ref && ref.current) {
       if (ref.current.offsetTop) {

@@ -8,9 +8,10 @@ const TeamTable = ({ tableArray }) => {
     if (sortOrder.indexOf(a.category) > sortOrder.indexOf(b.category)) {
       return 1
     }
-
     if (sortOrder.indexOf(a.category) < sortOrder.indexOf(b.category)) {
       return -1
+    } else {
+      return 0
     }
   })
   return (
@@ -18,12 +19,12 @@ const TeamTable = ({ tableArray }) => {
       {sortedTables.map((category, index) => {
         return (
           <div key={category.category} className="mb-6">
-            <h2 className="xs:text-base text-sm font-bold md:text-xl">
+            <h2 className="text-sm font-bold xs:text-base md:text-xl">
               {groupConstant[category.category]}
             </h2>
 
             <div>
-              <table className="xxs:text-xs w-full table-fixed text-[10px] md:w-[30rem] md:text-sm lg:text-base">
+              <table className="w-full table-fixed text-[10px] xxs:text-xs md:w-[30rem] md:text-sm lg:text-base">
                 <thead>
                   <tr>
                     <th

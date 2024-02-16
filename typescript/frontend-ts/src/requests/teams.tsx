@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { baseUrl, mobileBaseUrl, header } from './config'
+import { TeamAttributes } from '../components/types/teams/teams'
 
 const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
 
@@ -8,12 +9,14 @@ const teamsApi = axios.create({
   headers: header,
 })
 
-export const getTeams = async () => {
+export const getTeams = async (): Promise<TeamAttributes[]> => {
   const response = await teamsApi.get('/')
   return response.data
 }
 
-export const getSingleTeam = async (teamId) => {
+export const getSingleTeam = async (
+  teamId: number,
+): Promise<TeamAttributes> => {
   const response = await teamsApi.get(`/${teamId}`)
   return response.data
 }

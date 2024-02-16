@@ -1,4 +1,4 @@
-import { useReducer } from 'react'
+import { SyntheticEvent,ChangeEvent, useReducer, Dispatch, SetStateAction } from 'react'
 import { useQueryClient } from 'react-query'
 import teamFormReducer from '../../../reducers/teamFormReducer'
 
@@ -7,14 +7,21 @@ const initState = {
   name: '',
   casualName: '',
   shortName: '',
+  lat:0,
+  long:0,
   women: false,
 }
 
-const TeamForm = ({ mutation, setShowModal }) => {
+type TeamFormProps = {
+  mutation:,
+  setShowModal: Dispatch<SetStateAction<boolean>>
+}
+
+const TeamForm = ({ mutation, setShowModal }:TeamFormProps) => {
   const [formState, dispatch] = useReducer(teamFormReducer, initState)
   const queryClient = useQueryClient()
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault()
 
     mutation.mutate({ formState })
@@ -22,7 +29,7 @@ const TeamForm = ({ mutation, setShowModal }) => {
     setShowModal(false)
   }
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch({
       type: 'INPUT',
       field: event.target.name,
@@ -109,6 +116,40 @@ const TeamForm = ({ mutation, setShowModal }) => {
                   </div>
                 </label>
               </div>
+              <div className="p-1">
+                <label
+                  htmlFor="lat"
+                  className="flex flex-row text-sm font-medium text-gray-900"
+                >
+                  <div className="w-32">Latitud:</div>
+                  <div>
+                    <input
+                      className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
+                      type="text"
+                      name="lat"
+                      value={formState.lat}
+                      onChange={(event) => handleChange(event)}
+                    />
+                  </div>
+                </label>
+              </div>
+              <div className="p-1">
+                <label
+                  htmlFor="long"
+                  className="flex flex-row text-sm font-medium text-gray-900"
+                >
+                  <div className="w-32">Longitud:</div>
+                  <div>
+                    <input
+                      className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
+                      type="text"
+                      name="long"
+                      value={formState.long}
+                      onChange={(event) => handleChange(event)}
+                    />
+                  </div>
+                </label>
+              </div>
 
               <div className="m-1 p-1">
                 <label
@@ -121,7 +162,6 @@ const TeamForm = ({ mutation, setShowModal }) => {
                       className="text-gray-900 focus:ring-gray-500"
                       type="checkbox"
                       name="women"
-                      value={formState.women}
                       checked={formState.women}
                       onChange={() => dispatch({ type: 'TOGGLE' })}
                     />

@@ -1,18 +1,34 @@
-import { useContext } from 'react'
+import { Dispatch, SetStateAction, useContext, ChangeEvent } from 'react'
 import { MenuContext } from '../../../contexts/contexts'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 import 'leaflet/dist/leaflet.css'
+import { CompareFormState, TeamAttributes } from '../../types/teams/teams'
 
+type MapProps = {
+  teams: TeamAttributes[]
+  formState: CompareFormState
+  handleTeamArrayChange: (
+    event: ChangeEvent<HTMLInputElement>,
+    teamId: number,
+  ) => void
+  setTab: Dispatch<SetStateAction<string>>
+  setTeamId: Dispatch<SetStateAction<number | null>>
+}
 const Map = ({
   teams,
   formState,
   handleTeamArrayChange,
   setTab,
   setTeamId,
-}) => {
-  const { open } = useContext(MenuContext)
+}: MapProps) => {
+  const menuContext = useContext(MenuContext)
+  if (!menuContext) {
+    throw new Error('Missing menu context')
+  }
+
+  const { open } = menuContext
 
   return (
     <div className="mx-auto mb-2 min-h-screen max-w-7xl px-1 font-inter text-[#011d29] lg:px-0">
@@ -30,7 +46,7 @@ const Map = ({
             />
             <MarkerClusterGroup chunkedLoading>
               {teams.map((team) => {
-                const position = [team.lat, team.long]
+                const position = [team.lat, team.long] as [number, number]
                 return (
                   <Marker key={team.teamId} position={position}>
                     <Popup>
@@ -45,13 +61,16 @@ const Map = ({
                           {team.name} {team.women ? 'Dam' : 'Herr'}
                         </div>
                         <div className="flex flex-row items-center">
-                          <label htmlFor={team.teamId} className="mr-2">
+                          <label
+                            htmlFor={team.teamId.toString()}
+                            className="mr-2"
+                          >
                             Välj:
                           </label>
                           <input
                             name="check"
                             type="checkbox"
-                            id={team.teamId}
+                            id={team.teamId.toString()}
                             checked={formState.teamArray.includes(team.teamId)}
                             onChange={(event) =>
                               handleTeamArrayChange(event, team.teamId)

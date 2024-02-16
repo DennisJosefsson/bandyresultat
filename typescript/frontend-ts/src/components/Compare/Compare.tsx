@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { compareTeams } from '../../requests/tables'
 
-import Spinner from '../../components/utilitycomponents/Components/Spinner'
+import Spinner from '../utilitycomponents/Components/Spinner'
 
 import AllData from './Subcomponents/AllData'
 import DetailedData from './Subcomponents/DetailedData'

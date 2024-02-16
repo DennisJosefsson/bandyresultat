@@ -14,11 +14,12 @@ import {
 import { Dispatch, SetStateAction, useContext } from 'react'
 import { GenderContext } from '../../../contexts/contexts'
 
-type TabBarObject = {
+export type TabBarObject = {
   tabBarArray: {
     name: string
     tabName: string
     clickFunctions: () => void
+    conditional?: string | boolean
   }[]
   genderClickFunction: () => void
 }
@@ -129,7 +130,7 @@ export const TabBarDivided = ({
   tabBarObject: TabBarObject
   tab: string
   setTab: Dispatch<SetStateAction<string>>
-  onlyDesktop: boolean
+  onlyDesktop?: boolean
 }) => {
   const genderContext = useContext(GenderContext)
   if (!genderContext) {

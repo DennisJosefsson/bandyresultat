@@ -1,5 +1,18 @@
-import { useContext } from 'react'
+import { useContext, Dispatch, SetStateAction, ChangeEvent } from 'react'
 import { TeamPreferenceContext } from '../../../contexts/contexts'
+import { TeamAttributes } from '../../types/teams/teams'
+import { CompareFormState } from '../../types/teams/teams'
+
+type TeamsListProps = {
+  teams: TeamAttributes[]
+  formState: CompareFormState
+  handleTeamArrayChange: (
+    event: ChangeEvent<HTMLInputElement>,
+    teamId: number,
+  ) => void
+  setTab: Dispatch<SetStateAction<string>>
+  setTeamId: Dispatch<SetStateAction<number | null>>
+}
 
 const TeamsList = ({
   formState,
@@ -7,8 +20,12 @@ const TeamsList = ({
   handleTeamArrayChange,
   setTeamId,
   setTab,
-}) => {
-  const { favTeams } = useContext(TeamPreferenceContext)
+}: TeamsListProps) => {
+  const teamPreference = useContext(TeamPreferenceContext)
+  if (!teamPreference) {
+    throw new Error('Missing team preference')
+  }
+  const { favTeams } = teamPreference
   return (
     <div>
       <div className="grid w-2/3 grid-cols-1 justify-between gap-x-8 gap-y-2 pt-2 lg:grid-cols-3">
@@ -35,7 +52,7 @@ const TeamsList = ({
               <div className="w-6 pl-4 pr-4">
                 <input
                   type="checkbox"
-                  id={team.teamId}
+                  id={team.teamId.toString()}
                   checked={formState.teamArray.includes(team.teamId)}
                   onChange={(event) =>
                     handleTeamArrayChange(event, team.teamId)

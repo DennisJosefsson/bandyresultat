@@ -1,4 +1,12 @@
-export const groupConstant = {
+type GroupConstant = {
+  [key: string]: string
+}
+
+type ColStarts = {
+  [key: string]: string
+}
+
+export const groupConstant: GroupConstant = {
   S1: 'Semifinal 1',
   S2: 'Semifinal 2',
   Q1: 'Kvartsfinal 1',
@@ -105,18 +113,18 @@ export const sortOrder = [
   'qualification',
 ]
 
-export const semiColStarts = {
+export const semiColStarts: ColStarts = {
   S1: 'md:col-start-2',
   S2: 'md:col-start-4',
 }
-export const quarterColStarts = {
+export const quarterColStarts: ColStarts = {
   Q1: 'md:col-start-1',
   Q2: 'md:col-start-2',
   Q3: 'md:col-start-3',
   Q4: 'md:col-start-4',
 }
 
-export const eightColStarts = {
+export const eightColStarts: ColStarts = {
   E1: 'md:col-start-2',
   E2: 'md:col-start-4',
 }

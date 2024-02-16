@@ -1,12 +1,20 @@
 import { useQuery } from 'react-query'
-import { useState, useReducer, useContext, useEffect } from 'react'
+import {
+  useState,
+  useReducer,
+  useContext,
+  useEffect,
+  KeyboardEvent,
+  ChangeEvent,
+  SyntheticEvent,
+} from 'react'
 import { getTeams } from '../../requests/teams'
 import { getSeasons } from '../../requests/seasons'
 import { useLocation, useParams } from 'react-router-dom'
 import { GenderContext } from '../../contexts/contexts'
 
 import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
-import Spinner from '../utilitycomponents/Components/spinner'
+import Spinner from '../utilitycomponents/Components/Spinner'
 import TeamsList from './Subcomponents/TeamsList'
 
 import FormStateComponent from './Subcomponents/FormStateComponent'
@@ -15,21 +23,30 @@ import Map from './Subcomponents/Map'
 import Compare from '../Compare/Compare'
 import Team from './Team'
 import Help from './Subcomponents/Help'
-import { TabBarDivided } from '../utilitycomponents/Components/TabBar'
+import {
+  TabBarDivided,
+  TabBarObject,
+} from '../utilitycomponents/Components/TabBar'
+import { compareTeamsSeasonId, teamIdFromParams } from '../types/teams/teams'
+
+type ValueErrorType = { error: false } | { error: true; message: string }
 
 const Teams = () => {
   const location = useLocation()
   const params = useParams()
+  const genderContext = useContext(GenderContext)
+  if (!genderContext) {
+    throw new Error('Missing gender context')
+  }
+  const { women, dispatch: genderDispatch } = genderContext
 
-  const { women, dispatch: genderDispatch } = useContext(GenderContext)
+  const [tab, setTab] = useState<string>('teams')
+  const [teamId, setTeamId] = useState<number | null>(null)
 
-  const [tab, setTab] = useState('teams')
-  const [teamId, setTeamId] = useState(null)
+  const [stateNull, setStateNull] = useState<boolean>(false)
 
-  const [stateNull, setStateNull] = useState(false)
-
-  const [teamFilter, setTeamFilter] = useState('')
-  const [valueError, setValueError] = useState({ error: false })
+  const [teamFilter, setTeamFilter] = useState<string>('')
+  const [valueError, setValueError] = useState<ValueErrorType>({ error: false })
   const initState = location.state
     ? location.state.compObject
     : {
@@ -42,8 +59,8 @@ const Teams = () => {
           'semi',
           'final',
         ],
-        startSeason: '',
-        endSeason: '',
+        startSeason: null,
+        endSeason: null,
         women: women,
       }
 
@@ -52,11 +69,17 @@ const Teams = () => {
     initState,
   )
 
-  const { data, isLoading, error } = useQuery(['teams'], getTeams)
+  const {
+    data,
+    isLoading,
+    error,
+    isSuccess: isTeamsSuccess,
+  } = useQuery(['teams'], getTeams)
   const {
     data: unFilteredSeasons,
     isLoading: isSeasonsLoading,
     error: seasonError,
+    isSuccess: isSeasonSuccess,
   } = useQuery(['seasons'], getSeasons)
 
   useEffect(() => {
@@ -71,7 +94,11 @@ const Teams = () => {
       setTab('compare')
     }
     if (params.teamId) {
-      setTeamId(params.teamId)
+      const teamId = teamIdFromParams.safeParse(params.teamId)
+      if (!teamId.success) {
+        throw new Error(teamId.error.message)
+      }
+      setTeamId(teamId.data)
       setTab('singleTeam')
     }
   }, [location.state, params.teamId, genderDispatch, women, stateNull])
@@ -92,15 +119,24 @@ const Teams = () => {
     )
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault()
-    if (formState.startSeason === '') {
-      formState.startSeason = seasons.pop().seasonId
+    if (formState.startSeason === null) {
+      const seasonObject = seasons.pop()
+      if (seasonObject && seasonObject.seasonId)
+        formState.startSeason = seasonObject.seasonId
     }
-    if (formState.endSeason === '') {
-      formState.endSeason = seasons.shift().seasonId
+    if (formState.endSeason === null) {
+      const seasonObject = seasons.shift()
+
+      if (seasonObject && seasonObject.seasonId)
+        formState.endSeason = seasonObject.seasonId
     }
-    if (formState.endSeason < formState.startSeason) {
+    if (
+      formState.endSeason &&
+      formState.startSeason &&
+      formState.endSeason < formState.startSeason
+    ) {
       setValueError({
         error: true,
         message: 'Bortre säsongsval lägre än undre val.',
@@ -115,27 +151,30 @@ const Teams = () => {
     }
   }
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault()
     }
   }
 
-  const handleTeamArrayChange = (event, teamId) => {
+  const handleTeamArrayChange = (
+    event: ChangeEvent<HTMLInputElement>,
+    teamId: number,
+  ) => {
     if (event.target.checked) {
       compareDispatch({
         type: 'ADD TEAM',
-        payload: Number(teamId),
+        payload: teamId,
       })
     } else {
       compareDispatch({
         type: 'REMOVE TEAM',
-        payload: Number(teamId),
+        payload: teamId,
       })
     }
   }
 
-  const handleCategoryArrayChange = (event) => {
+  const handleCategoryArrayChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       compareDispatch({
         type: 'ADD CATEGORY',
@@ -149,27 +188,39 @@ const Teams = () => {
     }
   }
 
-  const handleStartSeasonChange = (event) => {
+  const handleStartSeasonChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const seasonId = compareTeamsSeasonId.safeParse(event.target.value)
+    if (!seasonId.success) {
+      throw new Error(seasonId.error.message)
+    }
     compareDispatch({
       type: 'INPUT START',
-      payload: event.value,
+      payload: seasonId.data,
     })
   }
 
-  const handleEndSeasonChange = (event) => {
+  const handleEndSeasonChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const seasonId = compareTeamsSeasonId.safeParse(event.target.value)
+    if (!seasonId.success) {
+      throw new Error(seasonId.error.message)
+    }
     compareDispatch({
       type: 'INPUT END',
-      payload: event.value,
+      payload: seasonId.data,
     })
   }
 
-  const teams = data
-    .filter((team) => team.women === women)
-    .filter((team) =>
-      team.name.toLowerCase().includes(teamFilter.toLowerCase()),
-    )
+  const teams = isTeamsSuccess
+    ? data
+        .filter((team) => team.women === women)
+        .filter((team) =>
+          team.name.toLowerCase().includes(teamFilter.toLowerCase()),
+        )
+    : []
 
-  const seasons = unFilteredSeasons.filter((season) => season.women === women)
+  const seasons = isSeasonSuccess
+    ? unFilteredSeasons.filter((season) => season.women === women)
+    : []
   const reversedSeasons = [...seasons].sort((a, b) => a.seasonId - b.seasonId)
   const startOptions = reversedSeasons.map((season) => {
     return { label: season.year, value: season.seasonId }
@@ -181,7 +232,7 @@ const Teams = () => {
 
   const unFilteredTeams = data
 
-  const teamsTabBarObject = {
+  const teamsTabBarObject: TabBarObject = {
     genderClickFunction: () => {
       genderDispatch({ type: 'TOGGLE' })
       compareDispatch({ type: 'RESET' })
@@ -209,7 +260,7 @@ const Teams = () => {
       {
         name: 'Jämför',
         tabName: 'compare',
-        clickFunctions: (event) => handleSubmit(event),
+        clickFunctions: () => handleSubmit,
         conditional: 'formStateComplex',
       },
     ]
@@ -239,10 +290,6 @@ const Teams = () => {
           formState={formState}
           setTab={setTab}
           setTeamId={setTeamId}
-          valueError={valueError}
-          setValueError={setValueError}
-          unFilteredTeams={unFilteredTeams}
-          dispatch={compareDispatch}
         />
       )
       break
@@ -254,10 +301,6 @@ const Teams = () => {
           formState={formState}
           setTab={setTab}
           setTeamId={setTeamId}
-          valueError={valueError}
-          setValueError={setValueError}
-          unFilteredTeams={unFilteredTeams}
-          dispatch={compareDispatch}
         />
       )
       break
@@ -283,9 +326,6 @@ const Teams = () => {
           startOptions={startOptions}
           dispatch={compareDispatch}
           women={women}
-          valueError={valueError}
-          setValueError={setValueError}
-          unFilteredTeams={unFilteredTeams}
         />
       )
       break

@@ -73,5 +73,24 @@ export const gameObject = z.object({
   played: z.boolean().default(false).optional(),
 })
 
+export const teamGameObject = z.object({
+  teamGameId: z.number(),
+  team: z.number(),
+  opponent: z.number(),
+  date: z.string(),
+  scoredGoals: z.number(),
+  concededGoals: z.number(),
+  goalDifference: z.number(),
+  totalGoals: z.number(),
+  points: z.number(),
+  win: z.boolean(),
+  lost: z.boolean(),
+  draw: z.boolean(),
+  category: z.string(),
+  group: z.string(),
+  played: z.boolean(),
+})
+
 export type GameObjectType = z.infer<typeof gameObject>
 export type InputGameObjectType = z.infer<typeof inputGameObject>
+export type TeamGameObject = z.infer<typeof teamGameObject>

@@ -1,4 +1,26 @@
-const teamArrayFormReducer = (state, action) => {
+import { CompareFormState } from '../components/types/teams/teams'
+
+type CompareFormStateActions =
+  | { type: 'ADD TEAM'; payload: number }
+  | { type: 'REMOVE TEAM'; payload: number }
+  | { type: 'CLEAR TEAMS' }
+  | {
+      type: 'ADD CATEGORY'
+      payload: string
+    }
+  | {
+      type: 'REMOVE CATEGORY'
+      payload: string
+    }
+  | { type: 'CLEAR CATEGORIES' }
+  | { type: 'INPUT START'; payload: number }
+  | { type: 'INPUT END'; payload: number }
+  | { type: 'RESET' }
+
+const teamArrayFormReducer = (
+  state: CompareFormState,
+  action: CompareFormStateActions,
+): CompareFormState => {
   switch (action.type) {
     case 'ADD TEAM':
       if (state.teamArray.includes(action.payload)) {
@@ -50,8 +72,8 @@ const teamArrayFormReducer = (state, action) => {
           'semi',
           'final',
         ],
-        endSeason: '',
-        startSeason: '',
+        endSeason: null,
+        startSeason: null,
       }
     default:
       return state

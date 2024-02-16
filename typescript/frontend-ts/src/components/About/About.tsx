@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-import kalenderbitare from '../../assets/kalenderbitare.PNG'
+import kalenderbitare from '../../assets/kalenderbitare.png'
 
 const About = () => {
   return (

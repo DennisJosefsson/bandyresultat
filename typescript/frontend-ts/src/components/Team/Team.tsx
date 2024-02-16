@@ -2,22 +2,23 @@ import { useQuery } from 'react-query'
 import { getSingleTeam } from '../../requests/teams'
 import { useEffect } from 'react'
 
-import Spinner from '../utilitycomponents/Components/spinner'
+import Spinner from '../utilitycomponents/Components/Spinner'
 import TeamTable from './Subcomponents/TeamInfoSubComponents/TeamTable'
 import TeamCuriosities from './Subcomponents/TeamInfoSubComponents/TeamCuriosities'
 import TeamHeader from './Subcomponents/TeamInfoSubComponents/TeamHeader'
 
-const Team = ({ teamId }) => {
+const Team = ({ teamId }: { teamId: number }) => {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }, [])
 
-  const { data, isLoading, error } = useQuery(['teams', teamId], () =>
-    getSingleTeam(teamId),
+  const { data, isLoading, error, isSuccess } = useQuery(
+    ['teams', teamId],
+    () => getSingleTeam(teamId),
   )
 
   useEffect(() => {
-    if (data?.team) document.title = `Bandyresultat - ${data?.team.name}`
+    if (isSuccess && data) document.title = `Bandyresultat - ${data.name}`
 
     return () => (document.title = 'Bandyresultat')
   }, [data])
@@ -33,7 +34,7 @@ const Team = ({ teamId }) => {
   if (error) {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
-        Något gick fel.
+        {error.message}
       </div>
     )
   }
@@ -42,14 +43,6 @@ const Team = ({ teamId }) => {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         Kolla länken, angivet lag-id är felaktigt.
-      </div>
-    )
-  }
-
-  if (data?.success === 'false') {
-    return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
-        {data.message}
       </div>
     )
   }
