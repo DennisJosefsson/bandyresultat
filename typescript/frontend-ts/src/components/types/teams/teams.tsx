@@ -20,6 +20,7 @@ export const compareFormState = z.object({
   categoryArray: z.array(z.string()),
   startSeason: z.number().nullable(),
   endSeason: z.number().nullable(),
+  women: z.boolean(),
 })
 
 export const teamAttributes = z.object({
@@ -33,6 +34,13 @@ export const teamAttributes = z.object({
   long: z.number().optional().nullable(),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
+  seasonteam: z.array(
+    z.object({
+      year: z.string(),
+      seasonId: z.number(),
+      teamseason: z.object({ qualification: z.boolean().nullable() }),
+    }),
+  ),
 })
 
 export const teamSeasonAttributes = z.object({
@@ -65,6 +73,15 @@ export const teamAndSeasonAttributes = z.object({
   }),
 })
 
+type StreakType = {
+  team: number
+  name: string
+  game_count: number
+  start_date: string
+  end_date: string
+  women: boolean
+}
+
 export type TeamAttributes = z.infer<typeof teamAttributes>
 export type TeamSeasonAttributes = z.infer<typeof teamSeasonAttributes>
 export type TeamAndSeasonAttributes = z.infer<typeof teamAndSeasonAttributes>
@@ -74,4 +91,15 @@ export type SingleTeam = {
   team: TeamAttributes
   tabeller: SingleTeamTable[]
   finalsAndWins: TeamGameObject[]
+  noWinStreak: StreakType[]
+  unbeatenStreak: StreakType[]
+  winStreak: StreakType[]
+  drawStreak: StreakType[]
+  losingStreak: StreakType[]
+  playoffStreak: {
+    streak_length: number
+    start_year: string
+    end_year: string
+  }[]
+  playoffCount: { playoff_count: string }[]
 }

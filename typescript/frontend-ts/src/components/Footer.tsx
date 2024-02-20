@@ -1,15 +1,11 @@
 import { getLogin, logout } from '../requests/login'
-import { SyntheticEvent, useContext, useState } from 'react'
-import { UserContext } from '../contexts/contexts'
+import { SyntheticEvent, useState } from 'react'
+
 import LoginForm from './LoginForm/LoginForm'
+import useUserContext from '../hooks/contextHooks/useUserContext'
 
 const Footer = () => {
-  const userContext = useContext(UserContext)
-  if (!userContext) {
-    throw new Error('No user context')
-  }
-
-  const { user, dispatch } = userContext
+  const { user, dispatch } = useUserContext()
   const [userName, setUserName] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false)

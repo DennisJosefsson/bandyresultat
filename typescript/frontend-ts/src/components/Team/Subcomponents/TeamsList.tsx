@@ -1,7 +1,7 @@
-import { useContext, Dispatch, SetStateAction, ChangeEvent } from 'react'
-import { TeamPreferenceContext } from '../../../contexts/contexts'
+import { Dispatch, SetStateAction, ChangeEvent } from 'react'
 import { TeamAttributes } from '../../types/teams/teams'
 import { CompareFormState } from '../../types/teams/teams'
+import useTeampreferenceContext from '../../../hooks/contextHooks/useTeampreferenceContext'
 
 type TeamsListProps = {
   teams: TeamAttributes[]
@@ -21,11 +21,7 @@ const TeamsList = ({
   setTeamId,
   setTab,
 }: TeamsListProps) => {
-  const teamPreference = useContext(TeamPreferenceContext)
-  if (!teamPreference) {
-    throw new Error('Missing team preference')
-  }
-  const { favTeams } = teamPreference
+  const { favTeams } = useTeampreferenceContext()
   return (
     <div>
       <div className="grid w-2/3 grid-cols-1 justify-between gap-x-8 gap-y-2 pt-2 lg:grid-cols-3">

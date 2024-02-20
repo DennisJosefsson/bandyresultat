@@ -9,13 +9,20 @@ import AllData from './Subcomponents/AllData'
 import DetailedData from './Subcomponents/DetailedData'
 import CompareStats from './Subcomponents/CompareStats'
 import CompareHeader from './Subcomponents/CompareHeader'
+import { CompareFormState } from '../types/teams/teams'
 
-const Compare = ({ compObject, origin }) => {
+const Compare = ({
+  compObject,
+  origin,
+}: {
+  compObject: CompareFormState
+  origin: string
+}) => {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }, [])
 
-  const { data, isLoading, error } = useQuery(
+  const { data, isLoading, error, isSuccess } = useQuery(
     ['compareTeams', compObject],
     () => compareTeams(compObject),
   )
@@ -28,83 +35,76 @@ const Compare = ({ compObject, origin }) => {
     )
   }
 
-  if (error) {
+  if (error instanceof Error && error) {
+    if (error.message === 'nullObject') {
+      return (
+        <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+          <p className="mx-10 text-center">
+            Någon sköt högt över mål, och alla bollar i bollkorgarna är borta.
+            Det var nog inte meningen att det skulle länkas till denna sidan
+            direkt, så tyvärr har vi ingen information till dig. Om du kom hit
+            från en länk på bandyresultat.se, meddela gärna
+            dennis@bandyresultat.se att det finns en bugg han behöver fixa.
+          </p>
+        </div>
+      )
+    }
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
-        Något gick fel.
+        {error.message}
       </div>
     )
   }
 
-  if (data.success === false) {
-    return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
-        <p className="mx-10 text-center">
-          Någon sköt högt över mål, och alla bollar i bollkorgarna är borta. Det
-          var nog inte meningen att det skulle länkas till denna sidan direkt,
-          så tyvärr har vi ingen information till dig. Om du kom hit från en
-          länk på bandyresultat.se, meddela gärna dennis@bandyresultat.se att
-          det finns en bugg han behöver fixa.
-        </p>
-      </div>
-    )
-  }
-
-  const {
-    categoryData,
-    allData,
-    seasons,
-    playoffs,
-    allSeasons,
-    allPlayoffs,
-    golds,
-    firstGames,
-    latestGames,
-    compareAllGames,
-    seasonNames,
-    link,
-  } = data
+  const compareData = isSuccess ? data : null
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-7xl flex-col pt-4 font-inter text-[#011d29]">
-      <div className="mx-2 xl:mx-0">
-        <CompareHeader
-          length={allData.length}
-          seasonNames={seasonNames}
-          link={link}
-          compObject={compObject}
-          compareAllGames={compareAllGames}
-          origin={origin}
-        />
+    <>
+      {compareData && (
+        <div className="mx-auto flex min-h-screen max-w-7xl flex-col pt-4 font-inter text-[#011d29]">
+          <div className="mx-2 xl:mx-0">
+            <CompareHeader
+              length={compareData.allData.length}
+              seasonNames={compareData.seasonNames}
+              link={compareData.link}
+              compObject={compObject}
+              compareAllGames={compareData.compareAllGames}
+              origin={origin}
+            />
 
-        <div className="flex flex-col xl:flex-row xl:justify-between">
-          {allData.length > 0 && (
-            <>
-              <div>
-                <AllData allData={allData} compObject={compObject} />
-                <DetailedData
-                  categoryData={categoryData}
-                  compObject={compObject}
-                />
-              </div>
+            <div className="flex flex-col xl:flex-row xl:justify-between">
+              {compareData.allData.length > 0 && (
+                <>
+                  <div>
+                    <AllData
+                      allData={compareData.allData}
+                      compObject={compObject}
+                    />
+                    <DetailedData
+                      categoryData={compareData.categoryData}
+                      compObject={compObject}
+                    />
+                  </div>
 
-              <div>
-                <CompareStats
-                  compObject={compObject}
-                  firstGames={firstGames}
-                  latestGames={latestGames}
-                  golds={golds}
-                  playoffs={playoffs}
-                  allPlayoffs={allPlayoffs}
-                  seasons={seasons}
-                  allSeasons={allSeasons}
-                />
-              </div>
-            </>
-          )}
+                  <div>
+                    <CompareStats
+                      compObject={compObject}
+                      firstGames={compareData.firstGames}
+                      latestGames={compareData.latestGames}
+                      golds={compareData.golds}
+                      playoffs={compareData.playoffs}
+                      allPlayoffs={compareData.allPlayoffs}
+                      seasons={compareData.seasons}
+                      allSeasons={compareData.allSeasons}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   )
 }
 

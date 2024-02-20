@@ -5,6 +5,7 @@ import {
   CompareCategoryTeamTable,
   CompareAllTeamTables,
   NewCompareObject,
+  ParsedCompareAllTeamTables,
 } from '../../types/tables/tables'
 import { SerieAttributes } from '../../types/series/series'
 import { TeamAndSeasonAttributes } from '../../types/teams/teams'
@@ -135,7 +136,9 @@ export const compareSortFunction = (
   })
 }
 
-export const compareAllTeamData = (allDataArray: CompareAllTeamTables[]) => {
+export const compareAllTeamData = (
+  allDataArray: CompareAllTeamTables[],
+): ParsedCompareAllTeamTables[] => {
   let newArray: NewCompareObject[] = []
 
   allDataArray.forEach((team) => {

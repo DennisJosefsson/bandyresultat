@@ -2,11 +2,8 @@ import { Link } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import { getSeasonGames } from '../../../requests/games'
 import { getSingleSeason } from '../../../requests/seasons'
-import { useContext, useState, useEffect } from 'react'
-import {
-  TeamPreferenceContext,
-  GenderContext,
-} from '../../../contexts/contexts'
+import { useState, useEffect } from 'react'
+
 import {
   animationData,
   gameSortFunction,
@@ -17,6 +14,8 @@ import AnimationClicker from './AnimationSubComponents/AnimationClicker'
 import AnimationGamesList from './AnimationSubComponents/AnimationGamesList'
 import AnimationTable from './AnimationSubComponents/AnimationTable'
 import GroupSelector from './AnimationSubComponents/GroupSelector'
+import useTeampreferenceContext from '../../../hooks/contextHooks/useTeampreferenceContext'
+import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
 
 const Animation = ({ seasonId }: { seasonId: number }) => {
   const [group, setGroup] = useState<string | null>(null)
@@ -33,16 +32,8 @@ const Animation = ({ seasonId }: { seasonId: number }) => {
     isSuccess: isSeasonSuccess,
   } = useQuery(['singleSeason', seasonId], () => getSingleSeason(seasonId))
 
-  const teamPreferenceContext = useContext(TeamPreferenceContext)
-  const genderContext = useContext(GenderContext)
-  if (!teamPreferenceContext) {
-    throw new Error('Missing team preference context')
-  }
-  if (!genderContext) {
-    throw new Error('Missing gender context')
-  }
-  const { favTeams } = teamPreferenceContext
-  const { women } = genderContext
+  const { favTeams } = useTeampreferenceContext()
+  const { women } = useGenderContext()
 
   useEffect(() => {
     if (isSuccess) {

@@ -1,10 +1,11 @@
-import { Dispatch, SetStateAction, useContext, ChangeEvent } from 'react'
-import { MenuContext } from '../../../contexts/contexts'
+import { Dispatch, SetStateAction, ChangeEvent } from 'react'
+
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 import 'leaflet/dist/leaflet.css'
 import { CompareFormState, TeamAttributes } from '../../types/teams/teams'
+import useMenuContext from '../../../hooks/contextHooks/useMenuContext'
 
 type MapProps = {
   teams: TeamAttributes[]
@@ -23,12 +24,7 @@ const Map = ({
   setTab,
   setTeamId,
 }: MapProps) => {
-  const menuContext = useContext(MenuContext)
-  if (!menuContext) {
-    throw new Error('Missing menu context')
-  }
-
-  const { open } = menuContext
+  const { open } = useMenuContext()
 
   return (
     <div className="mx-auto mb-2 min-h-screen max-w-7xl px-1 font-inter text-[#011d29] lg:px-0">

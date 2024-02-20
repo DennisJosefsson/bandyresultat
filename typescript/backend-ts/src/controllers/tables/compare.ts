@@ -32,6 +32,7 @@ compareRouter.post('/compare', (async (
 
   const seasonNames = await Season.findAll({
     where: { seasonId: { [Op.in]: [startSeason, endSeason] } },
+    attributes: ['seasonId', 'year'],
   })
 
   const getCatTables = await TeamGame.findAll({

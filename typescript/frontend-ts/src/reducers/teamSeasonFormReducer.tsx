@@ -15,7 +15,7 @@ type CompareFormStateActions =
   | { type: 'CLEAR CATEGORIES' }
   | { type: 'INPUT START'; payload: number }
   | { type: 'INPUT END'; payload: number }
-  | { type: 'RESET' }
+  | { type: 'RESET'; payload: boolean }
 
 const teamArrayFormReducer = (
   state: CompareFormState,
@@ -74,6 +74,7 @@ const teamArrayFormReducer = (
         ],
         endSeason: null,
         startSeason: null,
+        women: action.payload,
       }
     default:
       return state

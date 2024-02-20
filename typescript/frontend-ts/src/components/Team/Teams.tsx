@@ -2,7 +2,6 @@ import { useQuery } from 'react-query'
 import {
   useState,
   useReducer,
-  useContext,
   useEffect,
   KeyboardEvent,
   ChangeEvent,
@@ -11,7 +10,6 @@ import {
 import { getTeams } from '../../requests/teams'
 import { getSeasons } from '../../requests/seasons'
 import { useLocation, useParams } from 'react-router-dom'
-import { GenderContext } from '../../contexts/contexts'
 
 import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
 import Spinner from '../utilitycomponents/Components/Spinner'
@@ -28,17 +26,15 @@ import {
   TabBarObject,
 } from '../utilitycomponents/Components/TabBar'
 import { compareTeamsSeasonId, teamIdFromParams } from '../types/teams/teams'
+import useGenderContext from '../../hooks/contextHooks/useGenderContext'
 
 type ValueErrorType = { error: false } | { error: true; message: string }
 
 const Teams = () => {
   const location = useLocation()
   const params = useParams()
-  const genderContext = useContext(GenderContext)
-  if (!genderContext) {
-    throw new Error('Missing gender context')
-  }
-  const { women, dispatch: genderDispatch } = genderContext
+
+  const { women, dispatch: genderDispatch } = useGenderContext()
 
   const [tab, setTab] = useState<string>('teams')
   const [teamId, setTeamId] = useState<number | null>(null)
@@ -235,7 +231,7 @@ const Teams = () => {
   const teamsTabBarObject: TabBarObject = {
     genderClickFunction: () => {
       genderDispatch({ type: 'TOGGLE' })
-      compareDispatch({ type: 'RESET' })
+      compareDispatch({ type: 'RESET', payload: !women })
       tab !== 'map' && setTab('teams')
     },
     tabBarArray: [
@@ -310,7 +306,8 @@ const Teams = () => {
       )
       break
     case 'singleTeam':
-      pageContent = <Team teamId={teamId} />
+      if (teamId) pageContent = <Team teamId={teamId} />
+      else pageContent = <div>Något gick fel, tom sida</div>
       break
     case 'help':
       pageContent = <Help />

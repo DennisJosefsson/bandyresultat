@@ -1,20 +1,12 @@
 import { Link } from 'react-router-dom'
-import { useContext } from 'react'
-import { MenuContext, UserContext } from '../contexts/contexts'
-import useScrollDirection from './utilitycomponents/functions/useScrollDirection'
+
+import useScrollDirection from '../hooks/useScrollDirection'
+import useUserContext from '../hooks/contextHooks/useUserContext'
+import useMenuContext from '../hooks/contextHooks/useMenuContext'
 
 const Header = () => {
-  const userContext = useContext(UserContext)
-  const menuContext = useContext(MenuContext)
-  if (!userContext) {
-    throw new Error('No user context')
-  }
-  if (!menuContext) {
-    throw new Error('No menu context')
-  }
-
-  const { user } = userContext
-  const { open, dispatch } = menuContext
+  const { user } = useUserContext()
+  const { open, dispatch } = useMenuContext()
   const scrollDirection = useScrollDirection()
 
   return (

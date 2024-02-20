@@ -2,9 +2,8 @@ import { useQuery } from 'react-query'
 import { getSeasonGames } from '../../requests/games'
 import { getSingleSeason, getSeasons } from '../../requests/seasons'
 
-import { useState, useContext, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { GenderContext, UserContext } from '../../contexts/contexts'
 
 import ScrollRefComponent from '../utilitycomponents/Components/ScrollRefComponent'
 import GamesList from './Subcomponents/GamesList'
@@ -17,21 +16,15 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 import FilterComponent from './Subcomponents/FilterComponent'
 import { GameObjectType } from '../types/games/games'
+import useGenderContext from '../../hooks/contextHooks/useGenderContext'
+import useUserContext from '../../hooks/contextHooks/useUserContext'
 
 dayjs.locale('sv')
 
 const Games = ({ seasonId }: { seasonId: number }) => {
-  const genderContext = useContext(GenderContext)
-  if (!genderContext) {
-    throw new Error('No gender context')
-  }
-  const { women } = genderContext
+  const { women } = useGenderContext()
 
-  const userContext = useContext(UserContext)
-  if (!userContext) {
-    throw new Error('No user context')
-  }
-  const { user } = userContext
+  const { user } = useUserContext()
 
   const topRef = useRef<HTMLDivElement>(null)
   const bottomRef = useRef<HTMLDivElement>(null)

@@ -11,8 +11,9 @@ import {
   QuestionIcon,
   SearchIcon,
 } from './icons'
-import { Dispatch, SetStateAction, useContext } from 'react'
-import { GenderContext } from '../../../contexts/contexts'
+import { Dispatch, SetStateAction } from 'react'
+
+import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
 
 export type TabBarObject = {
   tabBarArray: {
@@ -52,11 +53,7 @@ export const TabBarInline = ({
   tab: string
   setTab: Dispatch<SetStateAction<string>>
 }) => {
-  const genderContext = useContext(GenderContext)
-  if (!genderContext) {
-    throw new Error('Missing gender context')
-  }
-  const { women } = genderContext
+  const { women } = useGenderContext()
   return (
     <div>
       <div className="hidden items-center bg-slate-300 text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
@@ -132,11 +129,7 @@ export const TabBarDivided = ({
   setTab: Dispatch<SetStateAction<string>>
   onlyDesktop?: boolean
 }) => {
-  const genderContext = useContext(GenderContext)
-  if (!genderContext) {
-    throw new Error('Missing gender context')
-  }
-  const { women } = genderContext
+  const { women } = useGenderContext()
   return (
     <div>
       <div className="hidden items-center bg-slate-300 text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">

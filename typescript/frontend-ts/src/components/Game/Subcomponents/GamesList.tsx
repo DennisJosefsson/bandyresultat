@@ -1,12 +1,10 @@
-import { useContext, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  UserContext,
-  TeamPreferenceContext,
-  GenderContext,
-} from '../../../contexts/contexts'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
+import useUserContext from '../../../hooks/contextHooks/useUserContext'
+import useTeampreferenceContext from '../../../hooks/contextHooks/useTeampreferenceContext'
+import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
 
 dayjs.locale('sv')
 
@@ -19,9 +17,9 @@ const GamesList = ({
   startSeason,
   endSeason,
 }) => {
-  const { user } = useContext(UserContext)
-  const { favTeams } = useContext(TeamPreferenceContext)
-  const { women } = useContext(GenderContext)
+  const { user } = useUserContext()
+  const { favTeams } = useTeampreferenceContext()
+  const { women } = useGenderContext()
   const [width, setWidth] = useState(window.innerWidth)
   const breakpoint = 1050
 

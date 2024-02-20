@@ -1,6 +1,11 @@
 import axios from 'axios'
 import { baseUrl, mobileBaseUrl, header } from './config'
 import { GameObjectType } from '../components/types/games/games'
+import {
+  StreakObjectTypes,
+  StreakParams,
+} from '../components/types/games/streaks'
+import { SearchParamsObject } from '../components/types/games/search'
 const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
 
 const gamesApi = axios.create({
@@ -13,12 +18,14 @@ export const getGames = async () => {
   return response.data
 }
 
-export const getStreaks = async (params) => {
+export const getStreaks = async (
+  params: StreakParams,
+): Promise<StreakObjectTypes> => {
   const response = await gamesApi.post('/streaks', params)
   return response.data
 }
 
-export const getSearch = async (searchParams) => {
+export const getSearch = async (searchParams: SearchParamsObject | null) => {
   const response = await gamesApi.post('/search', searchParams)
   return response.data
 }
@@ -30,27 +37,23 @@ export const getSeasonGames = async (
   return response.data
 }
 
-export const getSeasonStats = async (seasonId) => {
+export const getSeasonStats = async (seasonId: number) => {
   const response = await gamesApi.get(`/stats/${seasonId}`)
   return response.data
 }
 
-export const getSingleGame = async ({ gameId }) => {
+export const getSingleGame = async ({ gameId }: { gameId: number }) => {
   const response = await gamesApi.get(`/${gameId}`)
   return response.data
 }
 
-export const postGame = async (newGameData) => {
+export const postGame = async (newGameData: GameObjectType | null) => {
   const response = await gamesApi.post('/', newGameData)
   return response.data
 }
 
-export const updateGame = async (game) => {
-  return await gamesApi.put(`/${game.gameId}`, game)
-}
-
-export const deleteGame = async ({ gameId }) => {
-  return await gamesApi.delete(`/${gameId}`, gameId)
+export const deleteGame = async ({ gameId }: { gameId: number }) => {
+  return await gamesApi.delete(`/${gameId}`)
 }
 
 export default gamesApi

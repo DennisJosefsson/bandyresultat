@@ -1,6 +1,6 @@
 import { ErrorInfo } from 'react'
-import { ErrorBoundary } from 'react-error-boundary'
 
-export const logError = (_error: ErrorBoundary, info: ErrorInfo) => {
+export const logError = (error: Error, info: ErrorInfo) => {
+  console.log(error.message)
   console.log(info.componentStack)
 }

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, SyntheticEvent } from 'react'
 
 const copyText = async (url: string) => {
   if ('clipboard' in navigator) {
@@ -9,7 +9,7 @@ const copyText = async (url: string) => {
 }
 
 export const handleCopyClick = (
-  event: Event,
+  event: SyntheticEvent,
   compareLink: string,
   setIsCopied: Dispatch<SetStateAction<boolean>>,
 ) => {

@@ -64,7 +64,34 @@ export const compareAllTeamTables = z.object({
   totalWins: z.coerce.number(),
 })
 
+export const parsedCompareAllTeamTables = z.object({
+  lag: z.object({
+    teamId: z.number(),
+    casualName: z.string(),
+    name: z.string(),
+    shortName: z.string(),
+  }),
+  opp: z.object({
+    teamId: z.number(),
+    casualName: z.string(),
+    name: z.string(),
+    shortName: z.string(),
+  }),
+  team: z.number(),
+  totalDraws: z.coerce.number(),
+  totalGames: z.coerce.number(),
+  totalGoalDifference: z.coerce.number(),
+  totalGoalsConceded: z.coerce.number(),
+  totalGoalsScored: z.coerce.number(),
+  totalLost: z.coerce.number(),
+  totalPoints: z.coerce.number(),
+  totalWins: z.coerce.number(),
+})
+
 export type CompareAllTeamTables = z.infer<typeof compareAllTeamTables>
+export type ParsedCompareAllTeamTables = z.infer<
+  typeof parsedCompareAllTeamTables
+>
 export const newCompareObject = z.object({
   lag: z.object({
     shortName: z.string(),
@@ -82,6 +109,34 @@ export const newCompareObject = z.object({
   totalPoints: z.coerce.number(),
   totalWins: z.coerce.number(),
 })
+
+export const maratonTable = z.array(
+  z.object({
+    'lag.casualName': z.string(),
+    'lag.name': z.string(),
+    'lag.shortName': z.string(),
+    'lag.teamId': z.number(),
+    women: z.boolean(),
+    team: z.number(),
+    totalDraws: z.coerce.number(),
+    totalGames: z.coerce.number(),
+    totalGoalDifference: z.coerce.number(),
+    totalGoalsConceded: z.coerce.number(),
+    totalGoalsScored: z.coerce.number(),
+    totalLost: z.coerce.number(),
+    totalPoints: z.coerce.number(),
+    totalWins: z.coerce.number(),
+  }),
+)
+
+export type MaratonTabell = z.infer<typeof maratonTable>
+
+export type MaratonTableType = {
+  maratonTabell: MaratonTabell
+  maratonHemmaTabell: MaratonTabell
+  maratonBortaTabell: MaratonTabell
+}
+
 export type NewCompareObject = z.infer<typeof newCompareObject>
 
 export const singleTeamTable = z.object({

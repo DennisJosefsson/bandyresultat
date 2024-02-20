@@ -4,7 +4,6 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom'
-import { useContext } from 'react'
 
 import Home from './components/Home'
 import Header from './components/Header'
@@ -18,8 +17,9 @@ import Dashboard from './components/Dashboard/Dashboard'
 import About from './components/About/About'
 import Link from './components/Link/Link'
 import Search from './components/Search/Search'
-import { UserContext } from './contexts/contexts'
+
 import Maraton from './components/Maraton/Maraton'
+import useUserContext from './hooks/contextHooks/useUserContext'
 
 const ProtectedRoute = ({ user, children }) => {
   if (!user) {
@@ -30,7 +30,7 @@ const ProtectedRoute = ({ user, children }) => {
 }
 
 const App = () => {
-  const { user } = useContext(UserContext)
+  const { user } = useUserContext()
   return (
     <Router>
       <div className="flex flex-col bg-[#f4f5f5] text-[#011d29] lg:min-h-screen">
