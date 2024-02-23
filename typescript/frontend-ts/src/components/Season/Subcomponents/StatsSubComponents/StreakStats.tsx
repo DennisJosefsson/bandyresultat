@@ -1,10 +1,17 @@
-import ScoreStatsCard from './ScoreStatsCard'
+import { SeasonStatsObjectType } from '../../../types/games/stats'
+import MaxDiffStatsCard from './MaxDiffStatsCard'
+import ScoreStatsCard from './MaxMinGoalsStatsCard'
 import StreakStatsCard from './StreakStatsCard'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 dayjs.locale('sv')
 
-const StreakStats = ({ data, women }) => {
+type StreakStatsProps = {
+  data: SeasonStatsObjectType
+  women: boolean
+}
+
+const StreakStats = ({ data, women }: StreakStatsProps) => {
   const unbeatenStreak = data.unbeatenStreak.filter(
     (table) => table.women === women,
   )
@@ -47,20 +54,20 @@ const StreakStats = ({ data, women }) => {
           <div>
             <ScoreStatsCard
               title="Match(er) med flest antal mål:"
-              streakMen={maxGoalsMen}
-              streakWomen={maxGoalsWomen}
+              maxMinGoalsMen={maxGoalsMen}
+              maxMinGoalsWomen={maxGoalsWomen}
               women={women}
             />
             <ScoreStatsCard
               title="Match(er) med minst antal mål:"
-              streakMen={minGoalsMen}
-              streakWomen={minGoalsWomen}
+              maxMinGoalsMen={minGoalsMen}
+              maxMinGoalsWomen={minGoalsWomen}
               women={women}
             />
-            <ScoreStatsCard
+            <MaxDiffStatsCard
               title="Match(er) med störst målskillnad:"
-              streakMen={maxDiffMen}
-              streakWomen={maxDiffWomen}
+              maxDiffMen={maxDiffMen}
+              maxDiffWomen={maxDiffWomen}
               women={women}
             />
           </div>

@@ -1,4 +1,6 @@
 import { z } from 'zod'
+import { compareLink } from '../link/link'
+import { searchResultTeamgameObject } from './games'
 
 export const searchParamsObject = z
   .object({
@@ -41,7 +43,7 @@ export const searchParamsObject = z
       .object({ value: z.number(), label: z.string() })
       .optional()
       .nullable(),
-    women: z.string().optional().nullable(),
+    women: z.boolean().nullable(),
     inputDate: z
       .string()
       .regex(/^\d{1,2}\/\d{1,2}/)
@@ -65,4 +67,11 @@ export const searchParamsObject = z
   })
   .refine((arg) => arg.endSeason >= arg.startSeason)
 
+export const searchResponseObject = z.object({
+  searchLink: compareLink,
+  searchResult: z.array(searchResultTeamgameObject),
+  hits: z.number(),
+})
+
 export type SearchParamsObject = z.infer<typeof searchParamsObject>
+export type SearchResponseObject = z.infer<typeof searchResponseObject>

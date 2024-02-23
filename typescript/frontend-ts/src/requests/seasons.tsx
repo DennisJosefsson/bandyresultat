@@ -29,12 +29,4 @@ export const postTeamSeason = async ({ formState, seasonId, women }) => {
   return await seasonsApi.post('/teamseason', { formState, seasonId, women })
 }
 
-export const updateSeason = async (season) => {
-  return await seasonsApi.put(`/${season.seasonId}`, season)
-}
-
-export const deleteSeason = async ({ seasonId }) => {
-  return await seasonsApi.delete(`/${seasonId}`, seasonId)
-}
-
 export default seasonsApi

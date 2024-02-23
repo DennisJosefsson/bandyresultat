@@ -1,19 +1,20 @@
 import { useQuery } from 'react-query'
 import { getSingleSeasonTable } from '../../../requests/tables'
 import { Link } from 'react-router-dom'
-import { useContext, useState, useEffect } from 'react'
-import { GenderContext } from '../../../contexts/contexts'
+import { useState, useEffect } from 'react'
 import PlayoffSeriesPopup from './PlayoffSubComponents/PlayoffSeriesPopup'
 import LoadingOrError from '../../utilitycomponents/Components/LoadingOrError'
 import SeasonPlayoffTables from './PlayoffSubComponents/SeasonPlayoffTables'
+import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
+import { GameObjectType } from '../../types/games/games'
 
-const Playoff = ({ seasonId }) => {
-  const { women } = useContext(GenderContext)
+const Playoff = ({ seasonId }: { seasonId: number }) => {
+  const { women } = useGenderContext()
 
-  const [gameData, setGameData] = useState(null)
-  const [showPopup, setShowPopup] = useState(false)
+  const [gameData, setGameData] = useState<GameObjectType[] | null>(null)
+  const [showPopup, setShowPopup] = useState<boolean>(false)
 
-  const { data, isLoading, error } = useQuery(
+  const { data, isLoading, error, isSuccess } = useQuery(
     ['singleSeasonTable', seasonId],
     () => getSingleSeasonTable(seasonId),
   )
@@ -24,6 +25,8 @@ const Playoff = ({ seasonId }) => {
 
   if (isLoading || error)
     return <LoadingOrError isLoading={isLoading} error={error} />
+
+  if (!isSuccess) return null
 
   const tables = data.tabell.filter((table) => table.women === women)
   const playoffGames = data.playoffGames.filter(
@@ -45,14 +48,6 @@ const Playoff = ({ seasonId }) => {
     )
   }
 
-  if (playoffGames.length === 0) {
-    return (
-      <div className="mx-auto mt-4 grid place-items-center font-inter font-bold text-[#011d29]">
-        Inga slutspelsmatcher än.
-      </div>
-    )
-  }
-
   return (
     <div>
       {seasonId < 2025 && (
@@ -62,6 +57,8 @@ const Playoff = ({ seasonId }) => {
           final={final}
           setGameData={setGameData}
           setShowPopup={setShowPopup}
+          women={women}
+          seasonId={seasonId}
         />
       )}
       {showPopup && (

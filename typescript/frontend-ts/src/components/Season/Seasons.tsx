@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query'
 import { getSeasons } from '../../requests/seasons'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, KeyboardEvent } from 'react'
 
 import SeasonsList from './Subcomponents/SeasonsList'
 import FilterComponent from './Subcomponents/FilterComponent'
@@ -10,9 +10,12 @@ import ScrollRefComponent from '../utilitycomponents/Components/ScrollRefCompone
 
 const Seasons = () => {
   const [seasonFilter, setSeasonFilter] = useState('')
-  const topRef = useRef()
-  const bottomRef = useRef()
-  const { data, isLoading, error } = useQuery('allSeasons', getSeasons)
+  const topRef = useRef(null)
+  const bottomRef = useRef(null)
+  const { data, isLoading, error, isSuccess } = useQuery(
+    'allSeasons',
+    getSeasons,
+  )
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
@@ -21,13 +24,15 @@ const Seasons = () => {
   if (isLoading || error)
     return <LoadingOrError isLoading={isLoading} error={error} />
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault()
     }
   }
 
-  const seasons = data.filter((season) => season.year.includes(seasonFilter))
+  const seasons = isSuccess
+    ? data.filter((season) => season.year.includes(seasonFilter))
+    : []
 
   return (
     <div

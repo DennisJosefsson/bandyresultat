@@ -1,20 +1,27 @@
-import { useContext } from 'react'
 import { useQuery } from 'react-query'
-import { GenderContext, MenuContext } from '../../../contexts/contexts'
+
 import { Link } from 'react-router-dom'
 import { getSingleSeason } from '../../../requests/seasons'
-import Spinner from '../../utilitycomponents/Components/spinner'
+import Spinner from '../../utilitycomponents/Components/Spinner'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import { latLngBounds, Icon } from 'leaflet'
+import {
+  latLngBounds,
+  Icon,
+  LatLngTuple,
+  LatLngBounds,
+  LatLngExpression,
+} from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
+import useMenuContext from '../../../hooks/contextHooks/useMenuContext'
 
-const Map = ({ seasonId }) => {
+const Map = ({ seasonId }: { seasonId: number }) => {
   const { data, isLoading, error } = useQuery(['singleSeason', seasonId], () =>
     getSingleSeason(seasonId),
   )
-  const { women } = useContext(GenderContext)
-  const { open } = useContext(MenuContext)
+  const { women } = useGenderContext()
+  const { open } = useMenuContext()
 
   if (isLoading) {
     return (
@@ -24,18 +31,10 @@ const Map = ({ seasonId }) => {
     )
   }
 
-  if (error) {
+  if (error && error instanceof Error) {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
-        Något gick fel.
-      </div>
-    )
-  }
-
-  if (data?.success === 'false') {
-    return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
-        {data.message}
+        {error.message}
       </div>
     )
   }
@@ -65,25 +64,25 @@ const Map = ({ seasonId }) => {
     shadowSize: [41, 41],
   })
 
-  const teams = data
-    .find((season) => season.women === women)
-    .teams.filter((team) => team.teamseason.qualification !== true)
+  const seasonObject = data?.find((season) => season.women === women)
 
-  const qualificationTeams = data
-    .find((season) => season.women === women)
-    .teams.filter((team) => team.teamseason.qualification === true)
+  const teams = seasonObject?.teams.filter(
+    (team) => team.teamseason.qualification !== true,
+  )
 
-  const latLongArray = data
-    .find((season) => season.women === women)
-    .teams.map((team) => {
-      return [team.lat, team.long]
-    })
+  const qualificationTeams = seasonObject?.teams.filter(
+    (team) => team.teamseason.qualification === true,
+  )
 
-  const bounds = new latLngBounds(latLongArray)
+  const latLongArray = seasonObject?.teams.map((team) => {
+    return [team.lat, team.long]
+  }) as LatLngTuple[]
+
+  const bounds = latLngBounds(latLongArray) as LatLngBounds
 
   return (
     <div>
-      {!open && (
+      {!open && teams && qualificationTeams && (
         <div id="map" className="h-[400px] w-screen max-w-xl p-2">
           <MapContainer
             bounds={bounds}
@@ -98,7 +97,7 @@ const Map = ({ seasonId }) => {
             />
             <MarkerClusterGroup chunkedLoading>
               {teams.map((team) => {
-                const position = [team.lat, team.long]
+                const position = [team.lat, team.long] as LatLngExpression
                 return (
                   <Marker key={team.teamId} position={position}>
                     <Popup>{team.name}</Popup>
@@ -106,7 +105,7 @@ const Map = ({ seasonId }) => {
                 )
               })}
               {qualificationTeams.map((team) => {
-                const position = [team.lat, team.long]
+                const position = [team.lat, team.long] as LatLngExpression
                 return (
                   <Marker key={team.teamId} position={position} icon={qualIcon}>
                     <Popup>{team.name}</Popup>

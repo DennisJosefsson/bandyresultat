@@ -1,11 +1,17 @@
+import { SeasonStatsObjectType } from '../../../types/games/stats'
 import GoalStatsCard from './GoalStatsCard'
 
-const GoalStats = ({ data, women }) => {
+type GoalStatsProps = {
+  data: SeasonStatsObjectType
+  women: boolean
+}
+
+const GoalStats = ({ data, women }: GoalStatsProps) => {
   const goalsScoredTotal = data.goalsScoredTotal.find(
     (cat) => cat.women === women,
   )
 
-  if (goalsScoredTotal.data === 0) return null
+  if (!goalsScoredTotal || goalsScoredTotal.data === 0) return null
 
   const goalsScoredTotalCat = data.goalsScoredTotalCat.filter(
     (cat) => cat.women === women,
@@ -53,33 +59,42 @@ const GoalStats = ({ data, women }) => {
           title="Antal mål"
           base={goalsScoredTotal}
           catArray={goalsScoredTotalCat}
-          half
         />
-        <GoalStatsCard
-          title="Antal mål hemmalag"
-          base={goalsScoredHomeTotal}
-          catArray={goalsScoredHomeTotalCat}
-        />
-        <GoalStatsCard
-          title="Antal mål bortalag"
-          base={goalsScoredAwayTotal}
-          catArray={goalsScoredAwayTotalCat}
-        />
-        <GoalStatsCard
-          title="Genomsnitt mål"
-          base={goalsScoredAverage}
-          catArray={goalsScoredAverageCat}
-        />
-        <GoalStatsCard
-          title="Genomsnitt mål hemmalag"
-          base={goalsScoredHomeAverage}
-          catArray={goalsScoredHomeAverageCat}
-        />
-        <GoalStatsCard
-          title="Genomsnitt mål bortalag"
-          base={goalsScoredAwayAverage}
-          catArray={goalsScoredAwayAverageCat}
-        />
+        {goalsScoredHomeTotal && (
+          <GoalStatsCard
+            title="Antal mål hemmalag"
+            base={goalsScoredHomeTotal}
+            catArray={goalsScoredHomeTotalCat}
+          />
+        )}
+        {goalsScoredAwayTotal && (
+          <GoalStatsCard
+            title="Antal mål bortalag"
+            base={goalsScoredAwayTotal}
+            catArray={goalsScoredAwayTotalCat}
+          />
+        )}
+        {goalsScoredAverage && (
+          <GoalStatsCard
+            title="Genomsnitt mål"
+            base={goalsScoredAverage}
+            catArray={goalsScoredAverageCat}
+          />
+        )}
+        {goalsScoredHomeAverage && (
+          <GoalStatsCard
+            title="Genomsnitt mål hemmalag"
+            base={goalsScoredHomeAverage}
+            catArray={goalsScoredHomeAverageCat}
+          />
+        )}
+        {goalsScoredAwayAverage && (
+          <GoalStatsCard
+            title="Genomsnitt mål bortalag"
+            base={goalsScoredAwayAverage}
+            catArray={goalsScoredAwayAverageCat}
+          />
+        )}
       </div>
     </div>
   )

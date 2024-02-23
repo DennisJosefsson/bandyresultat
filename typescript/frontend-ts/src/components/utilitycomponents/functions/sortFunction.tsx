@@ -5,7 +5,6 @@ import {
   CompareCategoryTeamTable,
   CompareAllTeamTables,
   NewCompareObject,
-  ParsedCompareAllTeamTables,
 } from '../../types/tables/tables'
 import { SerieAttributes } from '../../types/series/series'
 import { TeamAndSeasonAttributes } from '../../types/teams/teams'
@@ -80,6 +79,8 @@ export const gameSortFunction = (
   return sortGroupsAndDates
 }
 
+export type SortedGamesType = ReturnType<typeof gameSortFunction>
+
 export const tableSortFunction = (tableArray: TableObjectType[]) => {
   const groupArray = tableArray.reduce((groups, table) => {
     if (!groups[table.group]) {
@@ -136,9 +137,7 @@ export const compareSortFunction = (
   })
 }
 
-export const compareAllTeamData = (
-  allDataArray: CompareAllTeamTables[],
-): ParsedCompareAllTeamTables[] => {
+export const compareAllTeamData = (allDataArray: CompareAllTeamTables[]) => {
   let newArray: NewCompareObject[] = []
 
   allDataArray.forEach((team) => {
@@ -146,10 +145,10 @@ export const compareAllTeamData = (
       newArray.push({
         team: team.team,
         lag: {
-          casualName: team['lag.casualName'],
-          name: team['lag.name'],
-          teamId: team['lag.teamId'],
-          shortName: team['lag.shortName'],
+          casualName: team.lag.casualName,
+          name: team.lag.name,
+          teamId: team.lag.teamId,
+          shortName: team.lag.shortName,
         },
         totalGames: 0,
         totalWins: 0,
@@ -169,9 +168,9 @@ export const compareAllTeamData = (
     newArray[teamIndex].totalDraws += team.totalDraws
     newArray[teamIndex].totalLost += team.totalLost
     newArray[teamIndex].totalGoalsScored += team.totalGoalsScored
-    ;(newArray[teamIndex].totalGoalsConceded += team.totalGoalsConceded),
-      (newArray[teamIndex].totalGoalDifference += team.totalGoalDifference),
-      (newArray[teamIndex].totalPoints += team.totalPoints)
+    newArray[teamIndex].totalGoalsConceded += team.totalGoalsConceded
+    newArray[teamIndex].totalGoalDifference += team.totalGoalDifference
+    newArray[teamIndex].totalPoints += team.totalPoints
   })
 
   return newArray.sort((a, b) => {
@@ -189,10 +188,10 @@ export const filterOpposition = (array: CompareAllTeamTables[]) => {
   let tempArray: string[] = []
 
   const callback = (item: CompareAllTeamTables) => {
-    if (tempArray.includes(item['lag.casualName'] + item['opp.casualName'])) {
+    if (tempArray.includes(item.lag.casualName + item.opp.casualName)) {
       return false
     } else {
-      tempArray.push(item['opp.casualName'] + item['lag.casualName'])
+      tempArray.push(item.opp.casualName + item.lag.casualName)
       return true
     }
   }

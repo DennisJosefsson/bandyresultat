@@ -49,7 +49,7 @@ const CompareHeader = ({
   }
 
   const teamStringArray = [
-    ...new Set(compareAllGames.map((team) => team['lag.casualName'])),
+    ...new Set(compareAllGames.map((team) => team.lag.casualName)),
   ]
 
   const lastTeam = teamStringArray.pop()

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
+import { SeasonObjectType } from '../../types/season/seasons'
 
-const SeasonsList = ({ seasons }) => {
+const SeasonsList = ({ seasons }: { seasons: SeasonObjectType[] }) => {
   return (
     <div className="grid grid-cols-1 justify-between gap-x-8 gap-y-2 pt-2 sm:grid-cols-2 lg:grid-cols-3">
       {seasons.map((season) => {

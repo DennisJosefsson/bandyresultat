@@ -9,7 +9,10 @@ import {
   CompareResponseObjectType,
   compareResponseObject,
 } from '../components/types/teams/compare'
-import { MaratonTableType } from '../components/types/tables/tables'
+import {
+  MaratonTableType,
+  SingleSeasonTableType,
+} from '../components/types/tables/tables'
 
 const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
 
@@ -40,10 +43,10 @@ export const compareTeams = async (
     throw new Error(parsedResponseObject.error.message)
   }
   const categoryData = compareSortFunction(parsedResponseObject.data.tabeller)
-  const allData: CompareResponseObjectType['allData'] =
-    compObject.teamArray.length === 2
-      ? parsedResponseObject.data.compareAllGames
-      : compareAllTeamData(parsedResponseObject.data.compareAllGames)
+  const allData = parsedResponseObject.data.compareAllGames
+  const sortedData = compareAllTeamData(
+    parsedResponseObject.data.compareAllGames,
+  )
   const firstGames = parsedResponseObject.data.firstAndLatestGames.filter(
     (game) => game.ranked_first_games === '1',
   )
@@ -71,24 +74,27 @@ export const compareTeams = async (
     seasons: parsedResponseObject.data.seasons,
     allSeasons: parsedResponseObject.data.allSeasons,
     allData,
+    sortedData,
     categoryData,
     firstGames,
     latestGames,
   }
 }
 
-export const getSingleSeasonTable = async (seasonId: number) => {
+export const getSingleSeasonTable = async (
+  seasonId: number,
+): Promise<SingleSeasonTableType> => {
   const response = await tablesApi.get(`/${seasonId}`)
   return response.data
 }
 
-export const postTable = async (table) => {
-  return await tablesApi.post('/', table)
-}
+// export const postTable = async (table) => {
+//   return await tablesApi.post('/', table)
+// }
 
-export const updateTable = async (table) => {
-  return await tablesApi.put(`/${table.id}`, table)
-}
+// export const updateTable = async (table) => {
+//   return await tablesApi.put(`/${table.id}`, table)
+// }
 
 export const deleteTable = async ({ tableId }: { tableId: number }) => {
   return await tablesApi.delete(`/${tableId}`)

@@ -55,15 +55,15 @@ const AllData = ({ allData, compObject }: AllDataProps) => {
                 {compObject.teamArray.length > 2 && (
                   <td className="team">
                     {width < breakpoint
-                      ? `${'lag.shortName' in team ? team['lag.shortName'] : team.lag.shortName}`
-                      : `${'lag.casualName' in team ? team['lag.casualName'] : team.lag.casualName}`}
+                      ? team.lag.shortName
+                      : team.lag.casualName}
                   </td>
                 )}
                 {compObject.teamArray.length === 2 && (
                   <td className="team">
                     {width < breakpoint
-                      ? `${'lag.shortName' in team ? team['lag.shortName'] : team.lag.shortName}-${'opp.shortName' in team ? team['opp.shortName'] : team.opp.shortName}`
-                      : `${'lag.casualName' in team ? team['lag.casualName'] : team.lag.casualName}-${'opp.casualName' in team ? team['opp.casualName'] : team.opp.casualName}`}
+                      ? `${team.lag.shortName}-${team.opp.shortName}`
+                      : `${team.lag.casualName}-${team.opp.casualName}`}
                   </td>
                 )}
                 <td>{team.totalGames}</td>

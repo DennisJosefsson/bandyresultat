@@ -173,7 +173,7 @@ const Animation = ({ seasonId }: { seasonId: number }) => {
           <AnimationClicker
             round={round}
             setRound={setRound}
-            dateArray={dateArray}
+            arrayLength={dateArray.length}
             groupName={groupName}
           />
           <div>

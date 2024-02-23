@@ -2,11 +2,11 @@ import { useForm, Controller, FormProvider, FieldErrors } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, RefObject, MouseEvent } from 'react'
 import { getTeams } from '../../requests/teams'
 import { getSearch } from '../../requests/games'
 import { getLinkData } from '../../requests/link'
-
+import { useCopyToClipboard } from 'usehooks-ts'
 import Spinner from '../utilitycomponents/Components/Spinner'
 import Select from 'react-select'
 import { selectStyles } from '../utilitycomponents/Components/selectStyles'
@@ -19,11 +19,12 @@ import ResultComponent from './Subcomponents/ResultComponent'
 import SearchHelp from './Subcomponents/SearchFormModal'
 import { TabBarDivided } from '../utilitycomponents/Components/TabBar'
 import { ChevronDown } from '../utilitycomponents/Components/icons'
-import { handleCopyClick } from '../utilitycomponents/functions/copyLinkFunctions'
+
 import { SearchParamsObject, searchParamsObject } from '../types/games/search'
 import { zodResolver } from '@hookform/resolvers/zod'
 import useGenderContext from '../../hooks/contextHooks/useGenderContext'
 import useMenuContext from '../../hooks/contextHooks/useMenuContext'
+import { AxiosError } from 'axios'
 
 const ErrorComponent = ({ errors }: { errors: FieldErrors }) => {
   if (Object.keys(errors).length === 0) {
@@ -67,10 +68,10 @@ const Search = () => {
   const [showPreferenceForm, setShowPreferenceForm] = useState<boolean>(false)
   const [tab, setTab] = useState<string>('search')
   const [linkDataParams, setLinkDataParams] = useState<string | null>(null)
-  const [isCopied, setIsCopied] = useState<boolean>(false)
+
   const [linkDataLoaded, setLinkDataLoaded] = useState<boolean>(false)
   const [linkError, setLinkError] = useState<ErrorState>({ error: false })
-
+  const [copiedText, copy] = useCopyToClipboard()
   const topRef = useRef(null)
   const bottomRef = useRef(null)
   const methods = useForm<SearchParamsObject>({
@@ -116,9 +117,14 @@ const Search = () => {
     data: teams,
     isLoading: isTeamsLoading,
     error: isTeamsError,
+    isSuccess: isTeamsSuccess,
   } = useQuery('teams', getTeams)
 
-  const { data: searchResult } = useQuery({
+  const {
+    data: searchResult,
+    error: searchResultError,
+    isSuccess: isSearchResultSuccess,
+  } = useQuery({
     queryKey: ['search', searchParams],
     queryFn: () => getSearch(searchParams),
     enabled: !!searchParams,
@@ -131,20 +137,7 @@ const Search = () => {
   })
 
   useEffect(() => {
-    methods.setValue('women', Boolean(women).toString())
-
-    if (searchResult && searchResult.status === 400) {
-      methods.setError('inputDate', {
-        type: 'manual',
-        message: searchResult.message,
-      })
-    }
-    if (searchResult && searchResult.status === 404) {
-      methods.setError('root.random', {
-        type: 'random',
-        message: searchResult.message,
-      })
-    }
+    methods.setValue('women', women)
 
     if (linkData && !linkData?.success) {
       methods.setError('root.random', {
@@ -188,6 +181,27 @@ const Search = () => {
     )
   }
 
+  if (searchResultError) {
+    if (
+      searchResultError instanceof AxiosError &&
+      searchResultError.response?.status === 400
+    ) {
+      methods.setError('inputDate', {
+        type: 'manual',
+        message: searchResultError.response.data,
+      })
+    }
+    if (
+      searchResultError instanceof AxiosError &&
+      searchResultError.response?.status === 404
+    ) {
+      methods.setError('root.random', {
+        type: 'random',
+        message: searchResultError.response.data,
+      })
+    }
+  }
+
   if (isTeamsError) {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
@@ -196,8 +210,9 @@ const Search = () => {
     )
   }
 
-  const scrollTo = (event, ref) => {
+  const scrollTo = (event: MouseEvent, ref: RefObject<HTMLDivElement>) => {
     event.preventDefault()
+    if (!ref.current) throw new Error('Missing element for scroll ref')
     window.scrollTo(0, ref.current.offsetTop)
   }
 
@@ -208,8 +223,12 @@ const Search = () => {
     setShowSeasonForm(false)
   }
 
-  const filteredTeams = teams.filter((team) => team.women === women)
-  const filteredOpponents = teams.filter((team) => team.women === women)
+  const filteredTeams = isTeamsSuccess
+    ? teams.filter((team) => team.women === women)
+    : []
+  const filteredOpponents = isTeamsSuccess
+    ? teams.filter((team) => team.women === women)
+    : []
 
   const teamSelection = filteredTeams.map((team) => {
     return { value: team.teamId, label: team.casualName }
@@ -219,24 +238,26 @@ const Search = () => {
     return { value: team.teamId, label: team.casualName }
   })
 
-  const onSubmit = (data) => setSearchParams(data)
+  const onSubmit = (data: SearchParamsObject) => setSearchParams(data)
 
-  const gameArray = searchResult?.searchResult
-    ?.filter((game, index, array) => {
-      const gameIndex = array.findIndex((b) => game.gameId === b.gameId)
-      return index === gameIndex
-    })
-    .map((game) => {
-      return {
-        homeTeam: game.homeGame ? game.lag : game.opp,
-        awayTeam: game.homeGame ? game.opp : game.lag,
-        homeTeamId: game.homeGame ? game.team : game.opponent,
-        awayTeamId: game.homeGame ? game.opponent : game.team,
-        result: game.game.result,
-        date: game.date,
-        qualification: game.qualificationGame,
-      }
-    })
+  const gameArray = isSearchResultSuccess
+    ? searchResult?.searchResult
+        ?.filter((game, index, array) => {
+          const gameIndex = array.findIndex((b) => game.gameId === b.gameId)
+          return index === gameIndex
+        })
+        .map((game) => {
+          return {
+            homeTeam: game.homeGame ? game.lag : game.opp,
+            awayTeam: game.homeGame ? game.opp : game.lag,
+            homeTeamId: game.homeGame ? game.team : game.opponent,
+            awayTeamId: game.homeGame ? game.opponent : game.team,
+            result: game.game.result,
+            date: game.date,
+            qualification: game.qualificationGame,
+          }
+        })
+    : []
 
   const searchTabBarObject = {
     genderClickFunction: () => {
@@ -283,12 +304,8 @@ const Search = () => {
                 Nollställ
               </ButtonComponent>
               {searchResult && (
-                <ButtonComponent
-                  clickFunctions={(event) =>
-                    handleCopyClick(event, searchLink, setIsCopied)
-                  }
-                >
-                  {isCopied ? 'Kopierad!' : `Länk: ${searchLink}`}
+                <ButtonComponent clickFunctions={() => copy(searchLink)}>
+                  {copiedText ? 'Kopierad!' : `Länk: ${searchLink}`}
                 </ButtonComponent>
               )}
             </div>

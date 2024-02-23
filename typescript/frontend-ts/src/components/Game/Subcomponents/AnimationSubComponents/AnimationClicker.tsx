@@ -1,9 +1,22 @@
+import { Dispatch, SetStateAction } from 'react'
 import {
   LeftArrow,
   RightArrow,
 } from '../../../utilitycomponents/Components/icons'
 
-const AnimationClicker = ({ round, setRound, groupName, dateArray }) => {
+type AnimationClickerProps = {
+  round: number
+  setRound: Dispatch<SetStateAction<number>>
+  groupName: string
+  arrayLength: number
+}
+
+const AnimationClicker = ({
+  round,
+  setRound,
+  groupName,
+  arrayLength,
+}: AnimationClickerProps) => {
   return (
     <div className="flex w-full flex-row items-center justify-evenly">
       <div
@@ -21,10 +34,10 @@ const AnimationClicker = ({ round, setRound, groupName, dateArray }) => {
       </div>
       <div
         onClick={() =>
-          round < dateArray.length - 1 && setRound((current) => current + 1)
+          round < arrayLength - 1 && setRound((current) => current + 1)
         }
         className={
-          round < dateArray.length - 1
+          round < arrayLength - 1
             ? 'mt-3 w-6 cursor-pointer rounded-md py-3 text-right text-[#011d29]'
             : 'mt-3 w-6 cursor-not-allowed rounded-md py-3 text-right text-slate-400'
         }

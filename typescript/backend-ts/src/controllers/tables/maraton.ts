@@ -60,6 +60,7 @@ maratonRouter.get('/maraton', (async (
       ['totalGoalsScored', 'DESC'],
     ],
     raw: true,
+    nest: true,
   })
 
   const maratonTabell = maratonTable.parse(getMaratonTabell)
@@ -105,6 +106,7 @@ maratonRouter.get('/maraton', (async (
       ['totalGoalsScored', 'DESC'],
     ],
     raw: true,
+    nest: true,
   })
 
   const maratonHemmaTabell = maratonTable.parse(getMaratonHemmaTabell)
@@ -150,6 +152,7 @@ maratonRouter.get('/maraton', (async (
       ['totalGoalsScored', 'DESC'],
     ],
     raw: true,
+    nest: true,
   })
 
   const maratonBortaTabell = maratonTable.parse(getMaratonBortaTabell)

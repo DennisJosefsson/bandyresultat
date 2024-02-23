@@ -1,8 +1,14 @@
 import { sortStatsCat } from '../../../utilitycomponents/functions/sortFunction'
 import { groupConstant } from '../../../utilitycomponents/functions/constants'
 import GameResultStatsCard from './GameResultStatsCard'
+import { SeasonStatsObjectType } from '../../../types/games/stats'
 
-const GameResultStats = ({ data, women }) => {
+type GameResultStatsProps = {
+  data: SeasonStatsObjectType
+  women: boolean
+}
+
+const GameResultStats = ({ data, women }: GameResultStatsProps) => {
   const gamesCountTotal = data.gamesCountTotal.find(
     (cat) => cat.women === women,
   )
@@ -33,66 +39,69 @@ const GameResultStats = ({ data, women }) => {
         Match- och resultatstatistik
       </h4>
       <div className="grid grid-cols-1 gap-y-4 pt-2 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:gap-x-44">
-        <div>
-          <GameResultStatsCard
-            title="Antal matcher"
-            count={gamesCountTotal?.count}
-          />
+        {gamesCountTotal && (
+          <div>
+            <GameResultStatsCard
+              title="Antal matcher"
+              count={gamesCountTotal.count}
+            />
 
-          {sortStatsCat(gamesCountTotalCat).map((cat) => {
-            return (
-              <GameResultStatsCard
-                key={`${cat.category}-${Math.random()}`}
-                title={groupConstant[cat.category]}
-                count={cat.count}
-              />
-            )
-          })}
-        </div>
+            {sortStatsCat(gamesCountTotalCat).map((cat) => {
+              return (
+                <GameResultStatsCard
+                  key={`${cat.category}-${Math.random()}`}
+                  title={groupConstant[cat.category]}
+                  count={cat.count}
+                />
+              )
+            })}
+          </div>
+        )}
         <div>
-          {winCountHomeTeam?.count > 0 && (
+          {winCountHomeTeam && winCountHomeTeam.count > 0 && (
             <GameResultStatsCard
               title="Vinster hemmalag"
               count={winCountHomeTeam?.count}
             />
           )}
-          {winCountAwayTeam?.count > 0 && (
+          {winCountAwayTeam && winCountAwayTeam.count > 0 && (
             <GameResultStatsCard
               title="Vinster bortalag"
-              count={winCountAwayTeam?.count}
+              count={winCountAwayTeam.count}
             />
           )}
-          {drawCount?.count > 0 && (
-            <GameResultStatsCard
-              title="Oavgjort"
-              count={drawCount?.count / 2}
-            />
+          {drawCount && drawCount.count > 0 && (
+            <GameResultStatsCard title="Oavgjort" count={drawCount.count} />
           )}
         </div>
         <div>
-          {winCountHomeTeam?.count > 0 && (
-            <GameResultStatsCard
-              title="Vinster hemmalag"
-              count={`${(
-                (winCountHomeTeam?.count / gamesCountTotal?.count) *
-                100
-              ).toFixed(1)}%`}
-            />
-          )}
-          {winCountAwayTeam?.count > 0 && (
-            <GameResultStatsCard
-              title="Vinster bortalag"
-              count={`${(
-                (winCountAwayTeam?.count / gamesCountTotal?.count) *
-                100
-              ).toFixed(1)}%`}
-            />
-          )}
-          {drawCount?.count > 0 && (
+          {winCountHomeTeam &&
+            gamesCountTotal &&
+            winCountHomeTeam.count > 0 && (
+              <GameResultStatsCard
+                title="Vinster hemmalag"
+                count={`${(
+                  (winCountHomeTeam?.count / gamesCountTotal.count) *
+                  100
+                ).toFixed(1)}%`}
+              />
+            )}
+          {winCountAwayTeam &&
+            gamesCountTotal &&
+            winCountAwayTeam.count > 0 && (
+              <GameResultStatsCard
+                title="Vinster bortalag"
+                count={`${(
+                  (winCountAwayTeam?.count / gamesCountTotal.count) *
+                  100
+                ).toFixed(1)}%`}
+              />
+            )}
+          {drawCount && gamesCountTotal && drawCount.count > 0 && (
             <GameResultStatsCard
               title="Oavgjort"
               count={`${(
-                (drawCount?.count / gamesCountTotal?.count) *
+                (drawCount.count / gamesCountTotal.count) *
                 100
               ).toFixed(1)}%`}
             />
@@ -163,17 +172,17 @@ const GameResultStats = ({ data, women }) => {
                 Vinst hemmalag
               </h5>
               {sortStatsCat(winCountHomeTeamCat).map((cat) => {
+                const gamesObject = gamesCountTotalCat.find(
+                  (category) => category.category === cat.category,
+                )
+                if (!gamesObject) return null
                 return (
                   <GameResultStatsCard
                     key={`${cat.category}-${Math.random()}`}
                     title={groupConstant[cat.category]}
-                    count={`${(
-                      (cat?.count /
-                        gamesCountTotalCat.find(
-                          (category) => category.category === cat.category,
-                        ).count) *
-                      100
-                    ).toFixed(1)}%`}
+                    count={`${((cat?.count / gamesObject.count) * 100).toFixed(
+                      1,
+                    )}%`}
                   />
                 )
               })}
@@ -183,17 +192,17 @@ const GameResultStats = ({ data, women }) => {
                 Vinst bortalag
               </h5>
               {sortStatsCat(winCountAwayTeamCat).map((cat) => {
+                const gamesObject = gamesCountTotalCat.find(
+                  (category) => category.category === cat.category,
+                )
+                if (!gamesObject) return null
                 return (
                   <GameResultStatsCard
                     key={`${cat.category}-${Math.random()}`}
                     title={groupConstant[cat.category]}
-                    count={`${(
-                      (cat?.count /
-                        gamesCountTotalCat.find(
-                          (category) => category.category === cat.category,
-                        ).count) *
-                      100
-                    ).toFixed(1)}%`}
+                    count={`${((cat?.count / gamesObject.count) * 100).toFixed(
+                      1,
+                    )}%`}
                   />
                 )
               })}
@@ -204,15 +213,16 @@ const GameResultStats = ({ data, women }) => {
                   Oavgjort
                 </h5>
                 {sortStatsCat(drawCountCat).map((cat) => {
+                  const gamesObject = gamesCountTotalCat.find(
+                    (category) => category.category === cat.category,
+                  )
+                  if (!gamesObject) return null
                   return (
                     <GameResultStatsCard
                       key={`${cat.category}-${Math.random()}`}
                       title={groupConstant[cat.category]}
                       count={`${(
-                        (cat?.count /
-                          gamesCountTotalCat.find(
-                            (category) => category.category === cat.category,
-                          ).count) *
+                        (cat?.count / gamesObject.count) *
                         100
                       ).toFixed(1)}%`}
                     />

@@ -1,11 +1,18 @@
 import axios from 'axios'
 import { baseUrl, mobileBaseUrl, header } from './config'
-import { GameObjectType } from '../components/types/games/games'
+import {
+  GameFormObjectType,
+  GameObjectType,
+} from '../components/types/games/games'
 import {
   StreakObjectTypes,
   StreakParams,
 } from '../components/types/games/streaks'
-import { SearchParamsObject } from '../components/types/games/search'
+import {
+  SearchParamsObject,
+  SearchResponseObject,
+} from '../components/types/games/search'
+import { SeasonStatsObjectType } from '../components/types/games/stats'
 const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
 
 const gamesApi = axios.create({
@@ -25,7 +32,9 @@ export const getStreaks = async (
   return response.data
 }
 
-export const getSearch = async (searchParams: SearchParamsObject | null) => {
+export const getSearch = async (
+  searchParams: SearchParamsObject | null,
+): Promise<SearchResponseObject> => {
   const response = await gamesApi.post('/search', searchParams)
   return response.data
 }
@@ -37,7 +46,9 @@ export const getSeasonGames = async (
   return response.data
 }
 
-export const getSeasonStats = async (seasonId: number) => {
+export const getSeasonStats = async (
+  seasonId: number,
+): Promise<SeasonStatsObjectType> => {
   const response = await gamesApi.get(`/stats/${seasonId}`)
   return response.data
 }
@@ -47,7 +58,7 @@ export const getSingleGame = async ({ gameId }: { gameId: number }) => {
   return response.data
 }
 
-export const postGame = async (newGameData: GameObjectType | null) => {
+export const postGame = async (newGameData: GameFormObjectType | null) => {
   const response = await gamesApi.post('/', newGameData)
   return response.data
 }

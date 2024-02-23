@@ -1,9 +1,15 @@
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
+import { GameObjectType } from '../../../types/games/games'
 
 dayjs.locale('sv')
 
-const FinalCard = ({ game, favTeams }) => {
+type FinalCardProps = {
+  game: GameObjectType
+  favTeams: number[]
+}
+
+const FinalCard = ({ game, favTeams }: FinalCardProps) => {
   return (
     <div className="grid w-auto min-w-[33%] grid-cols-1 justify-center rounded bg-white p-2 shadow-md md:mx-auto">
       <div className="flex flex-col">
@@ -16,7 +22,7 @@ const FinalCard = ({ game, favTeams }) => {
         <div className="mt-1 flex flex-row justify-between text-sm xl:text-lg">
           <span
             className={
-              favTeams.includes(game.homeTeam.teamId) ? 'font-bold' : null
+              favTeams.includes(game.homeTeam.teamId) ? 'font-bold' : undefined
             }
           >
             {game.homeTeam.name}
@@ -24,7 +30,7 @@ const FinalCard = ({ game, favTeams }) => {
           -
           <span
             className={
-              favTeams.includes(game.awayTeam.teamId) ? 'font-bold' : null
+              favTeams.includes(game.awayTeam.teamId) ? 'font-bold' : undefined
             }
           >
             {game.awayTeam.name}

@@ -14,6 +14,10 @@ import Game from '../../models/Game.js'
 
 import NotFoundError from '../../utils/middleware/errors/NotFoundError.js'
 import seasonIdCheck from '../../utils/postFunctions/seasonIdCheck.js'
+import {
+  goalStatsByCatObject,
+  goalStatsObject,
+} from '../../utils/responseTypes/statsTypes.js'
 const statsRouter = Router()
 
 statsRouter.get('/stats/:seasonId', (async (
@@ -34,7 +38,8 @@ statsRouter.get('/stats/:seasonId', (async (
     })
   }
 
-  const goalsScoredTotal = await TeamGame.findAll({
+  const goalsScoredTotalRaw = await TeamGame.findAll({
+    where: { homeGame: true },
     include: {
       model: Season,
       where: { year: { [Op.eq]: seasonYear } },
@@ -45,9 +50,14 @@ statsRouter.get('/stats/:seasonId', (async (
       [sequelize.fn('SUM', sequelize.col('total_goals')), 'data'],
     ],
     group: ['teamgame.women', 'season.year', 'season.season_id'],
+    raw: true,
+    nest: true,
   })
 
-  const goalsScoredTotalCat = await TeamGame.findAll({
+  const goalsScoredTotal = goalStatsObject.parse(goalsScoredTotalRaw)
+
+  const goalsScoredTotalCatRaw = await TeamGame.findAll({
+    where: { homeGame: true },
     include: {
       model: Season,
       where: { year: { [Op.eq]: seasonYear } },
@@ -59,9 +69,13 @@ statsRouter.get('/stats/:seasonId', (async (
       [sequelize.fn('SUM', sequelize.col('total_goals')), 'data'],
     ],
     group: ['teamgame.women', 'category', 'season.year', 'season.season_id'],
+    raw: true,
+    nest: true,
   })
 
-  const goalsScoredHomeTotal = await Game.findAll({
+  const goalsScoredTotalCat = goalStatsByCatObject.parse(goalsScoredTotalCatRaw)
+
+  const goalsScoredHomeTotalRaw = await Game.findAll({
     include: {
       model: Season,
       where: { year: { [Op.eq]: seasonYear } },
@@ -72,9 +86,13 @@ statsRouter.get('/stats/:seasonId', (async (
       [sequelize.fn('SUM', sequelize.col('home_goal')), 'data'],
     ],
     group: ['game.women', 'season.year', 'season.season_id'],
+    raw: true,
+    nest: true,
   })
 
-  const goalsScoredHomeTotalCat = await Game.findAll({
+  const goalsScoredHomeTotal = goalStatsObject.parse(goalsScoredHomeTotalRaw)
+
+  const goalsScoredHomeTotalCatRaw = await Game.findAll({
     include: {
       model: Season,
       where: { year: { [Op.eq]: seasonYear } },
@@ -86,9 +104,15 @@ statsRouter.get('/stats/:seasonId', (async (
       [sequelize.fn('SUM', sequelize.col('home_goal')), 'data'],
     ],
     group: ['game.women', 'category', 'season.year', 'season.season_id'],
+    raw: true,
+    nest: true,
   })
 
-  const goalsScoredAwayTotal = await Game.findAll({
+  const goalsScoredHomeTotalCat = goalStatsByCatObject.parse(
+    goalsScoredHomeTotalCatRaw
+  )
+
+  const goalsScoredAwayTotalRaw = await Game.findAll({
     include: {
       model: Season,
       where: { year: { [Op.eq]: seasonYear } },
@@ -99,9 +123,13 @@ statsRouter.get('/stats/:seasonId', (async (
       [sequelize.fn('SUM', sequelize.col('away_goal')), 'data'],
     ],
     group: ['game.women', 'season.year', 'season.season_id'],
+    raw: true,
+    nest: true,
   })
 
-  const goalsScoredAwayTotalCat = await Game.findAll({
+  const goalsScoredAwayTotal = goalStatsObject.parse(goalsScoredAwayTotalRaw)
+
+  const goalsScoredAwayTotalCatRaw = await Game.findAll({
     include: {
       model: Season,
       where: { year: { [Op.eq]: seasonYear } },
@@ -113,9 +141,15 @@ statsRouter.get('/stats/:seasonId', (async (
       [sequelize.fn('SUM', sequelize.col('away_goal')), 'data'],
     ],
     group: ['game.women', 'category', 'season.year', 'season.season_id'],
+    raw: true,
+    nest: true,
   })
 
-  const goalsScoredAverage = await TeamGame.findAll({
+  const goalsScoredAwayTotalCat = goalStatsByCatObject.parse(
+    goalsScoredAwayTotalCatRaw
+  )
+
+  const goalsScoredAverageRaw = await TeamGame.findAll({
     where: { played: true },
     include: {
       model: Season,
@@ -134,9 +168,13 @@ statsRouter.get('/stats/:seasonId', (async (
       ],
     ],
     group: ['teamgame.women', 'season.year', 'season.season_id'],
+    raw: true,
+    nest: true,
   })
 
-  const goalsScoredAverageCat = await TeamGame.findAll({
+  const goalsScoredAverage = goalStatsObject.parse(goalsScoredAverageRaw)
+
+  const goalsScoredAverageCatRaw = await TeamGame.findAll({
     where: { played: true },
     include: {
       model: Season,
@@ -156,9 +194,15 @@ statsRouter.get('/stats/:seasonId', (async (
       ],
     ],
     group: ['teamgame.women', 'category', 'season.year', 'season.season_id'],
+    raw: true,
+    nest: true,
   })
 
-  const goalsScoredHomeAverage = await Game.findAll({
+  const goalsScoredAverageCat = goalStatsByCatObject.parse(
+    goalsScoredAverageCatRaw
+  )
+
+  const goalsScoredHomeAverageRaw = await Game.findAll({
     include: {
       model: Season,
       where: { year: { [Op.eq]: seasonYear } },
@@ -176,9 +220,15 @@ statsRouter.get('/stats/:seasonId', (async (
       ],
     ],
     group: ['game.women', 'season.year', 'season.season_id'],
+    raw: true,
+    nest: true,
   })
 
-  const goalsScoredHomeAverageCat = await Game.findAll({
+  const goalsScoredHomeAverage = goalStatsObject.parse(
+    goalsScoredHomeAverageRaw
+  )
+
+  const goalsScoredHomeAverageCatRaw = await Game.findAll({
     include: {
       model: Season,
       where: { year: { [Op.eq]: seasonYear } },
@@ -197,9 +247,15 @@ statsRouter.get('/stats/:seasonId', (async (
       ],
     ],
     group: ['game.women', 'category', 'season.year', 'season.season_id'],
+    raw: true,
+    nest: true,
   })
 
-  const goalsScoredAwayAverage = await Game.findAll({
+  const goalsScoredHomeAverageCat = goalStatsByCatObject.parse(
+    goalsScoredHomeAverageCatRaw
+  )
+
+  const goalsScoredAwayAverageRaw = await Game.findAll({
     include: {
       model: Season,
       where: { year: { [Op.eq]: seasonYear } },
@@ -217,9 +273,15 @@ statsRouter.get('/stats/:seasonId', (async (
       ],
     ],
     group: ['game.women', 'season.year', 'season.season_id'],
+    raw: true,
+    nest: true,
   })
 
-  const goalsScoredAwayAverageCat = await Game.findAll({
+  const goalsScoredAwayAverage = goalStatsObject.parse(
+    goalsScoredAwayAverageRaw
+  )
+
+  const goalsScoredAwayAverageCatRaw = await Game.findAll({
     include: {
       model: Season,
       where: { year: { [Op.eq]: seasonYear } },
@@ -238,7 +300,13 @@ statsRouter.get('/stats/:seasonId', (async (
       ],
     ],
     group: ['game.women', 'category', 'season.year', 'season.season_id'],
+    raw: true,
+    nest: true,
   })
+
+  const goalsScoredAwayAverageCat = goalStatsByCatObject.parse(
+    goalsScoredAwayAverageCatRaw
+  )
 
   const gamesCountTotal = await Game.count({
     where: { played: true },
@@ -286,7 +354,7 @@ statsRouter.get('/stats/:seasonId', (async (
       where: { year: { [Op.eq]: seasonYear } },
       attributes: ['year', 'seasonId'],
     },
-    where: { draw: true },
+    where: { draw: true, homeGame: true },
     group: ['teamgame.women', 'season.year', 'season.season_id'],
   })
 
@@ -316,7 +384,7 @@ statsRouter.get('/stats/:seasonId', (async (
       where: { year: { [Op.eq]: seasonYear } },
       attributes: ['year', 'seasonId'],
     },
-    where: { draw: true },
+    where: { draw: true, homeGame: true },
     group: ['teamgame.women', 'category', 'season.year', 'season.season_id'],
   })
 

@@ -1,8 +1,15 @@
 import { useState, useEffect } from 'react'
 import { filterOpposition } from '../../utilitycomponents/functions/sortFunction'
 import { groupConstant } from '../../utilitycomponents/functions/constants'
+import { CompareResponseObjectType } from '../../types/teams/compare'
+import { CompareFormState } from '../../types/teams/teams'
 
-const DetailedData = ({ categoryData, compObject }) => {
+type DetailedDataProps = {
+  categoryData: CompareResponseObjectType['categoryData']
+  compObject: CompareFormState
+}
+
+const DetailedData = ({ categoryData, compObject }: DetailedDataProps) => {
   const [width, setWidth] = useState(window.innerWidth)
   const breakpoint = 768
   useEffect(() => {
@@ -49,7 +56,7 @@ const DetailedData = ({ categoryData, compObject }) => {
                     filterOpposition(category.teams).map((team, index) => {
                       return (
                         <tr
-                          key={`${team.teamId}-${index}`}
+                          key={`${team.team}-${index}`}
                           className="rounded odd:bg-slate-300"
                         >
                           <td className="team">
@@ -57,14 +64,14 @@ const DetailedData = ({ categoryData, compObject }) => {
                               ? `${team.lag.shortName}-${team.opp.shortName}`
                               : `${team.lag.casualName}-${team.opp.casualName}`}
                           </td>
-                          <td>{team.total_games}</td>
-                          <td>{team.total_wins}</td>
-                          <td>{team.total_draws}</td>
-                          <td>{team.total_lost}</td>
-                          <td>{team.total_goals_scored}</td>
-                          <td>{team.total_goals_conceded}</td>
-                          <td>{team.total_goal_difference}</td>
-                          <td>{team.total_points}</td>
+                          <td>{team.totalGames}</td>
+                          <td>{team.totalWins}</td>
+                          <td>{team.totalDraws}</td>
+                          <td>{team.totalLost}</td>
+                          <td>{team.totalGoalsScored}</td>
+                          <td>{team.totalGoalsConceded}</td>
+                          <td>{team.totalGoalDifference}</td>
+                          <td>{team.totalPoints}</td>
                         </tr>
                       )
                     })}
@@ -72,7 +79,7 @@ const DetailedData = ({ categoryData, compObject }) => {
                     category.teams.slice(1).map((team, index) => {
                       return (
                         <tr
-                          key={`${team.teamId}-${index}`}
+                          key={`${team.team}-${index}`}
                           className="rounded odd:bg-slate-300"
                         >
                           <td className="team">
@@ -80,14 +87,14 @@ const DetailedData = ({ categoryData, compObject }) => {
                               ? `${team.lag.shortName}-${team.opp.shortName}`
                               : `${team.lag.casualName}-${team.opp.casualName}`}
                           </td>
-                          <td>{team.total_games}</td>
-                          <td>{team.total_wins}</td>
-                          <td>{team.total_draws}</td>
-                          <td>{team.total_lost}</td>
-                          <td>{team.total_goals_scored}</td>
-                          <td>{team.total_goals_conceded}</td>
-                          <td>{team.total_goal_difference}</td>
-                          <td>{team.total_points}</td>
+                          <td>{team.totalGames}</td>
+                          <td>{team.totalWins}</td>
+                          <td>{team.totalDraws}</td>
+                          <td>{team.totalLost}</td>
+                          <td>{team.totalGoalsScored}</td>
+                          <td>{team.totalGoalsConceded}</td>
+                          <td>{team.totalGoalDifference}</td>
+                          <td>{team.totalPoints}</td>
                         </tr>
                       )
                     })}

@@ -103,6 +103,7 @@ compareRouter.post('/compare', (async (
       ['totalGoalsScored', 'DESC'],
     ],
     raw: true,
+    nest: true,
   })
 
   if (!getCatTables || getCatTables.length === 0) {
@@ -182,6 +183,7 @@ compareRouter.post('/compare', (async (
       ['totalGoalsScored', 'DESC'],
     ],
     raw: true,
+    nest: true,
   })
 
   const compareAllGames = compareAllTeamTables.parse(getCompareAllGames)

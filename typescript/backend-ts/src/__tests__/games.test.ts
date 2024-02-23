@@ -170,7 +170,12 @@ describe('Testing Games router', () => {
       expect(response.body.bortaTabell).toBeDefined()
       expect(response.body.tabell).toContainEqual(
         expect.objectContaining({
-          'lag.shortName': 'VLBK',
+          lag: {
+            casualName: 'Villa Lidköping',
+            name: 'Villa Lidköpings BK',
+            shortName: 'VLBK',
+            teamId: 1,
+          },
           team: 1,
           totalGames: 1,
           totalPoints: 2,

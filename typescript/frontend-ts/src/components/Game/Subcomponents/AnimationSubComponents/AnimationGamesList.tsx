@@ -1,9 +1,26 @@
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
+import { GameObjectType } from '../../../types/games/games'
 
 dayjs.locale('sv')
 
-const AnimationGamesList = ({ dateArray, round, favTeams }) => {
+type DateArrayItem = {
+  date: string
+  games: GameObjectType[]
+}
+
+type AnimationGamesListProps = {
+  dateArray: DateArrayItem[]
+
+  round: number
+  favTeams: number[]
+}
+
+const AnimationGamesList = ({
+  dateArray,
+  round,
+  favTeams,
+}: AnimationGamesListProps) => {
   return (
     <div className="mx-2 xl:mx-0">
       <div>
@@ -16,7 +33,7 @@ const AnimationGamesList = ({ dateArray, round, favTeams }) => {
           </span>
         )}
       </div>
-      {dateArray[round]?.games.map((game) => {
+      {dateArray[round].games.map((game) => {
         return (
           <div
             key={game.gameId}

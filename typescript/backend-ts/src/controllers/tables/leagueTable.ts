@@ -16,7 +16,7 @@ import { leagueTable } from '../../utils/responseTypes/tableTypes.js'
 
 const leagueTableRouter = Router()
 
-leagueTableRouter.get('/season/:seasonId', (async (
+leagueTableRouter.get('/:seasonId', (async (
   req: Request,
   res: Response,
   _next: NextFunction
@@ -100,6 +100,7 @@ leagueTableRouter.get('/season/:seasonId', (async (
       ['totalGoalsScored', 'DESC'],
     ],
     raw: true,
+    nest: true,
   })
 
   const tabell = leagueTable.parse(getTable)
@@ -157,6 +158,7 @@ leagueTableRouter.get('/season/:seasonId', (async (
       ['totalGoalsScored', 'DESC'],
     ],
     raw: true,
+    nest: true,
   })
 
   const hemmaTabell = leagueTable.parse(getHomeTable)
@@ -214,6 +216,7 @@ leagueTableRouter.get('/season/:seasonId', (async (
       ['totalGoalsScored', 'DESC'],
     ],
     raw: true,
+    nest: true,
   })
 
   const bortaTabell = leagueTable.parse(getAwayTable)

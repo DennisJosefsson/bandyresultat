@@ -1,20 +1,37 @@
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
+
 dayjs.locale('sv')
 
-const ScoreStatsCard = ({ streakMen, streakWomen, women, title }) => {
+type MaxDiffType = {
+  home_name: string
+  away_name: string
+  resultat: string
+  datum: string
+  goal_difference: number
+}[]
+
+type MaxDiffStatsCardProps = {
+  maxDiffMen: MaxDiffType
+  maxDiffWomen: MaxDiffType
+  women: boolean
+  title: string
+}
+
+const MaxDiffStatsCard = ({
+  maxDiffMen,
+  maxDiffWomen,
+  women,
+  title,
+}: MaxDiffStatsCardProps) => {
   return (
     <div className="streakCard">
       <h6 className="head">{title}</h6>
       {!women && (
         <div>
-          {streakMen.map((game, index) => {
+          {maxDiffMen.map((game, index) => {
             return (
-              <div
-                key={`${game.casual_name}-${game.game_count}-${
-                  game.start_date
-                }-${index}-${Math.random()}`}
-              >
+              <div key={`${index}-${Math.random()}`}>
                 <div className="streak1st">
                   <div className="name">
                     {game.home_name}-{game.away_name}
@@ -33,13 +50,9 @@ const ScoreStatsCard = ({ streakMen, streakWomen, women, title }) => {
       )}
       {women && (
         <div>
-          {streakWomen.map((game, index) => {
+          {maxDiffWomen.map((game, index) => {
             return (
-              <div
-                key={`${game.casual_name}-${game.game_count}-${
-                  game.start_date
-                }-${index}-${Math.random()}`}
-              >
+              <div key={`${index}-${Math.random()}`}>
                 <div className="streak1st">
                   <div className="name">
                     {game.home_name}-{game.away_name}
@@ -60,4 +73,4 @@ const ScoreStatsCard = ({ streakMen, streakWomen, women, title }) => {
   )
 }
 
-export default ScoreStatsCard
+export default MaxDiffStatsCard

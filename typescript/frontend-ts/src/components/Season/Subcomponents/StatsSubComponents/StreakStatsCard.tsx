@@ -2,7 +2,21 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 dayjs.locale('sv')
 
-const StreakStatsCard = ({ streak, title }) => {
+type StreakType = {
+  women: boolean
+  team: number
+  casual_name: string
+  game_count: number
+  start_date: string
+  end_date: string
+}[]
+
+type StreakStatsCard = {
+  streak: StreakType
+  title: string
+}
+
+const StreakStatsCard = ({ streak, title }: StreakStatsCard) => {
   return (
     <div className="streakCard">
       <h6 className="head">{title}</h6>

@@ -1,8 +1,21 @@
+import { CompareResponseObjectType } from '../../types/teams/compare'
+import { CompareFormState } from '../../types/teams/teams'
 import FirstGames from './CompareStatsSubComponents/FirstGames'
 import Golds from './CompareStatsSubComponents/Golds'
 import LatestGames from './CompareStatsSubComponents/LatestGames'
 import Playoffs from './CompareStatsSubComponents/Playoffs'
 import Seasons from './CompareStatsSubComponents/Seasons'
+
+type CompareStatsProps = {
+  compObject: CompareFormState
+  firstGames: CompareResponseObjectType['firstGames']
+  latestGames: CompareResponseObjectType['latestGames']
+  golds: CompareResponseObjectType['golds']
+  playoffs: CompareResponseObjectType['playoffs']
+  allPlayoffs: CompareResponseObjectType['allPlayoffs']
+  seasons: CompareResponseObjectType['seasons']
+  allSeasons: CompareResponseObjectType['allSeasons']
+}
 
 const CompareStats = ({
   compObject,
@@ -13,7 +26,7 @@ const CompareStats = ({
   allPlayoffs,
   seasons,
   allSeasons,
-}) => {
+}: CompareStatsProps) => {
   return (
     <div>
       <h2 className="text-sm font-bold md:text-lg xl:text-right">Statistik</h2>

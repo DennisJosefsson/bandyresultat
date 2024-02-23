@@ -4,7 +4,21 @@ import useTeampreferenceContext from '../../../hooks/contextHooks/useTeamprefere
 
 dayjs.locale('sv')
 
-const ResultComponent = ({ gameArray }) => {
+type Game = {
+  homeTeam: { casualName: string }
+  awayTeam: { casualName: string }
+  homeTeamId: number
+  awayTeamId: number
+  result: string
+  date: string
+  qualification: boolean
+}
+
+type ResultComponentProps = {
+  gameArray: Game[]
+}
+
+const ResultComponent = ({ gameArray }: ResultComponentProps) => {
   const { favTeams } = useTeampreferenceContext()
   return (
     <div>

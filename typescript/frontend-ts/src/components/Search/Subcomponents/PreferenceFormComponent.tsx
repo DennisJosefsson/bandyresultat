@@ -1,9 +1,16 @@
+import { Dispatch, SetStateAction } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { ChevronUp } from '../../utilitycomponents/Components/icons'
+
+type PreferenceFormComponentProps = {
+  showPreferenceForm: boolean
+  setShowPreferenceForm: Dispatch<SetStateAction<boolean>>
+}
+
 const PreferenceFormComponent = ({
   showPreferenceForm,
   setShowPreferenceForm,
-}) => {
+}: PreferenceFormComponentProps) => {
   const { register, getValues } = useFormContext()
   return (
     <div className="mb-2 flex w-[18rem] flex-col rounded bg-white p-2 text-sm shadow-md md:text-base lg:w-full">

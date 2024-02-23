@@ -71,7 +71,8 @@ type CategoryData = {
 }
 
 export type CompareResponseObjectType = {
-  allData: CompareAllTeamTables[] | ParsedCompareAllTeamTables[]
+  allData: CompareAllTeamTables[]
+  sortedData: ParsedCompareAllTeamTables[]
   compareAllGames: CompareAllTeamTables[]
   link: CompareResponseObject['link']
   seasonNames: CompareResponseObject['seasonNames']

@@ -1,23 +1,25 @@
 import { useParams, useLocation } from 'react-router-dom'
-import { useContext, useState, useEffect } from 'react'
-import { GenderContext } from '../../contexts/contexts'
-import { ErrorBoundary } from 'react-error-boundary'
-import { logError } from '../utilitycomponents/functions/logError.jsx'
-import SeasonHelp from './Subcomponents/SeasonHelpModal'
-import SeasonTables from './Subcomponents/SeasonTables'
-import Games from '../Game/Games'
-import Playoff from './Subcomponents/SeasonPlayoff'
-import SeasonStats from './Subcomponents/SeasonStats'
-import Animation from '../Game/Subcomponents/Animation'
-import Map from './Subcomponents/Map'
-import ErrorFallback from '../utilitycomponents/Components/ErrorFallback'
-import SeasonHeader from './Subcomponents/SeasonHeader'
+import { useState, useEffect } from 'react'
 
-import { TabBarInline } from '../utilitycomponents/Components/TabBar'
+import { ErrorBoundary } from 'react-error-boundary'
+import { logError } from '../utilitycomponents/functions/logError.js'
+import SeasonHelp from './Subcomponents/SeasonHelpModal.jsx'
+import SeasonTables from './Subcomponents/SeasonTables.jsx'
+import Games from '../Game/Games.js'
+import Playoff from './Subcomponents/SeasonPlayoff.jsx'
+import SeasonStats from './Subcomponents/SeasonStats.jsx'
+import Animation from '../Game/Subcomponents/Animation.js'
+import Map from './Subcomponents/Map.jsx'
+import ErrorFallback from '../utilitycomponents/Components/ErrorFallback.js'
+import SeasonHeader from './Subcomponents/SeasonHeader.jsx'
+
+import { TabBarInline } from '../utilitycomponents/Components/TabBar.js'
+import useGenderContext from '../../hooks/contextHooks/useGenderContext.js'
 
 const Season = () => {
-  const seasonId = parseInt(useParams().seasonId)
-  const { women, dispatch } = useContext(GenderContext)
+  const unparsedSeasonId = useParams().seasonId
+
+  const { women, dispatch } = useGenderContext()
   const [tab, setTab] = useState('tables')
 
   const { state } = useLocation()
@@ -28,22 +30,20 @@ const Season = () => {
     }
   }, [state])
 
-  useEffect(() => {
-    if (seasonId.toString().match('^[0-9]{4}$'))
-      document.title =
-        seasonId < 1964
-          ? `Bandyresultat - ${seasonId}`
-          : `Bandyresultat - ${seasonId - 1}/${seasonId}`
-    return () => (document.title = 'Bandyresultat')
-  }, [seasonId])
+  if (!unparsedSeasonId) throw new Error('Missing seasonId')
 
-  if (!seasonId.toString().match('^[0-9]{4}$') || seasonId > 2024) {
+  if (
+    !unparsedSeasonId.toString().match('^[0-9]{4}$') ||
+    parseInt(unparsedSeasonId) > 2024
+  ) {
     return (
-      <div className="font-inter mx-auto grid h-screen place-items-center text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         Kolla länken, angivna årtalet är felaktigt.
       </div>
     )
   }
+
+  const seasonId = parseInt(unparsedSeasonId)
 
   const seasonTabBarObject = {
     genderClickFunction: () => dispatch({ type: 'TOGGLE' }),
@@ -110,7 +110,7 @@ const Season = () => {
   }
 
   return (
-    <div className="font-inter mx-auto mt-2 flex min-h-screen max-w-7xl flex-col text-[#011d29]">
+    <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
       <SeasonHeader seasonId={seasonId} women={women} />
 
       <TabBarInline

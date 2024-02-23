@@ -1,34 +1,25 @@
-import { useContext, useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
-import { GenderContext } from '../../../contexts/contexts'
+
 import { getSeasonStats } from '../../../requests/games'
 
 import LoadingOrError from '../../utilitycomponents/Components/LoadingOrError'
 import StatsComponent from './StatsSubComponents/StatsComponent'
+import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
+import useScrollTo from '../../../hooks/useScrollTo'
 
-const SeasonStats = ({ seasonId }) => {
+const SeasonStats = ({ seasonId }: { seasonId: number }) => {
   const { data, isLoading, error } = useQuery(
     ['singleSeasonStats', seasonId],
     () => getSeasonStats(seasonId),
   )
 
-  const { women } = useContext(GenderContext)
+  const { women } = useGenderContext()
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-  }, [])
+  useScrollTo()
 
   if (isLoading || error)
     return <LoadingOrError isLoading={isLoading} error={error} />
-
-  if (data?.success === 'false') {
-    return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
-        {data.message}
-      </div>
-    )
-  }
 
   if (women && (seasonId === 1973 || seasonId === 1974)) {
     return (
@@ -52,7 +43,7 @@ const SeasonStats = ({ seasonId }) => {
     )
   }
 
-  return <StatsComponent data={data} women={women} />
+  return <>{data && <StatsComponent data={data} women={women} />}</>
 }
 
 export default SeasonStats

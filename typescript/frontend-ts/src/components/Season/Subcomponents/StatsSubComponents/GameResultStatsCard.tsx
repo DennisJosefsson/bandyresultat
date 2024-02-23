@@ -1,4 +1,10 @@
-const GameResultStatsCard = ({ title, count }) => {
+const GameResultStatsCard = ({
+  title,
+  count,
+}: {
+  title: string
+  count: number | string
+}) => {
   return (
     <div className="statsCard">
       <div className="name">{title}</div>

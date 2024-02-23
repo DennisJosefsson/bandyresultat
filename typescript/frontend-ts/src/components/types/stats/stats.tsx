@@ -1,5 +1,7 @@
 export type SortedStatsCat = {
   women: boolean
+  year: string
+  season_id: number
   category: string
-  data: number
+  count: number
 }

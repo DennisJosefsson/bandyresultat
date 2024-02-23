@@ -1,8 +1,14 @@
+import { SeasonStatsObjectType } from '../../../types/games/stats'
 import GameResultStats from './GameResultStats'
 import GoalStats from './GoalStats'
 import StreakStats from './StreakStats'
 
-const StatsComponent = ({ data, women }) => {
+type StatsComponentProps = {
+  data: SeasonStatsObjectType
+  women: boolean
+}
+
+const StatsComponent = ({ data, women }: StatsComponentProps) => {
   return (
     <div>
       <GameResultStats data={data} women={women} />

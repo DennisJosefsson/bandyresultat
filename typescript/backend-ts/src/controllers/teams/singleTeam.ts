@@ -74,6 +74,7 @@ singleTeamRouter.get('/:teamId', (async (
       ['totalGoalsScored', 'DESC'],
     ],
     raw: true,
+    nest: true,
   })
 
   const tabeller = singleTeamTable.parse(getTables)

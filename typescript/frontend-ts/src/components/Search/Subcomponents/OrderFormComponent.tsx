@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react'
 import { useFormContext, Controller } from 'react-hook-form'
 import Select from 'react-select'
 import { selectStyles } from '../../utilitycomponents/Components/selectStyles'
@@ -25,7 +26,15 @@ const orderVariableSelection = [
   { value: 'goalsConceded', label: 'Insläppta mål' },
 ]
 
-const OrderFormComponent = ({ showOrderForm, setShowOrderForm }) => {
+type OrderFormComponentProps = {
+  showOrderForm: boolean
+  setShowOrderForm: Dispatch<SetStateAction<boolean>>
+}
+
+const OrderFormComponent = ({
+  showOrderForm,
+  setShowOrderForm,
+}: OrderFormComponentProps) => {
   const { control } = useFormContext()
   return (
     <div className="mb-2 flex w-[18rem] flex-col rounded bg-white p-2 text-sm shadow-md md:text-base lg:w-full">

@@ -2,6 +2,7 @@ import { useFormContext, Controller } from 'react-hook-form'
 import Select from 'react-select'
 import { selectStyles } from '../../utilitycomponents/Components/selectStyles'
 import { ChevronUp } from '../../utilitycomponents/Components/icons'
+import { Dispatch, SetStateAction } from 'react'
 
 const operatorSelection = [
   { value: 'gte', label: 'Lika eller större än' },
@@ -9,7 +10,15 @@ const operatorSelection = [
   { value: 'eq', label: 'Lika' },
 ]
 
-const ResultFormComponent = ({ showResultForm, setShowResultForm }) => {
+type ResultFormComponentProps = {
+  showResultForm: boolean
+  setShowResultForm: Dispatch<SetStateAction<boolean>>
+}
+
+const ResultFormComponent = ({
+  showResultForm,
+  setShowResultForm,
+}: ResultFormComponentProps) => {
   const { register, control } = useFormContext()
   return (
     <div className="mb-2 flex w-[18rem] flex-col rounded bg-white p-2 text-sm shadow-md md:text-base lg:w-full">
@@ -20,20 +29,7 @@ const ResultFormComponent = ({ showResultForm, setShowResultForm }) => {
             <input
               className="w-full border-[#011d29] text-[#011d29] md:w-[16rem]"
               type="text"
-              {...register('result', {
-                minLength: {
-                  value: 3,
-                  message: 'Resultatet måste vara i formatet n-n, t.ex. 2-1.',
-                },
-                maxLength: {
-                  value: 5,
-                  message: 'Resultatet måste vara i formatet n-n, t.ex. 2-1.',
-                },
-                pattern: {
-                  value: '/[0-9]{1,2}-[0-9]{1,2}',
-                  message: 'Resultatet måste vara i formatet n-n, t.ex. 2-1.',
-                },
-              })}
+              {...register('result')}
             />
           </div>
         </div>
@@ -43,12 +39,7 @@ const ResultFormComponent = ({ showResultForm, setShowResultForm }) => {
             <input
               className="w-full border-[#011d29] text-[#011d29] md:w-[16rem]"
               type="text"
-              {...register('goalDiff', {
-                pattern: {
-                  value: '/[0-9]{1,2}',
-                  message: 'Målskillnaden måste vara en eller två siffror.',
-                },
-              })}
+              {...register('goalDiff')}
             />
           </div>
         </div>
@@ -81,12 +72,7 @@ const ResultFormComponent = ({ showResultForm, setShowResultForm }) => {
             <input
               className="w-full border-[#011d29] text-[#011d29] md:w-[16rem]"
               type="text"
-              {...register('goalsScored', {
-                pattern: {
-                  value: '/[0-9]{1,2}',
-                  message: 'Antalet gjorda måste vara en eller två siffror.',
-                },
-              })}
+              {...register('goalsScored')}
             />
           </div>
         </div>
@@ -119,13 +105,7 @@ const ResultFormComponent = ({ showResultForm, setShowResultForm }) => {
             <input
               className="w-full border-[#011d29] text-[#011d29] md:w-[16rem]"
               type="text"
-              {...register('goalsConceded', {
-                pattern: {
-                  value: '/[0-9]{1,2}',
-                  message:
-                    'Antalet insläppta mål måste vara en eller två siffror.',
-                },
-              })}
+              {...register('goalsConceded')}
             />
           </div>
         </div>

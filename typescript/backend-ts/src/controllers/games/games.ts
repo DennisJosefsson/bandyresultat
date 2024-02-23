@@ -107,6 +107,7 @@ gameRouter.post('/', authControl, (async (
   const serie = await Serie.findOne({
     where: { seasonId: introData.seasonId, serieGroupCode: introData.group },
     raw: true,
+    nest: true,
   })
 
   if (!serie) {
@@ -157,6 +158,7 @@ gameRouter.post('/', authControl, (async (
   const teamGames = await TeamGame.findAll({
     where: { gameId: gameId },
     raw: true,
+    nest: true,
   })
 
   if (teamGames.length === 0) {

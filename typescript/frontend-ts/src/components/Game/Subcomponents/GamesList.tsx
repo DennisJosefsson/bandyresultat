@@ -1,12 +1,25 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Dispatch, SetStateAction } from 'react'
 import { Link } from 'react-router-dom'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 import useUserContext from '../../../hooks/contextHooks/useUserContext'
 import useTeampreferenceContext from '../../../hooks/contextHooks/useTeampreferenceContext'
 import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
+import { GameObjectType } from '../../types/games/games'
+import { SortedGamesType } from '../../utilitycomponents/functions/sortFunction'
+import { SerieAttributes } from '../../types/series/series'
 
 dayjs.locale('sv')
+
+type GameListProps = {
+  gamesArray: SortedGamesType
+  title: string
+  setShowModal: Dispatch<SetStateAction<boolean>>
+  setGameData: Dispatch<SetStateAction<GameObjectType | null>>
+  seriesInfo: SerieAttributes[]
+  startSeason: number | null
+  endSeason: number | null
+}
 
 const GamesList = ({
   gamesArray,
@@ -16,7 +29,7 @@ const GamesList = ({
   seriesInfo,
   startSeason,
   endSeason,
-}) => {
+}: GameListProps) => {
   const { user } = useUserContext()
   const { favTeams } = useTeampreferenceContext()
   const { women } = useGenderContext()
@@ -43,26 +56,18 @@ const GamesList = ({
       <h1 className="text-[1rem] font-bold md:text-[1.25rem]">{title}</h1>
       <div>
         {gamesArray.map((group) => {
+          const seriesObject = seriesInfo.find(
+            (serie) => serie.serieGroupCode === group.group,
+          )
           return (
             <div key={group.group} className="mb-6">
               <h3 className="text-[0.75rem] font-bold md:text-base xl:text-lg">
-                {gamesArray.length > 1
-                  ? `${
-                      seriesInfo.find(
-                        (serie) => serie.serieGroupCode === group.group,
-                      ).serieName
-                    }`
-                  : ''}
+                {gamesArray.length > 1 ? `${seriesObject?.serieName}` : ''}
               </h3>
 
-              {seriesInfo.find((serie) => serie.serieGroupCode === group.group)
-                .comment && (
+              {seriesObject && seriesObject.comment && (
                 <p className="my-2 max-w-xl bg-white p-1 text-xs font-bold">
-                  {
-                    seriesInfo.find(
-                      (serie) => serie.serieGroupCode === group.group,
-                    ).comment
-                  }
+                  {seriesObject.comment}
                 </p>
               )}
               <div>

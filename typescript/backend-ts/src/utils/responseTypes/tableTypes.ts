@@ -4,12 +4,17 @@ export const leagueTable = z.array(
   z.object({
     category: z.string(),
     group: z.string(),
-    'lag.casualName': z.string(),
-    'lag.name': z.string(),
-    'lag.shortName': z.string(),
-    'lag.teamId': z.number(),
-    'season.seasonId': z.number(),
-    'season.year': z.string(),
+    lag: z.object({
+      casualName: z.string(),
+      name: z.string(),
+      shortName: z.string(),
+      teamId: z.number(),
+    }),
+    season: z.object({
+      seasonId: z.number(),
+      year: z.string(),
+    }),
+
     team: z.number(),
     totalDraws: z.coerce.number(),
     totalGames: z.coerce.number(),
@@ -25,10 +30,13 @@ export const leagueTable = z.array(
 
 export const maratonTable = z.array(
   z.object({
-    'lag.casualName': z.string(),
-    'lag.name': z.string(),
-    'lag.shortName': z.string(),
-    'lag.teamId': z.number(),
+    lag: z.object({
+      casualName: z.string(),
+      name: z.string(),
+      shortName: z.string(),
+      teamId: z.number(),
+    }),
+
     women: z.boolean(),
     team: z.number(),
     totalDraws: z.coerce.number(),
@@ -58,14 +66,18 @@ export const singleTeamTable = z.array(
 
 export const compareCategoryTeamTables = z.array(
   z.object({
-    'lag.casualName': z.string(),
-    'lag.name': z.string(),
-    'lag.shortName': z.string(),
-    'lag.teamId': z.number(),
-    'opp.casualName': z.string(),
-    'opp.name': z.string(),
-    'opp.shortName': z.string(),
-    'opp.teamId': z.number(),
+    lag: z.object({
+      casualName: z.string(),
+      name: z.string(),
+      shortName: z.string(),
+      teamId: z.number(),
+    }),
+    opp: z.object({
+      casualName: z.string(),
+      name: z.string(),
+      shortName: z.string(),
+      teamId: z.number(),
+    }),
     category: z.string(),
     team: z.number(),
     opponent: z.number(),
@@ -82,14 +94,18 @@ export const compareCategoryTeamTables = z.array(
 
 export const compareAllTeamTables = z.array(
   z.object({
-    'lag.casualName': z.string(),
-    'lag.name': z.string(),
-    'lag.shortName': z.string(),
-    'lag.teamId': z.number(),
-    'opp.casualName': z.string(),
-    'opp.name': z.string(),
-    'opp.shortName': z.string(),
-    'opp.teamId': z.number(),
+    lag: z.object({
+      casualName: z.string(),
+      name: z.string(),
+      shortName: z.string(),
+      teamId: z.number(),
+    }),
+    opp: z.object({
+      casualName: z.string(),
+      name: z.string(),
+      shortName: z.string(),
+      teamId: z.number(),
+    }),
     team: z.number(),
     opponent: z.number(),
     totalDraws: z.coerce.number(),

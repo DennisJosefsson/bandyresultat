@@ -1,4 +1,16 @@
-const FilterComponent = ({ seasonFilter, setSeasonFilter, handleKeyDown }) => {
+import { Dispatch, SetStateAction, KeyboardEvent } from 'react'
+
+type FilterComponentProps = {
+  seasonFilter: string
+  setSeasonFilter: Dispatch<SetStateAction<string>>
+  handleKeyDown: (event: KeyboardEvent<HTMLInputElement>) => void
+}
+
+const FilterComponent = ({
+  seasonFilter,
+  setSeasonFilter,
+  handleKeyDown,
+}: FilterComponentProps) => {
   return (
     <div className="w-full ">
       <form>

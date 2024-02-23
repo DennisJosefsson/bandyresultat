@@ -14,6 +14,7 @@ import {
   inputGameObject,
   InputGameObjectType,
   GameObjectType,
+  GameFormObjectType,
 } from '../../types/games/games'
 import { SeasonObjectType } from '../../types/season/seasons'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -101,7 +102,9 @@ const GameForm = ({
   setGameData,
   women,
 }: GameFormPropTypes) => {
-  const [newGameData, setNewGameData] = useState<GameObjectType | null>(null)
+  const [newGameData, setNewGameData] = useState<GameFormObjectType | null>(
+    null,
+  )
   const [playoff, setPlayoff] = useState<boolean>(false)
   const [extraTime, setExtraTime] = useState<boolean>(false)
   const [penalties, setPenalties] = useState<boolean>(false)
@@ -163,6 +166,7 @@ const GameForm = ({
       homeTeamId: formData.homeTeamId.value,
       awayTeamId: formData.awayTeamId.value,
     }
+
     setNewGameData(gameData)
     setTimeout(() => {
       setShowModal(false)
