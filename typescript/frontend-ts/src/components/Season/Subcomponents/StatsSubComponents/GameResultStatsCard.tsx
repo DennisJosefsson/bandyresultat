@@ -3,7 +3,7 @@ const GameResultStatsCard = ({
   count,
 }: {
   title: string
-  count: number | string
+  count: number | string | undefined
 }) => {
   return (
     <div className="statsCard">

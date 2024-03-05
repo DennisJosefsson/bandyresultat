@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { baseUrl, mobileBaseUrl, header } from './config'
+import { baseUrl, mobileBaseUrl, header } from '../config/requestConfig'
 import {
   GameFormObjectType,
   GameObjectType,
@@ -63,7 +63,7 @@ export const postGame = async (newGameData: GameFormObjectType | null) => {
   return response.data
 }
 
-export const deleteGame = async ({ gameId }: { gameId: number }) => {
+export const deleteGame = async (gameId: number) => {
   return await gamesApi.delete(`/${gameId}`)
 }
 

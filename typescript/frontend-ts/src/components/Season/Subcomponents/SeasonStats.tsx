@@ -1,25 +1,25 @@
-import { useQuery } from 'react-query'
-import { Link } from 'react-router-dom'
-
-import { getSeasonStats } from '../../../requests/games'
-
-import LoadingOrError from '../../utilitycomponents/Components/LoadingOrError'
+import {
+  Loading,
+  DataError,
+} from '../../utilitycomponents/Components/LoadingOrError'
 import StatsComponent from './StatsSubComponents/StatsComponent'
 import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
-import useScrollTo from '../../../hooks/useScrollTo'
+import useScrollTo from '../../../hooks/domHooks/useScrollTo'
+import { NoWomenSeason } from '../../utilitycomponents/Components/NoWomenSeason'
+import { useGetSeasonStats } from '../../../hooks/dataHooks/seasonHooks/statsHooks/useGetSeasonStats'
+import useSeasonContext from '../../../hooks/contextHooks/useSeasonContext'
 
-const SeasonStats = ({ seasonId }: { seasonId: number }) => {
-  const { data, isLoading, error } = useQuery(
-    ['singleSeasonStats', seasonId],
-    () => getSeasonStats(seasonId),
-  )
+const SeasonStats = () => {
+  const { seasonId } = useSeasonContext()
+  const { data, isLoading, error } = useGetSeasonStats(seasonId)
 
   const { women } = useGenderContext()
 
   useScrollTo()
 
-  if (isLoading || error)
-    return <LoadingOrError isLoading={isLoading} error={error} />
+  if (error) return <DataError />
+
+  if (isLoading) return <Loading />
 
   if (women && (seasonId === 1973 || seasonId === 1974)) {
     return (
@@ -30,20 +30,10 @@ const SeasonStats = ({ seasonId }: { seasonId: number }) => {
   }
 
   if (women && seasonId < 1973) {
-    return (
-      <div className="mx-auto mt-4 grid place-items-center py-5 font-inter text-sm font-bold text-[#011d29] md:text-base">
-        <p className="mx-10 text-center">
-          Första säsongen för damernas högsta serie var{' '}
-          <Link to="/season/1973" className="font-bold">
-            1972/73
-          </Link>
-          .
-        </p>
-      </div>
-    )
+    return <NoWomenSeason />
   }
 
-  return <>{data && <StatsComponent data={data} women={women} />}</>
+  return <>{data && <StatsComponent />}</>
 }
 
 export default SeasonStats

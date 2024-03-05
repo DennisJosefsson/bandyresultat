@@ -24,7 +24,7 @@ export interface TableSeasonOutput extends Required<TableSeasonAttributes> {}
 
 @Table({
   underscored: true,
-  timestamps: true,
+  timestamps: false,
   modelName: 'tableseason',
 })
 class TableSeason extends Model<TableSeasonAttributes, TableSeasonInput> {

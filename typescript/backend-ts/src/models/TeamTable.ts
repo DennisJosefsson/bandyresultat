@@ -31,8 +31,6 @@ export const teamTableAttributes = z.object({
   qualification: z.boolean(),
   group: z.string(),
   women: z.boolean(),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
 })
 
 export const teamTableInput = teamTableAttributes.partial({ tableId: true })
@@ -44,7 +42,7 @@ export interface TeamTableOutput extends Required<TeamTableAttributes> {}
 
 @Table({
   underscored: true,
-  timestamps: true,
+  timestamps: false,
   modelName: 'table',
 })
 class TeamTable extends Model<TeamTableAttributes, TeamTableInput> {
@@ -108,12 +106,6 @@ class TeamTable extends Model<TeamTableAttributes, TeamTableInput> {
 
   @Column
   declare group: string
-
-  @Column
-  declare createdAt?: Date
-
-  @Column
-  declare updatedAt?: Date
 
   @BelongsTo(() => Team, 'teamId')
   declare team: ReturnType<() => Team>

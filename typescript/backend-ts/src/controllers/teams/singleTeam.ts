@@ -12,7 +12,12 @@ import { sequelize } from '../../utils/db.js'
 import { QueryTypes } from 'sequelize'
 import { teamIdChecker } from '../../utils/postFunctions/teamRequest.js'
 import NotFoundError from '../../utils/middleware/errors/NotFoundError.js'
-import { singleTeamTable } from '../../utils/responseTypes/tableTypes.js'
+import {
+  singleTeamTable,
+  fiveSeasonsLeagueTable,
+  FiveSeasonsLeagueTableType,
+} from '../../utils/responseTypes/tableTypes.js'
+
 const singleTeamRouter = Router()
 
 singleTeamRouter.get('/:teamId', (async (
@@ -413,6 +418,39 @@ where team = $teamId and "category" = any(array['quarter', 'semi', 'final']) and
     { bind: { teamId: teamId }, type: QueryTypes.SELECT }
   )
 
+  const latestFiveSeasons = await TeamGame.findAll({
+    where: {
+      team: req.params.teamId,
+      played: true,
+    },
+    attributes: [
+      'seasonId',
+      'category',
+
+      [sequelize.literal('count(*)'), 'totalGames'],
+      [sequelize.literal('sum (points)'), 'totalPoints'],
+      [sequelize.literal('sum(goals_scored)'), 'totalGoalsScored'],
+      [sequelize.literal('sum(goals_conceded)'), 'totalGoalsConceded'],
+      [sequelize.literal('sum(goal_difference)'), 'totalGoalDifference'],
+      [sequelize.literal(`(count(*) filter (where win))`), 'totalWins'],
+      [sequelize.literal(`(count(*) filter (where draw))`), 'totalDraws'],
+      [sequelize.literal(`(count(*) filter (where lost))`), 'totalLost'],
+    ],
+    include: Season,
+    group: ['teamgame.season_id', 'category', 'season.season_id'],
+    order: [
+      ['seasonId', 'DESC'],
+      ['category', 'ASC'],
+    ],
+    limit: 20,
+    raw: true,
+    nest: true,
+  })
+
+  const sortedFiveSeasons = tableSortFunction(
+    fiveSeasonsLeagueTable.parse(latestFiveSeasons)
+  )
+
   if (!team) {
     throw new Error('No such team in the database')
   } else {
@@ -427,8 +465,39 @@ where team = $teamId and "category" = any(array['quarter', 'semi', 'final']) and
       finalsAndWins,
       playoffStreak,
       playoffCount,
+      sortedFiveSeasons,
     })
   }
 }) as RequestHandler)
 
 export default singleTeamRouter
+
+type SortedTables = {
+  [key: string]: FiveSeasonsLeagueTableType
+}
+
+const tableSortFunction = (tableArray: FiveSeasonsLeagueTableType) => {
+  const seasonArray = tableArray.reduce((seasons, table) => {
+    if (!seasons[table.season.year]) {
+      seasons[table.season.year] = []
+    }
+    seasons[table.season.year].push(table)
+    return seasons
+  }, {} as SortedTables)
+
+  const sortedTables = Object.keys(seasonArray).map((season) => {
+    return {
+      season,
+      tables: seasonArray[season],
+    }
+  })
+  return sortedTables
+    .sort((a, b) => {
+      if (a.season > b.season) {
+        return 1
+      } else if (a.season < b.season) {
+        return -1
+      } else return 0
+    })
+    .slice(-5)
+}

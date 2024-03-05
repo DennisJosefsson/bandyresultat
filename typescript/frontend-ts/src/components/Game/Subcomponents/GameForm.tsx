@@ -6,8 +6,8 @@ import {
   SubmitHandler,
 } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
-import { postGame } from '../../../requests/games'
-import { useQuery, useQueryClient } from 'react-query'
+import { postGame, deleteGame } from '../../../requests/games'
+import { useQuery, useQueryClient, useMutation } from 'react-query'
 import Select from 'react-select'
 import { selectStyles } from '../../utilitycomponents/Components/selectStyles'
 import {
@@ -105,6 +105,7 @@ const GameForm = ({
   const [newGameData, setNewGameData] = useState<GameFormObjectType | null>(
     null,
   )
+  const [error, setError] = useState<string | null>(null)
   const [playoff, setPlayoff] = useState<boolean>(false)
   const [extraTime, setExtraTime] = useState<boolean>(false)
   const [penalties, setPenalties] = useState<boolean>(false)
@@ -113,13 +114,36 @@ const GameForm = ({
     queryKey: ['game', newGameData],
     queryFn: () => postGame(newGameData),
     enabled: !!newGameData,
-    onSuccess: () =>
-      client.invalidateQueries({ queryKey: ['singleSeasonGames'] }),
+    onSuccess: () => onSuccessSubmit(),
   })
+
+  const mutation = useMutation({
+    mutationFn: ({ gameId }: { gameId: number }) => deleteGame(gameId),
+    onSuccess: () => onSuccessDeleteMutation(),
+    onError: (error: Error) => setError(error.message),
+  })
+
+  const onSuccessDeleteMutation = () => {
+    client.invalidateQueries({ queryKey: ['singleSeasonGames'] })
+    setTimeout(() => {
+      setGameData(null)
+      setShowModal(false)
+    }, 500)
+  }
+
+  const onSuccessSubmit = () => {
+    client.invalidateQueries({ queryKey: ['singleSeasonGames'] })
+    setTimeout(() => {
+      setGameData(null)
+      setShowModal(false)
+    }, 750)
+  }
 
   const teamSelection = season[0].teams.map((team) => {
     return { value: team.teamId, label: team.name }
   })
+
+  teamSelection.push({ value: 176, label: 'Ej Bestämt' })
 
   const groupSelection = [
     { value: 'elitserien', label: 'Elitserien' },
@@ -471,6 +495,7 @@ const GameForm = ({
             </div>
             <div>
               <ErrorComponent errors={errors} />
+              {error && <div className="p-2">{error}</div>}
               {data && (
                 <div className="p-2">
                   Ny match: {data.game.date} {data.game.result}
@@ -479,6 +504,18 @@ const GameForm = ({
             </div>
             {/*footer*/}
             <div className="flex items-center justify-end rounded-b border-t border-solid border-slate-200 p-6">
+              {gameData && gameData.gameId && (
+                <button
+                  className="mb-1 mr-1 rounded bg-red-500 px-6 py-2 text-sm font-bold uppercase text-white outline-none transition-all duration-150 ease-linear focus:outline-none"
+                  type="button"
+                  onClick={() =>
+                    gameData.gameId !== undefined &&
+                    mutation.mutate({ gameId: gameData.gameId })
+                  }
+                >
+                  Ta bort
+                </button>
+              )}
               <button
                 className="background-transparent mb-1 mr-1 px-6 py-2 text-sm font-bold uppercase text-red-500 outline-none transition-all duration-150 ease-linear focus:outline-none"
                 type="button"

@@ -23,19 +23,21 @@ export const gameAttributes = z.object({
   awayTeamId: z.number().optional().nullable(),
   result: z
     .string()
-    .regex(/^\d{1,2}-\d{1,2}$/)
+    .regex(/^\d{1,2}-\d{1,2}$/, { message: 'Fel resultat' })
     .optional()
-    .nullable(),
+    .nullable()
+    .or(z.literal('')),
   halftimeResult: z
     .string()
-    .regex(/^\d{1,2}-\d{1,2}$/)
+    .regex(/^\d{1,2}-\d{1,2}$/, { message: 'Fel halvtidsresultat' })
     .optional()
-    .nullable(),
+    .nullable()
+    .or(z.literal('')),
   homeGoal: z.coerce.number().optional().nullable(),
   awayGoal: z.coerce.number().optional().nullable(),
   halftimeHomeGoal: z.coerce.number().optional().nullable(),
   halftimeAwayGoal: z.coerce.number().optional().nullable(),
-  date: z.string().regex(/^\d{4}-\d{1,2}-\d{1,2}$/),
+  date: z.string().regex(/^\d{4}-\d{1,2}-\d{1,2}$/, { message: 'Fel datum' }),
   round: z.number().nullable().optional(),
   category: z.string(),
   group: z.string(),
@@ -45,8 +47,6 @@ export const gameAttributes = z.object({
   mix: z.boolean().default(false),
   played: z.boolean().optional(),
   women: z.boolean().default(false),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
 })
 
 const gameInput = gameAttributes.omit({ gameId: true })
@@ -56,7 +56,7 @@ export type GameInput = z.infer<typeof gameInput>
 
 @Table({
   underscored: true,
-  timestamps: true,
+  timestamps: false,
   modelName: 'game',
 })
 class Game extends Model<GameAttributes, GameInput> {
@@ -136,12 +136,6 @@ class Game extends Model<GameAttributes, GameInput> {
   @Default(false)
   @Column
   declare women: boolean
-
-  @Column
-  declare createdAt?: Date
-
-  @Column
-  declare updatedAt?: Date
 
   @BelongsTo(() => Season, 'seasonId')
   declare season: ReturnType<() => Season>

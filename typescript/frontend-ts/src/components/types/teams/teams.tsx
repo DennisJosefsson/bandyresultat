@@ -90,6 +90,7 @@ export type NewTeamType = z.infer<typeof newTeam>
 export type SingleTeam = {
   team: TeamAttributes
   tabeller: SingleTeamTable[]
+  sortedFiveSeasons: { season: string; tables: SingleTeamTable[] }[]
   finalsAndWins: TeamGameObject[]
   noWinStreak: StreakType[]
   unbeatenStreak: StreakType[]

@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react'
 import { CompareResponseObjectType } from '../../types/teams/compare'
 import { CompareFormState } from '../../types/teams/teams'
+import AllDataTableHeader from './AllDataTableHeader'
 
 type AllDataProps = {
   allData: CompareResponseObjectType['allData']
+  sortedData: CompareResponseObjectType['sortedData']
   compObject: CompareFormState
 }
 
-const AllData = ({ allData, compObject }: AllDataProps) => {
+const AllData = ({ allData, compObject, sortedData }: AllDataProps) => {
   const [width, setWidth] = useState(window.innerWidth)
   const breakpoint = 768
   useEffect(() => {
@@ -18,69 +20,74 @@ const AllData = ({ allData, compObject }: AllDataProps) => {
     return () => window.removeEventListener('resize', handleWindowResize)
   }, [])
 
-  const games = compObject.teamArray.length > 2 ? allData : allData.slice(1)
-
-  return (
-    <div>
-      <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>
-      <table className="compareGames mb-2 w-full table-fixed text-[8px] sm:text-sm xl:w-[36rem]">
-        <thead>
-          <tr key={`tableheadAllgames`}>
-            <th scope="col" className="team">
-              Lag
-            </th>
-            <th scope="col">M</th>
-            <th scope="col">V</th>
-            <th scope="col">O</th>
-            <th scope="col">F</th>
-            <th scope="col" className="twelve">
-              GM
-            </th>
-            <th scope="col" className="twelve">
-              IM
-            </th>
-            <th scope="col" className="twelve">
-              MS
-            </th>
-            <th scope="col">P</th>
-          </tr>
-        </thead>
-        <tbody>
-          {games.map((team, index) => {
-            return (
-              <tr
-                key={`${team.team}-${index}`}
-                className="rounded odd:bg-slate-300"
-              >
-                {compObject.teamArray.length > 2 && (
+  if (compObject.teamArray.length > 2) {
+    return (
+      <div>
+        <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>
+        <table className="compareGames mb-2 w-full table-fixed text-[8px] sm:text-sm xl:w-[36rem]">
+          <AllDataTableHeader />
+          <tbody>
+            {sortedData.map((team, index) => {
+              return (
+                <tr
+                  key={`${team.team}-${index}`}
+                  className="rounded odd:bg-slate-300"
+                >
                   <td className="team">
                     {width < breakpoint
                       ? team.lag.shortName
                       : team.lag.casualName}
                   </td>
-                )}
-                {compObject.teamArray.length === 2 && (
+
+                  <td>{team.totalGames}</td>
+                  <td>{team.totalWins}</td>
+                  <td>{team.totalDraws}</td>
+                  <td>{team.totalLost}</td>
+                  <td>{team.totalGoalsScored}</td>
+                  <td>{team.totalGoalsConceded}</td>
+                  <td>{team.totalGoalDifference}</td>
+                  <td>{team.totalPoints}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    )
+  } else
+    return (
+      <div>
+        <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>
+        <table className="compareGames mb-2 w-full table-fixed text-[8px] sm:text-sm xl:w-[36rem]">
+          <AllDataTableHeader />
+          <tbody>
+            {allData.slice(1).map((team, index) => {
+              return (
+                <tr
+                  key={`${team.team}-${index}`}
+                  className="rounded odd:bg-slate-300"
+                >
                   <td className="team">
                     {width < breakpoint
                       ? `${team.lag.shortName}-${team.opp.shortName}`
                       : `${team.lag.casualName}-${team.opp.casualName}`}
                   </td>
-                )}
-                <td>{team.totalGames}</td>
-                <td>{team.totalWins}</td>
-                <td>{team.totalDraws}</td>
-                <td>{team.totalLost}</td>
-                <td>{team.totalGoalsScored}</td>
-                <td>{team.totalGoalsConceded}</td>
-                <td>{team.totalGoalDifference}</td>
-                <td>{team.totalPoints}</td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
-    </div>
-  )
+
+                  <td>{team.totalGames}</td>
+                  <td>{team.totalWins}</td>
+                  <td>{team.totalDraws}</td>
+                  <td>{team.totalLost}</td>
+                  <td>{team.totalGoalsScored}</td>
+                  <td>{team.totalGoalsConceded}</td>
+                  <td>{team.totalGoalDifference}</td>
+                  <td>{team.totalPoints}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    )
 }
 
 export default AllData

@@ -1,25 +1,18 @@
-import { useQuery } from 'react-query'
-
 import { Link } from 'react-router-dom'
-import { getSingleSeason } from '../../../requests/seasons'
 import Spinner from '../../utilitycomponents/Components/Spinner'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import {
-  latLngBounds,
-  Icon,
-  LatLngTuple,
-  LatLngBounds,
-  LatLngExpression,
-} from 'leaflet'
+import { Icon, LatLngExpression } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
 import useMenuContext from '../../../hooks/contextHooks/useMenuContext'
+import { useMapData } from '../../../hooks/dataHooks/seasonHooks/mapHooks/useMapData'
+import useSeasonContext from '../../../hooks/contextHooks/useSeasonContext'
 
-const Map = ({ seasonId }: { seasonId: number }) => {
-  const { data, isLoading, error } = useQuery(['singleSeason', seasonId], () =>
-    getSingleSeason(seasonId),
-  )
+const Map = () => {
+  const { seasonId } = useSeasonContext()
+  const { teams, qualificationTeams, bounds, isLoading, error } =
+    useMapData(seasonId)
   const { women } = useGenderContext()
   const { open } = useMenuContext()
 
@@ -63,22 +56,6 @@ const Map = ({ seasonId }: { seasonId: number }) => {
     popupAnchor: [1, -34],
     shadowSize: [41, 41],
   })
-
-  const seasonObject = data?.find((season) => season.women === women)
-
-  const teams = seasonObject?.teams.filter(
-    (team) => team.teamseason.qualification !== true,
-  )
-
-  const qualificationTeams = seasonObject?.teams.filter(
-    (team) => team.teamseason.qualification === true,
-  )
-
-  const latLongArray = seasonObject?.teams.map((team) => {
-    return [team.lat, team.long]
-  }) as LatLngTuple[]
-
-  const bounds = latLngBounds(latLongArray) as LatLngBounds
 
   return (
     <div>

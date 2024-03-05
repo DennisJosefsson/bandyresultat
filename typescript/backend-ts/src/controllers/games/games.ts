@@ -22,7 +22,8 @@ import {
   newTeamGameAwayEntry,
   newTeamGameHomeEntry,
 } from '../../utils/postFunctions/newTeamGameEntry.js'
-import authControl from '../../utils/middleware/authControl.js'
+import IDCheck from '../../utils/postFunctions/IDCheck.js'
+// import authControl from '../../utils/middleware/authControl.js'
 
 const gameRouter = Router()
 
@@ -98,7 +99,7 @@ gameRouter.get('/season/:seasonId', (async (
   res.status(200).json(games)
 }) as RequestHandler)
 
-gameRouter.post('/', authControl, (async (
+gameRouter.post('/', (async (
   req: Request,
   res: Response,
   _next: NextFunction
@@ -193,6 +194,33 @@ gameRouter.post('/', authControl, (async (
     })
   }
   res.status(201).json({ game, homeTeamGame, awayTeamGame })
+}) as RequestHandler)
+
+gameRouter.delete('/:gameId', (async (
+  req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
+  res.locals.origin = 'DELETE Game router'
+  const gameId = IDCheck.parse(req.params.gameId)
+  const teamGames = await TeamGame.findAll({
+    where: { gameId: gameId },
+  })
+  if (teamGames.length > 0) {
+    await TeamGame.destroy({ where: { gameId: gameId } })
+  }
+  const game = await Game.findByPk(gameId)
+  if (!game) {
+    throw new NotFoundError({
+      code: 404,
+      message: 'No such game',
+      logging: false,
+      context: { origin: 'Delete Game Router' },
+    })
+  } else {
+    await game.destroy()
+    res.json({ message: 'Game deleted' })
+  }
 }) as RequestHandler)
 
 export default gameRouter

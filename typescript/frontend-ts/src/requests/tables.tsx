@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { baseUrl, mobileBaseUrl, header } from './config'
+import { baseUrl, mobileBaseUrl, header } from '../config/requestConfig'
 import {
   compareSortFunction,
   compareAllTeamData,

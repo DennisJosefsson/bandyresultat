@@ -18,7 +18,11 @@ const newGameEntry = (object: unknown, serieId: number): GameAttributes => {
   let halftimeHomeGoal = undefined
   let halftimeAwayGoal = undefined
 
-  if ('result' in object && typeof object['result'] === 'string') {
+  if (
+    'result' in object &&
+    typeof object['result'] === 'string' &&
+    object['result'] !== ''
+  ) {
     homeGoal = object.result.split('-')[0]
     awayGoal = object.result.split('-')[1]
     played = true
@@ -26,7 +30,8 @@ const newGameEntry = (object: unknown, serieId: number): GameAttributes => {
 
   if (
     'halftimeResult' in object &&
-    typeof object['halftimeResult'] === 'string'
+    typeof object['halftimeResult'] === 'string' &&
+    object['halftimeResult'] !== ''
   ) {
     halftimeHomeGoal = object.halftimeResult.split('-')[0]
     halftimeAwayGoal = object.halftimeResult.split('-')[1]

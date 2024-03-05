@@ -6,6 +6,7 @@ import Spinner from '../utilitycomponents/Components/Spinner'
 import TeamTable from './Subcomponents/TeamInfoSubComponents/TeamTable'
 import TeamCuriosities from './Subcomponents/TeamInfoSubComponents/TeamCuriosities'
 import TeamHeader from './Subcomponents/TeamInfoSubComponents/TeamHeader'
+import TeamFiveSeasonsTables from './Subcomponents/TeamInfoSubComponents/TeamFiveSeasons'
 
 const Team = ({ teamId }: { teamId: number }) => {
   useEffect(() => {
@@ -55,6 +56,27 @@ const Team = ({ teamId }: { teamId: number }) => {
             <div>
               <h2 className="ml-0 text-base font-bold md:text-xl">Tabeller</h2>
               <TeamTable tabeller={team.tabeller} />
+              {team.tabeller.length === 0 && (
+                <h2 className="mb-2 ml-0 text-base font-bold md:text-xl">
+                  Tyvärr saknas tabelldata
+                </h2>
+              )}
+              {team.tabeller.length > 0 && (
+                <>
+                  <h2 className="ml-0 text-base font-bold md:text-xl">
+                    Tabeller
+                  </h2>
+                  <TeamTable tabeller={team.tabeller} />
+                </>
+              )}
+              {team.sortedFiveSeasons.length > 1 && (
+                <>
+                  <h2 className="mb-2 ml-0 text-base font-bold md:text-xl">
+                    Senaste säsongerna
+                  </h2>
+                  <TeamFiveSeasonsTables tableArray={team.sortedFiveSeasons} />
+                </>
+              )}
             </div>
           </div>
         </div>

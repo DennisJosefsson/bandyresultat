@@ -1,38 +1,35 @@
-import { useQuery } from 'react-query'
-import { getSingleSeasonTable } from '../../../requests/tables'
 import { Link } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import PlayoffSeriesPopup from './PlayoffSubComponents/PlayoffSeriesPopup'
-import LoadingOrError from '../../utilitycomponents/Components/LoadingOrError'
+import {
+  Loading,
+  DataError,
+} from '../../utilitycomponents/Components/LoadingOrError'
 import SeasonPlayoffTables from './PlayoffSubComponents/SeasonPlayoffTables'
 import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
 import { GameObjectType } from '../../types/games/games'
+import useScrollTo from '../../../hooks/domHooks/useScrollTo'
+import useSeasonContext from '../../../hooks/contextHooks/useSeasonContext'
+import { useGetPlayoffData } from '../../../hooks/dataHooks/seasonHooks/playoffHooks/useGetPlayoffData'
+import { useGetFirstAndLastSeason } from '../../../hooks/dataHooks/seasonHooks/useGetFirstAndLastSeason'
 
-const Playoff = ({ seasonId }: { seasonId: number }) => {
+const Playoff = () => {
   const { women } = useGenderContext()
-
+  const { seasonId } = useSeasonContext()
+  const { lastSeason } = useGetFirstAndLastSeason()
   const [gameData, setGameData] = useState<GameObjectType[] | null>(null)
   const [showPopup, setShowPopup] = useState<boolean>(false)
 
-  const { data, isLoading, error, isSuccess } = useQuery(
-    ['singleSeasonTable', seasonId],
-    () => getSingleSeasonTable(seasonId),
-  )
+  const { isLoading, error, isSuccess, tables, final, playoffGames } =
+    useGetPlayoffData(seasonId)
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-  }, [])
+  useScrollTo()
 
-  if (isLoading || error)
-    return <LoadingOrError isLoading={isLoading} error={error} />
+  if (error) return <DataError />
+
+  if (isLoading) return <Loading />
 
   if (!isSuccess) return null
-
-  const tables = data.tabell.filter((table) => table.women === women)
-  const playoffGames = data.playoffGames.filter(
-    (table) => table.women === women,
-  )
-  const final = playoffGames.filter((games) => games.category === 'final')
 
   if (women && seasonId < 1973) {
     return (
@@ -50,7 +47,7 @@ const Playoff = ({ seasonId }: { seasonId: number }) => {
 
   return (
     <div>
-      {seasonId < 2025 && (
+      {seasonId <= lastSeason && tables && playoffGames && final ? (
         <SeasonPlayoffTables
           tables={tables}
           playoffGames={playoffGames}
@@ -60,7 +57,7 @@ const Playoff = ({ seasonId }: { seasonId: number }) => {
           women={women}
           seasonId={seasonId}
         />
-      )}
+      ) : null}
       {showPopup && (
         <PlayoffSeriesPopup gameData={gameData} setShowPopup={setShowPopup} />
       )}

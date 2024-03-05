@@ -273,7 +273,7 @@ order by "date" asc;
     allPlayoffs,
     allSeasons,
     firstAndLatestGames,
-    link,
+    link: link,
     seasonNames,
   })
 }) as RequestHandler)

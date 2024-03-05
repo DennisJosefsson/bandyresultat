@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-import useScrollDirection from '../hooks/useScrollDirection'
+import useScrollDirection from '../hooks/domHooks/useScrollDirection'
 import useUserContext from '../hooks/contextHooks/useUserContext'
 import useMenuContext from '../hooks/contextHooks/useMenuContext'
 

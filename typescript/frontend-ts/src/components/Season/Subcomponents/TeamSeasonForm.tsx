@@ -1,13 +1,28 @@
-import { useReducer, useState } from 'react'
-import { useQueryClient } from 'react-query'
-import teamArrayFormReducer from '../../../reducers/teamSeasonFormReducer'
-
+import { Reducer, SyntheticEvent, useReducer, useState } from 'react'
+import { useQueryClient, useMutation } from 'react-query'
 import { Plus, Minus } from '../../utilitycomponents/Components/icons'
+import { postTeamSeason } from '../../../requests/seasons'
+import { TeamAttributes } from '../../types/teams/teams'
+import teamseasonReducer, {
+  TeamSeasonActionType,
+  TeamSeasonStateType,
+} from '../../../reducers/teamseasonReducer'
 
-const TeamSeasonForm = ({ seasonId, mutation, setShowModal, teams, women }) => {
-  const initState = { teamArray: [] }
+type TeamSeasonFormProps = {
+  seasonId: number
+  teams: TeamAttributes[]
+  women: boolean
+}
+
+const TeamSeasonForm = ({ seasonId, teams, women }: TeamSeasonFormProps) => {
+  const mutation = useMutation({
+    mutationFn: postTeamSeason,
+  })
+
   const [teamFilter, setTeamFilter] = useState('')
-  const [formState, dispatch] = useReducer(teamArrayFormReducer, initState)
+  const [formState, dispatch] = useReducer<
+    Reducer<TeamSeasonStateType, TeamSeasonActionType>
+  >(teamseasonReducer, { teamArray: [] })
   const queryClient = useQueryClient()
 
   const teamSelection = teams.map((team) => {
@@ -17,21 +32,20 @@ const TeamSeasonForm = ({ seasonId, mutation, setShowModal, teams, women }) => {
     }
   })
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault()
 
     mutation.mutate({ formState, seasonId, women })
     queryClient.invalidateQueries({ queryKey: ['singleSeason'] })
-    setShowModal(false)
   }
 
-  const addTeam = (teamId) => {
+  const addTeam = (teamId: number) => {
     dispatch({
       type: 'ADD TEAM',
       payload: teamId,
     })
   }
-  const removeTeam = (teamId) => {
+  const removeTeam = (teamId: number) => {
     dispatch({
       type: 'REMOVE TEAM',
       payload: teamId,
@@ -39,7 +53,7 @@ const TeamSeasonForm = ({ seasonId, mutation, setShowModal, teams, women }) => {
   }
   const clearTeams = () => {
     dispatch({
-      type: 'CLEAR',
+      type: 'CLEAR TEAMS',
     })
   }
 
@@ -91,7 +105,7 @@ const TeamSeasonForm = ({ seasonId, mutation, setShowModal, teams, women }) => {
               {formState.teamArray.map((teamId) => {
                 return (
                   <div key={teamId}>
-                    {teamSelection.find((team) => team.value === teamId).label}
+                    {teamSelection.find((team) => team.value === teamId)?.label}
                   </div>
                 )
               })}

@@ -11,7 +11,7 @@ import { getTeams } from '../../requests/teams'
 import { getSeasons } from '../../requests/seasons'
 import { useLocation, useParams } from 'react-router-dom'
 
-import teamArrayFormReducer from '../../reducers/teamSeasonFormReducer'
+import teamArrayFormReducer from '../../reducers/compareReducer'
 import Spinner from '../utilitycomponents/Components/Spinner'
 import TeamsList from './Subcomponents/TeamsList'
 
@@ -208,6 +208,7 @@ const Teams = () => {
 
   const teams = isTeamsSuccess
     ? data
+        .filter((team) => team.teamId !== 176)
         .filter((team) => team.women === women)
         .filter((team) =>
           team.name.toLowerCase().includes(teamFilter.toLowerCase()),
@@ -256,7 +257,7 @@ const Teams = () => {
       {
         name: 'Jämför',
         tabName: 'compare',
-        clickFunctions: () => handleSubmit,
+        clickFunctions: handleSubmit,
         conditional: 'formStateComplex',
       },
     ]

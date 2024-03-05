@@ -13,6 +13,7 @@ import Season from '../../models/Season.js'
 import Link from '../../models/Link.js'
 import Game from '../../models/Game.js'
 import NotFoundError from '../../utils/middleware/errors/NotFoundError.js'
+import SearchError from '../../utils/middleware/errors/SearchError.js'
 import { searchRequest } from '../../utils/postFunctions/gameRequest.js'
 import seasonIdCheck from '../../utils/postFunctions/seasonIdCheck.js'
 import dayjs from 'dayjs'
@@ -25,7 +26,7 @@ searchRouter.post('/search', (async (
   _next: NextFunction
 ) => {
   res.locals.origin = 'POST Search router'
-
+  console.log(req.body)
   const searchString = JSON.stringify(req.body)
   const searchParams = searchRequest.parse(req.body)
 
@@ -40,8 +41,6 @@ searchRouter.post('/search', (async (
   let draw
   let lost
   let women
-
-  let limit = searchParams.limit
 
   const startSeasonName = seasonIdCheck.parse(req.body.startSeason)
   const endSeasonName = seasonIdCheck.parse(req.body.endSeason)
@@ -74,26 +73,42 @@ searchRouter.post('/search', (async (
 
   const order: Order = [['date', searchParams.order]]
 
-  if (searchParams.team) {
+  if (searchParams.team && searchParams.team) {
     team = searchParams.team
   }
 
-  if (searchParams.opponent) {
+  if (searchParams.opponent && searchParams.opponent) {
     opponent = searchParams.opponent
   }
 
   if (searchParams.inputDate) {
-    const date =
-      '2024-' +
-      searchParams.inputDate.split('/')[1] +
-      '-' +
-      searchParams.inputDate.split('/')[0]
+    const month = searchParams.inputDate.split('/')[1]
+    const day = searchParams.inputDate.split('/')[0]
+    if (month === '2' && Number(day) > 29) {
+      throw new SearchError({
+        code: 400,
+        message: 'Felaktigt datum:' + searchParams.inputDate,
+        logging: false,
+        context: { origin: 'POST Search Router' },
+      })
+    } else if (['4', '6', '9', '11'].includes(month) && Number(day) > 30) {
+      throw new SearchError({
+        code: 400,
+        message: 'Felaktigt datum: ' + searchParams.inputDate,
+        logging: false,
+        context: { origin: 'POST Search Router' },
+      })
+    }
+    const date = '2024-' + month + '-' + day
 
     if (!dayjs(date, 'YYYY-M-D', true).isValid()) {
-      return res.json({ status: 400, message: 'Felaktigt datum' })
+      throw new SearchError({
+        code: 400,
+        message: 'Felaktigt datum: ' + searchParams.inputDate,
+        logging: false,
+        context: { origin: 'POST Search Router' },
+      })
     } else {
-      const month = date.split('-')[1]
-      const day = date.split('-')[2]
       inputDate = [
         sequelize.fn('extract(month from game."date") =', month),
         sequelize.fn('extract(day from game."date") =', day),
@@ -192,15 +207,6 @@ searchRouter.post('/search', (async (
     }
   }
 
-  if (
-    (!searchParams.team && searchParams.result) ||
-    (!searchParams.team && searchParams.gameResult === 'draw') ||
-    (!searchParams.team && searchParams.orderVar === 'totalGoals') ||
-    (searchParams.goalDiff && searchParams.goalDiff === 0)
-  ) {
-    limit = searchParams.limit * 2 || 20
-  }
-
   const include = resultGame
     ? [
         {
@@ -245,31 +251,47 @@ searchRouter.post('/search', (async (
     ...(homeGame && { homeGame: homeGame }),
   }
 
-  const searchResult = await TeamGame.findAndCountAll({
+  const unfilteredSearchResult = await TeamGame.findAndCountAll({
     where,
     include,
-    limit,
+    limit: 100,
     order,
+    raw: true,
+    nest: true,
   })
 
-  const link = await Link.findOrCreate({
-    where: { searchString: searchString, origin: 'search' },
-  })
-
-  if (searchResult.count === 0) {
+  if (unfilteredSearchResult.count === 0) {
     throw new NotFoundError({
       code: 404,
       message: 'Hittade ingen match som matchade sökningen.',
       logging: false,
       context: { origin: 'POST Search Router' },
     })
-  } else {
-    res.status(200).json({
-      hits: searchResult.count,
-      searchResult: searchResult.rows,
-      searchLink: link,
-    })
   }
+
+  console.log('limit', searchParams.limit)
+
+  const gameIdArray: number[] = []
+
+  const searchResult = unfilteredSearchResult.rows
+    .map((game) => {
+      if (!gameIdArray.includes(game.gameId)) {
+        gameIdArray.push(game.gameId)
+        return game
+      }
+      return
+    })
+    .filter((game) => game !== undefined)
+    .slice(0, searchParams.limit)
+
+  const link = await Link.findOrCreate({
+    where: { searchString: searchString, origin: 'search' },
+  })
+
+  res.status(200).json({
+    searchResult,
+    searchLink: link,
+  })
 }) as RequestHandler)
 
 export default searchRouter

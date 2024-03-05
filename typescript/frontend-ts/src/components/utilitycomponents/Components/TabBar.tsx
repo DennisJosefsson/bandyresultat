@@ -11,7 +11,7 @@ import {
   QuestionIcon,
   SearchIcon,
 } from './icons'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, SyntheticEvent } from 'react'
 
 import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
 
@@ -19,7 +19,7 @@ export type TabBarObject = {
   tabBarArray: {
     name: string
     tabName: string
-    clickFunctions: () => void
+    clickFunctions: (() => void) | ((event: SyntheticEvent) => void)
     conditional?: string | boolean
   }[]
   genderClickFunction: () => void

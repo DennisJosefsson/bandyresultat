@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { serieAttributes } from '../series/series'
 import { teamAndSeasonAttributes } from '../teams/teams'
+import { staticSeasonTable } from '../tables/tables'
 
 const seasonObject = z.object({
   seasonId: z.number(),
@@ -8,6 +9,7 @@ const seasonObject = z.object({
   women: z.boolean(),
   series: z.array(serieAttributes),
   teams: z.array(teamAndSeasonAttributes),
+  tables: z.array(staticSeasonTable),
 })
 
 export type SeasonObjectType = z.infer<typeof seasonObject>

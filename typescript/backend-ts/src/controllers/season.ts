@@ -17,6 +17,7 @@ import Serie from '../models/Serie.js'
 import IDCheck from '../utils/postFunctions/IDCheck.js'
 import authControl from '../utils/middleware/authControl.js'
 import Metadata from '../models/Metadata.js'
+import TeamTable from '../models/TeamTable.js'
 
 const seasonRouter = Router()
 
@@ -29,7 +30,7 @@ seasonRouter.get('/:seasonId', (async (
 
   const season = await Season.findAll({
     where: { year: { [Op.eq]: seasonYear } },
-    include: [Team, Serie, Metadata],
+    include: [Team, TeamTable, Serie, Metadata],
     order: [['seasonId', 'asc']],
   })
 
@@ -49,7 +50,10 @@ seasonRouter.get('/', (async (
   res: Response,
   _next: NextFunction
 ) => {
-  const seasons = await Season.findAll()
+  const seasons = await Season.findAll({
+    include: { model: Metadata, attributes: ['metadataId'] },
+    order: [['seasonId', 'DESC']],
+  })
   if (!seasons || seasons.length === 0) {
     throw new NotFoundError({
       code: 404,

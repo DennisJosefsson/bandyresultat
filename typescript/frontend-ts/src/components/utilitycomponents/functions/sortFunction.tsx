@@ -108,6 +108,8 @@ export const tableSortFunction = (tableArray: TableObjectType[]) => {
   })
 }
 
+export type SortedTablesType = ReturnType<typeof tableSortFunction>
+
 export const compareSortFunction = (
   compareArray: CompareCategoryTeamTable[],
 ) => {
@@ -502,7 +504,10 @@ export const animationData = (
       serieName: serieName,
       tables: group.dates.map((date) => {
         date.games.forEach((game) => {
-          if (game.homeGoal && game.awayGoal) {
+          if (
+            (game.homeGoal || game.homeGoal === 0) &&
+            (game.awayGoal || game.awayGoal === 0)
+          ) {
             const homeTeamIndex = teamsTables.findIndex(
               (team) => team.teamId === game.homeTeamId,
             )

@@ -1,27 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
-import GenderContextProvider from './contexts/genderContext'
-import UserContextProvider from './contexts/userContext'
-import FavTeamsContextProvider from './contexts/favteamsContext'
-import MenuContextProvider from './contexts/menuContext'
+import GenderContextProvider from './contexts/genderContext.js'
+import UserContextProvider from './contexts/userContext.js'
+import FavTeamsContextProvider from './contexts/favteamsContext.js'
+import MenuContextProvider from './contexts/menuContext.js'
 import './index.css'
-import App from './App.jsx'
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false, // default: true
-    },
-  },
-})
+import App from './App.js'
+import { queryClient } from './config/queryClientConfig.js'
 
 console.log('BK allez allez.')
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <UserContextProvider>

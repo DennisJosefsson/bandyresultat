@@ -1,44 +1,35 @@
-import { useState, useContext } from 'react'
-import { useMutation, useQuery } from 'react-query'
-import { postTeamSeason } from '../../requests/seasons'
-import { postMetadata } from '../../requests/metadata'
-import { GenderContext } from '../../contexts/contexts'
+import { useState } from 'react'
+import { useQuery } from 'react-query'
+
 import MetadataForm from '../Metadata/MetadataForm'
 import TeamSeasonForm from '../Season/Subcomponents/TeamSeasonForm'
 import TeamForm from '../Team/Subcomponents/TeamForm'
 import Errors from './Errors'
 import { getSeasons } from '../../requests/seasons'
-import { getTeams, postTeam } from '../../requests/teams'
+import { getTeams } from '../../requests/teams'
 import SeriesModal from './SeriesModal'
 import { TabBarDivided } from '../utilitycomponents/Components/TabBar'
+import useGenderContext from '../../hooks/contextHooks/useGenderContext'
 
 const Dashboard = () => {
   const {
     data: seasons,
     isLoading: isSeasonLoading,
     error: seasonsError,
+    isSuccess: isSeasonSuccess,
   } = useQuery('allSeasons', getSeasons)
   const {
     data: teams,
     isLoading: isTeamsLoading,
     error: teamsError,
+    isSuccess: isTeamsSuccess,
   } = useQuery(['teams'], getTeams)
 
-  const [seasonId, setSeasonId] = useState('')
-  const [seasonFilter, setSeasonFilter] = useState('')
-  const [tab, setTab] = useState('error')
+  const [seasonId, setSeasonId] = useState<number | null>(null)
+  const [seasonFilter, setSeasonFilter] = useState<string>('')
+  const [tab, setTab] = useState<string>('error')
 
-  const metadataMutation = useMutation({
-    mutationFn: postMetadata,
-  })
-
-  const teamSeasonMutation = useMutation({
-    mutationFn: postTeamSeason,
-  })
-
-  const teamFormMutation = useMutation({ mutationFn: postTeam })
-
-  const { women, dispatch } = useContext(GenderContext)
+  const { women, dispatch } = useGenderContext()
 
   if (isSeasonLoading || isTeamsLoading) {
     return <div className="mx-auto max-w-7xl">Loading...</div>
@@ -48,10 +39,14 @@ const Dashboard = () => {
     return <div className="mx-auto max-w-7xl">There was an error</div>
   }
 
-  const filteredSeasons = seasons
-    .filter((season) => season.women === women)
-    .filter((season) => season.year.includes(seasonFilter))
-  const teamsArray = teams.filter((season) => season.women === women)
+  const filteredSeasons = isSeasonSuccess
+    ? seasons
+        .filter((season) => season.women === women)
+        .filter((season) => season.year.includes(seasonFilter))
+    : []
+  const teamsArray = isTeamsSuccess
+    ? teams.filter((season) => season.women === women)
+    : []
 
   const dashboardTabBarObject = {
     genderClickFunction: () => dispatch({ type: 'TOGGLE' }),
@@ -87,7 +82,7 @@ const Dashboard = () => {
         conditional: false,
       },
     ].filter((item) => {
-      if (seasonId === '') {
+      if (seasonId === null) {
         if (item.conditional !== false) return item
       } else {
         return item
@@ -95,13 +90,17 @@ const Dashboard = () => {
     }),
   }
 
-  const handleSeasonChange = (checkedSeasonId) => {
+  const handleSeasonChange = (checkedSeasonId: number) => {
     if (seasonId === checkedSeasonId) {
-      setSeasonId('')
+      setSeasonId(null)
     } else {
       setSeasonId(checkedSeasonId)
     }
   }
+
+  const seasonObject = filteredSeasons.find(
+    (season) => season.seasonId === seasonId,
+  )
 
   return (
     <div className="mx-auto min-h-screen max-w-7xl font-inter text-[#011d29]">
@@ -128,36 +127,31 @@ const Dashboard = () => {
         <div className="justify-self-center">
           {tab === 'error' && <Errors />}
 
-          {tab === 'metadata' && (
+          {tab === 'metadata' && seasonObject && seasonId && (
             <>
               <MetadataForm
                 teams={teamsArray}
                 seasonId={seasonId}
-                women={women}
-                name={
-                  seasons.find((season) => season.seasonId === seasonId).year
-                }
-                mutation={metadataMutation}
+                name={seasonObject?.year}
               />
             </>
           )}
 
           {tab === 'serie' && <SeriesModal women={women} />}
 
-          {tab === 'teamseason' && (
+          {tab === 'teamseason' && seasonId && (
             <>
               <TeamSeasonForm
                 teams={teamsArray}
                 seasonId={seasonId}
                 women={women}
-                mutation={teamSeasonMutation}
               />
             </>
           )}
 
           {tab === 'addteams' && (
             <>
-              <TeamForm mutation={teamFormMutation} />
+              <TeamForm />
             </>
           )}
           <ul>

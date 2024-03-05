@@ -1,11 +1,12 @@
+import useGenderContext from '../../../../hooks/contextHooks/useGenderContext'
 import { GeneralStatsResponse } from '../../../types/games/streaks'
 
 type GeneralStatsProps = {
-  women: boolean
   data: GeneralStatsResponse
 }
 
-const GeneralStats = ({ data, women }: GeneralStatsProps) => {
+const GeneralStats = ({ data }: GeneralStatsProps) => {
+  const { women } = useGenderContext()
   return (
     <div className="ml-4 xl:ml-0">
       {!women && (

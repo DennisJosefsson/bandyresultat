@@ -1,38 +1,32 @@
-import { useQuery } from 'react-query'
-import { getSeasons } from '../../requests/seasons'
-
-import { useState, useRef, useEffect, KeyboardEvent } from 'react'
+import { useState, useRef, KeyboardEvent } from 'react'
 
 import SeasonsList from './Subcomponents/SeasonsList'
 import FilterComponent from './Subcomponents/FilterComponent'
-import LoadingOrError from '../utilitycomponents/Components/LoadingOrError'
+import {
+  Loading,
+  DataError,
+} from '../utilitycomponents/Components/LoadingOrError'
 import ScrollRefComponent from '../utilitycomponents/Components/ScrollRefComponent'
+import useScrollTo from '../../hooks/domHooks/useScrollTo'
+import useGetAllSeasons from '../../hooks/dataHooks/seasonHooks/useGetAllSeasons'
 
 const Seasons = () => {
   const [seasonFilter, setSeasonFilter] = useState('')
   const topRef = useRef(null)
   const bottomRef = useRef(null)
-  const { data, isLoading, error, isSuccess } = useQuery(
-    'allSeasons',
-    getSeasons,
-  )
+  const { seasons, isLoading, error } = useGetAllSeasons()
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-  }, [])
+  useScrollTo()
 
-  if (isLoading || error)
-    return <LoadingOrError isLoading={isLoading} error={error} />
+  if (error) return <DataError />
+
+  if (isLoading) return <Loading />
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault()
     }
   }
-
-  const seasons = isSuccess
-    ? data.filter((season) => season.year.includes(seasonFilter))
-    : []
 
   return (
     <div
@@ -46,7 +40,11 @@ const Seasons = () => {
       />
 
       <div className="self-center">
-        <SeasonsList seasons={seasons} />
+        <SeasonsList
+          seasons={seasons.filter((season) =>
+            season.year.includes(seasonFilter),
+          )}
+        />
         <div ref={bottomRef}></div>
       </div>
       <ScrollRefComponent bottomRef={bottomRef} topRef={topRef} />

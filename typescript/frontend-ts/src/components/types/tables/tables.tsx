@@ -171,3 +171,30 @@ export const singleTeamTable = z.object({
 })
 
 export type SingleTeamTable = z.infer<typeof singleTeamTable>
+
+export const staticSeasonTable = z.object({
+  tableId: z.number(),
+  teamId: z.number(),
+  seasonId: z.number(),
+  position: z.number(),
+  games: z.number(),
+  won: z.number(),
+  draw: z.number(),
+  lost: z.number(),
+  scoredGoals: z.number(),
+  concededGoals: z.number(),
+  goalDifference: z.number(),
+  points: z.number(),
+  qualification: z.boolean(),
+  group: z.string(),
+  teamseason: z.object({
+    teamseasonId: z.number(),
+    seasonId: z.number(),
+    teamId: z.number(),
+    tableId: z.number(),
+    qualification: z.boolean().nullable(),
+    women: z.boolean(),
+  }),
+})
+
+export type StaticSeasonTable = z.infer<typeof staticSeasonTable>

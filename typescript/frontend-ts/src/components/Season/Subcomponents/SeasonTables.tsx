@@ -1,177 +1,105 @@
-import { useQuery } from 'react-query'
-import { getSingleSeason } from '../../../requests/seasons'
-import { getSingleSeasonTable } from '../../../requests/tables'
-import { Link } from 'react-router-dom'
-import { useContext, useState, useEffect } from 'react'
-import { GenderContext } from '../../../contexts/contexts'
-import { tableSortFunction } from '../../utilitycomponents/functions/sortFunction'
-import LoadingOrError from '../../utilitycomponents/Components/LoadingOrError'
+import { useState } from 'react'
+
+import {
+  DataError,
+  Loading,
+} from '../../utilitycomponents/Components/LoadingOrError'
 import TableList from './TablesSubComponents/TableList'
-import StaticTableList from './TablesSubComponents/StaticTableList'
+
 import SeasonTablesButtonList from './TablesSubComponents/SeasonTablesButtonList'
+import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
+import useScrollTo from '../../../hooks/domHooks/useScrollTo'
+import { useGetFirstAndLastSeason } from '../../../hooks/dataHooks/seasonHooks/useGetFirstAndLastSeason'
+import { useGetSingleSeasonTables } from '../../../hooks/dataHooks/seasonHooks/tableHooks/useGetSingleSeasonTables'
+import { useGetSingleSeason } from '../../../hooks/dataHooks/seasonHooks/useGetSingleSeason'
+import { NoWomenSeason } from '../../utilitycomponents/Components/NoWomenSeason'
+import StaticTables from './TablesSubComponents/StaticTables'
+import useSeasonContext from '../../../hooks/contextHooks/useSeasonContext'
 
-const SeasonTables = ({ seasonId }) => {
-  const { women } = useContext(GenderContext)
-  const [selectedTable, setSelectedTable] = useState('all')
-  const [homeAwayTitle, setHomeAwayTitle] = useState('')
-  const {
-    data: season,
-    isLoading,
-    error,
-  } = useQuery(['singleSeason', seasonId], () => getSingleSeason(seasonId))
-  const {
-    data,
-    isLoading: isTableLoading,
-    error: tableError,
-  } = useQuery(['singleSeasonTable', seasonId], () =>
-    getSingleSeasonTable(seasonId),
-  )
+const SeasonTables = () => {
+  const { seasonId } = useSeasonContext()
+  const { lastSeason } = useGetFirstAndLastSeason()
+  const { women } = useGenderContext()
+  const [selectedTable, setSelectedTable] = useState<string>('all')
+  const [homeAwayTitle, setHomeAwayTitle] = useState<string>('')
+  const season = useGetSingleSeason(seasonId)
+  const tables = useGetSingleSeasonTables(seasonId, selectedTable)
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-  }, [])
+  useScrollTo()
 
-  if (isLoading || isTableLoading || error || tableError)
-    return (
-      <LoadingOrError
-        isLoading={isLoading || isTableLoading}
-        error={error || tableError}
-      />
-    )
-
-  if (data?.success === 'false' || season?.success === 'false') {
-    return (
-      <div className="font-inter mx-auto grid h-screen place-items-center text-[#011d29]">
-        {data.message}
-      </div>
-    )
-  }
-
-  let regTables
-  switch (selectedTable) {
-    case 'all':
-      regTables = data.tabell.filter((table) => table.women === women)
-      break
-    case 'home':
-      regTables = data.hemmaTabell.filter((table) => table.women === women)
-      break
-    case 'away':
-      regTables = data.bortaTabell.filter((table) => table.women === women)
-      break
-  }
-
-  const unsortedRegularTables = regTables.filter(
-    (table) => table.category === 'regular',
-  )
-  const unsortedQualificationTables = regTables.filter(
-    (table) => table.category === 'qualification',
-  )
-
-  const regularTables = tableSortFunction(unsortedRegularTables)
-  const qualificationTables = tableSortFunction(unsortedQualificationTables)
-
-  const seriesInfo = season.find((season) => season.women === women)
-    ? season.find((season) => season.women === women).series
-    : []
-
-  const seasonTables = season.find((season) => season.women === women)
-    ? season.find((season) => season.women === women).tables
-    : []
-
-  if (women && seasonId < 1973) {
-    return (
-      <div className="font-inter mx-auto mt-4 grid place-items-center py-5 text-sm font-bold text-[#011d29] md:text-base">
-        <p className="mx-10 text-center">
-          Första säsongen för damernas högsta serie var{' '}
-          <Link to="/season/1973" className="font-bold">
-            1972/73
-          </Link>
-          .
-        </p>
-      </div>
-    )
-  }
-
-  if (unsortedRegularTables.length === 0 && seasonTables.length === 0) {
-    return (
-      <div className="font-inter mx-auto mt-4 grid place-items-center py-5 text-sm font-bold text-[#011d29] md:text-base">
-        <p className="mx-10 text-center">
-          Inga serietabeller för denna säsong.
-        </p>
-      </div>
-    )
-  }
-
-  const womensSeason = season.filter((season) => season.women === true)
-
-  const bonusPointsArray = seriesInfo.map((serie) => {
-    return {
-      group: serie.serieGroupCode,
-      bonusPoints: JSON.parse(serie.bonusPoints),
+  if (season.seasonData && tables.tableData) {
+    if (women && seasonId < 1973) {
+      return <NoWomenSeason />
     }
-  })
 
-  return (
-    <div>
+    if (seasonId < 1930) {
+      return (
+        <div className="mx-auto mt-4 grid place-items-center py-5 font-inter text-sm font-bold text-[#011d29] md:text-base">
+          <p className="mx-10 text-center">
+            Inga serietabeller för denna säsong.
+          </p>
+        </div>
+      )
+    }
+
+    return (
       <div>
-        {seasonId === 2025 && (
-          <div className="font-inter mx-auto grid place-items-center text-[#011d29]">
-            <p>Inga resultat än.</p>
-          </div>
-        )}
-
-        {seasonTables.length === 0 && seasonId < 2025 && (
-          <div>
-            <SeasonTablesButtonList
-              setHomeAwayTitle={setHomeAwayTitle}
-              setSelectedTable={setSelectedTable}
-            />
-
+        <div>
+          {season.seasonData.tableLength === 0 && seasonId <= lastSeason && (
             <div>
-              {regularTables.length > 0 && (
-                <TableList
-                  tableArray={regularTables}
-                  seriesInfo={seriesInfo}
-                  bonusPoints={bonusPointsArray}
-                  homeAwayTitle={homeAwayTitle}
-                  selectedTable={selectedTable}
-                />
-              )}
-              {qualificationTables.length > 0 && (
-                <TableList
-                  tableArray={qualificationTables}
-                  seriesInfo={seriesInfo}
-                  bonusPoints={bonusPointsArray}
-                  homeAwayTitle={homeAwayTitle}
-                  selectedTable={selectedTable}
-                />
-              )}
+              <SeasonTablesButtonList
+                setHomeAwayTitle={setHomeAwayTitle}
+                setSelectedTable={setSelectedTable}
+                table={selectedTable}
+              />
+
+              <div>
+                {tables.tableData.regularTables.length > 0 &&
+                  season.seasonData.seriesInfo &&
+                  season.seasonData.bonusPointsArray && (
+                    <TableList
+                      tableArray={tables.tableData.regularTables}
+                      seriesInfo={season.seasonData.seriesInfo}
+                      bonusPoints={season.seasonData.bonusPointsArray}
+                      homeAwayTitle={homeAwayTitle}
+                      selectedTable={selectedTable}
+                    />
+                  )}
+                {tables.tableData.qualificationTables.length > 0 &&
+                  season.seasonData.seriesInfo &&
+                  season.seasonData.bonusPointsArray && (
+                    <TableList
+                      tableArray={tables.tableData.qualificationTables}
+                      seriesInfo={season.seasonData.seriesInfo}
+                      bonusPoints={season.seasonData.bonusPointsArray}
+                      homeAwayTitle={homeAwayTitle}
+                      selectedTable={selectedTable}
+                    />
+                  )}
+              </div>
             </div>
-          </div>
-        )}
-        {seasonTables.length > 0 && (
-          <div>
-            <StaticTableList
-              tableArray={seasonTables.filter(
-                (team) => team.group === 'Div1Norr',
-              )}
-              seriesInfo={seriesInfo}
-              teams={womensSeason[0].teams}
-              serieName="Division 1 Norra"
-            />
-            <StaticTableList
-              tableArray={seasonTables.filter(
-                (team) => team.group === 'Div1Syd',
-              )}
-              seriesInfo={seriesInfo}
-              teams={womensSeason[0].teams}
-              serieName="Division 1 Södra"
-            />
-          </div>
-        )}
+          )}
+          {season.seasonData.tableLength &&
+          season.seasonData.tableLength > 0 &&
+          season.seasonData.seasonTables &&
+          season.seasonData.seriesInfo &&
+          season.seasonData.womensSeason ? (
+            <div>
+              <StaticTables
+                tableArray={season.seasonData.seasonTables}
+                seriesInfo={season.seasonData.seriesInfo}
+                teams={season.seasonData.womensSeason.teams}
+              />
+            </div>
+          ) : null}
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
+
+  if (season.error || tables.error) return <DataError />
+
+  if (season.isLoading || tables.isLoading) return <Loading />
 }
 
 export default SeasonTables

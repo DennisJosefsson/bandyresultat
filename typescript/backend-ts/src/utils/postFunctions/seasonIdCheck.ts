@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
-const seasonIdCheck = z
-  .string()
-  .regex(/^[0-9]{4}$/)
+const seasonIdCheck = z.coerce
+  .string({ invalid_type_error: 'Fel format, säsongsId' })
+  .regex(/^[0-9]{4}$/, { message: 'Fel säsongsId' })
   .transform((value) => {
     const seasonId = Number(value)
     if (!isNaN(seasonId)) {

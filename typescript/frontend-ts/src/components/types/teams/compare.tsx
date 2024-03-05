@@ -2,7 +2,6 @@ import { z } from 'zod'
 import {
   compareCategoryTeamTable,
   compareAllTeamTables,
-  parsedCompareAllTeamTables,
   CompareAllTeamTables,
   ParsedCompareAllTeamTables,
   CompareCategoryTeamTable,
@@ -12,7 +11,6 @@ import { compareLink } from '../link/link'
 export const compareResponseObject = z.object({
   tabeller: z.array(compareCategoryTeamTable),
   compareAllGames: z.array(compareAllTeamTables),
-  allData: z.array(parsedCompareAllTeamTables),
   golds: z.array(
     z.object({
       guld: z.string(),

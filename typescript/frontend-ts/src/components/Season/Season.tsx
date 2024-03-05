@@ -3,23 +3,21 @@ import { useState, useEffect } from 'react'
 
 import { ErrorBoundary } from 'react-error-boundary'
 import { logError } from '../utilitycomponents/functions/logError.js'
-import SeasonHelp from './Subcomponents/SeasonHelpModal.jsx'
-import SeasonTables from './Subcomponents/SeasonTables.jsx'
-import Games from '../Game/Games.js'
-import Playoff from './Subcomponents/SeasonPlayoff.jsx'
-import SeasonStats from './Subcomponents/SeasonStats.jsx'
-import Animation from '../Game/Subcomponents/Animation.js'
-import Map from './Subcomponents/Map.jsx'
+
 import ErrorFallback from '../utilitycomponents/Components/ErrorFallback.js'
 import SeasonHeader from './Subcomponents/SeasonHeader.jsx'
-
-import { TabBarInline } from '../utilitycomponents/Components/TabBar.js'
+import SeasonContextProvider from '../../contexts/seasonContext.js'
 import useGenderContext from '../../hooks/contextHooks/useGenderContext.js'
+import { useGetFirstAndLastSeason } from '../../hooks/dataHooks/seasonHooks/useGetFirstAndLastSeason.js'
+import { inputSeasonId } from '../types/season/seasonId.js'
+import SeasonComponentSwitch from './Subcomponents/SeasonComponentSwitch.js'
+import SeasonTabBar from './Subcomponents/SeasonTabBar.js'
 
 const Season = () => {
   const unparsedSeasonId = useParams().seasonId
 
-  const { women, dispatch } = useGenderContext()
+  const { lastSeason } = useGetFirstAndLastSeason()
+  const { women } = useGenderContext()
   const [tab, setTab] = useState('tables')
 
   const { state } = useLocation()
@@ -30,12 +28,15 @@ const Season = () => {
     }
   }, [state])
 
-  if (!unparsedSeasonId) throw new Error('Missing seasonId')
-
-  if (
-    !unparsedSeasonId.toString().match('^[0-9]{4}$') ||
-    parseInt(unparsedSeasonId) > 2024
-  ) {
+  if (!unparsedSeasonId) {
+    return (
+      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+        Kolla länken, måste ange säsongsId.
+      </div>
+    )
+  }
+  const parsedSeasonId = inputSeasonId.safeParse(unparsedSeasonId)
+  if (!parsedSeasonId.success || parsedSeasonId.data > lastSeason) {
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
         Kolla länken, angivna årtalet är felaktigt.
@@ -43,88 +44,22 @@ const Season = () => {
     )
   }
 
-  const seasonId = parseInt(unparsedSeasonId)
-
-  const seasonTabBarObject = {
-    genderClickFunction: () => dispatch({ type: 'TOGGLE' }),
-    tabBarArray: [
-      {
-        name: 'Matcher',
-        tabName: 'games',
-        clickFunctions: () => setTab('games'),
-      },
-      {
-        name: 'Tabell',
-        tabName: 'tables',
-        clickFunctions: () => setTab('tables'),
-      },
-      {
-        name: 'Slutspel',
-        tabName: 'playoff',
-        clickFunctions: () => setTab('playoff'),
-      },
-      {
-        name: 'Utveckling',
-        tabName: 'roundForRound',
-        clickFunctions: () => setTab('roundForRound'),
-      },
-      {
-        name: 'Statistik',
-        tabName: 'stats',
-        clickFunctions: () => setTab('stats'),
-      },
-      {
-        name: 'Karta',
-        tabName: 'map',
-        clickFunctions: () => setTab('map'),
-      },
-    ],
-  }
-
-  let pageContent
-  switch (tab) {
-    case 'tables':
-      pageContent = <SeasonTables seasonId={seasonId} />
-      break
-    case 'games':
-      pageContent = <Games seasonId={seasonId} />
-      break
-    case 'playoff':
-      pageContent = <Playoff seasonId={seasonId} />
-      break
-    case 'roundForRound':
-      pageContent = <Animation seasonId={seasonId} />
-      break
-    case 'stats':
-      pageContent = <SeasonStats seasonId={seasonId} />
-      break
-    case 'map':
-      pageContent = <Map seasonId={seasonId} />
-      break
-    case 'help':
-      pageContent = <SeasonHelp />
-      break
-    default:
-      pageContent = <div>Något gick fel, ingen sida.</div>
-      break
-  }
+  const seasonId = parsedSeasonId.data
 
   return (
     <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
       <SeasonHeader seasonId={seasonId} women={women} />
 
-      <TabBarInline
-        tabBarObject={seasonTabBarObject}
-        tab={tab}
-        setTab={setTab}
-      />
+      <SeasonTabBar tab={tab} setTab={setTab} />
       <div>
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
           onError={logError}
           resetKeys={[tab]}
         >
-          {seasonId < 2025 && pageContent}
+          <SeasonContextProvider seasonId={seasonId}>
+            <SeasonComponentSwitch tab={tab} />
+          </SeasonContextProvider>
         </ErrorBoundary>
       </div>
     </div>

@@ -17,13 +17,15 @@ export const inputGameObject = z.object({
     .optional(),
   result: z
     .string()
-    .regex(/^\d{1,2}-\d{1,2}$/)
-    .optional(),
+    .regex(/^\d{1,2}-\d{1,2}$/, { message: 'Fel resultat, ny match' })
+    .optional()
+    .or(z.literal('')),
   halftimeResult: z
     .string()
-    .regex(/^\d{1,2}-\d{1,2}$/)
-    .optional(),
-  date: z.string().regex(/^\d{4}-\d{2}-{2}$/),
+    .regex(/^\d{1,2}-\d{1,2}$/, { message: 'Fel halvtidsresultat, ny match' })
+    .optional()
+    .or(z.literal('')),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, { message: 'Fel datum' }),
   category: z
     .enum(['qualification', 'regular', 'eight', 'quarter', 'semi', 'final'])
     .default('regular'),
@@ -57,7 +59,7 @@ export const gameObject = z.object({
   awayGoal: z.number().optional(),
   halftimeHomeGoal: z.number().optional(),
   halftimeAwayGoal: z.number().optional(),
-  date: z.string().regex(/^\d{4}-\d{2}-{2}$/),
+  date: z.string().regex(/^\d{4}-\d{2}-{2}$/, { message: 'Fel datum' }),
   category: z
     .enum(['qualification', 'regular', 'eight', 'quarter', 'semi', 'final'])
     .default('regular'),
@@ -76,7 +78,7 @@ export const gameFormObject = z.object({
   awayTeamId: z.number(),
   result: z.string().optional(),
   halftimeResult: z.string().optional(),
-  date: z.string().regex(/^\d{4}-\d{2}-{2}$/),
+  date: z.string().regex(/^\d{4}-\d{2}-{2}$/, { message: 'Fel datum' }),
   category: z
     .enum(['qualification', 'regular', 'eight', 'quarter', 'semi', 'final'])
     .default('regular'),

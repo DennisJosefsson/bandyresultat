@@ -1,4 +1,4 @@
-import { TeamPreference } from '../../../../contexts/contexts'
+import useTeampreferenceContext from '../../../../hooks/contextHooks/useTeampreferenceContext'
 import { GameObjectType } from '../../../types/games/games'
 import { SerieAttributes } from '../../../types/series/series'
 import {
@@ -29,7 +29,7 @@ type AnimationTableProps = {
   dateArray: DateArrayObject[]
   round: number
   seriesArray: SerieAttributes[]
-  favTeams: TeamPreference
+
   group: string | null
 }
 
@@ -37,9 +37,10 @@ const AnimationTable = ({
   dateArray,
   round,
   seriesArray,
-  favTeams,
+
   group,
 }: AnimationTableProps) => {
+  const { favTeams } = useTeampreferenceContext()
   const displayArrow = (teamId: number) => {
     const prevPosObject = dateArray[round - 1].table.find(
       (team) => team.teamId === teamId,

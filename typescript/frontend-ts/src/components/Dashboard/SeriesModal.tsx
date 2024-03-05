@@ -1,10 +1,12 @@
-import { useForm } from 'react-hook-form'
+import { FieldErrors, useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { useQuery } from 'react-query'
 import { postSerie } from '../../requests/series'
 import { useState, useEffect } from 'react'
+import { SerieAttributes, serieAttributes } from '../types/series/series'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-const ErrorComponent = ({ errors }) => {
+const ErrorComponent = ({ errors }: { errors: FieldErrors }) => {
   if (Object.keys(errors).length === 0) {
     return null
   }
@@ -22,8 +24,8 @@ const ErrorComponent = ({ errors }) => {
   )
 }
 
-const SeriesModal = ({ women }) => {
-  const [serieData, setSerieData] = useState(null)
+const SeriesModal = ({ women }: { women: boolean }) => {
+  const [serieData, setSerieData] = useState<SerieAttributes | null>(null)
   const { data } = useQuery({
     queryKey: ['search', serieData],
     queryFn: () => postSerie(serieData),
@@ -35,7 +37,7 @@ const SeriesModal = ({ women }) => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm({
+  } = useForm<SerieAttributes>({
     defaultValues: {
       serieCategory: '',
       serieGroupCode: '',
@@ -47,6 +49,7 @@ const SeriesModal = ({ women }) => {
     },
     criteriaMode: 'all',
     mode: 'onBlur',
+    resolver: zodResolver(serieAttributes),
   })
 
   useEffect(() => {
@@ -58,7 +61,7 @@ const SeriesModal = ({ women }) => {
     }
   }, [data, setError])
 
-  const onSubmit = (formData) => setSerieData(formData)
+  const onSubmit = (formData: SerieAttributes) => setSerieData(formData)
 
   return (
     <>

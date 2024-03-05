@@ -78,6 +78,7 @@ const Compare = ({
                   <div>
                     <AllData
                       allData={compareData.allData}
+                      sortedData={compareData.sortedData}
                       compObject={compObject}
                     />
                     <DetailedData

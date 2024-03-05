@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { LeftArrow, RightArrow } from '../../utilitycomponents/Components/icons'
+import { useGetFirstAndLastSeason } from '../../../hooks/dataHooks/seasonHooks/useGetFirstAndLastSeason'
 
 type SeasonHeaderProps = {
   seasonId: number
@@ -7,10 +8,12 @@ type SeasonHeaderProps = {
 }
 
 const SeasonHeader = ({ seasonId, women }: SeasonHeaderProps) => {
+  const { firstSeason, lastSeason } = useGetFirstAndLastSeason()
+
   return (
     <div className="flex flex-row justify-center">
       <div className="mx-auto mb-4 flex w-full flex-1 flex-row items-center justify-center">
-        <div className={seasonId - 1 === 1906 ? 'invisible' : undefined}>
+        <div className={seasonId === firstSeason ? 'invisible' : undefined}>
           <Link to={`/season/${seasonId - 1}`} state={{ resetRound: true }}>
             <div className="flex flex-row items-center gap-1">
               <LeftArrow />
@@ -24,7 +27,7 @@ const SeasonHeader = ({ seasonId, women }: SeasonHeaderProps) => {
             {women ? 'Damer' : 'Herrar'}
           </h2>
         </div>
-        <div className={seasonId + 1 === 2025 ? 'invisible' : undefined}>
+        <div className={seasonId === lastSeason ? 'invisible' : undefined}>
           <Link to={`/season/${seasonId + 1}`} state={{ resetRound: true }}>
             <div className="flex flex-row items-center gap-1">
               <RightArrow />

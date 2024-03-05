@@ -12,7 +12,7 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   if (error instanceof CustomError) {
-    const { statusCode, errors, logging } = error
+    const { statusCode, logging } = error
     if (logging) {
       BandyError.create({
         name: error.name,
@@ -40,7 +40,7 @@ export const errorHandler = (
       )
     }
 
-    return res.status(statusCode).json({ errors })
+    return res.status(statusCode).json({ errors: error.message })
   } else if (error instanceof ZodError) {
     BandyError.create({
       name: error.name,
@@ -55,8 +55,10 @@ export const errorHandler = (
         next()
       })
       .catch(next)
-    console.error(JSON.stringify(error.issues, null, 2))
-    return res.status(400).json({ errors: error.issues })
+    const errorStrings = error.issues.map((error) => error.message)
+    const errorString = errorStrings.join(', ')
+    console.error(JSON.stringify(error.errors, null, 2))
+    return res.status(400).json({ errors: errorString })
   } else if (error instanceof JsonWebTokenError) {
     BandyError.create({
       name: error.name,
@@ -108,5 +110,5 @@ export const errorHandler = (
     })
     .catch(next)
   console.error(JSON.stringify(error, null, 2))
-  return res.status(500).json({ errors: [{ message: 'Something went wrong' }] })
+  return res.status(500).json({ errors: [{ message: 'Något gick fel' }] })
 }

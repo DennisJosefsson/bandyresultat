@@ -1,23 +1,20 @@
-import { SyntheticEvent,ChangeEvent, useReducer, Dispatch, SetStateAction } from 'react'
-import { useQueryClient } from 'react-query'
+import { SyntheticEvent, ChangeEvent, useReducer } from 'react'
+import { useQueryClient, useMutation } from 'react-query'
 import teamFormReducer from '../../../reducers/teamFormReducer'
+import { postTeam } from '../../../requests/teams'
 
 const initState = {
   city: '',
   name: '',
   casualName: '',
   shortName: '',
-  lat:0,
-  long:0,
+  lat: 0,
+  long: 0,
   women: false,
 }
 
-type TeamFormProps = {
-  mutation:,
-  setShowModal: Dispatch<SetStateAction<boolean>>
-}
-
-const TeamForm = ({ mutation, setShowModal }:TeamFormProps) => {
+const TeamForm = () => {
+  const mutation = useMutation({ mutationFn: postTeam })
   const [formState, dispatch] = useReducer(teamFormReducer, initState)
   const queryClient = useQueryClient()
 
@@ -26,7 +23,6 @@ const TeamForm = ({ mutation, setShowModal }:TeamFormProps) => {
 
     mutation.mutate({ formState })
     queryClient.invalidateQueries({ queryKey: ['teams'] })
-    setShowModal(false)
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {

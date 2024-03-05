@@ -21,7 +21,7 @@ const orderSelection = [
 const orderVariableSelection = [
   { value: 'date', label: 'Datum' },
   { value: 'totalGoals', label: 'Antal mål' },
-  { value: 'goalDiff', label: 'Målskillnad' },
+  { value: 'goalDifference', label: 'Målskillnad' },
   { value: 'goalsScored', label: 'Gjorda mål' },
   { value: 'goalsConceded', label: 'Insläppta mål' },
 ]

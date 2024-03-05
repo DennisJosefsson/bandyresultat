@@ -12,7 +12,7 @@ import Footer from './components/Footer'
 import Teams from './components/Team/Teams'
 import Season from './components/Season/Season'
 import Seasons from './components/Season/Seasons'
-import Compare from './components/Compare/Compare'
+
 import Dashboard from './components/Dashboard/Dashboard'
 import About from './components/About/About'
 import Link from './components/Link/Link'
@@ -20,8 +20,15 @@ import Search from './components/Search/Search'
 
 import Maraton from './components/Maraton/Maraton'
 import useUserContext from './hooks/contextHooks/useUserContext'
+import { ReactNode } from 'react'
 
-const ProtectedRoute = ({ user, children }) => {
+const ProtectedRoute = ({
+  user,
+  children,
+}: {
+  user: boolean
+  children: ReactNode
+}) => {
   if (!user) {
     return <Navigate to="/" replace />
   }
@@ -43,7 +50,7 @@ const App = () => {
             <Route path="/seasons" element={<Seasons />} />
             <Route path="/tables" element={<Maraton />} />
             <Route path="/link/:linkName" element={<Link />} />
-            <Route path="/compare" element={<Compare />} />
+
             <Route path="/search" element={<Search />} />
             <Route path="/search/:linkName" element={<Search />} />
             <Route

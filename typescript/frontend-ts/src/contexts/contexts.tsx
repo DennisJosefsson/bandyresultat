@@ -31,3 +31,4 @@ export const TeamPreferenceContext = createContext<{
   favTeams: TeamPreference
   favTeamsDispatch: Dispatch<FavTeamsActionType>
 } | null>(null)
+export const SeasonContext = createContext<{ seasonId: number } | null>(null)

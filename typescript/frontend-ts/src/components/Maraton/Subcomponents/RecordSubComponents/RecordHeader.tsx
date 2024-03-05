@@ -6,6 +6,7 @@ type RecordHeaderProps = {
   women: boolean
   title: string
   setTitle: Dispatch<SetStateAction<string>>
+  record: string
 }
 
 const RecordHeader = ({
@@ -13,6 +14,7 @@ const RecordHeader = ({
   women,
   title,
   setTitle,
+  record,
 }: RecordHeaderProps) => {
   return (
     <>
@@ -21,6 +23,9 @@ const RecordHeader = ({
       </h2>
       <div className="mb-2 flex flex-row justify-center gap-1 md:gap-4">
         <ButtonComponent
+          active={`${
+            record === 'generalStats' ? 'ring-2 ring-cyan-600 ring-inset' : null
+          }`}
           clickFunctions={() => {
             setParams((params) => ({ ...params, record: 'generalStats' }))
             setTitle('Statistik')
@@ -29,6 +34,9 @@ const RecordHeader = ({
           Statistik
         </ButtonComponent>
         <ButtonComponent
+          active={`${
+            record === 'points' ? 'ring-2 ring-cyan-600 ring-inset' : null
+          }`}
           clickFunctions={() => {
             setParams((params) => ({ ...params, record: 'points' }))
             setTitle('Poäng Elitserien')
@@ -37,6 +45,9 @@ const RecordHeader = ({
           Poäng
         </ButtonComponent>
         <ButtonComponent
+          active={`${
+            record === 'scored' ? 'ring-2 ring-cyan-600 ring-inset' : null
+          }`}
           clickFunctions={() => {
             setParams((params) => ({ ...params, record: 'scored' }))
             setTitle('Gjorda mål Elitserien')
@@ -45,6 +56,9 @@ const RecordHeader = ({
           Gjorda mål
         </ButtonComponent>
         <ButtonComponent
+          active={`${
+            record === 'conceded' ? 'ring-2 ring-cyan-600 ring-inset' : null
+          }`}
           clickFunctions={() => {
             setParams((params) => ({ ...params, record: 'conceded' }))
             setTitle('Insläppta mål Elitserien')
@@ -53,6 +67,9 @@ const RecordHeader = ({
           Insl. mål
         </ButtonComponent>
         <ButtonComponent
+          active={`${
+            record === 'streaks' ? 'ring-2 ring-cyan-600 ring-inset' : null
+          }`}
           clickFunctions={() => {
             setParams((params) => ({ ...params, record: 'streaks' }))
             setTitle('Rekordsviter')

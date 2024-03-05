@@ -1,51 +1,29 @@
-import { useQuery } from 'react-query'
-import { useState, useEffect, useRef } from 'react'
-import { maratonTabell } from '../../../requests/tables'
-
+import { useState, useRef } from 'react'
 import MaratonTableHeader from './MaratonTableSubComponents/MaratonTableHeader'
 import MaratonTables from './MaratonTableSubComponents/MaratonTables'
-import LoadingOrError from '../../utilitycomponents/Components/LoadingOrError'
+import {
+  Loading,
+  DataError,
+} from '../../utilitycomponents/Components/LoadingOrError'
 import ScrollRefComponent from '../../utilitycomponents/Components/ScrollRefComponent'
+import useScrollTo from '../../../hooks/domHooks/useScrollTo'
+import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
+import { useGetMaratonTables } from '../../../hooks/dataHooks/maratonHooks/useGetMaratonTables'
 
-const Table = ({ women }: { women: boolean }) => {
-  const [selectedTable, setSelectedTable] = useState('all')
-  const [homeAwayTitle, setHomeAwayTitle] = useState('')
+const Table = () => {
+  const { women } = useGenderContext()
+  const [selectedTable, setSelectedTable] = useState<string>('all')
+  const [homeAwayTitle, setHomeAwayTitle] = useState<string>('')
   const topRef = useRef(null)
   const bottomRef = useRef(null)
 
-  const { data, isLoading, error, isSuccess } = useQuery(
-    'maratonTabell',
-    maratonTabell,
-  )
+  const { tabell, isLoading, error } = useGetMaratonTables(selectedTable)
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-  }, [])
+  useScrollTo()
 
-  if (isLoading || error)
-    return <LoadingOrError isLoading={isLoading} error={error} />
+  if (error) return <DataError />
 
-  let tabell
-  switch (selectedTable) {
-    case 'all':
-      if (isSuccess)
-        tabell = data.maratonTabell.filter((table) => table.women === women)
-      break
-    case 'home':
-      if (isSuccess)
-        tabell = data.maratonHemmaTabell.filter(
-          (table) => table.women === women,
-        )
-      break
-    case 'away':
-      if (isSuccess)
-        tabell = data.maratonBortaTabell.filter(
-          (table) => table.women === women,
-        )
-      break
-    default:
-      return <div>Väntar...</div>
-  }
+  if (isLoading) return <Loading />
 
   return (
     <>
@@ -59,6 +37,7 @@ const Table = ({ women }: { women: boolean }) => {
             <MaratonTableHeader
               setHomeAwayTitle={setHomeAwayTitle}
               setSelectedTable={setSelectedTable}
+              table={selectedTable}
             />
             <MaratonTables tabell={tabell} />
             <div ref={bottomRef}></div>

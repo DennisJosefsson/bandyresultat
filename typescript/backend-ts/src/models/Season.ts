@@ -56,8 +56,6 @@ export const seasonAttributes = z.object({
   }),
   women: z.boolean(),
   seasonStructure: z.string().optional(),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
 })
 
 export const seasonInput = seasonAttributes.partial({ seasonId: true })
@@ -69,7 +67,7 @@ export interface SeasonOutput extends Required<SeasonAttributes> {}
 
 @Table({
   underscored: true,
-  timestamps: true,
+  timestamps: false,
   modelName: 'season',
 })
 class Season extends Model<SeasonAttributes, SeasonInput> {
@@ -87,12 +85,6 @@ class Season extends Model<SeasonAttributes, SeasonInput> {
 
   @Column
   declare seasonStructure?: string
-
-  @Column
-  declare createdAt?: Date
-
-  @Column
-  declare updatedAt?: Date
 
   @BelongsToMany(() => Team, () => TeamSeason)
   declare teams: Team[]

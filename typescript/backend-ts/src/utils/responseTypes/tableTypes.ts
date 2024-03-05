@@ -28,6 +28,29 @@ export const leagueTable = z.array(
   })
 )
 
+export type LeagueTableType = z.infer<typeof leagueTable>
+
+export const fiveSeasonsLeagueTable = z.array(
+  z.object({
+    category: z.string(),
+    season: z.object({
+      seasonId: z.number(),
+      year: z.string(),
+    }),
+
+    totalDraws: z.coerce.number(),
+    totalGames: z.coerce.number(),
+    totalGoalDifference: z.coerce.number(),
+    totalGoalsConceded: z.coerce.number(),
+    totalGoalsScored: z.coerce.number(),
+    totalLost: z.coerce.number(),
+    totalPoints: z.coerce.number(),
+    totalWins: z.coerce.number(),
+  })
+)
+
+export type FiveSeasonsLeagueTableType = z.infer<typeof fiveSeasonsLeagueTable>
+
 export const maratonTable = z.array(
   z.object({
     lag: z.object({
@@ -35,6 +58,7 @@ export const maratonTable = z.array(
       name: z.string(),
       shortName: z.string(),
       teamId: z.number(),
+      women: z.boolean(),
     }),
 
     women: z.boolean(),

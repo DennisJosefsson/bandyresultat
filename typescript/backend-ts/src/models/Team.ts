@@ -26,8 +26,6 @@ export const teamAttributes = z.object({
   women: z.boolean().optional(),
   lat: z.number().optional().nullable(),
   long: z.number().optional().nullable(),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
 })
 
 export const teamInput = teamAttributes.partial({ teamId: true })
@@ -39,7 +37,7 @@ export interface TeamOutput extends Required<TeamAttributes> {}
 
 @Table({
   underscored: true,
-  timestamps: true,
+  timestamps: false,
   modelName: 'team',
 })
 class Team extends Model<TeamAttributes, TeamInput> {
@@ -70,12 +68,6 @@ class Team extends Model<TeamAttributes, TeamInput> {
 
   @Column(DataType.FLOAT)
   declare long?: number
-
-  @Column
-  declare createdAt?: Date
-
-  @Column
-  declare updatedAt?: Date
 
   @BelongsToMany(() => Season, () => TeamSeason, 'teamId')
   declare seasonteam: Season[]

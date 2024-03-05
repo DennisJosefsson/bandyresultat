@@ -4,16 +4,21 @@ import { ButtonComponent } from '../../../utilitycomponents/Components/ButtonCom
 type MaratonTableHeaderProps = {
   setHomeAwayTitle: Dispatch<SetStateAction<string>>
   setSelectedTable: Dispatch<SetStateAction<string>>
+  table: string
 }
 
 const MaratonTableHeader = ({
   setHomeAwayTitle,
   setSelectedTable,
+  table,
 }: MaratonTableHeaderProps) => {
   return (
     <div className="mb-2 flex flex-row justify-center gap-4">
       <div>
         <ButtonComponent
+          active={`${
+            table === 'home' ? 'ring-2 ring-cyan-600 ring-inset' : null
+          }`}
           clickFunctions={() => {
             setSelectedTable('home')
             setHomeAwayTitle('Hemma')
@@ -24,6 +29,9 @@ const MaratonTableHeader = ({
       </div>
       <div>
         <ButtonComponent
+          active={`${
+            table === 'away' ? 'ring-2 ring-cyan-600 ring-inset' : null
+          }`}
           clickFunctions={() => {
             setSelectedTable('away')
             setHomeAwayTitle('Borta')
@@ -34,6 +42,9 @@ const MaratonTableHeader = ({
       </div>
       <div>
         <ButtonComponent
+          active={`${
+            table === 'all' ? 'ring-2 ring-cyan-600 ring-inset' : null
+          }`}
           clickFunctions={() => {
             setSelectedTable('all')
             setHomeAwayTitle('')
