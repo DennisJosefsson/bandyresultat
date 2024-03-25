@@ -1,13 +1,13 @@
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
-import { GameObjectType } from '../../../types/games/games'
+import { GameObjectWithSeasonType } from '../../../types/games/games'
 import useTeampreferenceContext from '../../../../hooks/contextHooks/useTeampreferenceContext'
 
 dayjs.locale('sv')
 
 type DateArrayItem = {
   date: string
-  games: GameObjectType[]
+  games: GameObjectWithSeasonType[]
 }
 
 type AnimationGamesListProps = {
@@ -17,6 +17,7 @@ type AnimationGamesListProps = {
 
 const AnimationGamesList = ({ dateArray, round }: AnimationGamesListProps) => {
   const { favTeams } = useTeampreferenceContext()
+
   return (
     <div className="mx-2 xl:mx-0">
       <div>
@@ -29,7 +30,7 @@ const AnimationGamesList = ({ dateArray, round }: AnimationGamesListProps) => {
           </span>
         )}
       </div>
-      {dateArray[round].games.map((game) => {
+      {dateArray[round]?.games.map((game) => {
         return (
           <div
             key={game.gameId}

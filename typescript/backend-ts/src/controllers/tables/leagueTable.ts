@@ -11,8 +11,13 @@ import TeamGame from '../../models/TeamGame.js'
 import Game from '../../models/Game.js'
 import Team from '../../models/Team.js'
 import Season from '../../models/Season.js'
+import Serie from '../../models/Serie.js'
 import seasonIdCheck from '../../utils/postFunctions/seasonIdCheck.js'
 import { leagueTable } from '../../utils/responseTypes/tableTypes.js'
+
+type BonusPoints = {
+  [key: string]: number
+}
 
 const leagueTableRouter = Router()
 
@@ -220,6 +225,40 @@ leagueTableRouter.get('/:seasonId', (async (
   })
 
   const bortaTabell = leagueTable.parse(getAwayTable)
+
+  const series = await Serie.findAll({
+    where: { serieCategory: 'regular' },
+    include: [{ model: Season, where: { year: seasonYear } }],
+    raw: true,
+    nest: true,
+  })
+
+  const seriesWithBonusPoints = series.find(
+    (serie) => serie.bonusPoints !== null
+  )
+
+  if (seriesWithBonusPoints) {
+    const bonusPointsObject = JSON.parse(
+      seriesWithBonusPoints.bonusPoints
+    ) as BonusPoints
+    console.log(seriesWithBonusPoints)
+    console.log(bonusPointsObject)
+
+    const updatedTable = tabell.map((table) => {
+      return table.group === seriesWithBonusPoints.serieGroupCode &&
+        table.women === seriesWithBonusPoints.season.women
+        ? {
+            ...table,
+            totalPoints:
+              table.totalPoints + bonusPointsObject[table.team.toString()],
+          }
+        : table
+    })
+
+    return res
+      .status(200)
+      .json({ tabell: updatedTable, hemmaTabell, bortaTabell, playoffGames })
+  }
 
   res.status(200).json({ tabell, hemmaTabell, bortaTabell, playoffGames })
 }) as RequestHandler)

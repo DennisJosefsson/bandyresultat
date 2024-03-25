@@ -10,6 +10,7 @@ import teamgameRouter from '../controllers/teamGames.js'
 import streakRouter from '../controllers/games/streaks.js'
 import searchRouter from '../controllers/games/search.js'
 import statsRouter from '../controllers/games/stats.js'
+import animationRouter from '../controllers/games/animation.js'
 import leagueTableRouter from '../controllers/tables/leagueTable.js'
 import maratonRouter from '../controllers/tables/maraton.js'
 import linkRouter from '../controllers/link.js'
@@ -27,6 +28,7 @@ export const routeArray = [
   { path: '/api/games', router: streakRouter },
   { path: '/api/games', router: searchRouter },
   { path: '/api/games', router: statsRouter },
+  { path: '/api/games', router: animationRouter },
   { path: '/api/tables', router: tableRouter },
   { path: '/api/tables', router: maratonRouter },
   { path: '/api/tables', router: compareRouter },

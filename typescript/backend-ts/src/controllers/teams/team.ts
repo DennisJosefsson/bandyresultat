@@ -22,7 +22,7 @@ teamRouter.get('/', (async (
   _next: NextFunction
 ) => {
   const teams = await Team.findAll({
-    order: [['teamId', 'asc']],
+    order: [[sequelize.literal(`casual_name collate "se-SE-x-icu"`), 'ASC']],
   })
   if (!teams || teams.length === 0) {
     throw new NotFoundError({

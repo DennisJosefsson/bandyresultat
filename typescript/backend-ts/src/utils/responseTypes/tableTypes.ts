@@ -1,33 +1,33 @@
 import { z } from 'zod'
 
-export const leagueTable = z.array(
-  z.object({
-    category: z.string(),
-    group: z.string(),
-    lag: z.object({
-      casualName: z.string(),
-      name: z.string(),
-      shortName: z.string(),
-      teamId: z.number(),
-    }),
-    season: z.object({
-      seasonId: z.number(),
-      year: z.string(),
-    }),
+const tableItem = z.object({
+  category: z.string(),
+  group: z.string(),
+  lag: z.object({
+    casualName: z.string(),
+    name: z.string(),
+    shortName: z.string(),
+    teamId: z.number(),
+  }),
+  season: z.object({
+    seasonId: z.number(),
+    year: z.string(),
+  }),
 
-    team: z.number(),
-    totalDraws: z.coerce.number(),
-    totalGames: z.coerce.number(),
-    totalGoalDifference: z.coerce.number(),
-    totalGoalsConceded: z.coerce.number(),
-    totalGoalsScored: z.coerce.number(),
-    totalLost: z.coerce.number(),
-    totalPoints: z.coerce.number(),
-    totalWins: z.coerce.number(),
-    women: z.boolean(),
-  })
-)
+  team: z.number(),
+  totalDraws: z.coerce.number(),
+  totalGames: z.coerce.number(),
+  totalGoalDifference: z.coerce.number(),
+  totalGoalsConceded: z.coerce.number(),
+  totalGoalsScored: z.coerce.number(),
+  totalLost: z.coerce.number(),
+  totalPoints: z.coerce.number(),
+  totalWins: z.coerce.number(),
+  women: z.boolean(),
+})
 
+export const leagueTable = z.array(tableItem)
+export type TableItem = z.infer<typeof tableItem>
 export type LeagueTableType = z.infer<typeof leagueTable>
 
 export const fiveSeasonsLeagueTable = z.array(

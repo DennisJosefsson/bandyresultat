@@ -19,19 +19,10 @@ export const useGetSingleSeason = (seasonId: number) => {
 
   const womensSeason = data?.find((season) => season.women === true)
 
-  const bonusPointsArray = seriesInfo?.map((serie) => {
-    return {
-      group: serie.serieGroupCode,
-      bonusPoints: serie.bonusPoints ? JSON.parse(serie.bonusPoints) : null,
-    }
-  })
-
   const seasonData = {
     seriesInfo,
     seasonTables,
     womensSeason,
-
-    bonusPointsArray,
     tableLength,
   }
 

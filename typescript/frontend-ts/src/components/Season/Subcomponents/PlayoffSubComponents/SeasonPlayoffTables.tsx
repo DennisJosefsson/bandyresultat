@@ -68,7 +68,7 @@ const SeasonPlayoffTables = ({
   const nilEightGroups = ['E1', 'E2']
 
   return (
-    <div className="m-0 mt-4 justify-self-center text-base">
+    <div className="m-0 mt-4 justify-self-center">
       <div className="grid grid-rows-7 gap-6">
         {final.length === 0 && <NilFinalComponent />}
         {final.length > 0 && (
@@ -81,7 +81,7 @@ const SeasonPlayoffTables = ({
           </>
         )}
 
-        <div className="grid grid-cols-1 gap-2 text-xs md:grid-cols-5 md:text-sm">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-5">
           {semiGames.length === 0 && seasonId === 2024 && (
             <>
               {nilSemiGroups.map((group, index) => {
@@ -115,7 +115,7 @@ const SeasonPlayoffTables = ({
           )}
         </div>
         {quarterGames.length === 0 && seasonId === 2024 && (
-          <div className="grid grid-cols-1 gap-2 text-xs md:grid-cols-4 md:text-sm">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-4">
             {nilQuarterGroups.map((group, index) => {
               return (
                 <NilComponent
@@ -128,7 +128,7 @@ const SeasonPlayoffTables = ({
           </div>
         )}
         {quarterGames.length !== 2 && quarterGames.length !== 0 && (
-          <div className="grid grid-cols-1 gap-2 text-xs md:grid-cols-4 md:text-sm">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-4">
             {quarterGames.map((group, index) => {
               return (
                 <DefaultComponent
@@ -147,7 +147,7 @@ const SeasonPlayoffTables = ({
         )}
 
         {quarterGames.length === 2 && (
-          <div className="grid grid-cols-1 gap-2 text-xs md:grid-cols-5 md:text-sm">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-5">
             {quarterGames.map((group, index) => {
               return (
                 <DefaultComponent
@@ -165,7 +165,7 @@ const SeasonPlayoffTables = ({
           </div>
         )}
         {eightGames.length === 0 && seasonId === 2024 && !women && (
-          <div className="grid grid-cols-1 gap-2 text-xs md:grid-cols-5 md:text-sm">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-5">
             {nilEightGroups.map((group, index) => {
               return (
                 <NilComponent
@@ -178,7 +178,7 @@ const SeasonPlayoffTables = ({
           </div>
         )}
         {eightGames.length === 2 && (
-          <div className="grid grid-cols-1 gap-2 text-xs md:grid-cols-5 md:text-sm">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-5">
             {eightGames.map((group, index) => {
               return (
                 <DefaultComponent
@@ -196,7 +196,7 @@ const SeasonPlayoffTables = ({
           </div>
         )}
         {eightGames.length === 4 && (
-          <div className="grid grid-cols-1 gap-2 text-xs md:grid-cols-4 md:text-sm">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-4">
             {eightGames.map((group, index) => {
               return (
                 <DefaultComponent

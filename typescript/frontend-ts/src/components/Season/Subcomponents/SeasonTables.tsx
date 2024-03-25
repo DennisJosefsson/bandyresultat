@@ -55,23 +55,19 @@ const SeasonTables = () => {
 
               <div>
                 {tables.tableData.regularTables.length > 0 &&
-                  season.seasonData.seriesInfo &&
-                  season.seasonData.bonusPointsArray && (
+                  season.seasonData.seriesInfo && (
                     <TableList
                       tableArray={tables.tableData.regularTables}
                       seriesInfo={season.seasonData.seriesInfo}
-                      bonusPoints={season.seasonData.bonusPointsArray}
                       homeAwayTitle={homeAwayTitle}
                       selectedTable={selectedTable}
                     />
                   )}
                 {tables.tableData.qualificationTables.length > 0 &&
-                  season.seasonData.seriesInfo &&
-                  season.seasonData.bonusPointsArray && (
+                  season.seasonData.seriesInfo && (
                     <TableList
                       tableArray={tables.tableData.qualificationTables}
                       seriesInfo={season.seasonData.seriesInfo}
-                      bonusPoints={season.seasonData.bonusPointsArray}
                       homeAwayTitle={homeAwayTitle}
                       selectedTable={selectedTable}
                     />

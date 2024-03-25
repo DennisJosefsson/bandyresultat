@@ -1,8 +1,5 @@
-import { Dispatch, SetStateAction } from 'react'
-import { useFormContext, Controller } from 'react-hook-form'
-import Select from 'react-select'
-import { selectStyles } from '../../utilitycomponents/Components/selectStyles'
-import { ChevronUp } from '../../utilitycomponents/Components/icons'
+import { useFormContext } from 'react-hook-form'
+import { SelectComponent } from '../../utilitycomponents/Components/SelectComponent'
 
 const limitSelection = [
   { value: 5, label: '5' },
@@ -26,86 +23,38 @@ const orderVariableSelection = [
   { value: 'goalsConceded', label: 'Insläppta mål' },
 ]
 
-type OrderFormComponentProps = {
-  showOrderForm: boolean
-  setShowOrderForm: Dispatch<SetStateAction<boolean>>
-}
-
-const OrderFormComponent = ({
-  showOrderForm,
-  setShowOrderForm,
-}: OrderFormComponentProps) => {
-  const { control } = useFormContext()
+const OrderFormComponent = () => {
+  const methods = useFormContext()
   return (
-    <div className="mb-2 flex w-[18rem] flex-col rounded bg-white p-2 text-sm shadow-md md:text-base lg:w-full">
+    <div className="mb-2 flex w-[18rem] flex-col rounded bg-white lg:w-full">
       <div className="grid grid-cols-1 lg:grid-cols-3">
         <div className="flex max-w-[16rem] flex-col">
-          <div>Max antal träffar</div>
-          <div>
-            <Controller
-              name="limit"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  isSearchable={false}
-                  {...field}
-                  options={limitSelection}
-                  styles={selectStyles}
-                  defaultValue={{
-                    label: '10',
-                    value: '10',
-                  }}
-                  noOptionsMessage={() => 'Inga val'}
-                />
-              )}
-            />
-          </div>
+          <SelectComponent
+            selectionArray={limitSelection}
+            label="Max antal träffar"
+            methods={methods}
+            name="limit"
+            placeholder="Välj"
+          />
         </div>
         <div className="flex max-w-[16rem] flex-col">
-          <div>Sorteringsordning</div>
-          <div>
-            <Controller
-              name="order"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  isSearchable={false}
-                  {...field}
-                  options={orderSelection}
-                  defaultValue={{ value: 'desc', label: 'Fallande' }}
-                  styles={selectStyles}
-                  noOptionsMessage={() => 'Inga val'}
-                />
-              )}
-            />
-          </div>
+          <SelectComponent
+            selectionArray={orderSelection}
+            label="Sorteringsordning"
+            methods={methods}
+            name="order"
+            placeholder="Välj"
+          />
         </div>
         <div className="flex max-w-[16rem] flex-col">
-          <div>Välj sorteringsfält</div>
-          <div>
-            <Controller
-              name="orderVar"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  isSearchable={false}
-                  {...field}
-                  options={orderVariableSelection}
-                  styles={selectStyles}
-                  defaultValue={{ value: 'date', label: 'Datum' }}
-                  noOptionsMessage={() => 'Inga val'}
-                />
-              )}
-            />
-          </div>
+          <SelectComponent
+            selectionArray={orderVariableSelection}
+            label="Välj sorteringsfält"
+            methods={methods}
+            name="orderVar"
+            placeholder="Välj"
+          />
         </div>
-      </div>
-      <div
-        className="flex w-full cursor-pointer flex-row justify-between py-2"
-        onClick={() => setShowOrderForm(false)}
-      >
-        <div>{showOrderForm ? 'Göm sorteringsval' : null}</div>
-        <div>{showOrderForm ? <ChevronUp /> : null}</div>
       </div>
     </div>
   )

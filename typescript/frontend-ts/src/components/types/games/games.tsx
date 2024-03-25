@@ -71,6 +71,15 @@ export const gameObject = z.object({
   played: z.boolean().default(false).optional(),
 })
 
+export const gameObjectWithSeason = gameObject.extend({
+  season: z.object({
+    seasonId: z.number(),
+    year: z.string(),
+    women: z.boolean(),
+    seasonStructure: z.string().or(z.null()),
+  }),
+})
+
 export const gameFormObject = z.object({
   gameId: z.number().int().positive().optional(),
   seasonId: z.number(),
@@ -144,6 +153,7 @@ export const searchResultTeamgameObject = z.object({
 })
 
 export type GameObjectType = z.infer<typeof gameObject>
+export type GameObjectWithSeasonType = z.infer<typeof gameObjectWithSeason>
 export type GameFormObjectType = z.infer<typeof gameFormObject>
 export type InputGameObjectType = z.infer<typeof inputGameObject>
 export type TeamGameObject = z.infer<typeof teamGameObject>

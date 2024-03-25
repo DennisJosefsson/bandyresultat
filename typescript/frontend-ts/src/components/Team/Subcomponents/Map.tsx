@@ -1,31 +1,24 @@
-import { Dispatch, SetStateAction, ChangeEvent } from 'react'
-
+import {
+  FormField,
+  FormItem,
+  FormControl,
+  FormLabel,
+} from '@/src/@/components/ui/form'
+import { Checkbox } from '@/src/@/components/ui/checkbox'
+import { useFormContext } from 'react-hook-form'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 import 'leaflet/dist/leaflet.css'
-import { CompareFormState, TeamAttributes } from '../../types/teams/teams'
+import { TeamAttributes } from '../../types/teams/teams'
 import useMenuContext from '../../../hooks/contextHooks/useMenuContext'
 
 type MapProps = {
   teams: TeamAttributes[]
-  formState: CompareFormState
-  handleTeamArrayChange: (
-    event: ChangeEvent<HTMLInputElement>,
-    teamId: number,
-  ) => void
-  setTab: Dispatch<SetStateAction<string>>
-  setTeamId: Dispatch<SetStateAction<number | null>>
 }
-const Map = ({
-  teams,
-  formState,
-  handleTeamArrayChange,
-  setTab,
-  setTeamId,
-}: MapProps) => {
+const Map = ({ teams }: MapProps) => {
   const { open } = useMenuContext()
-
+  const methods = useFormContext()
   return (
     <div className="mx-auto mb-2 min-h-screen max-w-7xl px-1 font-inter text-[#011d29] lg:px-0">
       {!open && (
@@ -41,44 +34,59 @@ const Map = ({
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <MarkerClusterGroup chunkedLoading>
-              {teams.map((team) => {
-                const position = [team.lat, team.long] as [number, number]
-                return (
-                  <Marker key={team.teamId} position={position}>
-                    <Popup>
-                      <div className="flew flex-row items-center gap-1">
-                        <div
-                          className="cursor-pointer text-blue-600"
-                          onClick={() => {
-                            setTeamId(team.teamId)
-                            setTab('singleTeam')
+              <FormField
+                control={methods.control}
+                name="teamArray"
+                render={() => (
+                  <FormItem>
+                    <div className="grid w-2/3 grid-cols-1 justify-between gap-x-8 gap-y-2 pt-2 lg:grid-cols-3"></div>
+                    {teams.map((team) => {
+                      const position = [team.lat, team.long] as [number, number]
+                      return (
+                        <FormField
+                          key={team.teamId}
+                          control={methods.control}
+                          name="teamArray"
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={team.teamId}
+                                className="flex flex-row items-start space-x-3 space-y-0"
+                              >
+                                <Marker key={team.teamId} position={position}>
+                                  <Popup>
+                                    <FormControl>
+                                      <Checkbox
+                                        checked={field.value?.includes(
+                                          team.teamId,
+                                        )}
+                                        onCheckedChange={(checked) => {
+                                          return checked
+                                            ? field.onChange([
+                                                ...field.value,
+                                                team.teamId,
+                                              ])
+                                            : field.onChange(
+                                                field.value?.filter(
+                                                  (value: number) =>
+                                                    value !== team.teamId,
+                                                ),
+                                              )
+                                        }}
+                                      />
+                                    </FormControl>
+                                    <FormLabel>{team.casualName}</FormLabel>
+                                  </Popup>
+                                </Marker>
+                              </FormItem>
+                            )
                           }}
-                        >
-                          {team.name} {team.women ? 'Dam' : 'Herr'}
-                        </div>
-                        <div className="flex flex-row items-center">
-                          <label
-                            htmlFor={team.teamId.toString()}
-                            className="mr-2"
-                          >
-                            Välj:
-                          </label>
-                          <input
-                            name="check"
-                            type="checkbox"
-                            id={team.teamId.toString()}
-                            checked={formState.teamArray.includes(team.teamId)}
-                            onChange={(event) =>
-                              handleTeamArrayChange(event, team.teamId)
-                            }
-                            className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
-                          />
-                        </div>
-                      </div>
-                    </Popup>
-                  </Marker>
-                )
-              })}
+                        />
+                      )
+                    })}
+                  </FormItem>
+                )}
+              />
             </MarkerClusterGroup>
           </MapContainer>
         </div>

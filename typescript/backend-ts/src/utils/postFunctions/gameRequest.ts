@@ -26,34 +26,16 @@ export const searchRequest = z
         'semi',
         'final',
       ]),
-    order: z
-      .object({ value: z.string(), label: z.string() })
-      .transform((arg) => arg.value),
-    limit: z
-      .object({ value: z.number(), label: z.number() })
-      .transform((arg) => arg.value),
-    team: z
-      .object({
-        value: z.number().optional(),
-        label: z.string().optional(),
-      })
-      .or(z.literal(''))
-      .or(z.null())
-      .transform((arg) => {
-        if (arg && arg.value) return arg.value
-        return null
-      }),
-    opponent: z
-      .object({
-        value: z.number().optional(),
-        label: z.string().optional(),
-      })
-      .or(z.literal(''))
-      .or(z.null())
-      .transform((arg) => {
-        if (arg && arg.value) return arg.value
-        return null
-      }),
+    order: z.string(),
+    limit: z.coerce.number().default(10),
+    team: z.coerce.number().transform((arg) => {
+      if (arg !== 0) return arg
+      return null
+    }),
+    opponent: z.coerce.number().transform((arg) => {
+      if (arg !== 0) return arg
+      return null
+    }),
     inputDate: z
       .string()
       .regex(/^\d{1,2}\/\d{1,2}$/, { message: 'Fel sökdatum' })
@@ -74,33 +56,19 @@ export const searchRequest = z
       .optional()
       .nullable()
       .or(z.literal('')),
-    goalDiff: z.number().nonnegative().optional().nullable(),
-    goalDiffOperator: z
-      .object({ value: z.string(), label: z.string() })
-      .transform((arg) => arg.value)
-      .refine((arg) => ['lte', 'gte', 'eq'].includes(arg)),
-    goalsScored: z.number().nonnegative().optional().nullable(),
-    goalsScoredOperator: z
-      .object({ value: z.string(), label: z.string() })
-      .transform((arg) => arg.value)
-      .refine((arg) => ['lte', 'gte', 'eq'].includes(arg)),
-    goalsConceded: z.number().nonnegative().optional().nullable(),
-    goalsConcededOperator: z
-      .object({ value: z.string(), label: z.string() })
-      .transform((arg) => arg.value)
-      .refine((arg) => ['lte', 'gte', 'eq'].includes(arg)),
-    orderVar: z
-      .object({ value: z.string(), label: z.string() })
-      .transform((arg) => arg.value)
-      .refine((arg) =>
-        [
-          'goalDifference',
-          'goalsConceded',
-          'goalsScored',
-          'totalGoals',
-          'date',
-        ].includes(arg)
-      ),
+    goalDiff: z.coerce.number().nonnegative().optional().nullable(),
+    goalDiffOperator: z.enum(['lte', 'gte', 'eq']),
+    goalsScored: z.coerce.number().nonnegative().optional().nullable(),
+    goalsScoredOperator: z.enum(['lte', 'gte', 'eq']),
+    goalsConceded: z.coerce.number().nonnegative().optional().nullable(),
+    goalsConcededOperator: z.enum(['lte', 'gte', 'eq']),
+    orderVar: z.enum([
+      'goalDifference',
+      'goalsConceded',
+      'goalsScored',
+      'totalGoals',
+      'date',
+    ]),
 
     homeGame: z.enum(['home', 'away', 'both']),
     gameResult: z.enum(['win', 'lost', 'draw', 'all']).optional(),
@@ -110,7 +78,7 @@ export const searchRequest = z
       .regex(/^\d{1,2}-\d{1,2}$/, { message: 'Fel resultat, sökning' })
       .optional()
       .or(z.literal('')),
-    startSeason: z.number().min(1907).max(2024).default(1907),
-    endSeason: z.number().min(1907).max(2024).default(2024),
+    startSeason: z.coerce.number().min(1907).max(2024).default(1907),
+    endSeason: z.coerce.number().min(1907).max(2024).default(2024),
   })
   .refine((arg) => arg.endSeason >= arg.startSeason)

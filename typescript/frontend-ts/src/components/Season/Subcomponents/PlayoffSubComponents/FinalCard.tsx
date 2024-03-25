@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 import { GameObjectType } from '../../../types/games/games'
-
+import PlayoffCard from './PlayoffCard'
 dayjs.locale('sv')
 
 type FinalCardProps = {
@@ -9,35 +9,33 @@ type FinalCardProps = {
   favTeams: number[]
 }
 
-const FinalCard = ({ game, favTeams }: FinalCardProps) => {
+const FinalCard = ({ game }: FinalCardProps) => {
   return (
-    <div className="grid w-auto min-w-[33%] grid-cols-1 justify-center rounded bg-white p-2 shadow-md md:mx-auto">
-      <div className="flex flex-col">
-        <div className="flex justify-between">
-          <h4 className="text-sm font-bold">Final</h4>
-          <h4 className="text-sm font-bold">
+    <div className="grid max-h-[10rem] w-auto min-w-[33%] grid-cols-1 justify-center md:mx-auto">
+      <PlayoffCard>
+        <PlayoffCard.Title>
+          <PlayoffCard.Group>Final</PlayoffCard.Group>
+          <PlayoffCard.Result>
             {dayjs(game.date).format('D MMMM YYYY')}
-          </h4>
-        </div>
-        <div className="mt-1 flex flex-row justify-between text-sm xl:text-lg">
-          <span
-            className={
-              favTeams.includes(game.homeTeam.teamId) ? 'font-bold' : undefined
-            }
-          >
-            {game.homeTeam.name}
-          </span>
-          -
-          <span
-            className={
-              favTeams.includes(game.awayTeam.teamId) ? 'font-bold' : undefined
-            }
-          >
-            {game.awayTeam.name}
-          </span>{' '}
-          <span className="text-right tabular-nums">{game.result}</span>
-        </div>
-      </div>
+          </PlayoffCard.Result>
+        </PlayoffCard.Title>
+        <PlayoffCard.Content>
+          <div className="flex flex-row justify-between text-xs md:text-sm lg:text-base">
+            <div>
+              <PlayoffCard.Team teamId={game.homeTeam.teamId}>
+                {game.homeTeam.name}
+              </PlayoffCard.Team>
+              <span> - </span>
+              <PlayoffCard.Team teamId={game.awayTeamId}>
+                {game.awayTeam.name}
+              </PlayoffCard.Team>
+            </div>
+            <div>
+              <PlayoffCard.Result>{game.result}</PlayoffCard.Result>
+            </div>
+          </div>
+        </PlayoffCard.Content>
+      </PlayoffCard>
     </div>
   )
 }

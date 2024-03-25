@@ -1,61 +1,41 @@
 import { useFormContext } from 'react-hook-form'
-import { ChevronUp } from '../../utilitycomponents/Components/icons'
-import { Dispatch, SetStateAction } from 'react'
+import { InputComponent } from '../../utilitycomponents/Components/InputComponent'
+import { useGetFirstAndLastSeason } from '@/src/hooks/dataHooks/seasonHooks/useGetFirstAndLastSeason'
 
-type SeasonFormComponentProps = {
-  showSeasonForm: boolean
-  setShowSeasonForm: Dispatch<SetStateAction<boolean>>
-}
-
-const SeasonFormComponent = ({
-  showSeasonForm,
-  setShowSeasonForm,
-}: SeasonFormComponentProps) => {
-  const { register } = useFormContext()
+const SeasonFormComponent = () => {
+  const methods = useFormContext()
+  const { lastSeason } = useGetFirstAndLastSeason()
 
   return (
-    <div className="mb-2 flex w-[18rem] flex-col rounded bg-white p-2 text-sm shadow-md md:text-base lg:w-full">
+    <div className="mb-2 flex w-[18rem] flex-col rounded bg-white lg:w-full">
       <div className="grid grid-cols-1 lg:grid-cols-3">
         <div className="flex max-w-[16rem] flex-col">
-          <div>Första år</div>
-          <div>
-            <input
-              className="w-[16rem] border-[#011d29] text-[#011d29]"
-              type="text"
-              {...register('startSeason')}
-              placeholder="T.ex. 1964 för 1963/1964"
-            />
-          </div>
+          <InputComponent
+            methods={methods}
+            name="startSeason"
+            label="Första år"
+            placeholder="1907"
+            description={`1907-${lastSeason}`}
+          />
         </div>
         <div className="flex max-w-[16rem] flex-col">
-          <div>Sista år</div>
-          <div>
-            <input
-              className="w-[16rem] border-[#011d29] text-[#011d29]"
-              type="text"
-              {...register('endSeason')}
-              placeholder="T.ex. 2021 för 2020/2021"
-            />
-          </div>
+          <InputComponent
+            methods={methods}
+            name="endSeason"
+            label="Sista år"
+            placeholder={`${lastSeason}`}
+            description={`1907-${lastSeason}`}
+          />
         </div>
         <div className="flex max-w-[16rem] flex-col">
-          <div>Matchdatum</div>
-          <div>
-            <input
-              className="w-[16rem] border-[#011d29] text-[#011d29]"
-              type="text"
-              {...register('inputDate')}
-              placeholder="T.ex. 26/12 för annandagen"
-            />
-          </div>
+          <InputComponent
+            methods={methods}
+            name="inputDate"
+            label="Matchdatum"
+            placeholder="Datum"
+            description="T.ex. 26/12 för annandagen."
+          />
         </div>
-      </div>
-      <div
-        className="flex w-full cursor-pointer flex-row justify-between py-2"
-        onClick={() => setShowSeasonForm(false)}
-      >
-        <div>{showSeasonForm ? 'Göm säsongsinställningar' : null}</div>
-        <div>{showSeasonForm ? <ChevronUp /> : null}</div>
       </div>
     </div>
   )

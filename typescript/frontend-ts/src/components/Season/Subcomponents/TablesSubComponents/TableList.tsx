@@ -1,24 +1,29 @@
-import { useState, useEffect } from 'react'
+// import { useState, useEffect } from 'react'
 
-import useTeampreferenceContext from '../../../../hooks/contextHooks/useTeampreferenceContext'
+// import useTeampreferenceContext from '../../../../hooks/contextHooks/useTeampreferenceContext'
 
 import { SerieAttributes } from '../../../types/series/series'
 import { SortedTablesType } from '../../../utilitycomponents/functions/sortFunction'
-import {
-  sortTitles,
-  sortFunctions,
-  calculateBonusPoints,
-} from '../../../utilitycomponents/functions/tableSortFunctions'
+// import {
+//   sortTitles,
 
-type BonusPointsType = {
-  group: string
-  bonusPoints: { [key: string]: number } | null
-}
+// } from '../../../utilitycomponents/functions/tableSortFunctions'
+
+import DataTable from './DataTable'
+import { columns } from './columns'
+
+// import {
+//   Table,
+//   TableHeader,
+//   TableBody,
+//   TableHead,
+//   TableRow,
+//   TableCell,
+// } from '@/src/@/components/ui/table'
 
 type TableListProps = {
   tableArray: SortedTablesType
   seriesInfo: SerieAttributes[]
-  bonusPoints: BonusPointsType[]
   homeAwayTitle: string
   selectedTable: string
 }
@@ -26,21 +31,25 @@ type TableListProps = {
 const TableList = ({
   tableArray,
   seriesInfo,
-  bonusPoints,
   homeAwayTitle,
-  selectedTable,
 }: TableListProps) => {
-  const [width, setWidth] = useState(window.innerWidth)
-  const [sortColumn, setSortColumn] = useState('tablePointsDesc')
-  const { favTeams } = useTeampreferenceContext()
-  const breakpoint = 576
+  // const [width, setWidth] = useState(window.innerWidth)
+  // const [sortColumn, setSortColumn] = useState('tablePointsDesc')
+  // const { favTeams } = useTeampreferenceContext()
+  // const breakpoint = 576
 
-  useEffect(() => {
-    const handleWindowResize = () => setWidth(window.innerWidth)
-    window.addEventListener('resize', handleWindowResize)
+  // useEffect(() => {
+  //   const handleWindowResize = () => setWidth(window.innerWidth)
+  //   window.addEventListener('resize', handleWindowResize)
 
-    return () => window.removeEventListener('resize', handleWindowResize)
-  }, [])
+  //   return () => window.removeEventListener('resize', handleWindowResize)
+  // }, [])
+
+  // return (
+  //   <div className="container mx-auto py-10">
+  //     <DataTable columns={columns} data={tableArray} />
+  //   </div>
+  // )
 
   return (
     <div className="mb-6">
@@ -50,39 +59,39 @@ const TableList = ({
         )
         if (!serieObject) throw new Error('Missing serieObject')
         const serieName = serieObject.serieName
-
+        const teamObject = group.tables.reduce(
+          (o, key) => ({ ...o, [key.lag.name]: key.team }),
+          {},
+        )
+        const serieStructure = serieObject.serieStructure
         return (
           <div key={group.group} className="mb-6">
             {group.group.includes('Kval') && tableArray.length === 1 ? (
               <>
-                <h2 className="ml-1 text-[0.75rem] font-bold lg:text-[1rem] xl:ml-0 xl:text-xl">
+                <h2 className="ml-1 text-sm font-bold lg:text-base xl:ml-0 xl:text-xl">
                   Kvalgrupp {homeAwayTitle}
                 </h2>
-                <p className="m-1 text-[8px] sm:text-xs xl:m-0">
+                {/* <p className="m-1 text-[8px] sm:text-xs xl:m-0">
                   Sorteras efter {sortTitles[sortColumn]}
-                </p>
+                </p> */}
               </>
             ) : (
               <>
                 <h2 className="ml-1 text-sm font-bold lg:text-base xl:ml-0 xl:text-xl">
                   {serieName} {homeAwayTitle}
                 </h2>
-                <p className="m-1 text-[8px] sm:text-xs xl:m-0">
+                {/* <p className="m-1 text-[8px] sm:text-xs xl:m-0">
                   Sorteras efter {sortTitles[sortColumn]}
-                </p>
+                </p> */}
               </>
             )}
             <div>
-              <table className="season w-full px-1 text-xs md:text-sm">
-                <thead>
-                  <tr>
-                    <th scope="col" className="pos">
-                      Pos
-                    </th>
-                    <th scope="col" className="team">
-                      Lag
-                    </th>
-                    <th
+              {/* <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Pos</TableHead>
+                    <TableHead>Lag</TableHead>
+                    <TableHead
                       className="cursor-pointer"
                       scope="col"
                       onClick={() =>
@@ -92,8 +101,8 @@ const TableList = ({
                       }
                     >
                       M
-                    </th>
-                    <th
+                    </TableHead>
+                    <TableHead
                       className="cursor-pointer"
                       scope="col"
                       onClick={() =>
@@ -103,8 +112,8 @@ const TableList = ({
                       }
                     >
                       V
-                    </th>
-                    <th
+                    </TableHead>
+                    <TableHead
                       className="cursor-pointer"
                       scope="col"
                       onClick={() =>
@@ -114,8 +123,8 @@ const TableList = ({
                       }
                     >
                       O
-                    </th>
-                    <th
+                    </TableHead>
+                    <TableHead
                       className="cursor-pointer"
                       scope="col"
                       onClick={() =>
@@ -125,8 +134,8 @@ const TableList = ({
                       }
                     >
                       F
-                    </th>
-                    <th
+                    </TableHead>
+                    <TableHead
                       scope="col"
                       className="twelve cursor-pointer"
                       onClick={() =>
@@ -138,10 +147,10 @@ const TableList = ({
                       }
                     >
                       GM
-                    </th>
-                    <th
+                    </TableHead>
+                    <TableHead
                       scope="col"
-                      className="twelve cursor-pointer"
+                      className="cursor-pointer"
                       onClick={() =>
                         setSortColumn(
                           sortColumn !== 'concededDesc'
@@ -151,10 +160,10 @@ const TableList = ({
                       }
                     >
                       IM
-                    </th>
-                    <th
+                    </TableHead>
+                    <TableHead
                       scope="col"
-                      className="twelve cursor-pointer"
+                      className="cursor-pointer"
                       onClick={() =>
                         setSortColumn(
                           sortColumn !== 'goalDiffDesc'
@@ -164,10 +173,10 @@ const TableList = ({
                       }
                     >
                       MS
-                    </th>
-                    <th
+                    </TableHead>
+                    <TableHead
                       scope="col"
-                      className="points group cursor-pointer"
+                      className="cursor-pointer"
                       onClick={() =>
                         setSortColumn(
                           sortColumn !== 'tablePointsDesc'
@@ -177,62 +186,52 @@ const TableList = ({
                       }
                     >
                       P
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {group.tables
-                    .sort(
-                      sortFunctions[sortColumn](
-                        bonusPoints,
-                        group.group,
-                        selectedTable,
-                      ),
-                    )
+                    .sort(sortFunctions[sortColumn](group.group, selectedTable))
                     .map((team, index) => {
                       return (
-                        <tr
+                        <TableRow
                           key={`${team.team}-${index}`}
-                          className={`season ${
+                          className={`${
                             serieObject.serieStructure?.includes(index + 1)
                               ? 'border-b-2 border-black'
                               : null
                           } ${
                             favTeams.includes(team.team) ? 'font-bold' : null
-                          } odd:bg-slate-300`}
+                          }`}
                         >
-                          <td className="pos">{index + 1}</td>
-                          <td className="team">
+                          <TableCell className="pos">{index + 1}</TableCell>
+                          <TableCell className="team">
                             {width < breakpoint
                               ? `${team.lag.shortName}`
                               : `${team.lag.name}`}
-                          </td>
+                          </TableCell>
 
-                          <td>
+                          <TableCell>
                             {team.totalWins + team.totalDraws + team.totalLost}
-                          </td>
-                          <td>{team.totalWins}</td>
-                          <td>{team.totalDraws}</td>
-                          <td>{team.totalLost}</td>
-                          <td>{team.totalGoalsScored}</td>
-                          <td>{team.totalGoalsConceded}</td>
-                          <td>{team.totalGoalDifference}</td>
-                          <td className="points">
-                            {Number(team.totalPoints) +
-                              Number(
-                                calculateBonusPoints(
-                                  bonusPoints,
-                                  selectedTable,
-                                  group.group,
-                                  team.team,
-                                ),
-                              )}
-                          </td>
-                        </tr>
+                          </TableCell>
+                          <TableCell>{team.totalWins}</TableCell>
+                          <TableCell>{team.totalDraws}</TableCell>
+                          <TableCell>{team.totalLost}</TableCell>
+                          <TableCell>{team.totalGoalsScored}</TableCell>
+                          <TableCell>{team.totalGoalsConceded}</TableCell>
+                          <TableCell>{team.totalGoalDifference}</TableCell>
+                          <TableCell>{team.totalPoints}</TableCell>
+                        </TableRow>
                       )
                     })}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table> */}
+              <DataTable
+                columns={columns}
+                data={group.tables}
+                teamObject={teamObject}
+                serieStructure={serieStructure}
+              />
               {serieObject.comment && (
                 <p className="bg-white p-1 text-xs font-bold">
                   {serieObject.comment}

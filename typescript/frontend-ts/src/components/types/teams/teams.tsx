@@ -15,13 +15,23 @@ export const newTeam = z.object({
   long: z.number(),
 })
 
-export const compareFormState = z.object({
-  teamArray: z.array(z.number()).max(4).min(2),
-  categoryArray: z.array(z.string()),
-  startSeason: z.number().nullable(),
-  endSeason: z.number().nullable(),
-  women: z.boolean(),
-})
+export const compareFormState = z
+  .object({
+    teamArray: z
+      .array(z.number())
+      .max(4, { message: 'Max 4 lag.' })
+      .min(2, { message: 'Minst 2 lag.' }),
+    categoryArray: z
+      .array(z.string())
+      .min(1, { message: 'Minst en matchkategori.' }),
+    startSeason: z.string(),
+    endSeason: z.string(),
+    women: z.boolean(),
+  })
+  .refine((arg) => Number(arg.startSeason) <= Number(arg.endSeason), {
+    message: 'Första säsong kan inte komma efter sista säsong.',
+    path: ['startSeason'],
+  })
 
 export const teamAttributes = z.object({
   teamId: z.number(),

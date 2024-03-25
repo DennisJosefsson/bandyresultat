@@ -14,6 +14,7 @@ import {
 import { Dispatch, SetStateAction, SyntheticEvent } from 'react'
 
 import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
+import { Button } from '@/src/@/components/ui/button'
 
 export type TabBarObject = {
   tabBarArray: {
@@ -46,8 +47,8 @@ const tabIcons: TabIcons = {
 
 export const TabBarInline = ({
   tabBarObject,
-  tab,
   setTab,
+  tab,
 }: {
   tabBarObject: TabBarObject
   tab: string
@@ -56,63 +57,49 @@ export const TabBarInline = ({
   const { women } = useGenderContext()
   return (
     <div>
-      <div className="hidden items-center bg-slate-300 text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
+      <div className="hidden items-center text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
         {tabBarObject.tabBarArray.map((currTab) => {
           return (
-            <div
+            <Button
               key={currTab.name}
               onClick={currTab.clickFunctions}
-              className={`${
-                tab === currTab.tabName
-                  ? 'border-b-4 border-black'
-                  : 'border-b-4 border-slate-300'
-              } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
+              variant={tab === currTab.tabName ? 'default' : 'outline'}
             >
               {currTab.name}
-            </div>
+            </Button>
           )
         })}
-        <div
+        <Button
           onClick={() => setTab('help')}
-          className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 duration-300 ease-in-out hover:border-black hover:bg-slate-200 hover:transition-colors"
+          variant={tab === 'help' ? 'default' : 'outline'}
         >
           Hjälp
-        </div>
-        <div
-          className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 duration-300 ease-in-out hover:border-black hover:bg-slate-200 hover:transition-colors"
-          onClick={tabBarObject.genderClickFunction}
-        >
+        </Button>
+        <Button onClick={tabBarObject.genderClickFunction}>
           {women ? 'Herrar' : 'Damer'}
-        </div>
+        </Button>
       </div>
-      <div className="flex flex-row justify-between gap-1 bg-slate-300 text-sm font-bold xs:mb-2 xs:hidden md:gap-2 md:text-lg">
+      <div className="flex flex-row justify-between gap-1 text-sm font-bold xs:mb-2 xs:hidden md:gap-2 md:text-lg">
         {tabBarObject.tabBarArray.map((currTab, index) => {
           return (
-            <div
+            <Button
               key={`${currTab.name}-${index}`}
               onClick={currTab.clickFunctions}
-              className={`${
-                tab === currTab.tabName
-                  ? 'border-b-4 border-black'
-                  : 'border-b-4 border-slate-300'
-              } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
+              variant={tab === currTab.tabName ? 'default' : 'outline'}
             >
               {tabIcons[currTab.tabName]}
-            </div>
+            </Button>
           )
         })}
-        <div
+        <Button
           onClick={() => setTab('help')}
-          className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 duration-300 ease-in-out hover:border-black hover:bg-slate-200 hover:transition-colors"
+          variant={tab === 'help' ? 'default' : 'outline'}
         >
           <QuestionIcon />
-        </div>
-        <div
-          className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 hover:border-black hover:bg-slate-200"
-          onClick={tabBarObject.genderClickFunction}
-        >
+        </Button>
+        <Button onClick={tabBarObject.genderClickFunction}>
           {women ? <ManIcon /> : <WomanIcon />}
-        </div>
+        </Button>
       </div>
     </div>
   )
@@ -132,71 +119,52 @@ export const TabBarDivided = ({
   const { women } = useGenderContext()
   return (
     <div>
-      <div className="hidden items-center bg-slate-300 text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
+      <div className="hidden items-center text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
         <div className="flex flex-row xs:gap-1 md:gap-2">
           {tabBarObject.tabBarArray.map((currTab) => {
             return (
-              <div
+              <Button
                 key={currTab.name}
                 onClick={currTab.clickFunctions}
-                className={`${
-                  tab === currTab.tabName
-                    ? 'border-b-4 border-black'
-                    : 'border-b-4 border-slate-300'
-                } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
+                variant={tab === currTab.tabName ? 'default' : 'outline'}
               >
                 {currTab.name}
-              </div>
+              </Button>
             )
           })}
         </div>
         <div className="flex flex-row xs:gap-1 md:gap-2">
-          <div
-            onClick={() => setTab('help')}
-            className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 duration-300 ease-in-out hover:border-black hover:bg-slate-200 hover:transition-colors"
-          >
-            Hjälp
-          </div>
-          <div
-            className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 duration-300 ease-in-out hover:border-black hover:bg-slate-200 hover:transition-colors"
-            onClick={tabBarObject.genderClickFunction}
-          >
+          <Button onClick={() => setTab('help')}>Hjälp</Button>
+          <Button onClick={tabBarObject.genderClickFunction}>
             {women ? 'Herrar' : 'Damer'}
-          </div>
+          </Button>
         </div>
       </div>
       {!onlyDesktop && (
-        <div className="flex flex-row justify-between gap-1 bg-slate-300 text-sm font-bold xs:mb-2 xs:hidden md:gap-2 md:text-lg">
+        <div className="flex flex-row justify-between gap-1  text-sm font-bold xs:mb-2 xs:hidden md:gap-2 md:text-lg">
           <div className="flex flex-row xs:gap-1 md:gap-2">
             {tabBarObject.tabBarArray.map((currTab, index) => {
               return (
-                <div
+                <Button
                   key={`${currTab.name}-${index}`}
                   onClick={currTab.clickFunctions}
-                  className={`${
-                    tab === currTab.tabName
-                      ? 'border-b-4 border-black'
-                      : 'border-b-4 border-slate-300'
-                  } cursor-pointer bg-slate-300 p-2 duration-300 ease-in-out hover:border-b-4 hover:border-black hover:bg-slate-200 hover:transition-colors`}
+                  variant={tab === currTab.tabName ? 'default' : 'outline'}
                 >
                   {tabIcons[currTab.tabName]}
-                </div>
+                </Button>
               )
             })}
           </div>
           <div className="flex flex-row xs:gap-1 md:gap-2">
-            <div
+            <Button
               onClick={() => setTab('help')}
-              className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 duration-300 ease-in-out hover:border-black hover:bg-slate-200 hover:transition-colors"
+              variant={tab === 'help' ? 'default' : 'outline'}
             >
               <QuestionIcon />
-            </div>
-            <div
-              className="cursor-pointer border-b-4 border-slate-300 bg-slate-300 p-2 hover:border-black hover:bg-slate-200"
-              onClick={tabBarObject.genderClickFunction}
-            >
+            </Button>
+            <Button onClick={tabBarObject.genderClickFunction}>
               {women ? <ManIcon /> : <WomanIcon />}
-            </div>
+            </Button>
           </div>
         </div>
       )}

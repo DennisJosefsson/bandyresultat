@@ -27,9 +27,8 @@ type DateArrayObject = {
 
 type AnimationTableProps = {
   dateArray: DateArrayObject[]
-  round: number
+  round: number[]
   seriesArray: SerieAttributes[]
-
   group: string | null
 }
 
@@ -42,10 +41,10 @@ const AnimationTable = ({
 }: AnimationTableProps) => {
   const { favTeams } = useTeampreferenceContext()
   const displayArrow = (teamId: number) => {
-    const prevPosObject = dateArray[round - 1].table.find(
+    const prevPosObject = dateArray[round[0] - 1].table.find(
       (team) => team.teamId === teamId,
     )
-    const currPosObject = dateArray[round].table.find(
+    const currPosObject = dateArray[round[0]].table.find(
       (team) => team.teamId === teamId,
     )
 
@@ -92,7 +91,7 @@ const AnimationTable = ({
           </tr>
         </thead>
         <tbody>
-          {dateArray[round]?.table.map((team, index) => {
+          {dateArray[round[0]]?.table.map((team, index) => {
             return (
               <tr
                 key={`${team.teamId}-${index}`}
@@ -107,7 +106,7 @@ const AnimationTable = ({
                 <td className="pos">{team.table.position}</td>
                 <td className="team">{team.casualName}</td>
                 <td className="text-slate-100">
-                  {round > 0 &&
+                  {round[0] > 0 &&
                     team.table.games > 0 &&
                     displayArrow(team.teamId)}
                 </td>

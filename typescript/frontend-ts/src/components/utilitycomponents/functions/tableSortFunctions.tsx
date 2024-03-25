@@ -1,7 +1,7 @@
-type BonusPointsType = {
-  group: string
-  bonusPoints: { [key: string]: number } | null
-}
+// type BonusPointsType = {
+//   group: string
+//   bonusPoints: { [key: string]: number } | null
+// }
 
 type Team = {
   totalPoints: number
@@ -35,26 +35,26 @@ type StaticTeam = {
 
 type MaratonTeam = Omit<Team, 'group'>
 
-export const calculateBonusPoints = (
-  bonusPoints: BonusPointsType[],
-  selectedTable: string,
-  group: string,
-  teamId: number,
-) => {
-  if (selectedTable !== 'all') return 0
-  const bonus = bonusPoints.find((points) => points.group === group)
-  if (!bonus) return 0
-  if (bonus.bonusPoints === null) {
-    return 0
-  }
-  const points = bonus.bonusPoints[String(teamId)]
+// export const calculateBonusPoints = (
+//   bonusPoints: BonusPointsType[],
+//   selectedTable: string,
+//   group: string,
+//   teamId: number,
+// ) => {
+//   if (selectedTable !== 'all') return 0
+//   const bonus = bonusPoints.find((points) => points.group === group)
+//   if (!bonus) return 0
+//   if (bonus.bonusPoints === null) {
+//     return 0
+//   }
+//   const points = bonus.bonusPoints[String(teamId)]
 
-  if (points === null) {
-    return 0
-  } else {
-    return points
-  }
-}
+//   if (points === null) {
+//     return 0
+//   } else {
+//     return points
+//   }
+// }
 
 type Titles = {
   [key: string]: string
@@ -99,7 +99,6 @@ export const sortTitles: Titles = {
 
 type Functions = {
   [key: string]: (
-    bonusPoints?: BonusPointsType[],
     group?: string,
     selectedTable?: string,
   ) => (TeamA: Team, TeamB: Team) => number
@@ -107,62 +106,22 @@ type Functions = {
 
 export const sortFunctions: Functions = {
   tablePointsDesc:
-    (
-      bonusPoints: BonusPointsType[] | undefined,
-      group: string | undefined,
-      selectedTable: string | undefined,
-    ) =>
+    (group: string | undefined, selectedTable: string | undefined) =>
     (teamA: Team, teamB: Team) => {
-      if (!bonusPoints || !group || !selectedTable)
-        throw new Error('Missing parameters')
-      if (
-        teamA.totalPoints +
-          calculateBonusPoints(
-            bonusPoints,
-            selectedTable,
-            group,
-            teamA.team,
-          ) ===
-        teamB.totalPoints +
-          calculateBonusPoints(bonusPoints, selectedTable, group, teamB.team)
-      ) {
+      if (!group || !selectedTable) throw new Error('Missing parameters')
+      if (teamA.totalPoints === teamB.totalPoints) {
         return teamB.totalGoalDifference - teamA.totalGoalDifference
       }
-      return (
-        teamB.totalPoints +
-        calculateBonusPoints(bonusPoints, selectedTable, group, teamB.team) -
-        teamA.totalPoints +
-        calculateBonusPoints(bonusPoints, selectedTable, group, teamA.team)
-      )
+      return teamB.totalPoints - teamA.totalPoints
     },
   tablePointsAsc:
-    (
-      bonusPoints: BonusPointsType[] | undefined,
-      group: string | undefined,
-      selectedTable: string | undefined,
-    ) =>
+    (group: string | undefined, selectedTable: string | undefined) =>
     (teamA: Team, teamB: Team) => {
-      if (!bonusPoints || !group || !selectedTable)
-        throw new Error('Missing parameters')
-      if (
-        teamA.totalPoints +
-          calculateBonusPoints(
-            bonusPoints,
-            selectedTable,
-            group,
-            teamA.team,
-          ) ===
-        teamB.totalPoints +
-          calculateBonusPoints(bonusPoints, selectedTable, group, teamB.team)
-      ) {
+      if (!group || !selectedTable) throw new Error('Missing parameters')
+      if (teamA.totalPoints === teamB.totalPoints) {
         return teamA.totalGoalDifference - teamB.totalGoalDifference
       }
-      return (
-        teamA.totalPoints +
-        calculateBonusPoints(bonusPoints, selectedTable, group, teamA.team) -
-        teamB.totalPoints +
-        calculateBonusPoints(bonusPoints, selectedTable, group, teamB.team)
-      )
+      return teamA.totalPoints - teamB.totalPoints
     },
 
   scoredDesc: () => (teamA: Team, teamB: Team) => {

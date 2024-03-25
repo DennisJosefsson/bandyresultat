@@ -13,6 +13,7 @@ import {
   SearchResponseObject,
 } from '../components/types/games/search'
 import { SeasonStatsObjectType } from '../components/types/games/stats'
+import { AnimationObject } from '../components/types/games/animation'
 const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
 
 const gamesApi = axios.create({
@@ -50,6 +51,13 @@ export const getSeasonStats = async (
   seasonId: number,
 ): Promise<SeasonStatsObjectType> => {
   const response = await gamesApi.get(`/stats/${seasonId}`)
+  return response.data
+}
+
+export const getAnimation = async (
+  seasonId: number,
+): Promise<AnimationObject> => {
+  const response = await gamesApi.get(`/animation/${seasonId}`)
   return response.data
 }
 

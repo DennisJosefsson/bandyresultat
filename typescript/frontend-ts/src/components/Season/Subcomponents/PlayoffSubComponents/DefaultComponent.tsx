@@ -2,6 +2,12 @@ import { Dispatch, SetStateAction } from 'react'
 import { GameObjectType } from '../../../types/games/games'
 import { groupConstant } from '../../../utilitycomponents/functions/constants'
 import { TableObjectType } from '../../../types/tables/tables'
+import PlayoffCard from './PlayoffCard'
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from '@/src/@/components/ui/popover'
 
 type ColstartsType = {
   [key: string]: string
@@ -33,15 +39,12 @@ type DefaultComponentProps = {
 const DefaultComponent = ({
   group,
   colStarts,
-  setGameData,
   playoffGames,
-  setShowPopup,
-  favTeams,
   tables,
 }: DefaultComponentProps) => {
   const styleClass = colStarts
-    ? `${colStarts[group.group]} cursor-pointer rounded bg-white p-2 shadow-md`
-    : 'cursor-pointer rounded bg-white p-2 shadow-md md:col-start-4 md:odd:col-start-2'
+    ? `${colStarts[group.group]} cursor-pointer`
+    : 'cursor-pointer md:col-start-4 md:odd:col-start-2'
 
   let resultString
   const tableObject = tables.find(
@@ -57,52 +60,33 @@ const DefaultComponent = ({
       resultString = ''
       return
     }
-    resultString = `${actualTableObject.totalWins}-${actualTableObject.totalWins}`
+    resultString = `${actualTableObject.totalWins}-${actualTableObject.totalLost}`
   } else {
     resultString = ''
   }
 
   return (
-    <div
-      className={styleClass}
-      onClick={() => {
-        setGameData(playoffGames.filter((game) => game.group === group.group))
-        setShowPopup(true)
-      }}
-    >
-      <div className="flex flex-row justify-between">
-        <h4 className="text-sm font-bold">{groupConstant[group.group]}</h4>
-        <h4 className="text-sm font-bold">{resultString}</h4>
-      </div>
-      <div>
+    <PlayoffCard styleClass={styleClass}>
+      <PlayoffCard.Title>
+        <PlayoffCard.Group>{groupConstant[group.group]}</PlayoffCard.Group>
+        <PlayoffCard.Result>{resultString}</PlayoffCard.Result>
+      </PlayoffCard.Title>
+      <PlayoffCard.Content>
         {group.dates[0].games.map((game) => {
           return (
-            <div
-              key={`${game.date}-${Math.random()}`}
-              className="flex flex-row justify-between"
-            >
-              <div>
-                <span
-                  className={
-                    favTeams.includes(game.homeTeamId) ? 'font-bold' : undefined
-                  }
-                >
-                  {game.homeTeam.casualName}
-                </span>
-                <span>-</span>
-                <span
-                  className={
-                    favTeams.includes(game.awayTeamId) ? 'font-bold' : undefined
-                  }
-                >
-                  {game.awayTeam.casualName}
-                </span>
-              </div>
+            <div key={`${game.date}-${Math.random()}`}>
+              <PlayoffCard.Team teamId={game.homeTeamId}>
+                {game.homeTeam.casualName}
+              </PlayoffCard.Team>
+              <span> - </span>
+              <PlayoffCard.Team teamId={game.awayTeamId}>
+                {game.awayTeam.casualName}
+              </PlayoffCard.Team>
             </div>
           )
         })}
-      </div>
-    </div>
+      </PlayoffCard.Content>
+    </PlayoffCard>
   )
 }
 

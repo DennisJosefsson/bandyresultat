@@ -17,8 +17,8 @@ export const searchParamsObject = z
       )
       .min(1, { message: 'Måste ange minst en matchkategori.' })
       .max(6),
-    order: z.object({ value: z.string(), label: z.string() }),
-    limit: z.object({ value: z.number(), label: z.number() }),
+    order: z.enum(['asc', 'desc']),
+    limit: z.enum(['5', '10', '15', '20', '50', '100']),
     result: z
       .string()
       .regex(/^\d{1,2}-\d{1,2}$/, { message: 'Felaktigt resultatformat' })
@@ -26,103 +26,115 @@ export const searchParamsObject = z
       .nullable()
       .or(z.literal('')),
     gameResult: z.enum(['win', 'lost', 'draw', 'all']),
-    goalsScored: z.coerce
-      .number({ invalid_type_error: 'Gjorda mål måste vara en siffra' })
-      .nonnegative({ message: 'Gjorda mål måste vara positivt' })
-      .int({ message: 'Gjorda mål måste vara ett heltal' })
-      .optional()
-      .nullable(),
-    goalsScoredOperator: z
-      .object({ value: z.string(), label: z.string() })
-
-      .optional()
-      .nullable(),
-    goalsConceded: z.coerce
-      .number({ invalid_type_error: 'Insläppta mål måste vara en siffra' })
-      .nonnegative({ message: 'Insläppta mål måste vara positivt' })
-      .int({ message: 'Insläppta mål måste vara ett heltal' })
-      .optional()
-      .nullable(),
-    goalsConcededOperator: z.object({ value: z.string(), label: z.string() }),
-    goalDiff: z.coerce
-      .number({ invalid_type_error: 'Målskillnad måste vara en siffra' })
-      .int({ message: 'Målskillnad måste vara ett heltal' })
-      .nonnegative({ message: 'Målskillnad måste vara positivt' })
-      .optional()
-      .nullable(),
-    goalDiffOperator: z.object({ value: z.string(), label: z.string() }),
-    startSeason: z.coerce
-      .number({ invalid_type_error: 'Fel årsformat' })
-      .transform((arg) => {
-        const stringArg = arg.toString()
-
-        if (stringArg === '0') return 1907
-        else return arg
-      })
+    goalsScored: z
+      .string()
+      .refine(
+        (val) => {
+          return !isNaN(Number(val))
+        },
+        { message: 'Gjorda mål måste vara en siffra.' },
+      )
+      .refine(
+        (val) => {
+          return Number.isInteger(Number(val))
+        },
+        { message: 'Gjorda mål måste vara ett heltal.' },
+      )
+      .refine(
+        (val) => {
+          return Number(val) > -1
+        },
+        { message: 'Gjorda mål måste vara 0 eller större än 0.' },
+      ),
+    goalsScoredOperator: z.enum(['eq', 'lte', 'gte']),
+    goalsConceded: z
+      .string()
+      .refine(
+        (val) => {
+          return !isNaN(Number(val))
+        },
+        { message: 'Insläppta mål måste vara en siffra.' },
+      )
+      .refine(
+        (val) => {
+          return Number.isInteger(Number(val))
+        },
+        { message: 'Insläppta mål måste vara ett heltal.' },
+      )
+      .refine(
+        (val) => {
+          return Number(val) > -1
+        },
+        { message: 'Insläppta mål måste vara 0 eller större än 0.' },
+      ),
+    goalsConcededOperator: z.enum(['eq', 'lte', 'gte']),
+    goalDiff: z
+      .string()
+      .refine(
+        (val) => {
+          return !isNaN(Number(val))
+        },
+        { message: 'Målskillnaden måste vara en siffra.' },
+      )
+      .refine(
+        (val) => {
+          return Number.isInteger(Number(val))
+        },
+        { message: 'Målskillnaden måste vara ett heltal.' },
+      )
+      .refine(
+        (val) => {
+          return Number(val) > -1
+        },
+        { message: 'Målskillnaden måste vara 0 eller större än 0.' },
+      ),
+    goalDiffOperator: z.enum(['eq', 'lte', 'gte']),
+    startSeason: z
+      .string()
+      .regex(/^\d{4}$/, { message: 'Fel format, första år' })
       .refine(
         (arg) => {
-          if (arg < 1907) return false
+          if (Number(arg) < 1907) return false
           return true
         },
         {
-          message: 'Första året kan inte vara före 1907',
-          path: ['startSeason'],
+          message: 'Första år kan inte vara före 1907',
         },
       )
       .refine(
         (arg) => {
-          if (arg > 2024) return false
+          if (Number(arg) > 2024) return false
           return true
         },
         {
-          message: 'Första året kan inte vara efter 2024',
-          path: ['startSeason'],
+          message: 'Första år kan inte vara efter 2024',
         },
       )
-      .default(1907),
-    endSeason: z.coerce
-      .number({ invalid_type_error: 'Fel årsformat' })
-      .transform((arg) => {
-        const stringArg = arg.toString()
-
-        if (stringArg === '0') return 2024
-        else return arg
-      })
+      .default('1907'),
+    endSeason: z
+      .string()
+      .regex(/^\d{4}$/, { message: 'Fel format, sista år' })
       .refine(
         (arg) => {
-          if (arg < 1907) return false
+          if (Number(arg) < 1907) return false
           return true
         },
         {
           message: 'Sista året kan inte vara före 1907',
-          path: ['endSeason'],
         },
       )
       .refine(
         (arg) => {
-          if (arg > 2024) return false
+          if (Number(arg) > 2024) return false
           return true
         },
         {
           message: 'Sista året kan inte vara efter 2024',
-          path: ['endSeason'],
         },
       )
-      .default(2024),
-    team: z
-      .object({
-        value: z.number().optional(),
-        label: z.string().optional(),
-      })
-      .or(z.literal(''))
-      .or(z.null()),
-    opponent: z
-      .object({
-        value: z.number().optional(),
-        label: z.string().optional(),
-      })
-      .or(z.literal(''))
-      .or(z.null()),
+      .default('2024'),
+    team: z.string().or(z.null()),
+    opponent: z.string().or(z.null()),
     inputDate: z
       .string()
       .regex(/^\d{1,2}\/\d{1,2}/, { message: 'Fel datum, sökning' })
@@ -138,16 +150,22 @@ export const searchParamsObject = z
             return false
           return true
         },
-        { message: 'Fel datumformat', path: ['inputDate'] },
+        { message: 'Fel datumformat' },
       )
       .optional()
       .nullable()
       .or(z.literal('')),
     selectedGender: z.string().optional().nullable(),
     homeGame: z.string().optional().nullable(),
-    orderVar: z.object({ value: z.string(), label: z.string() }),
+    orderVar: z.enum([
+      'date',
+      'goalsScored',
+      'goalsConceded',
+      'goalDifference',
+      'totalGoals',
+    ]),
   })
-  .refine((arg) => arg.endSeason >= arg.startSeason, {
+  .refine((arg) => Number(arg.endSeason) >= Number(arg.startSeason), {
     message: '"Första år" kan inte komma efter "Sista år"',
     path: ['startSeason'],
   })
@@ -160,7 +178,7 @@ export const searchParamsObject = z
     },
     {
       message: 'Lag och motståndare måste vara olika.',
-      path: ['Opponent'],
+      path: ['opponent'],
     },
   )
   .refine(
@@ -170,7 +188,7 @@ export const searchParamsObject = z
     },
     {
       message: 'Kan inte välja motståndare utan att välja lag.',
-      path: ['Opponent'],
+      path: ['opponent'],
     },
   )
 

@@ -12,30 +12,41 @@ import GroupSelector from './AnimationSubComponents/GroupSelector'
 
 import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
 import useSeasonContext from '../../../hooks/contextHooks/useSeasonContext'
-import { useAnimationData } from '../../../hooks/dataHooks/seasonHooks/animationHooks/useAnimationData'
+import useAnimationData from '../../../hooks/dataHooks/seasonHooks/animationHooks/useAnimationData.ts'
 
 const Animation = () => {
   const { seasonId } = useSeasonContext()
   const [group, setGroup] = useState<string | null>(null)
-  const [round, setRound] = useState<number>(0)
+  const [round, setRound] = useState<number[]>([0])
 
   const {
     isLoading,
-    isSeasonLoading,
     error,
-    seasonError,
-    dateArray,
-    gameLength,
     groupName,
-    gamesArray,
+    groupArray,
     seriesArray,
+    dateArray,
+    dateArrayLength,
+    animationObject,
   } = useAnimationData(seasonId, group, setGroup, setRound)
 
   const { women } = useGenderContext()
 
-  if (error || seasonError) return <DataError />
+  // useEffect(() => {
+  //   if (!isLoading && !error && data !== undefined) {
+  //     const object = data.find((item) => item.women === women)
 
-  if (isLoading || isSeasonLoading) return <Loading />
+  //     const groupArray = object ? object.games.map((item) => item.group) : []
+  //     if (groupArray.length === 1) {
+  //       setGroup(groupArray[0])
+  //     }
+  //   }
+  //   setRound([0])
+  // }, [data, isLoading, error, women, seasonId])
+
+  if (error) return <DataError />
+
+  if (isLoading) return <Loading />
 
   if (women && seasonId < 1973) {
     return (
@@ -51,7 +62,7 @@ const Animation = () => {
     )
   }
 
-  if (gameLength === 0) {
+  if (animationObject && animationObject.length === 0) {
     return (
       <div className="mx-auto mt-4 grid place-items-center py-5 font-inter text-sm font-bold text-[#011d29] md:text-base">
         <p className="mx-10 text-center">
@@ -61,39 +72,43 @@ const Animation = () => {
     )
   }
 
-  return (
-    <div className="mx-auto flex flex-col pt-4 font-inter text-[#011d29]">
-      {gamesArray.length > 1 && (
-        <GroupSelector
-          gamesArray={gamesArray}
-          setRound={setRound}
-          setGroup={setGroup}
-          groupName={groupName}
-        />
-      )}
-
-      {groupName !== '' && gamesArray.length > 0 && (
-        <div>
-          <AnimationClicker
-            round={round}
+  if (animationObject && animationObject.length > 0) {
+    return (
+      <div className="mx-auto flex flex-col pt-4 font-inter text-[#011d29]">
+        {animationObject.games.length > 1 && (
+          <GroupSelector
+            groupArray={groupArray}
             setRound={setRound}
-            arrayLength={dateArray.length}
+            setGroup={setGroup}
             groupName={groupName}
           />
+        )}
 
-          <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-8">
-            <AnimationGamesList dateArray={dateArray} round={round} />
-            <AnimationTable
-              dateArray={dateArray}
+        {groupName !== '' && animationObject.games.length > 0 && (
+          <div>
+            <AnimationClicker
               round={round}
-              seriesArray={seriesArray}
-              group={group}
+              setRound={setRound}
+              arrayLength={dateArrayLength}
+              groupName={groupName}
             />
+
+            {dateArray ? (
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-8">
+                <AnimationGamesList dateArray={dateArray} round={round[0]} />
+                <AnimationTable
+                  dateArray={dateArray}
+                  round={round}
+                  seriesArray={seriesArray}
+                  group={group}
+                />
+              </div>
+            ) : null}
           </div>
-        </div>
-      )}
-    </div>
-  )
+        )}
+      </div>
+    )
+  }
 }
 
 export default Animation
