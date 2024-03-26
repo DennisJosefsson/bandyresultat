@@ -4,17 +4,65 @@ import {
   CardHeader,
   CardTitle,
 } from '@/src/@/components/ui/card'
+import { Button } from '@/src/@/components/ui/button'
+import { Dialog, DialogContent } from '@/src/@/components/ui/dialog'
 import useTeampreferenceContext from '@/src/hooks/contextHooks/useTeampreferenceContext'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
+import { GameObjectType } from '@/src/components/types/games/games'
+import dayjs from 'dayjs'
+import 'dayjs/locale/sv'
+import { DialogTrigger } from '@radix-ui/react-dialog'
+dayjs.locale('sv')
 
 const PlayoffCard = ({
   styleClass = '',
   children,
+  playoffGames,
+  group,
 }: {
   styleClass?: string
   children: ReactNode
+  playoffGames?: GameObjectType[]
+  group: string
 }) => {
-  return <Card className={styleClass}>{children}</Card>
+  const [open, setOpen] = useState(false)
+
+  if (group === 'final') {
+    return <Card>{children}</Card>
+  }
+
+  return (
+    <Card className={styleClass}>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <div>{children}</div>
+        </DialogTrigger>
+        <DialogContent>
+          {playoffGames && (
+            <div>
+              {playoffGames.map((game, index) => (
+                <div key={`${game.date}-${index}`} className="flex flex-col">
+                  <div>
+                    {game.date !== null && (
+                      <span className="font-bold">
+                        {dayjs(game.date).format('D MMMM YYYY')}:
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <span> {game.homeTeam.casualName}</span>-
+                    <span>{game.awayTeam.casualName}</span>{' '}
+                    <span>{game.result}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          <Button onClick={() => setOpen(false)}>Stäng</Button>
+        </DialogContent>
+      </Dialog>
+    </Card>
+  )
 }
 
 function Title({ children }: { children: ReactNode }) {

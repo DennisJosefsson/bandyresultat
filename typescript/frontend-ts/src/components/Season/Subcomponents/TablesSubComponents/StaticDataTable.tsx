@@ -83,7 +83,7 @@ const DataTable = <TData, TValue>({
                 data-state={row.getIsSelected() && 'selected'}
                 className={`${
                   favTeams.includes(
-                    teamObject[getString(row.getValue('lag_name'))],
+                    teamObject[getString(row.getValue('team_name'))],
                   )
                     ? 'font-bold'
                     : null

@@ -1,5 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { TableObjectType } from '@/src/components/types/tables/tables'
+import { MaratonTabell } from '@/src/components/types/tables/tables'
 import { Button } from '@/src/@/components/ui/button'
 
 import {
@@ -8,16 +8,32 @@ import {
   CaretSortIcon,
 } from '@radix-ui/react-icons'
 
-export const columns: ColumnDef<TableObjectType>[] = [
+export const columns: ColumnDef<MaratonTabell>[] = [
   {
     accessorKey: 'lag.name',
     header: 'Lag',
   },
   {
     accessorKey: 'totalGames',
-    header: () => <div className="pr-1 text-right">M</div>,
+    header: ({ column }) => (
+      <div className="pr-1 text-right">
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          M
+          {column.getIsSorted() === 'desc' ? (
+            <ArrowDownIcon className="ml-2 h-4 w-4" />
+          ) : column.getIsSorted() === 'asc' ? (
+            <ArrowUpIcon className="ml-2 h-4 w-4" />
+          ) : (
+            <CaretSortIcon className="ml-2 h-4 w-4" />
+          )}
+        </Button>
+      </div>
+    ),
     cell: ({ row }) => (
-      <div className="text-right tabular-nums">
+      <div className="pr-8 text-right tabular-nums">
         {row.getValue('totalGames')}
       </div>
     ),

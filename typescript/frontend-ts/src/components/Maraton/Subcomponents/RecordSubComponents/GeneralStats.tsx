@@ -1,6 +1,6 @@
 import useGenderContext from '../../../../hooks/contextHooks/useGenderContext'
 import { GeneralStatsResponse } from '../../../types/games/streaks'
-
+import { Card } from '@/src/@/components/ui/card'
 type GeneralStatsProps = {
   data: GeneralStatsResponse
 }
@@ -22,9 +22,9 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
               <div className="table">
                 {data.seasons.map((team, index) => {
                   return (
-                    <div
-                      className="recordCard"
+                    <Card
                       key={`${team.seasons}-${Math.random()}`}
+                      className="recordCard"
                     >
                       <div className="pos">{index + 1}</div>
                       <div className="flex flex-col">
@@ -33,7 +33,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                           <div className="count">{team.seasons}</div>
                         </div>
                       </div>
-                    </div>
+                    </Card>
                   )
                 })}
               </div>
@@ -46,7 +46,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
               <div className="table">
                 {data.allSeasons?.map((team, index) => {
                   return (
-                    <div
+                    <Card
                       className="recordCard"
                       key={`${team.seasons}-${Math.random()}`}
                     >
@@ -57,7 +57,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                           <div className="count">{team.seasons}</div>
                         </div>
                       </div>
-                    </div>
+                    </Card>
                   )
                 })}
               </div>
@@ -74,7 +74,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
               <div className="table">
                 {data.playoffs.map((team, index) => {
                   return (
-                    <div
+                    <Card
                       className="recordCard"
                       key={`${team.playoffs}-${Math.random()}`}
                     >
@@ -85,7 +85,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                           <div className="count">{team.playoffs}</div>
                         </div>
                       </div>
-                    </div>
+                    </Card>
                   )
                 })}
               </div>
@@ -98,7 +98,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
               <div className="table">
                 {data.allPlayoffs?.map((team, index) => {
                   return (
-                    <div
+                    <Card
                       className="recordCard"
                       key={`${team.playoffs}-${Math.random()}`}
                     >
@@ -109,7 +109,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                           <div className="count">{team.playoffs}</div>
                         </div>
                       </div>
-                    </div>
+                    </Card>
                   )
                 })}
               </div>
@@ -126,7 +126,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
               <div className="table">
                 {data.golds.map((team, index) => {
                   return (
-                    <div
+                    <Card
                       className="recordCard"
                       key={`${team.guld}-${Math.random()}`}
                     >
@@ -137,7 +137,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                           <div className="count">{team.guld}</div>
                         </div>
                       </div>
-                    </div>
+                    </Card>
                   )
                 })}
               </div>
@@ -149,7 +149,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
               <div className="table">
                 {data.finals.map((team, index) => {
                   return (
-                    <div
+                    <Card
                       className="recordCard"
                       key={`${team.finals}-${Math.random()}`}
                     >
@@ -160,7 +160,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                           <div className="count">{team.finals}</div>
                         </div>
                       </div>
-                    </div>
+                    </Card>
                   )
                 })}
               </div>
@@ -178,7 +178,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
               <div className="table">
                 {data.seasons.map((team, index) => {
                   return (
-                    <div
+                    <Card
                       className="recordCard"
                       key={`${team.seasons}-${Math.random()}`}
                     >
@@ -189,7 +189,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                           <div className="count">{team.seasons}</div>
                         </div>
                       </div>
-                    </div>
+                    </Card>
                   )
                 })}
               </div>
@@ -202,7 +202,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
               <div className="table">
                 {data.playoffs.map((team, index) => {
                   return (
-                    <div
+                    <Card
                       className="recordCard"
                       key={`${team.playoffs}-${Math.random()}`}
                     >
@@ -213,7 +213,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                           <div className="count">{team.playoffs}</div>
                         </div>
                       </div>
-                    </div>
+                    </Card>
                   )
                 })}
               </div>
@@ -230,7 +230,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
               <div className="table">
                 {data.golds.map((team, index) => {
                   return (
-                    <div
+                    <Card
                       className="recordCard"
                       key={`${team.guld}-${Math.random()}`}
                     >
@@ -241,7 +241,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                           <div className="count">{team.guld}</div>
                         </div>
                       </div>
-                    </div>
+                    </Card>
                   )
                 })}
               </div>
@@ -253,7 +253,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
               <div className="table">
                 {data.finals.map((team, index) => {
                   return (
-                    <div
+                    <Card
                       className="recordCard"
                       key={`${team.finals}-${Math.random()}`}
                     >
@@ -264,7 +264,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                           <div className="count">{team.finals}</div>
                         </div>
                       </div>
-                    </div>
+                    </Card>
                   )
                 })}
               </div>

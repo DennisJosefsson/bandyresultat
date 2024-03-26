@@ -1,5 +1,5 @@
 import StreakCard from './StreakCard'
-
+import { Card } from '@/src/@/components/ui/card'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 import { StreakResponse } from '../../../types/games/streaks'
@@ -34,7 +34,7 @@ const Streaks = ({ data }: { data: StreakResponse }) => {
           <div className="table">
             {data.currInoffChamps.rows.map((team, index) => {
               return (
-                <div
+                <Card
                   className="recordCard"
                   key={`${team.lag.name}-${Math.random()}`}
                 >
@@ -53,7 +53,7 @@ const Streaks = ({ data }: { data: StreakResponse }) => {
                       <div className="text-right">{team.opp.shortName}</div>
                     </div>
                   </div>
-                </div>
+                </Card>
               )
             })}
           </div>

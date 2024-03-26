@@ -1,5 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { TableObjectType } from '@/src/components/types/tables/tables'
+import { StaticSeasonTable } from '@/src/components/types/tables/tables'
 import { Button } from '@/src/@/components/ui/button'
 
 import {
@@ -8,22 +8,20 @@ import {
   CaretSortIcon,
 } from '@radix-ui/react-icons'
 
-export const columns: ColumnDef<TableObjectType>[] = [
+export const columns: ColumnDef<StaticSeasonTable>[] = [
   {
-    accessorKey: 'lag.name',
+    accessorKey: 'team.name',
     header: 'Lag',
   },
   {
-    accessorKey: 'totalGames',
+    accessorKey: 'games',
     header: () => <div className="pr-1 text-right">M</div>,
     cell: ({ row }) => (
-      <div className="text-right tabular-nums">
-        {row.getValue('totalGames')}
-      </div>
+      <div className="text-right tabular-nums">{row.getValue('games')}</div>
     ),
   },
   {
-    accessorKey: 'totalWins',
+    accessorKey: 'won',
     header: ({ column }) => (
       <div className="text-right">
         <Button
@@ -42,13 +40,11 @@ export const columns: ColumnDef<TableObjectType>[] = [
       </div>
     ),
     cell: ({ row }) => (
-      <div className="pr-8 text-right tabular-nums">
-        {row.getValue('totalWins')}
-      </div>
+      <div className="pr-8 text-right tabular-nums">{row.getValue('won')}</div>
     ),
   },
   {
-    accessorKey: 'totalDraws',
+    accessorKey: 'draw',
     header: ({ column }) => (
       <div className="text-right">
         <Button
@@ -67,13 +63,11 @@ export const columns: ColumnDef<TableObjectType>[] = [
       </div>
     ),
     cell: ({ row }) => (
-      <div className="pr-8 text-right tabular-nums">
-        {row.getValue('totalDraws')}
-      </div>
+      <div className="pr-8 text-right tabular-nums">{row.getValue('draw')}</div>
     ),
   },
   {
-    accessorKey: 'totalLost',
+    accessorKey: 'lost',
     header: ({ column }) => (
       <div className="text-right">
         <Button
@@ -92,13 +86,11 @@ export const columns: ColumnDef<TableObjectType>[] = [
       </div>
     ),
     cell: ({ row }) => (
-      <div className="pr-8 text-right tabular-nums">
-        {row.getValue('totalLost')}
-      </div>
+      <div className="pr-8 text-right tabular-nums">{row.getValue('lost')}</div>
     ),
   },
   {
-    accessorKey: 'totalGoalsScored',
+    accessorKey: 'scoredGoals',
     header: ({ column }) => (
       <div className="text-right">
         <Button
@@ -118,12 +110,12 @@ export const columns: ColumnDef<TableObjectType>[] = [
     ),
     cell: ({ row }) => (
       <div className="pr-8 text-right tabular-nums">
-        {row.getValue('totalGoalsScored')}
+        {row.getValue('scoredGoals')}
       </div>
     ),
   },
   {
-    accessorKey: 'totalGoalsConceded',
+    accessorKey: 'concededGoals',
     header: ({ column }) => (
       <div className="text-right">
         <Button
@@ -143,12 +135,12 @@ export const columns: ColumnDef<TableObjectType>[] = [
     ),
     cell: ({ row }) => (
       <div className="pr-8 text-right tabular-nums">
-        {row.getValue('totalGoalsConceded')}
+        {row.getValue('concededGoals')}
       </div>
     ),
   },
   {
-    accessorKey: 'totalGoalDifference',
+    accessorKey: 'goalDifference',
     header: ({ column }) => (
       <div className="text-right">
         <Button
@@ -168,12 +160,12 @@ export const columns: ColumnDef<TableObjectType>[] = [
     ),
     cell: ({ row }) => (
       <div className="pr-8 text-right tabular-nums">
-        {row.getValue('totalGoalDifference')}
+        {row.getValue('goalDifference')}
       </div>
     ),
   },
   {
-    accessorKey: 'totalPoints',
+    accessorKey: 'points',
     header: ({ column }) => (
       <div className="text-right">
         <Button
@@ -193,7 +185,7 @@ export const columns: ColumnDef<TableObjectType>[] = [
     ),
     cell: ({ row }) => (
       <div className="pr-8 text-right tabular-nums">
-        {row.getValue('totalPoints')}
+        {row.getValue('points')}
       </div>
     ),
   },

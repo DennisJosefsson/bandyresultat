@@ -134,7 +134,12 @@ export const TabBarDivided = ({
           })}
         </div>
         <div className="flex flex-row xs:gap-1 md:gap-2">
-          <Button onClick={() => setTab('help')}>Hjälp</Button>
+          <Button
+            onClick={() => setTab('help')}
+            variant={tab === 'help' ? 'default' : 'outline'}
+          >
+            Hjälp
+          </Button>
           <Button onClick={tabBarObject.genderClickFunction}>
             {women ? 'Herrar' : 'Damer'}
           </Button>

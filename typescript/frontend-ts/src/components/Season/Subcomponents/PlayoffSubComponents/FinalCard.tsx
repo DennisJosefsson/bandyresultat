@@ -12,7 +12,7 @@ type FinalCardProps = {
 const FinalCard = ({ game }: FinalCardProps) => {
   return (
     <div className="grid max-h-[10rem] w-auto min-w-[33%] grid-cols-1 justify-center md:mx-auto">
-      <PlayoffCard>
+      <PlayoffCard group="final">
         <PlayoffCard.Title>
           <PlayoffCard.Group>Final</PlayoffCard.Group>
           <PlayoffCard.Result>

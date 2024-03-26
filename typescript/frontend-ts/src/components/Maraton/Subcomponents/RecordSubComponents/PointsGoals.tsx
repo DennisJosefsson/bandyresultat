@@ -1,3 +1,4 @@
+import { Card } from '@/src/@/components/ui/card'
 import { PointsGoalsResponse } from '../../../types/games/streaks'
 
 const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
@@ -14,7 +15,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
           <div className="table">
             {data.avgMaxAll.map((team, index) => {
               return (
-                <div
+                <Card
                   className="recordCard"
                   key={`${team.data}-${Math.random()}`}
                 >
@@ -28,7 +29,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
                       <div className="dates">{team.season.year}</div>
                     </div>
                   </div>
-                </div>
+                </Card>
               )
             })}
           </div>
@@ -40,7 +41,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
           <div className="table">
             {data.avgMaxHome.map((team, index) => {
               return (
-                <div
+                <Card
                   className="recordCard"
                   key={`${team.data}-${Math.random()}`}
                 >
@@ -54,7 +55,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
                       <div className="dates">{team.season.year}</div>
                     </div>
                   </div>
-                </div>
+                </Card>
               )
             })}
           </div>
@@ -66,7 +67,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
           <div className="table">
             {data.avgMaxAway.map((team, index) => {
               return (
-                <div
+                <Card
                   className="recordCard"
                   key={`${team.data}-${Math.random()}`}
                 >
@@ -80,7 +81,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
                       <div className="dates">{team.season.year}</div>
                     </div>
                   </div>
-                </div>
+                </Card>
               )
             })}
           </div>
@@ -97,7 +98,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
           <div className="table">
             {data.avgMinAll.map((team, index) => {
               return (
-                <div
+                <Card
                   className="recordCard"
                   key={`${team.data}-${Math.random()}`}
                 >
@@ -111,7 +112,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
                       <div className="dates">{team.season.year}</div>
                     </div>
                   </div>
-                </div>
+                </Card>
               )
             })}
           </div>
@@ -123,7 +124,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
           <div className="table">
             {data.avgMinHome.map((team, index) => {
               return (
-                <div
+                <Card
                   className="recordCard"
                   key={`${team.data}-${Math.random()}`}
                 >
@@ -137,7 +138,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
                       <div className="dates">{team.season.year}</div>
                     </div>
                   </div>
-                </div>
+                </Card>
               )
             })}
           </div>
@@ -149,7 +150,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
           <div className="table">
             {data.avgMinAway.map((team, index) => {
               return (
-                <div
+                <Card
                   className="recordCard"
                   key={`${team.data}-${Math.random()}`}
                 >
@@ -163,7 +164,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
                       <div className="dates">{team.season.year}</div>
                     </div>
                   </div>
-                </div>
+                </Card>
               )
             })}
           </div>
@@ -180,7 +181,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
           <div className="table">
             {data.sumMaxAll.map((team, index) => {
               return (
-                <div
+                <Card
                   className="recordCard"
                   key={`${team.data}-${Math.random()}`}
                 >
@@ -194,7 +195,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
                       <div className="dates">{team.season.year}</div>
                     </div>
                   </div>
-                </div>
+                </Card>
               )
             })}
           </div>
@@ -206,7 +207,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
           <div className="table">
             {data.sumMaxHome.map((team, index) => {
               return (
-                <div
+                <Card
                   className="recordCard"
                   key={`${team.data}-${Math.random()}`}
                 >
@@ -220,7 +221,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
                       <div className="dates">{team.season.year}</div>
                     </div>
                   </div>
-                </div>
+                </Card>
               )
             })}
           </div>
@@ -232,7 +233,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
           <div className="table">
             {data.sumMaxAway.map((team, index) => {
               return (
-                <div
+                <Card
                   className="recordCard"
                   key={`${team.data}-${Math.random()}`}
                 >
@@ -246,7 +247,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
                       <div className="dates">{team.season.year}</div>
                     </div>
                   </div>
-                </div>
+                </Card>
               )
             })}
           </div>
@@ -263,7 +264,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
           <div className="table">
             {data.sumMinAll.map((team, index) => {
               return (
-                <div
+                <Card
                   className="recordCard"
                   key={`${team.data}-${Math.random()}`}
                 >
@@ -277,7 +278,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
                       <div className="dates">{team.season.year}</div>
                     </div>
                   </div>
-                </div>
+                </Card>
               )
             })}
           </div>
@@ -289,7 +290,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
           <div className="table">
             {data.sumMinHome.map((team, index) => {
               return (
-                <div
+                <Card
                   className="recordCard"
                   key={`${team.data}-${Math.random()}`}
                 >
@@ -303,7 +304,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
                       <div className="dates">{team.season.year}</div>
                     </div>
                   </div>
-                </div>
+                </Card>
               )
             })}
           </div>
@@ -315,7 +316,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
           <div className="table">
             {data.sumMinAway.map((team, index) => {
               return (
-                <div
+                <Card
                   className="recordCard"
                   key={`${team.data}-${Math.random()}`}
                 >
@@ -329,7 +330,7 @@ const PointsGoals = ({ data }: { data: PointsGoalsResponse }) => {
                       <div className="dates">{team.season.year}</div>
                     </div>
                   </div>
-                </div>
+                </Card>
               )
             })}
           </div>

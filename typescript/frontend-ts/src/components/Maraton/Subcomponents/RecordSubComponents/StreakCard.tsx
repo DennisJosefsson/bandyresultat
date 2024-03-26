@@ -1,3 +1,4 @@
+import { Card } from '@/src/@/components/ui/card'
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 dayjs.locale('sv')
@@ -21,7 +22,10 @@ const StreakCard = ({ streak, title }: StreakCardProps) => {
       <div className="table">
         {streak.map((streak, index) => {
           return (
-            <div className="recordCard" key={`${streak.name}-${Math.random()}`}>
+            <Card
+              className="recordCard"
+              key={`${streak.name}-${Math.random()}`}
+            >
               <div className="pos">{index + 1}</div>
               <div className="flex flex-col">
                 <div className="record1st">
@@ -35,7 +39,7 @@ const StreakCard = ({ streak, title }: StreakCardProps) => {
                   </div>
                 </div>
               </div>
-            </div>
+            </Card>
           )
         })}
       </div>

@@ -126,34 +126,32 @@ export const newCompareObject = z.object({
   totalWins: z.coerce.number(),
 })
 
-export const maratonTable = z.array(
-  z.object({
-    lag: z.object({
-      casualName: z.string(),
-      name: z.string(),
-      shortName: z.string(),
-      teamId: z.number(),
-    }),
-
-    women: z.boolean(),
-    team: z.number(),
-    totalDraws: z.coerce.number(),
-    totalGames: z.coerce.number(),
-    totalGoalDifference: z.coerce.number(),
-    totalGoalsConceded: z.coerce.number(),
-    totalGoalsScored: z.coerce.number(),
-    totalLost: z.coerce.number(),
-    totalPoints: z.coerce.number(),
-    totalWins: z.coerce.number(),
+export const maratonTable = z.object({
+  lag: z.object({
+    casualName: z.string(),
+    name: z.string(),
+    shortName: z.string(),
+    teamId: z.number(),
   }),
-)
+
+  women: z.boolean(),
+  team: z.number(),
+  totalDraws: z.coerce.number(),
+  totalGames: z.coerce.number(),
+  totalGoalDifference: z.coerce.number(),
+  totalGoalsConceded: z.coerce.number(),
+  totalGoalsScored: z.coerce.number(),
+  totalLost: z.coerce.number(),
+  totalPoints: z.coerce.number(),
+  totalWins: z.coerce.number(),
+})
 
 export type MaratonTabell = z.infer<typeof maratonTable>
 
 export type MaratonTableType = {
-  maratonTabell: MaratonTabell
-  maratonHemmaTabell: MaratonTabell
-  maratonBortaTabell: MaratonTabell
+  maratonTabell: MaratonTabell[]
+  maratonHemmaTabell: MaratonTabell[]
+  maratonBortaTabell: MaratonTabell[]
 }
 
 export type NewCompareObject = z.infer<typeof newCompareObject>
@@ -194,6 +192,16 @@ export const staticSeasonTable = z.object({
     tableId: z.number(),
     qualification: z.boolean().nullable(),
     women: z.boolean(),
+  }),
+  team: z.object({
+    teamId: z.number(),
+    name: z.string(),
+    city: z.string(),
+    casualName: z.string(),
+    shortName: z.string(),
+    women: z.boolean(),
+    lat: z.number(),
+    long: z.number(),
   }),
 })
 

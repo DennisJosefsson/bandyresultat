@@ -30,7 +30,7 @@ seasonRouter.get('/:seasonId', (async (
 
   const season = await Season.findAll({
     where: { year: { [Op.eq]: seasonYear } },
-    include: [Team, TeamTable, Serie, Metadata],
+    include: [Team, { model: TeamTable, include: [Team] }, Serie, Metadata],
     order: [['seasonId', 'asc']],
   })
 

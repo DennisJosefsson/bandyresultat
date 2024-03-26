@@ -1,31 +1,39 @@
-import { useState, useEffect } from 'react'
+//import { useState, useEffect } from 'react'
 import { MaratonTabell } from '../../../types/tables/tables'
-import useTeampreferenceContext from '../../../../hooks/contextHooks/useTeampreferenceContext'
-import {
-  sortTitles,
-  maratonSortFunctions,
-} from '../../../utilitycomponents/functions/tableSortFunctions'
+//import useTeampreferenceContext from '../../../../hooks/contextHooks/useTeampreferenceContext'
+// import {
+//   sortTitles,
+//   maratonSortFunctions,
+// } from '../../../utilitycomponents/functions/tableSortFunctions'
 
-const MaratonTables = ({ tabell }: { tabell: MaratonTabell }) => {
-  const [sortColumn, setSortColumn] = useState('maratonPointsDesc')
-  const [width, setWidth] = useState(window.innerWidth)
-  const breakpoint = 576
+import { columns } from './columns'
+import DataTable from './DataTable'
 
-  useEffect(() => {
-    const handleWindowResize = () => setWidth(window.innerWidth)
-    window.addEventListener('resize', handleWindowResize)
+const MaratonTables = ({ tabell }: { tabell: MaratonTabell[] }) => {
+  // const [sortColumn, setSortColumn] = useState('maratonPointsDesc')
+  // const [width, setWidth] = useState(window.innerWidth)
+  // const breakpoint = 576
 
-    return () => window.removeEventListener('resize', handleWindowResize)
-  }, [])
+  // useEffect(() => {
+  //   const handleWindowResize = () => setWidth(window.innerWidth)
+  //   window.addEventListener('resize', handleWindowResize)
 
-  const { favTeams } = useTeampreferenceContext()
+  //   return () => window.removeEventListener('resize', handleWindowResize)
+  // }, [])
+
+  // const { favTeams } = useTeampreferenceContext()
+
+  const teamObject = tabell.reduce(
+    (o, key) => ({ ...o, [key.lag.name]: key.team }),
+    {},
+  )
 
   return (
     <div className="w-full">
-      <p className="m-2 text-[8px] sm:text-xs xl:m-0">
+      {/* <p className="m-2 text-[8px] sm:text-xs xl:m-0">
         Sorteras efter {sortTitles[sortColumn]}
-      </p>
-      <table className="w-full table-auto text-[10px] md:text-sm">
+      </p> */}
+      {/* <table className="w-full table-auto text-[10px] md:text-sm">
         <thead>
           <tr className="maraton" key={'header'}>
             <th scope="col" className="pos">
@@ -157,7 +165,8 @@ const MaratonTables = ({ tabell }: { tabell: MaratonTabell }) => {
             )
           })}
         </tbody>
-      </table>
+      </table> */}
+      <DataTable columns={columns} data={tabell} teamObject={teamObject} />
     </div>
   )
 }

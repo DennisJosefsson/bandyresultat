@@ -3,11 +3,7 @@ import { GameObjectType } from '../../../types/games/games'
 import { groupConstant } from '../../../utilitycomponents/functions/constants'
 import { TableObjectType } from '../../../types/tables/tables'
 import PlayoffCard from './PlayoffCard'
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from '@/src/@/components/ui/popover'
+import { Dialog } from '@/src/@/components/ui/dialog'
 
 type ColstartsType = {
   [key: string]: string
@@ -66,25 +62,33 @@ const DefaultComponent = ({
   }
 
   return (
-    <PlayoffCard styleClass={styleClass}>
+    <PlayoffCard
+      styleClass={styleClass}
+      playoffGames={playoffGames.filter((game) => game.group === group.group)}
+      group={group.group}
+    >
       <PlayoffCard.Title>
         <PlayoffCard.Group>{groupConstant[group.group]}</PlayoffCard.Group>
         <PlayoffCard.Result>{resultString}</PlayoffCard.Result>
       </PlayoffCard.Title>
       <PlayoffCard.Content>
-        {group.dates[0].games.map((game) => {
-          return (
-            <div key={`${game.date}-${Math.random()}`}>
-              <PlayoffCard.Team teamId={game.homeTeamId}>
-                {game.homeTeam.casualName}
-              </PlayoffCard.Team>
-              <span> - </span>
-              <PlayoffCard.Team teamId={game.awayTeamId}>
-                {game.awayTeam.casualName}
-              </PlayoffCard.Team>
-            </div>
-          )
-        })}
+        <Dialog>
+          <div>
+            {group.dates[0].games.map((game) => {
+              return (
+                <div key={`${game.date}-${Math.random()}`}>
+                  <PlayoffCard.Team teamId={game.homeTeamId}>
+                    {game.homeTeam.casualName}
+                  </PlayoffCard.Team>
+                  <span> - </span>
+                  <PlayoffCard.Team teamId={game.awayTeamId}>
+                    {game.awayTeam.casualName}
+                  </PlayoffCard.Team>
+                </div>
+              )
+            })}
+          </div>
+        </Dialog>
       </PlayoffCard.Content>
     </PlayoffCard>
   )

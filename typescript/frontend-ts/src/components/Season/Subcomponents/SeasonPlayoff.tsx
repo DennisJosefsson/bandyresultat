@@ -59,7 +59,11 @@ const Playoff = () => {
         />
       ) : null}
       {showPopup && (
-        <PlayoffSeriesPopup gameData={gameData} setShowPopup={setShowPopup} />
+        <PlayoffSeriesPopup
+          gameData={gameData}
+          setShowPopup={setShowPopup}
+          showPopup={showPopup}
+        />
       )}
     </div>
   )

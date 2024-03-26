@@ -84,7 +84,6 @@ const SeasonTables = () => {
               <StaticTables
                 tableArray={season.seasonData.seasonTables}
                 seriesInfo={season.seasonData.seriesInfo}
-                teams={season.seasonData.womensSeason.teams}
               />
             </div>
           ) : null}

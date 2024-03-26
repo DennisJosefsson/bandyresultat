@@ -23,14 +23,12 @@ interface DataTableProps<TData, TValue> {
   teamObject: {
     [x: string]: number
   }
-  serieStructure: number[] | null | undefined
 }
 
 const DataTable = <TData, TValue>({
   columns,
   data,
   teamObject,
-  serieStructure,
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([])
   const table = useReactTable({
@@ -87,11 +85,7 @@ const DataTable = <TData, TValue>({
                   )
                     ? 'font-bold'
                     : null
-                } ${
-                  serieStructure?.includes(index + 1)
-                    ? 'border-b-2 border-black'
-                    : null
-                }`}
+                } `}
               >
                 <TableCell key={`index-${index}`}>{index + 1}</TableCell>
                 {row.getVisibleCells().map((cell) => {
