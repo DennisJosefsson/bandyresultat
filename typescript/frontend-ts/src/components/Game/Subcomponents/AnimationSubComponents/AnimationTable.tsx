@@ -5,6 +5,15 @@ import {
   SmallArrowDownRight,
   SmallArrowUpRight,
 } from '../../../utilitycomponents/Components/icons'
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableBody,
+  TableCaption,
+} from '@/src/@/components/ui/table'
 
 type DateArrayObject = {
   date: string
@@ -74,60 +83,88 @@ const AnimationTable = ({
 
   return (
     <div className="mx-2 mt-4 xl:mx-0">
-      <table className="season w-full text-xs md:text-sm ">
-        <thead>
-          <tr>
-            <th scope="col" className="pos"></th>
-            <th scope="col" className="team"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col" className="twelve"></th>
-            <th scope="col" className="twelve"></th>
-            <th scope="col" className="twelve"></th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table>
+        <TableCaption>{serieObject?.comment}</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead scope="col">P</TableHead>
+            <TableHead scope="col" className="text-left">
+              Lag
+            </TableHead>
+            <TableHead></TableHead>
+            <TableHead scope="col" className="text-right">
+              M
+            </TableHead>
+            <TableHead scope="col" className="text-right">
+              V
+            </TableHead>
+            <TableHead scope="col" className="text-right">
+              O
+            </TableHead>
+            <TableHead scope="col" className="text-right">
+              F
+            </TableHead>
+            <TableHead scope="col" className="text-right">
+              GM
+            </TableHead>
+            <TableHead scope="col" className="text-right">
+              IM
+            </TableHead>
+            <TableHead scope="col" className="text-right">
+              MS
+            </TableHead>
+            <TableHead scope="col" className="text-right">
+              P
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {dateArray[round[0]]?.table.map((team, index) => {
             return (
-              <tr
+              <TableRow
                 key={`${team.teamId}-${index}`}
-                className={`season ${
+                className={`${
                   serieObject?.serieStructure?.includes(index + 1)
                     ? 'border-b-2 border-black'
                     : null
-                } ${
-                  favTeams.includes(team.teamId) ? 'font-bold' : null
-                } odd:bg-slate-300`}
+                } ${favTeams.includes(team.teamId) ? 'font-bold' : null}`}
               >
-                <td className="pos">{team.table.position}</td>
-                <td className="team">{team.casualName}</td>
-                <td className="text-slate-100">
+                <TableCell>{team.table.position}</TableCell>
+                <TableCell className="text-left">{team.casualName}</TableCell>
+                <TableCell className="text-slate-100">
                   {round[0] > 0 &&
                     team.table.games > 0 &&
                     displayArrow(team.teamId)}
-                </td>
-                <td>{team.table.games}</td>
-                <td>{team.table.wins}</td>
-                <td>{team.table.draws}</td>
-                <td>{team.table.lost}</td>
-                <td className="twelve">{team.table.scoredGoals}</td>
-                <td className="twelve">{team.table.concededGoals}</td>
-                <td className="twelve">
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {team.table.games}
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {team.table.wins}
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {team.table.draws}
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {team.table.lost}
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {team.table.scoredGoals}
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {team.table.concededGoals}
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
                   {team.table.scoredGoals - team.table.concededGoals}
-                </td>
-                <td>{team.table.points}</td>
-              </tr>
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {team.table.points}
+                </TableCell>
+              </TableRow>
             )
           })}
-        </tbody>
-      </table>
-      {serieObject?.comment && (
-        <p className="bg-white p-1 text-xs font-bold">{serieObject?.comment}</p>
-      )}
+        </TableBody>
+      </Table>
     </div>
   )
 }

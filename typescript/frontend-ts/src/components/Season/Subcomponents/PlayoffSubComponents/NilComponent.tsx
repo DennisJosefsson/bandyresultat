@@ -1,4 +1,5 @@
 import { groupConstant } from '../../../utilitycomponents/functions/constants'
+import PlayoffCard from './PlayoffCard'
 
 type ColstartsType = {
   [key: string]: string
@@ -15,14 +16,14 @@ const NilComponent = ({ group, colStarts }: NilComponentProps) => {
     : 'rounded bg-white p-2 shadow-md md:col-start-4 md:odd:col-start-2'
 
   return (
-    <div className={styleClass}>
-      <div className="flex flex-row justify-between">
-        <h4 className="text-sm font-bold">{groupConstant[group]}</h4>
-      </div>
-      <div>
+    <PlayoffCard group={group} styleClass={styleClass}>
+      <PlayoffCard.Title>
+        <PlayoffCard.Group>{groupConstant[group]}</PlayoffCard.Group>
+      </PlayoffCard.Title>
+      <PlayoffCard.Content>
         <h4 className="text-sm">Inga matcher än</h4>
-      </div>
-    </div>
+      </PlayoffCard.Content>
+    </PlayoffCard>
   )
 }
 

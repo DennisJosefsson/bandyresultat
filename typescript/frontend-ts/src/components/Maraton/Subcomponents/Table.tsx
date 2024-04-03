@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
 import MaratonTableHeader from './MaratonTableSubComponents/MaratonTableHeader'
 import MaratonTables from './MaratonTableSubComponents/MaratonTables'
 import {
@@ -12,12 +12,10 @@ import { useGetMaratonTables } from '../../../hooks/dataHooks/maratonHooks/useGe
 
 const Table = () => {
   const { women } = useGenderContext()
-  const [selectedTable, setSelectedTable] = useState<string>('all')
-  const [homeAwayTitle, setHomeAwayTitle] = useState<string>('')
   const topRef = useRef(null)
   const bottomRef = useRef(null)
 
-  const { tabell, isLoading, error } = useGetMaratonTables(selectedTable)
+  const { tabell, isLoading, error, homeAwayTitle } = useGetMaratonTables()
 
   useScrollTo()
 
@@ -34,11 +32,7 @@ const Table = () => {
           </h2>
 
           <div className="mx-auto mt-4 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
-            <MaratonTableHeader
-              setHomeAwayTitle={setHomeAwayTitle}
-              setSelectedTable={setSelectedTable}
-              table={selectedTable}
-            />
+            <MaratonTableHeader />
             <MaratonTables tabell={tabell} />
             <div ref={bottomRef}></div>
           </div>

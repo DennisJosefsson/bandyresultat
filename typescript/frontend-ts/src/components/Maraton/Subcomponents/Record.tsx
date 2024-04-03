@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 
 import RecordHeader from './RecordSubComponents/RecordHeader'
 
@@ -7,19 +7,11 @@ import {
   DataError,
 } from '../../utilitycomponents/Components/LoadingOrError'
 import ScrollRefComponent from '../../utilitycomponents/Components/ScrollRefComponent'
-import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
 import { useGetRecordData } from '../../../hooks/dataHooks/maratonHooks/useGetRecordData'
 import RecordComponentSwitch from './RecordSubComponents/RecordComponentSwitch'
 
 const Record = () => {
-  const { women } = useGenderContext()
-  const [params, setParams] = useState<{ record: string; women: boolean }>({
-    record: 'generalStats',
-    women: women,
-  })
-  const [title, setTitle] = useState<string>('Statistik')
-
-  const { data, isLoading, error } = useGetRecordData(params, setParams)
+  const { isLoading, error } = useGetRecordData()
   const topRef = useRef(null)
   const bottomRef = useRef(null)
 
@@ -33,15 +25,9 @@ const Record = () => {
       ref={topRef}
     >
       <div className="flex flex-col">
-        <RecordHeader
-          setParams={setParams}
-          women={women}
-          title={title}
-          setTitle={setTitle}
-          record={params.record}
-        />
+        <RecordHeader />
         <div className="flex flex-col">
-          {data ? <RecordComponentSwitch data={data} params={params} /> : null}
+          <RecordComponentSwitch />
         </div>
       </div>
       <div ref={bottomRef}></div>

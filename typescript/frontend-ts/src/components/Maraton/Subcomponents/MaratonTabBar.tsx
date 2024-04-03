@@ -1,37 +1,83 @@
-import { Dispatch, SetStateAction } from 'react'
 import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
 import { TabBarDivided } from '../../utilitycomponents/Components/TabBar'
-
+import { Button } from '@/src/@/components/ui/button'
+import { useMediaQuery } from 'usehooks-ts'
+import {
+  ListIcon,
+  ManIcon,
+  StatsIcon,
+  WomanIcon,
+  QuestionIcon,
+} from '../../utilitycomponents/Components/icons'
+import { SetURLSearchParams } from 'react-router-dom'
 type MaratonTabBarProps = {
-  tab: string
-  setTab: Dispatch<SetStateAction<string>>
+  tab: string | null
+  setSearchParams: SetURLSearchParams
 }
 
-const MaratonTabBar = ({ tab, setTab }: MaratonTabBarProps) => {
-  const { dispatch } = useGenderContext()
-
+const MaratonTabBar = ({ tab, setSearchParams }: MaratonTabBarProps) => {
+  const { women, dispatch } = useGenderContext()
+  const matches = useMediaQuery('(min-width: 430px)')
   const maratonTabBarObject = {
-    genderClickFunction: () => dispatch({ type: 'TOGGLE' }),
+    gender: (
+      <Button
+        onClick={() => {
+          dispatch({ type: 'TOGGLE' })
+        }}
+      >
+        {women ? (
+          matches ? (
+            'Herrar'
+          ) : (
+            <ManIcon />
+          )
+        ) : matches ? (
+          'Damer'
+        ) : (
+          <WomanIcon />
+        )}
+      </Button>
+    ),
+    help: (
+      <Button
+        onClick={() => setSearchParams({ tab: 'help' })}
+        variant={tab === 'help' ? 'default' : 'outline'}
+      >
+        {matches ? 'Hjälp' : <QuestionIcon />}
+      </Button>
+    ),
     tabBarArray: [
       {
-        name: 'Maratontabeller',
+        tab: (
+          <Button
+            variant={tab === 'maraton' ? 'default' : 'outline'}
+            onClick={() => {
+              setSearchParams({ tab: 'maraton', table: 'all' })
+            }}
+          >
+            {matches ? 'Maratontabeller' : <ListIcon />}
+          </Button>
+        ),
         tabName: 'maraton',
-        clickFunctions: () => setTab('maraton'),
       },
       {
-        name: 'Rekord',
+        tab: (
+          <Button
+            variant={tab === 'records' ? 'default' : 'outline'}
+            onClick={() => {
+              setSearchParams({ tab: 'records', record: 'generalStats' })
+            }}
+          >
+            {matches ? 'Rekord' : <StatsIcon />}
+          </Button>
+        ),
         tabName: 'records',
-        clickFunctions: () => setTab('records'),
       },
     ],
   }
   return (
     <>
-      <TabBarDivided
-        tabBarObject={maratonTabBarObject}
-        tab={tab}
-        setTab={setTab}
-      />
+      <TabBarDivided tabBarObject={maratonTabBarObject} />
     </>
   )
 }

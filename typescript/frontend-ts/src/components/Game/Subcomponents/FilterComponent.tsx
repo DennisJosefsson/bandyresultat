@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, KeyboardEvent } from 'react'
-
+import { Input } from '@/src/@/components/ui/input'
 const FilterComponent = ({
   teamFilter,
   setTeamFilter,
@@ -16,7 +16,7 @@ const FilterComponent = ({
   return (
     <div className="w-full ">
       <form>
-        <input
+        <Input
           className="w-full border-[#011d29] focus:border-[#011d29]"
           type="text"
           placeholder="Filter"

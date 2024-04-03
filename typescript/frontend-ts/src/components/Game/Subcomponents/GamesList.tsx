@@ -8,6 +8,8 @@ import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
 import { GameObjectType } from '../../types/games/games'
 import { SortedGamesType } from '../../utilitycomponents/functions/sortFunction'
 import { SerieAttributes } from '../../types/series/series'
+import { Button } from '@/src/@/components/ui/button'
+import { PlusIcon } from '@radix-ui/react-icons'
 
 dayjs.locale('sv')
 
@@ -53,7 +55,9 @@ const GamesList = ({
   }, [])
   return (
     <div className="mb-6 w-full font-inter">
-      <h1 className="text-[1rem] font-bold md:text-[1.25rem]">{title}</h1>
+      <h1 className="scroll-m-20 text-[1rem] font-semibold tracking-tight md:text-xl">
+        {title}
+      </h1>
       <div>
         {gamesArray.map((group) => {
           const seriesObject = seriesInfo.find(
@@ -61,7 +65,7 @@ const GamesList = ({
           )
           return (
             <div key={group.group} className="mb-6">
-              <h3 className="text-[0.75rem] font-bold md:text-base xl:text-lg">
+              <h3 className="scroll-m-20 text-[0.75rem] font-semibold tracking-tight md:text-base xl:text-lg">
                 {gamesArray.length > 1 ? `${seriesObject?.serieName}` : ''}
               </h3>
 
@@ -86,71 +90,78 @@ const GamesList = ({
                               key={game.gameId}
                               className="flex w-full flex-row items-center gap-1"
                             >
-                              <Link
-                                to="/teams"
-                                state={{
-                                  compObject: {
-                                    teamArray: [
-                                      game.homeTeamId,
-                                      game.awayTeamId,
-                                    ],
-                                    categoryArray: categoryArray,
-                                    startSeason: startSeason,
-                                    endSeason: endSeason,
-                                    women: women,
-                                  },
-                                  origin: 'gamesList',
-                                }}
-                              >
-                                <div className="mb-1 flex w-full flex-row items-center justify-between gap-1 bg-slate-300 px-2 py-0.5 text-[10px] xxs:gap-2 md:text-sm xl:mb-2 xl:w-[36rem] xl:py-1">
-                                  <span
-                                    className={
-                                      favTeams.includes(game.homeTeamId)
-                                        ? 'w-24 font-bold sm:w-40 lg:w-40 xl:w-52'
-                                        : 'w-24 sm:w-40 lg:w-40 xl:w-52'
-                                    }
-                                  >
-                                    {width < breakpoint
-                                      ? `${game.homeTeam.casualName}`
-                                      : `${game.homeTeam.name}`}
-                                  </span>
-                                  <span className="w-1 xl:w-4"> - </span>
-                                  <span
-                                    className={
-                                      favTeams.includes(game.awayTeamId)
-                                        ? 'w-24 font-bold sm:w-40 lg:w-40 xl:w-52'
-                                        : 'w-24 sm:w-40 lg:w-40 xl:w-52'
-                                    }
-                                  >
-                                    {width < breakpoint
-                                      ? `${game.awayTeam.casualName}`
-                                      : `${game.awayTeam.name}`}
-                                  </span>
-
-                                  <span className="w-10 text-right tabular-nums">
-                                    {game.result}
-                                  </span>
-
-                                  {game.halftimeResult && (
-                                    <>
-                                      <span className="ml-2 text-right text-[8px] tabular-nums md:text-xs">
-                                        ({game.halftimeResult})
-                                      </span>
-                                    </>
-                                  )}
-                                </div>
-                              </Link>
-                              {user && (
+                              <div className="mb-1 flex w-full flex-row items-center justify-between gap-1 px-2 py-0.5 text-[10px] transition-colors hover:bg-slate-100/50 data-[state=selected]:bg-slate-100 dark:hover:bg-slate-800/50 dark:data-[state=selected]:bg-slate-800 xxs:gap-2 md:text-sm xl:mb-2 xl:w-[36rem] xl:py-1">
                                 <span
-                                  className="cursor-pointer"
-                                  onClick={() => {
-                                    setGameData(game)
-                                    setShowModal(true)
-                                  }}
+                                  className={
+                                    favTeams.includes(game.homeTeamId)
+                                      ? 'w-24 font-bold sm:w-40 lg:w-40 xl:w-52'
+                                      : 'w-24 sm:w-40 lg:w-40 xl:w-52'
+                                  }
                                 >
-                                  [Ä]
+                                  {width < breakpoint
+                                    ? `${game.homeTeam.casualName}`
+                                    : `${game.homeTeam.name}`}
                                 </span>
-                              )}
+                                <span className="w-1 text-center xl:w-4">
+                                  {' '}
+                                  -{' '}
+                                </span>
+                                <span
+                                  className={
+                                    favTeams.includes(game.awayTeamId)
+                                      ? 'w-24 font-bold sm:w-40 lg:w-40 xl:w-52'
+                                      : 'w-24 sm:w-40 lg:w-40 xl:w-52'
+                                  }
+                                >
+                                  {width < breakpoint
+                                    ? `${game.awayTeam.casualName}`
+                                    : `${game.awayTeam.name}`}
+                                </span>
+
+                                <span className="w-10 text-right tabular-nums">
+                                  {game.result}
+                                </span>
+
+                                {game.halftimeResult && (
+                                  <>
+                                    <span className="w-10 text-right text-[8px] tabular-nums md:text-xs">
+                                      ({game.halftimeResult})
+                                    </span>
+                                  </>
+                                )}
+                                <Button asChild size="icon" variant="ghost">
+                                  <Link
+                                    to="/teams"
+                                    state={{
+                                      compObject: {
+                                        teamArray: [
+                                          game.homeTeamId,
+                                          game.awayTeamId,
+                                        ],
+                                        categoryArray: categoryArray,
+                                        startSeason: startSeason?.toString(),
+                                        endSeason: endSeason?.toString(),
+                                        women: women,
+                                      },
+                                      origin: 'gamesList',
+                                    }}
+                                  >
+                                    H2H
+                                  </Link>
+                                </Button>
+                                {user && (
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => {
+                                      setGameData(game)
+                                      setShowModal(true)
+                                    }}
+                                    size="icon"
+                                  >
+                                    <PlusIcon />
+                                  </Button>
+                                )}
+                              </div>
                             </div>
                           )
                         })}

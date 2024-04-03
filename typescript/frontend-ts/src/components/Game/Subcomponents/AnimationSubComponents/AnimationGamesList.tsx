@@ -34,7 +34,7 @@ const AnimationGamesList = ({ dateArray, round }: AnimationGamesListProps) => {
         return (
           <div
             key={game.gameId}
-            className="flex flex-row justify-between px-2 py-1 text-[10px] even:bg-slate-300 md:text-sm xl:py-2 "
+            className="flex flex-row justify-between border-b px-2 py-1 text-[10px] transition-colors hover:bg-slate-100/50 data-[state=selected]:bg-slate-100 dark:hover:bg-slate-800/50 dark:data-[state=selected]:bg-slate-800 md:text-sm xl:py-2 "
           >
             <div>
               <span
@@ -54,9 +54,13 @@ const AnimationGamesList = ({ dateArray, round }: AnimationGamesListProps) => {
               </span>
             </div>
             <div>
-              <span className="w-4 pr-2 text-right">{game.homeGoal}</span>
+              <span className="w-4 pr-2 text-right tabular-nums">
+                {game.homeGoal}
+              </span>
               <span className="w-4 text-center">-</span>
-              <span className="w-4 pl-2 text-justify">{game.awayGoal}</span>
+              <span className="w-4 pl-2 text-justify tabular-nums">
+                {game.awayGoal}
+              </span>
             </div>
           </div>
         )

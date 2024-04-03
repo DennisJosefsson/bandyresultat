@@ -1,56 +1,131 @@
-import { Dispatch, SetStateAction } from 'react'
 import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
 import { TabBarInline } from '../../utilitycomponents/Components/TabBar'
-
+import { useMediaQuery } from 'usehooks-ts'
+import { Button } from '@/src/@/components/ui/button'
+import {
+  CalendarIcon,
+  DevIcon,
+  ListIcon,
+  ManIcon,
+  MapIcon,
+  StatsIcon,
+  TrophyIcon,
+  WomanIcon,
+} from '../../utilitycomponents/Components/icons'
+import { SetURLSearchParams } from 'react-router-dom'
 type SeasonTabBarProps = {
-  tab: string
-  setTab: Dispatch<SetStateAction<string>>
+  tab: string | null
+  setSearchParams: SetURLSearchParams
 }
 
-const SeasonTabBar = ({ tab, setTab }: SeasonTabBarProps) => {
-  const { dispatch } = useGenderContext()
+const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
+  const matches = useMediaQuery('(min-width: 430px)')
+  const { dispatch, women } = useGenderContext()
   const seasonTabBarObject = {
-    genderClickFunction: () => dispatch({ type: 'TOGGLE' }),
+    gender: (
+      <Button onClick={() => dispatch({ type: 'TOGGLE' })}>
+        {women ? (
+          matches ? (
+            'Herrar'
+          ) : (
+            <ManIcon />
+          )
+        ) : matches ? (
+          'Damer'
+        ) : (
+          <WomanIcon />
+        )}
+      </Button>
+    ),
     tabBarArray: [
       {
-        name: 'Matcher',
+        tab: (
+          <Button
+            variant={tab === 'games' ? 'default' : 'outline'}
+            onClick={() => {
+              setSearchParams({ tab: 'games' })
+            }}
+          >
+            {matches ? 'Matcher' : <CalendarIcon />}
+          </Button>
+        ),
+
         tabName: 'games',
-        clickFunctions: () => setTab('games'),
       },
       {
-        name: 'Tabell',
+        tab: (
+          <Button
+            variant={tab === 'tables' ? 'default' : 'outline'}
+            onClick={() => {
+              setSearchParams({ tab: 'tables' })
+            }}
+          >
+            {matches ? 'Tabell' : <ListIcon />}
+          </Button>
+        ),
+
         tabName: 'tables',
-        clickFunctions: () => setTab('tables'),
       },
       {
-        name: 'Slutspel',
+        tab: (
+          <Button
+            variant={tab === 'playoff' ? 'default' : 'outline'}
+            onClick={() => {
+              setSearchParams({ tab: 'playoff' })
+            }}
+          >
+            {matches ? 'Slutspel' : <TrophyIcon />}
+          </Button>
+        ),
+
         tabName: 'playoff',
-        clickFunctions: () => setTab('playoff'),
       },
       {
-        name: 'Utveckling',
+        tab: (
+          <Button
+            variant={tab === 'roundForRound' ? 'default' : 'outline'}
+            onClick={() => {
+              setSearchParams({ tab: 'roundForRound' })
+            }}
+          >
+            {matches ? 'Utveckling' : <DevIcon />}
+          </Button>
+        ),
+
         tabName: 'roundForRound',
-        clickFunctions: () => setTab('roundForRound'),
       },
       {
-        name: 'Statistik',
+        tab: (
+          <Button
+            variant={tab === 'stats' ? 'default' : 'outline'}
+            onClick={() => {
+              setSearchParams({ tab: 'stats' })
+            }}
+          >
+            {matches ? 'Statistik' : <StatsIcon />}
+          </Button>
+        ),
+
         tabName: 'stats',
-        clickFunctions: () => setTab('stats'),
       },
       {
-        name: 'Karta',
+        tab: (
+          <Button
+            variant={tab === 'map' ? 'default' : 'outline'}
+            onClick={() => {
+              setSearchParams({ tab: 'map' })
+            }}
+          >
+            {matches ? 'Karta' : <MapIcon />}
+          </Button>
+        ),
         tabName: 'map',
-        clickFunctions: () => setTab('map'),
       },
     ],
   }
   return (
     <>
-      <TabBarInline
-        tabBarObject={seasonTabBarObject}
-        tab={tab}
-        setTab={setTab}
-      />
+      <TabBarInline tabBarObject={seasonTabBarObject} />
     </>
   )
 }

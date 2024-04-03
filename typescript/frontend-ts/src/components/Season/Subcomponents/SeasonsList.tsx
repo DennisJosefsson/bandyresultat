@@ -18,7 +18,7 @@ const SeasonsList = ({ seasons }: { seasons: SeasonObjectType[] }) => {
               <div className="w-28 font-semibold">{season.year}</div>
               <div className="rounded-md bg-slate-300 px-2 py-1 text-center lg:bg-white xl:p-0">
                 <Link
-                  to={`/season/${seasonYear}`}
+                  to={`/season/${seasonYear}?tab=tables`}
                   className="font-medium tabular-nums hover:font-bold lg:font-normal"
                 >
                   Tabeller
@@ -26,8 +26,7 @@ const SeasonsList = ({ seasons }: { seasons: SeasonObjectType[] }) => {
               </div>
               <div className="rounded-md bg-slate-300 px-2 py-1 text-center lg:bg-white xl:p-0">
                 <Link
-                  to={`/season/${seasonYear}`}
-                  state={{ tab: 'games' }}
+                  to={`/season/${seasonYear}?tab=games`}
                   className="font-medium hover:font-bold lg:font-normal"
                 >
                   Matcher

@@ -1,92 +1,89 @@
-import { useState, useEffect } from 'react'
 import { CompareResponseObjectType } from '../../types/teams/compare'
 import { CompareFormState } from '../../types/teams/teams'
 import AllDataTableHeader from './AllDataTableHeader'
+import {
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '@/src/@/components/ui/table'
+
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/src/@/components/ui/card'
+import { useMediaQuery } from 'usehooks-ts'
+import DataTableRow from './DataTableRow'
 
 type AllDataProps = {
   allData: CompareResponseObjectType['allData']
   sortedData: CompareResponseObjectType['sortedData']
-  compObject: CompareFormState
+  compObject: CompareFormState | null
 }
 
 const AllData = ({ allData, compObject, sortedData }: AllDataProps) => {
-  const [width, setWidth] = useState(window.innerWidth)
-  const breakpoint = 768
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-    const handleWindowResize = () => setWidth(window.innerWidth)
-    window.addEventListener('resize', handleWindowResize)
+  const matches = useMediaQuery('(min-width: 430px)')
 
-    return () => window.removeEventListener('resize', handleWindowResize)
-  }, [])
+  if (!compObject) return null
 
   if (compObject.teamArray.length > 2) {
     return (
-      <div>
-        <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>
-        <table className="compareGames mb-2 w-full table-fixed text-[8px] sm:text-sm xl:w-[36rem]">
-          <AllDataTableHeader />
-          <tbody>
-            {sortedData.map((team, index) => {
-              return (
-                <tr
-                  key={`${team.team}-${index}`}
-                  className="rounded odd:bg-slate-300"
-                >
-                  <td className="team">
-                    {width < breakpoint
-                      ? team.lag.shortName
-                      : team.lag.casualName}
-                  </td>
+      <Card className="mb-2">
+        <CardHeader>
+          <CardTitle>Sammanlagt</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table className="w-full table-fixed">
+            <AllDataTableHeader />
+            <TableBody>
+              {sortedData.map((team, index) => {
+                return (
+                  <TableRow key={`${team.team}-${index}`}>
+                    <TableCell className="team">
+                      {!matches ? team.lag.shortName : team.lag.casualName}
+                    </TableCell>
 
-                  <td>{team.totalGames}</td>
-                  <td>{team.totalWins}</td>
-                  <td>{team.totalDraws}</td>
-                  <td>{team.totalLost}</td>
-                  <td>{team.totalGoalsScored}</td>
-                  <td>{team.totalGoalsConceded}</td>
-                  <td>{team.totalGoalDifference}</td>
-                  <td>{team.totalPoints}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
+                    <TableCell>{team.totalGames}</TableCell>
+                    <TableCell>{team.totalWins}</TableCell>
+                    <TableCell>{team.totalDraws}</TableCell>
+                    <TableCell>{team.totalLost}</TableCell>
+                    <TableCell className="hidden xs:table-cell">
+                      {team.totalGoalsScored}
+                    </TableCell>
+                    <TableCell className="hidden xs:table-cell">
+                      {team.totalGoalsConceded}
+                    </TableCell>
+                    <TableCell className="hidden xs:table-cell">
+                      {team.totalGoalDifference}
+                    </TableCell>
+                    <TableCell>{team.totalPoints}</TableCell>
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     )
   } else
     return (
-      <div>
-        <h3 className="text-sm font-bold md:text-lg">Sammanlagt</h3>
-        <table className="compareGames mb-2 w-full table-fixed text-[8px] sm:text-sm xl:w-[36rem]">
-          <AllDataTableHeader />
-          <tbody>
-            {allData.slice(1).map((team, index) => {
-              return (
-                <tr
-                  key={`${team.team}-${index}`}
-                  className="rounded odd:bg-slate-300"
-                >
-                  <td className="team">
-                    {width < breakpoint
-                      ? `${team.lag.shortName}-${team.opp.shortName}`
-                      : `${team.lag.casualName}-${team.opp.casualName}`}
-                  </td>
-
-                  <td>{team.totalGames}</td>
-                  <td>{team.totalWins}</td>
-                  <td>{team.totalDraws}</td>
-                  <td>{team.totalLost}</td>
-                  <td>{team.totalGoalsScored}</td>
-                  <td>{team.totalGoalsConceded}</td>
-                  <td>{team.totalGoalDifference}</td>
-                  <td>{team.totalPoints}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
+      <Card className="mb-2">
+        <CardHeader>
+          <CardTitle>Sammanlagt</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table className="w-full table-fixed">
+            <AllDataTableHeader />
+            <TableBody>
+              {allData.slice(1).map((team, index) => {
+                return <DataTableRow key={index} team={team} />
+              })}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     )
 }
 

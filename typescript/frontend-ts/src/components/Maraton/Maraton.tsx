@@ -1,18 +1,18 @@
-import { useState } from 'react'
-
 import { ErrorBoundary } from 'react-error-boundary'
 import { logError } from '../utilitycomponents/functions/logError.js'
 import ErrorFallback from '../utilitycomponents/Components/ErrorFallback.js'
 
 import MaratonTabBar from './Subcomponents/MaratonTabBar.js'
 import MaratonComponentSwitch from './Subcomponents/MaratonComponentSwitch.js'
+import { useSearchParams } from 'react-router-dom'
 
 const Maraton = () => {
-  const [tab, setTab] = useState<string>('maraton')
+  const [searchParams, setSearchParams] = useSearchParams(location.search)
+  const tab = searchParams.get('tab')
 
   return (
     <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
-      <MaratonTabBar tab={tab} setTab={setTab} />
+      <MaratonTabBar tab={tab} setSearchParams={setSearchParams} />
       <div className="mt-2">
         <ErrorBoundary
           FallbackComponent={ErrorFallback}

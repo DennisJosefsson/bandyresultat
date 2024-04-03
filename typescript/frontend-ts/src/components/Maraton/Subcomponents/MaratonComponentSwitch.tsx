@@ -2,7 +2,7 @@ import MaratonHelp from './MaratonHelp'
 import Record from './Record'
 import Table from './Table'
 
-const MaratonComponentSwitch = ({ tab }: { tab: string }) => {
+const MaratonComponentSwitch = ({ tab }: { tab: string | null }) => {
   let pageContent
   switch (tab) {
     case 'maraton':
@@ -16,7 +16,7 @@ const MaratonComponentSwitch = ({ tab }: { tab: string }) => {
       pageContent = <MaratonHelp />
       break
     default:
-      pageContent = <div>Något gick fel, ingen sida.</div>
+      pageContent = <Table />
       break
   }
   return <>{pageContent}</>

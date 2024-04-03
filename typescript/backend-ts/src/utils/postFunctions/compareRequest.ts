@@ -10,6 +10,6 @@ export const compareObject = z.object({
       z.enum(['qualification', 'regular', 'eight', 'quarter', 'semi', 'final'])
     )
     .min(1, { message: 'Måste ange minst en kategori.' }),
-  startSeason: z.number().int().positive(),
-  endSeason: z.number().int().positive(),
+  startSeason: z.coerce.number().int().positive(),
+  endSeason: z.coerce.number().int().positive(),
 })

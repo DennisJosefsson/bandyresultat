@@ -1,105 +1,26 @@
-import {
-  SelectionIcon,
-  ListIcon,
-  DevIcon,
-  StatsIcon,
-  TrophyIcon,
-  CalendarIcon,
-  MapIcon,
-  ManIcon,
-  WomanIcon,
-  QuestionIcon,
-  SearchIcon,
-} from './icons'
-import { Dispatch, SetStateAction, SyntheticEvent } from 'react'
-
-import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
-import { Button } from '@/src/@/components/ui/button'
-
 export type TabBarObject = {
+  help?: JSX.Element
+  gender: JSX.Element
   tabBarArray: {
-    name: string
+    tab: JSX.Element
     tabName: string
-    clickFunctions: (() => void) | ((event: SyntheticEvent) => void)
     conditional?: string | boolean
   }[]
-  genderClickFunction: () => void
-}
-
-type TabIcons = {
-  [key: string]: JSX.Element
-}
-
-const tabIcons: TabIcons = {
-  games: <CalendarIcon />,
-  tables: <ListIcon />,
-  maraton: <ListIcon />,
-  playoff: <TrophyIcon />,
-  roundForRound: <DevIcon />,
-  stats: <StatsIcon />,
-  records: <StatsIcon />,
-  map: <MapIcon />,
-  teams: <ListIcon />,
-  search: <SearchIcon />,
-  compare: <SearchIcon />,
-  selection: <SelectionIcon />,
 }
 
 export const TabBarInline = ({
   tabBarObject,
-  setTab,
-  tab,
 }: {
   tabBarObject: TabBarObject
-  tab: string
-  setTab: Dispatch<SetStateAction<string>>
 }) => {
-  const { women } = useGenderContext()
   return (
     <div>
-      <div className="hidden items-center text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
+      <div className="flex flex-row items-center justify-between xs:mb-2 xs:gap-1 md:gap-2">
         {tabBarObject.tabBarArray.map((currTab) => {
-          return (
-            <Button
-              key={currTab.name}
-              onClick={currTab.clickFunctions}
-              variant={tab === currTab.tabName ? 'default' : 'outline'}
-            >
-              {currTab.name}
-            </Button>
-          )
+          return <div key={currTab.tabName}>{currTab.tab}</div>
         })}
-        <Button
-          onClick={() => setTab('help')}
-          variant={tab === 'help' ? 'default' : 'outline'}
-        >
-          Hjälp
-        </Button>
-        <Button onClick={tabBarObject.genderClickFunction}>
-          {women ? 'Herrar' : 'Damer'}
-        </Button>
-      </div>
-      <div className="flex flex-row justify-between gap-1 text-sm font-bold xs:mb-2 xs:hidden md:gap-2 md:text-lg">
-        {tabBarObject.tabBarArray.map((currTab, index) => {
-          return (
-            <Button
-              key={`${currTab.name}-${index}`}
-              onClick={currTab.clickFunctions}
-              variant={tab === currTab.tabName ? 'default' : 'outline'}
-            >
-              {tabIcons[currTab.tabName]}
-            </Button>
-          )
-        })}
-        <Button
-          onClick={() => setTab('help')}
-          variant={tab === 'help' ? 'default' : 'outline'}
-        >
-          <QuestionIcon />
-        </Button>
-        <Button onClick={tabBarObject.genderClickFunction}>
-          {women ? <ManIcon /> : <WomanIcon />}
-        </Button>
+        {tabBarObject.help ? tabBarObject.help : null}
+        {tabBarObject.gender}
       </div>
     </div>
   )
@@ -107,69 +28,34 @@ export const TabBarInline = ({
 
 export const TabBarDivided = ({
   tabBarObject,
-  tab,
-  setTab,
   onlyDesktop,
 }: {
   tabBarObject: TabBarObject
-  tab: string
-  setTab: Dispatch<SetStateAction<string>>
   onlyDesktop?: boolean
 }) => {
-  const { women } = useGenderContext()
   return (
     <div>
       <div className="hidden items-center text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
         <div className="flex flex-row xs:gap-1 md:gap-2">
           {tabBarObject.tabBarArray.map((currTab) => {
-            return (
-              <Button
-                key={currTab.name}
-                onClick={currTab.clickFunctions}
-                variant={tab === currTab.tabName ? 'default' : 'outline'}
-              >
-                {currTab.name}
-              </Button>
-            )
+            return <div key={currTab.tabName}>{currTab.tab}</div>
           })}
         </div>
         <div className="flex flex-row xs:gap-1 md:gap-2">
-          <Button
-            onClick={() => setTab('help')}
-            variant={tab === 'help' ? 'default' : 'outline'}
-          >
-            Hjälp
-          </Button>
-          <Button onClick={tabBarObject.genderClickFunction}>
-            {women ? 'Herrar' : 'Damer'}
-          </Button>
+          {tabBarObject.help ? tabBarObject.help : null}
+          {tabBarObject.gender}
         </div>
       </div>
       {!onlyDesktop && (
         <div className="flex flex-row justify-between gap-1  text-sm font-bold xs:mb-2 xs:hidden md:gap-2 md:text-lg">
           <div className="flex flex-row xs:gap-1 md:gap-2">
-            {tabBarObject.tabBarArray.map((currTab, index) => {
-              return (
-                <Button
-                  key={`${currTab.name}-${index}`}
-                  onClick={currTab.clickFunctions}
-                  variant={tab === currTab.tabName ? 'default' : 'outline'}
-                >
-                  {tabIcons[currTab.tabName]}
-                </Button>
-              )
+            {tabBarObject.tabBarArray.map((currTab) => {
+              return <div key={currTab.tabName}>{currTab.tab}</div>
             })}
           </div>
           <div className="flex flex-row xs:gap-1 md:gap-2">
-            <Button
-              onClick={() => setTab('help')}
-              variant={tab === 'help' ? 'default' : 'outline'}
-            >
-              <QuestionIcon />
-            </Button>
-            <Button onClick={tabBarObject.genderClickFunction}>
-              {women ? <ManIcon /> : <WomanIcon />}
-            </Button>
+            {tabBarObject.help ? tabBarObject.help : null}
+            {tabBarObject.gender}
           </div>
         </div>
       )}

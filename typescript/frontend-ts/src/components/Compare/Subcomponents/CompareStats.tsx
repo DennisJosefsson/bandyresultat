@@ -5,9 +5,9 @@ import Golds from './CompareStatsSubComponents/Golds'
 import LatestGames from './CompareStatsSubComponents/LatestGames'
 import Playoffs from './CompareStatsSubComponents/Playoffs'
 import Seasons from './CompareStatsSubComponents/Seasons'
-
+import { TabsContent } from '@/src/@/components/ui/tabs'
 type CompareStatsProps = {
-  compObject: CompareFormState
+  compObject: CompareFormState | null
   firstGames: CompareResponseObjectType['firstGames']
   latestGames: CompareResponseObjectType['latestGames']
   golds: CompareResponseObjectType['golds']
@@ -27,31 +27,27 @@ const CompareStats = ({
   seasons,
   allSeasons,
 }: CompareStatsProps) => {
+  if (!compObject) return null
   return (
-    <div>
-      <h2 className="text-sm font-bold md:text-lg xl:text-right">Statistik</h2>
-      <div className="grid grid-cols-1 flex-row justify-between gap-2 md:flex xl:gap-8">
-        <div className="w-full md:w-80">
-          <FirstGames compObject={compObject} firstGames={firstGames} />
-          {latestGames.length > 0 && <LatestGames latestGames={latestGames} />}
-        </div>
-        <div className="w-full md:w-80">
-          <div className="w-full">
-            <Seasons
-              compObject={compObject}
-              seasons={seasons}
-              allSeasons={allSeasons}
-            />
-            <Playoffs
-              compObject={compObject}
-              playoffs={playoffs}
-              allPlayoffs={allPlayoffs}
-            />
-            {golds.length > 0 && <Golds golds={golds} />}
-          </div>
-        </div>
-      </div>
-    </div>
+    <>
+      <TabsContent value="games">
+        <FirstGames compObject={compObject} firstGames={firstGames} />
+        {latestGames.length > 0 && <LatestGames latestGames={latestGames} />}
+      </TabsContent>
+      <TabsContent value="stats">
+        <Seasons
+          compObject={compObject}
+          seasons={seasons}
+          allSeasons={allSeasons}
+        />
+        <Playoffs
+          compObject={compObject}
+          playoffs={playoffs}
+          allPlayoffs={allPlayoffs}
+        />
+        {golds.length > 0 && <Golds golds={golds} />}
+      </TabsContent>
+    </>
   )
 }
 

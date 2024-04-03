@@ -8,7 +8,7 @@ import Animation from '../../Game/Subcomponents/Animation'
 import Map from './Map'
 import { useGetFirstAndLastSeason } from '../../../hooks/dataHooks/seasonHooks/useGetFirstAndLastSeason'
 
-const SeasonComponentSwitch = ({ tab }: { tab: string }) => {
+const SeasonComponentSwitch = ({ tab }: { tab: string | null }) => {
   const { seasonId } = useSeasonContext()
   const { lastSeason } = useGetFirstAndLastSeason()
   let pageContent

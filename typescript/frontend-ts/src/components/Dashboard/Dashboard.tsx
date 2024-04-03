@@ -10,6 +10,7 @@ import { getTeams } from '../../requests/teams'
 import SeriesModal from './SeriesModal'
 import { TabBarDivided } from '../utilitycomponents/Components/TabBar'
 import useGenderContext from '../../hooks/contextHooks/useGenderContext'
+import { Button } from '@/src/@/components/ui/button'
 
 const Dashboard = () => {
   const {
@@ -49,36 +50,85 @@ const Dashboard = () => {
     : []
 
   const dashboardTabBarObject = {
-    genderClickFunction: () => dispatch({ type: 'TOGGLE' }),
+    gender: (
+      <Button
+        onClick={() => {
+          dispatch({ type: 'TOGGLE' })
+        }}
+      >
+        {women ? 'Herrar' : 'Damer'}
+      </Button>
+    ),
     tabBarArray: [
       {
-        name: 'Error',
+        tab: (
+          <Button
+            variant={tab === 'error' ? 'default' : 'outline'}
+            onClick={() => {
+              setTab('error')
+            }}
+          >
+            Error
+          </Button>
+        ),
+
         tabName: 'error',
-        clickFunctions: () => setTab('error'),
         conditional: true,
       },
       {
-        name: 'Lägg till lag',
+        tab: (
+          <Button
+            variant={tab === 'addteams' ? 'default' : 'outline'}
+            onClick={() => {
+              setTab('addteams')
+            }}
+          >
+            Lägg till lag
+          </Button>
+        ),
         tabName: 'addteams',
-        clickFunctions: () => setTab('addteams'),
         conditional: true,
       },
       {
-        name: 'Serie',
+        tab: (
+          <Button
+            variant={tab === 'serie' ? 'default' : 'outline'}
+            onClick={() => {
+              setTab('serie')
+            }}
+          >
+            Serie
+          </Button>
+        ),
         tabName: 'serie',
-        clickFunctions: () => setTab('serie'),
         conditional: true,
       },
       {
-        name: 'Teamseason',
+        tab: (
+          <Button
+            variant={tab === 'teamseason' ? 'default' : 'outline'}
+            onClick={() => {
+              setTab('teamseason')
+            }}
+          >
+            Teamseason
+          </Button>
+        ),
         tabName: 'teamseason',
-        clickFunctions: () => setTab('teamseason'),
         conditional: false,
       },
       {
-        name: 'Metadata',
+        tab: (
+          <Button
+            variant={tab === 'metadata' ? 'default' : 'outline'}
+            onClick={() => {
+              setTab('metadata')
+            }}
+          >
+            Metadata
+          </Button>
+        ),
         tabName: 'metadata',
-        clickFunctions: () => setTab('metadata'),
         conditional: false,
       },
     ].filter((item) => {
@@ -107,12 +157,7 @@ const Dashboard = () => {
       <h2 className="text-2xl font-bold">
         Dashboard {women ? 'Damer' : 'Herrar'}
       </h2>
-      <TabBarDivided
-        tabBarObject={dashboardTabBarObject}
-        tab={tab}
-        setTab={setTab}
-        onlyDesktop
-      />
+      <TabBarDivided tabBarObject={dashboardTabBarObject} onlyDesktop />
       <div className=" flex flex-row-reverse justify-between">
         <div>
           <div>

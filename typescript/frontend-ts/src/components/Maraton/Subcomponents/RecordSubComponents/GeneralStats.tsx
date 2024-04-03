@@ -1,12 +1,11 @@
+import { useGetRecordData } from '@/src/hooks/dataHooks/maratonHooks/useGetRecordData'
 import useGenderContext from '../../../../hooks/contextHooks/useGenderContext'
-import { GeneralStatsResponse } from '../../../types/games/streaks'
-import { Card } from '@/src/@/components/ui/card'
-type GeneralStatsProps = {
-  data: GeneralStatsResponse
-}
 
-const GeneralStats = ({ data }: GeneralStatsProps) => {
+import { Card } from '@/src/@/components/ui/card'
+
+const GeneralStats = () => {
   const { women } = useGenderContext()
+  const { data } = useGetRecordData()
   return (
     <div className="ml-4 xl:ml-0">
       {!women && (
@@ -20,7 +19,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                 Sedan 1931
               </h3>
               <div className="table">
-                {data.seasons.map((team, index) => {
+                {data?.seasons.map((team, index) => {
                   return (
                     <Card
                       key={`${team.seasons}-${Math.random()}`}
@@ -44,7 +43,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                 Säsonger totalt
               </h3>
               <div className="table">
-                {data.allSeasons?.map((team, index) => {
+                {data?.allSeasons?.map((team, index) => {
                   return (
                     <Card
                       className="recordCard"
@@ -72,7 +71,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                 Sedan 1931
               </h3>
               <div className="table">
-                {data.playoffs.map((team, index) => {
+                {data?.playoffs.map((team, index) => {
                   return (
                     <Card
                       className="recordCard"
@@ -96,7 +95,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                 Slutspel totalt
               </h3>
               <div className="table">
-                {data.allPlayoffs?.map((team, index) => {
+                {data?.allPlayoffs?.map((team, index) => {
                   return (
                     <Card
                       className="recordCard"
@@ -124,7 +123,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                 Guld
               </h3>
               <div className="table">
-                {data.golds.map((team, index) => {
+                {data?.golds.map((team, index) => {
                   return (
                     <Card
                       className="recordCard"
@@ -147,7 +146,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                 Spelade
               </h3>
               <div className="table">
-                {data.finals.map((team, index) => {
+                {data?.finals.map((team, index) => {
                   return (
                     <Card
                       className="recordCard"
@@ -176,7 +175,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                 Säsonger
               </h3>
               <div className="table">
-                {data.seasons.map((team, index) => {
+                {data?.seasons.map((team, index) => {
                   return (
                     <Card
                       className="recordCard"
@@ -200,7 +199,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                 Slutspel
               </h3>
               <div className="table">
-                {data.playoffs.map((team, index) => {
+                {data?.playoffs.map((team, index) => {
                   return (
                     <Card
                       className="recordCard"
@@ -228,7 +227,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                 Guld
               </h3>
               <div className="table">
-                {data.golds.map((team, index) => {
+                {data?.golds.map((team, index) => {
                   return (
                     <Card
                       className="recordCard"
@@ -251,7 +250,7 @@ const GeneralStats = ({ data }: GeneralStatsProps) => {
                 Spelade
               </h3>
               <div className="table">
-                {data.finals.map((team, index) => {
+                {data?.finals.map((team, index) => {
                   return (
                     <Card
                       className="recordCard"

@@ -1,26 +1,47 @@
+import { TableHeader, TableHead, TableRow } from '@/src/@/components/ui/table'
+
 const AllDataTableHeader = () => {
   return (
-    <thead>
-      <tr key={`tableheadAllgames`}>
-        <th scope="col" className="team">
+    <TableHeader>
+      <TableRow key={`tableheadAllgames`}>
+        <TableHead scope="col" className="px-1 py-1 text-left md:w-56 md:py-2">
           Lag
-        </th>
-        <th scope="col">M</th>
-        <th scope="col">V</th>
-        <th scope="col">O</th>
-        <th scope="col">F</th>
-        <th scope="col" className="twelve">
+        </TableHead>
+        <TableHead scope="col" className="px-1 py-1 text-right md:w-8 md:py-2">
+          M
+        </TableHead>
+        <TableHead scope="col" className="px-1 py-1 text-right md:w-8 md:py-2">
+          V
+        </TableHead>
+        <TableHead scope="col" className="px-1 py-1 text-right md:w-8 md:py-2">
+          O
+        </TableHead>
+        <TableHead scope="col" className="px-1 py-1 text-right md:w-8 md:py-2">
+          F
+        </TableHead>
+        <TableHead
+          scope="col"
+          className="hidden px-1 py-1 text-right xs:table-cell md:w-12 md:py-2"
+        >
           GM
-        </th>
-        <th scope="col" className="twelve">
+        </TableHead>
+        <TableHead
+          scope="col"
+          className="hidden px-1 py-1 text-right xs:table-cell md:w-12 md:py-2"
+        >
           IM
-        </th>
-        <th scope="col" className="twelve">
+        </TableHead>
+        <TableHead
+          scope="col"
+          className="hidden px-1 py-1 text-right xs:table-cell md:w-12 md:py-2"
+        >
           MS
-        </th>
-        <th scope="col">P</th>
-      </tr>
-    </thead>
+        </TableHead>
+        <TableHead scope="col" className="px-1 py-1 text-right md:w-8 md:py-2">
+          P
+        </TableHead>
+      </TableRow>
+    </TableHeader>
   )
 }
 

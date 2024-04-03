@@ -1,5 +1,4 @@
-import { useParams, useLocation } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useParams, useSearchParams } from 'react-router-dom'
 
 import { ErrorBoundary } from 'react-error-boundary'
 import { logError } from '../utilitycomponents/functions/logError.js'
@@ -15,18 +14,10 @@ import SeasonTabBar from './Subcomponents/SeasonTabBar.js'
 
 const Season = () => {
   const unparsedSeasonId = useParams().seasonId
-
+  const [searchParams, setSearchParams] = useSearchParams(location.search)
+  const tab = searchParams.get('tab')
   const { lastSeason } = useGetFirstAndLastSeason()
   const { women } = useGenderContext()
-  const [tab, setTab] = useState('tables')
-
-  const { state } = useLocation()
-
-  useEffect(() => {
-    if (state && state.tab === 'games') {
-      setTab('games')
-    }
-  }, [state])
 
   if (!unparsedSeasonId) {
     return (
@@ -50,7 +41,7 @@ const Season = () => {
     <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
       <SeasonHeader seasonId={seasonId} women={women} />
 
-      <SeasonTabBar tab={tab} setTab={setTab} />
+      <SeasonTabBar tab={tab} setSearchParams={setSearchParams} />
       <div>
         <ErrorBoundary
           FallbackComponent={ErrorFallback}

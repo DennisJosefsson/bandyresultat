@@ -1,57 +1,43 @@
-import { Dispatch, SetStateAction } from 'react'
-import { ButtonComponent } from '../../../utilitycomponents/Components/ButtonComponents'
+import { Button } from '@/src/@/components/ui/button'
+import { useGetMaratonTables } from '@/src/hooks/dataHooks/maratonHooks/useGetMaratonTables'
 
-type MaratonTableHeaderProps = {
-  setHomeAwayTitle: Dispatch<SetStateAction<string>>
-  setSelectedTable: Dispatch<SetStateAction<string>>
-  table: string
-}
-
-const MaratonTableHeader = ({
-  setHomeAwayTitle,
-  setSelectedTable,
-  table,
-}: MaratonTableHeaderProps) => {
+const MaratonTableHeader = () => {
+  const { setHomeAwayTitle, setSearchParams, selectedTable } =
+    useGetMaratonTables()
   return (
     <div className="mb-2 flex flex-row justify-center gap-4">
       <div>
-        <ButtonComponent
-          active={`${
-            table === 'home' ? 'ring-2 ring-cyan-600 ring-inset' : null
-          }`}
-          clickFunctions={() => {
-            setSelectedTable('home')
-            setHomeAwayTitle('Hemma')
-          }}
-        >
-          Hemma
-        </ButtonComponent>
-      </div>
-      <div>
-        <ButtonComponent
-          active={`${
-            table === 'away' ? 'ring-2 ring-cyan-600 ring-inset' : null
-          }`}
-          clickFunctions={() => {
-            setSelectedTable('away')
-            setHomeAwayTitle('Borta')
-          }}
-        >
-          Borta
-        </ButtonComponent>
-      </div>
-      <div>
-        <ButtonComponent
-          active={`${
-            table === 'all' ? 'ring-2 ring-cyan-600 ring-inset' : null
-          }`}
-          clickFunctions={() => {
-            setSelectedTable('all')
+        <Button
+          variant={selectedTable === 'all' ? 'default' : 'outline'}
+          onClick={() => {
+            setSearchParams({ tab: 'maraton', table: 'all' })
             setHomeAwayTitle('')
           }}
         >
           Alla
-        </ButtonComponent>
+        </Button>
+      </div>
+      <div>
+        <Button
+          variant={selectedTable === 'home' ? 'default' : 'outline'}
+          onClick={() => {
+            setSearchParams({ tab: 'maraton', table: 'home' })
+            setHomeAwayTitle('Hemma')
+          }}
+        >
+          Hemma
+        </Button>
+      </div>
+      <div>
+        <Button
+          variant={selectedTable === 'away' ? 'default' : 'outline'}
+          onClick={() => {
+            setSearchParams({ tab: 'maraton', table: 'away' })
+            setHomeAwayTitle('Borta')
+          }}
+        >
+          Borta
+        </Button>
       </div>
     </div>
   )

@@ -1,37 +1,25 @@
-import { StreakObjectTypes } from '../../../types/games/streaks'
+import { useGetRecordData } from '@/src/hooks/dataHooks/maratonHooks/useGetRecordData'
 import GeneralStats from './GeneralStats'
 import PointsGoals from './PointsGoals'
 import Streaks from './Streaks'
 
-type ParamType = {
-  record: string
-  women: boolean
-}
-
-type RecordComponentSwitchProps = {
-  data: StreakObjectTypes
-  params: ParamType
-}
-
-const RecordComponentSwitch = ({
-  data,
-  params,
-}: RecordComponentSwitchProps) => {
+const RecordComponentSwitch = () => {
+  const { record } = useGetRecordData()
   let pageContent
-  switch (params.record) {
+  switch (record) {
     case 'points':
     case 'scored':
     case 'conceded':
-      if (data) pageContent = <PointsGoals data={data} />
+      pageContent = <PointsGoals />
       break
     case 'generalStats':
-      if (data) pageContent = <GeneralStats data={data} />
+      pageContent = <GeneralStats />
       break
     case 'streaks':
-      if (data) pageContent = <Streaks data={data} />
+      pageContent = <Streaks />
       break
     default:
-      pageContent = <div>Något är fel, tom sida.</div>
+      pageContent = <GeneralStats />
   }
   return <>{pageContent}</>
 }

@@ -1,20 +1,17 @@
 import { TeamAttributes } from '../../types/teams/teams'
 import useTeampreferenceContext from '../../../hooks/contextHooks/useTeampreferenceContext'
-import {
-  FormField,
-  FormItem,
-  FormControl,
-  FormLabel,
-} from '@/src/@/components/ui/form'
+import { FormField, FormItem, FormControl } from '@/src/@/components/ui/form'
 import { Checkbox } from '@/src/@/components/ui/checkbox'
 
 import { useFormContext } from 'react-hook-form'
+import { SetURLSearchParams } from 'react-router-dom'
 
 interface TeamsListProps {
   teams: TeamAttributes[]
+  setSearchParams: SetURLSearchParams
 }
 
-const TeamsList = ({ teams }: TeamsListProps) => {
+const TeamsList = ({ teams, setSearchParams }: TeamsListProps) => {
   const { favTeams } = useTeampreferenceContext()
   const methods = useFormContext()
   return (
@@ -38,15 +35,20 @@ const TeamsList = ({ teams }: TeamsListProps) => {
                             key={team.teamId}
                             className="flex flex-row items-center justify-between space-x-3 space-y-0 rounded bg-white p-2 text-sm md:text-base"
                           >
-                            <FormLabel
+                            <span
                               className={
                                 favTeams.includes(team.teamId)
                                   ? 'w-32 cursor-pointer font-bold md:text-base'
                                   : 'w-32 cursor-pointer md:text-base'
                               }
+                              onClick={() => {
+                                setSearchParams({
+                                  teamId: team.teamId.toString(),
+                                })
+                              }}
                             >
                               {team.casualName}
-                            </FormLabel>
+                            </span>
                             <FormControl>
                               <Checkbox
                                 checked={field.value?.includes(team.teamId)}
