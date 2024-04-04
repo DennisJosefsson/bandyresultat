@@ -24,6 +24,7 @@ const MaratonTabBar = ({ tab, setSearchParams }: MaratonTabBarProps) => {
         onClick={() => {
           dispatch({ type: 'TOGGLE' })
         }}
+        variant="default"
       >
         {women ? (
           matches ? (

@@ -153,7 +153,7 @@ const Dashboard = () => {
   )
 
   return (
-    <div className="mx-auto min-h-screen max-w-7xl font-inter text-[#011d29]">
+    <div className="mx-auto min-h-screen max-w-7xl font-inter text-foreground">
       <h2 className="text-2xl font-bold">
         Dashboard {women ? 'Damer' : 'Herrar'}
       </h2>

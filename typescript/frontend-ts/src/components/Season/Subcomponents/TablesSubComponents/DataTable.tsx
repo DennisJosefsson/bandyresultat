@@ -89,7 +89,7 @@ const DataTable = <TData, TValue>({
                     : null
                 } ${
                   serieStructure?.includes(index + 1)
-                    ? 'border-b-2 border-black'
+                    ? 'border-b-2 border-foreground'
                     : null
                 }`}
               >

@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, KeyboardEvent } from 'react'
-
+import { Input } from '@/src/@/components/ui/input'
 type FilterComponentProps = {
   seasonFilter: string
   setSeasonFilter: Dispatch<SetStateAction<string>>
@@ -14,8 +14,8 @@ const FilterComponent = ({
   return (
     <div className="w-full ">
       <form>
-        <input
-          className="w-full border-[#011d29] focus:border-[#011d29]"
+        <Input
+          className="w-full border-foreground focus:border-foreground"
           type="text"
           placeholder="Filter"
           value={seasonFilter}

@@ -1,7 +1,7 @@
 const CompareHelp = () => {
   return (
     <>
-      <div className="p-5 font-inter text-[#011d29]">
+      <div className="prose text-foreground">
         <div className="text-left text-xs md:text-sm lg:text-base">
           <p className="mb-4">
             OBS! Ändrar man från t.ex. dam till herr samtidigt som man redan har

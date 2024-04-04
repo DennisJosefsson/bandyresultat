@@ -29,7 +29,7 @@ const AnimationClicker = ({
               }
               className={
                 round[0] > 0
-                  ? 'mt-3 w-6 cursor-pointer rounded-md py-3 text-left text-[#011d29]'
+                  ? 'mt-3 w-6 cursor-pointer rounded-md py-3 text-left text-foreground'
                   : 'mt-3 w-6 cursor-not-allowed rounded-md py-3 text-left text-slate-400'
               }
             >
@@ -45,7 +45,7 @@ const AnimationClicker = ({
               }
               className={
                 round[0] < arrayLength - 1
-                  ? 'mt-3 w-6 cursor-pointer rounded-md py-3 text-right text-[#011d29]'
+                  ? 'mt-3 w-6 cursor-pointer rounded-md py-3 text-right text-foreground'
                   : 'mt-3 w-6 cursor-not-allowed rounded-md py-3 text-right text-slate-400'
               }
             >

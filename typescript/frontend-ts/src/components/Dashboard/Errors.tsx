@@ -24,7 +24,7 @@ const Errors = () => {
                 return (
                   <div
                     key={error.errorId}
-                    className="mb-1 flex flex-col rounded bg-white p-2 text-sm"
+                    className="mb-1 flex flex-col rounded bg-background p-2 text-sm"
                   >
                     <div className="font-semibold">{error.date}</div>
                     <div>
@@ -41,7 +41,7 @@ const Errors = () => {
                 return (
                   <div
                     key={error.errorId}
-                    className="mb-1 flex flex-col rounded bg-white p-2 text-sm"
+                    className="mb-1 flex flex-col rounded bg-background p-2 text-sm"
                   >
                     <div className="font-semibold">{error.date}</div>
                     <div>
@@ -60,7 +60,7 @@ const Errors = () => {
                 return (
                   <div
                     key={error.errorId}
-                    className="mb-1 flex flex-col rounded bg-white p-2 text-sm"
+                    className="mb-1 flex flex-col rounded bg-background p-2 text-sm"
                   >
                     <div className="font-semibold">{error.date}</div>
                     <div className="truncate">
@@ -79,7 +79,7 @@ const Errors = () => {
                 return (
                   <div
                     key={error.errorId}
-                    className="mb-1 flex flex-col rounded bg-white p-2 text-sm"
+                    className="mb-1 flex flex-col rounded bg-background p-2 text-sm"
                   >
                     <div className="font-semibold">{error.date}</div>
                     <div className="truncate">

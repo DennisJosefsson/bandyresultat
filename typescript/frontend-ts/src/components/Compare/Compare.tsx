@@ -22,7 +22,7 @@ type ErrorState = { error: false } | { error: true; message: string }
 
 const Compare = () => {
   const location = useLocation()
-  //const navigate = useNavigate()
+  const navigate = useNavigate()
   const [customError, setCustomError] = useState<ErrorState>({ error: false })
   const methods = useFormContext()
   const {
@@ -44,11 +44,11 @@ const Compare = () => {
       )
       if (!parsedFormData.success) {
         setCustomError({ error: true, message: parsedFormData.error.message })
-        //navigate(location.pathname, { replace: true })
+        navigate(location.pathname, { replace: true })
       }
       if (parsedFormData.success) {
         setCompObjectParams(parsedFormData.data)
-        //navigate(location.pathname, { replace: true })
+        navigate(location.pathname, { replace: true })
       }
     } else {
       const parsedFormData = compareFormState.safeParse(methods.getValues())
@@ -63,7 +63,7 @@ const Compare = () => {
 
   if (isLoading) {
     return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
         <Spinner />
       </div>
     )
@@ -76,7 +76,7 @@ const Compare = () => {
   if (error instanceof Error && error) {
     if (error.message === 'nullObject') {
       return (
-        <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+        <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
           <p className="mx-10 text-center">
             Någon sköt högt över mål, och alla bollar i bollkorgarna är borta.
             Det var nog inte meningen att det skulle länkas till denna sidan
@@ -88,7 +88,7 @@ const Compare = () => {
       )
     }
     return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
         {error.message}
       </div>
     )

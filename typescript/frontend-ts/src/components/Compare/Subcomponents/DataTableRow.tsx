@@ -6,7 +6,7 @@ interface TableRowData {
     shortName: string
     casualName: string
   }
-  opp: {
+  opp?: {
     shortName: string
     casualName: string
   }
@@ -25,9 +25,16 @@ const DataTableRow = ({ team }: { team: TableRowData }) => {
   return (
     <TableRow>
       <TableCell className="px-1 py-1 text-left md:py-2">
-        {!matches
-          ? `${team.lag.shortName}-${team.opp.shortName}`
-          : `${team.lag.casualName}-${team.opp.casualName}`}
+        {team.opp && (
+          <>
+            {!matches
+              ? `${team.lag.shortName}-${team.opp.shortName}`
+              : `${team.lag.casualName}-${team.opp.casualName}`}
+          </>
+        )}
+        {!team.opp && (
+          <>{!matches ? team.lag.shortName : team.lag.casualName}</>
+        )}
       </TableCell>
       <TableCell className="px-1 py-1 text-right tabular-nums md:py-2">
         {team.totalGames}

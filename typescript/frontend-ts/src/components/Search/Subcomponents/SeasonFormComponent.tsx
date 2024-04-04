@@ -7,7 +7,7 @@ const SeasonFormComponent = () => {
   const { lastSeason } = useGetFirstAndLastSeason()
 
   return (
-    <div className="mb-2 flex w-[18rem] flex-col rounded bg-white lg:w-full">
+    <div className="mb-2 flex w-[18rem] flex-col rounded bg-background lg:w-full">
       <div className="grid grid-cols-1 lg:grid-cols-3">
         <div className="flex max-w-[16rem] flex-col">
           <InputComponent

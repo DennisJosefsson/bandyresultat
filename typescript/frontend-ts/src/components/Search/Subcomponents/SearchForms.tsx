@@ -27,7 +27,7 @@ const SearchForms = ({ openAccordion, setOpenAccordion }: SearchFormsProps) => {
       >
         <AccordionItem
           value="resultform"
-          className="mb-2 rounded-md bg-white p-2 shadow-md"
+          className="mb-2 rounded-md bg-background p-2 shadow-md"
         >
           <AccordionTrigger className="text-sm md:text-base">
             Resultatformulär
@@ -38,7 +38,7 @@ const SearchForms = ({ openAccordion, setOpenAccordion }: SearchFormsProps) => {
         </AccordionItem>
         <AccordionItem
           value="orderform"
-          className="mb-2 rounded-md bg-white p-2 shadow-md"
+          className="mb-2 rounded-md bg-background p-2 shadow-md"
         >
           <AccordionTrigger className="text-sm md:text-base">
             Sorteringsval
@@ -49,7 +49,7 @@ const SearchForms = ({ openAccordion, setOpenAccordion }: SearchFormsProps) => {
         </AccordionItem>
         <AccordionItem
           value="seasonform"
-          className="mb-2 rounded-md bg-white p-2 shadow-md"
+          className="mb-2 rounded-md bg-background p-2 shadow-md"
         >
           <AccordionTrigger className="text-sm md:text-base">
             Säsongsinställningar
@@ -60,7 +60,7 @@ const SearchForms = ({ openAccordion, setOpenAccordion }: SearchFormsProps) => {
         </AccordionItem>
         <AccordionItem
           value="preferenceform"
-          className="mb-2 rounded-md bg-white p-2 shadow-md"
+          className="mb-2 rounded-md bg-background p-2 shadow-md"
         >
           <AccordionTrigger className="text-sm md:text-base">
             Matchinställningar

@@ -20,7 +20,7 @@ const Team = ({ teamId }: { teamId: number }) => {
 
   if (isLoading) {
     return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
         <Spinner />
       </div>
     )
@@ -28,7 +28,7 @@ const Team = ({ teamId }: { teamId: number }) => {
 
   if (error instanceof Error && error) {
     return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
         {error.message}
       </div>
     )
@@ -36,7 +36,7 @@ const Team = ({ teamId }: { teamId: number }) => {
 
   if (!teamId.toString().match('^[0-9]{1,3}$')) {
     return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
         Kolla länken, angivet lag-id är felaktigt.
       </div>
     )
@@ -47,7 +47,7 @@ const Team = ({ teamId }: { teamId: number }) => {
   return (
     <>
       {team && (
-        <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
+        <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-foreground">
           <TeamHeader team={team} teamId={teamId} />
           <div className="mx-2 flex flex-col-reverse justify-between lg:flex-row-reverse xl:mx-0">
             <div className="max-w-[30rem]">

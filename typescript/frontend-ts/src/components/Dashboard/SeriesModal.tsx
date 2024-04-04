@@ -11,7 +11,7 @@ const ErrorComponent = ({ errors }: { errors: FieldErrors }) => {
     return null
   }
   return (
-    <div className="mb-2 rounded border-red-700 bg-white p-2 text-sm font-semibold text-red-700 md:text-base">
+    <div className="mb-2 rounded border-red-700 bg-background p-2 text-sm font-semibold text-red-700 md:text-base">
       {Object.keys(errors).map((fieldName) => (
         <ErrorMessage
           errors={errors}
@@ -139,7 +139,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
                 </legend>
                 <div className="mb-1 mr-2 flex items-center">
                   <input
-                    className="content-center border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                    className="content-center border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                     type="checkbox"
                     value="1"
                     {...register('serieStructure')}
@@ -150,7 +150,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
                 </div>
                 <div className="mb-1 mr-2 flex items-center">
                   <input
-                    className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                     type="checkbox"
                     value="2"
                     {...register('serieStructure')}
@@ -161,7 +161,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
                 </div>
                 <div className="mb-1 mr-2 flex items-center">
                   <input
-                    className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                     type="checkbox"
                     value="3"
                     {...register('serieStructure')}
@@ -172,7 +172,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
                 </div>
                 <div className="mb-1 mr-2 flex items-center">
                   <input
-                    className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                     type="checkbox"
                     value="4"
                     {...register('serieStructure')}
@@ -183,7 +183,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
                 </div>
                 <div className="mb-1 mr-2 flex items-center">
                   <input
-                    className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                     type="checkbox"
                     value="5"
                     {...register('serieStructure')}
@@ -194,7 +194,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
                 </div>
                 <div className="mb-1 mr-2 flex items-center">
                   <input
-                    className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                     type="checkbox"
                     value="6"
                     {...register('serieStructure')}
@@ -205,7 +205,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
                 </div>
                 <div className="mb-1 mr-2 flex items-center">
                   <input
-                    className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                     type="checkbox"
                     value="7"
                     {...register('serieStructure')}
@@ -216,7 +216,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
                 </div>
                 <div className="mb-1 mr-2 flex items-center">
                   <input
-                    className="content-center border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                    className="content-center border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                     type="checkbox"
                     value="8"
                     {...register('serieStructure')}
@@ -227,7 +227,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
                 </div>
                 <div className="mb-1 mr-2 flex items-center">
                   <input
-                    className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                     type="checkbox"
                     value="9"
                     {...register('serieStructure')}
@@ -238,7 +238,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
                 </div>
                 <div className="mb-1 mr-2 flex items-center">
                   <input
-                    className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                     type="checkbox"
                     value="10"
                     {...register('serieStructure')}
@@ -249,7 +249,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
                 </div>
                 <div className="mb-1 mr-2 flex items-center">
                   <input
-                    className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                     type="checkbox"
                     value="11"
                     {...register('serieStructure')}
@@ -260,7 +260,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
                 </div>
                 <div className="mb-1 mr-2 flex items-center">
                   <input
-                    className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                     type="checkbox"
                     value="12"
                     {...register('serieStructure')}
@@ -271,7 +271,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
                 </div>
                 <div className="mb-1 mr-2 flex items-center">
                   <input
-                    className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                     type="checkbox"
                     value="13"
                     {...register('serieStructure')}
@@ -282,7 +282,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
                 </div>
                 <div className="mb-1 mr-2 flex items-center">
                   <input
-                    className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                     type="checkbox"
                     value="14"
                     {...register('serieStructure')}

@@ -70,7 +70,7 @@ const GamesList = ({
               </h3>
 
               {seriesObject && seriesObject.comment && (
-                <p className="my-2 max-w-xl bg-white p-1 text-xs font-bold">
+                <p className="my-2 max-w-xl bg-background p-1 text-xs font-bold">
                   {seriesObject.comment}
                 </p>
               )}

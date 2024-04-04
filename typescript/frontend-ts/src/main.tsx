@@ -8,6 +8,7 @@ import GenderContextProvider from './contexts/genderContext.js'
 import UserContextProvider from './contexts/userContext.js'
 import FavTeamsContextProvider from './contexts/favteamsContext.js'
 import MenuContextProvider from './contexts/menuContext.js'
+import { ThemeProvider } from './hooks/contextHooks/useTheme.js'
 import './index.css'
 import App from './App.js'
 import { queryClient } from './config/queryClientConfig.js'
@@ -21,7 +22,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <GenderContextProvider>
           <FavTeamsContextProvider>
             <MenuContextProvider>
-              <App />
+              <ThemeProvider defaultTheme="light" storageKey="theme">
+                <App />
+              </ThemeProvider>
             </MenuContextProvider>
           </FavTeamsContextProvider>
         </GenderContextProvider>

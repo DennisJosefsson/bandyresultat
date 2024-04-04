@@ -12,8 +12,8 @@ type NilComponentProps = {
 
 const NilComponent = ({ group, colStarts }: NilComponentProps) => {
   const styleClass = colStarts
-    ? `${colStarts[group]} rounded bg-white p-2 shadow-md`
-    : 'rounded bg-white p-2 shadow-md md:col-start-4 md:odd:col-start-2'
+    ? `${colStarts[group]} rounded bg-background p-2 shadow-md`
+    : 'rounded bg-background p-2 shadow-md md:col-start-4 md:odd:col-start-2'
 
   return (
     <PlayoffCard group={group} styleClass={styleClass}>

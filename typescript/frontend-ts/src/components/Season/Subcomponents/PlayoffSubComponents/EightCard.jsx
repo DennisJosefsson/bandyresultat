@@ -9,8 +9,8 @@ const EightCard = ({
   favTeams,
 }) => {
   const styleClass = colStarts
-    ? `${colStarts[group.group]} cursor-pointer rounded bg-white p-2 shadow-md`
-    : 'cursor-pointer rounded bg-white p-2 shadow-md'
+    ? `${colStarts[group.group]} cursor-pointer rounded bg-background p-2 shadow-md`
+    : 'cursor-pointer rounded bg-background p-2 shadow-md'
   return (
     <div
       key={group.group}

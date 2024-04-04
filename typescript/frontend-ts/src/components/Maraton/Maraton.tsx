@@ -11,7 +11,7 @@ const Maraton = () => {
   const tab = searchParams.get('tab')
 
   return (
-    <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
+    <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-foreground">
       <MaratonTabBar tab={tab} setSearchParams={setSearchParams} />
       <div className="mt-2">
         <ErrorBoundary

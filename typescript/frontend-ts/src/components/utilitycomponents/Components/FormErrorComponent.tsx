@@ -7,7 +7,7 @@ const ErrorComponent = ({ errors }: { errors: FieldErrors }) => {
   }
 
   return (
-    <div className="mb-2 rounded border-red-700 bg-white p-2 text-sm font-semibold text-red-700 md:text-base">
+    <div className="mb-2 rounded border-red-700 bg-background p-2 text-sm font-semibold text-red-700 md:text-base">
       {Object.keys(errors).map((fieldName) => (
         <ErrorMessage
           errors={errors}

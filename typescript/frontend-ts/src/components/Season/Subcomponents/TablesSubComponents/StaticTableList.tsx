@@ -54,7 +54,7 @@ const StaticTableList = ({
             teamObject={teamObject}
           />
           {serieObject.comment != null && (
-            <p className="bg-white p-1 text-xs font-bold">
+            <p className="bg-background p-1 text-xs font-bold">
               {serieObject.comment}
             </p>
           )}

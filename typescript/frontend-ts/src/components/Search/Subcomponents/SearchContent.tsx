@@ -98,12 +98,12 @@ const SearchContent = ({
       </div>
       <div className="ml-2 w-[18rem] max-w-[800px] lg:ml-0 lg:w-full">
         {error.error && (
-          <div className="mb-2 rounded border-red-700 bg-white p-2 text-sm font-semibold text-red-700 md:text-base">
+          <div className="mb-2 rounded border-red-700 bg-background p-2 text-sm font-semibold text-red-700 md:text-base">
             {error.message}
           </div>
         )}
         {searchResult && searchResult.searchResult.length === 0 && (
-          <div className="rounded bg-white p-2">
+          <div className="rounded bg-background p-2">
             <p className="">Din sökning gav inga träffar.</p>
           </div>
         )}

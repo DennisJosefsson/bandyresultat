@@ -33,7 +33,7 @@ const Link = () => {
   }, [linkName, navigate])
 
   return (
-    <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+    <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
       {error.success === false && <span>{error.message}</span>}
     </div>
   )

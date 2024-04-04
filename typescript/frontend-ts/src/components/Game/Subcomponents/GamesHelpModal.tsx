@@ -1,7 +1,7 @@
 const GamesHelp = () => {
   return (
     <>
-      <div className="p-5 font-inter text-[#011d29]">
+      <div className="prose p-5 text-foreground">
         <div className="text-left text-xs md:text-sm lg:text-base">
           <p className="mb-4">
             Visa resultat för specifikt lag genom att skriva lagnamn i

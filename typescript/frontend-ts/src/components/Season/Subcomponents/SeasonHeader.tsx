@@ -5,16 +5,20 @@ import { useGetFirstAndLastSeason } from '../../../hooks/dataHooks/seasonHooks/u
 type SeasonHeaderProps = {
   seasonId: number
   women: boolean
+  tab: string | null
 }
 
-const SeasonHeader = ({ seasonId, women }: SeasonHeaderProps) => {
+const SeasonHeader = ({ seasonId, women, tab }: SeasonHeaderProps) => {
   const { firstSeason, lastSeason } = useGetFirstAndLastSeason()
 
   return (
     <div className="flex flex-row justify-center">
       <div className="mx-auto mb-4 flex w-full flex-1 flex-row items-center justify-center">
         <div className={seasonId === firstSeason ? 'invisible' : undefined}>
-          <Link to={`/season/${seasonId - 1}`} state={{ resetRound: true }}>
+          <Link
+            to={`/season/${seasonId - 1}?tab=${tab}`}
+            state={{ resetRound: true }}
+          >
             <div className="flex flex-row items-center gap-1">
               <LeftArrow />
             </div>
@@ -28,7 +32,10 @@ const SeasonHeader = ({ seasonId, women }: SeasonHeaderProps) => {
           </h2>
         </div>
         <div className={seasonId === lastSeason ? 'invisible' : undefined}>
-          <Link to={`/season/${seasonId + 1}`} state={{ resetRound: true }}>
+          <Link
+            to={`/season/${seasonId + 1}?tab=${tab}`}
+            state={{ resetRound: true }}
+          >
             <div className="flex flex-row items-center gap-1">
               <RightArrow />
             </div>

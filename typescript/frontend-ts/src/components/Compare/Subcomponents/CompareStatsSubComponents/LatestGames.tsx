@@ -1,7 +1,12 @@
 import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 import { CompareResponseObjectType } from '../../../types/teams/compare'
-
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/src/@/components/ui/card'
 dayjs.locale('sv')
 
 type LatestGamesProps = {
@@ -10,9 +15,13 @@ type LatestGamesProps = {
 
 const LatestGames = ({ latestGames }: LatestGamesProps) => {
   return (
-    <div className="w-full">
-      <h3 className="text-sm font-semibold md:text-base">Senaste matcherna</h3>
-      <div className="compareFirstLast mb-3 w-full text-[8px] sm:text-sm">
+    <Card className="mt-2 w-full">
+      <CardHeader>
+        <CardTitle className="text-sm font-semibold md:text-base">
+          Senaste matcherna
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="compareFirstLast mb-3 w-full text-[8px] sm:text-sm">
         <div>
           {latestGames.map((game) => {
             return (
@@ -32,8 +41,8 @@ const LatestGames = ({ latestGames }: LatestGamesProps) => {
             )
           })}
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }
 

@@ -31,21 +31,25 @@ const CompareStats = ({
   return (
     <>
       <TabsContent value="games">
-        <FirstGames compObject={compObject} firstGames={firstGames} />
-        {latestGames.length > 0 && <LatestGames latestGames={latestGames} />}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <FirstGames compObject={compObject} firstGames={firstGames} />
+          {latestGames.length > 0 && <LatestGames latestGames={latestGames} />}
+        </div>
       </TabsContent>
       <TabsContent value="stats">
-        <Seasons
-          compObject={compObject}
-          seasons={seasons}
-          allSeasons={allSeasons}
-        />
-        <Playoffs
-          compObject={compObject}
-          playoffs={playoffs}
-          allPlayoffs={allPlayoffs}
-        />
-        {golds.length > 0 && <Golds golds={golds} />}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <Seasons
+            compObject={compObject}
+            seasons={seasons}
+            allSeasons={allSeasons}
+          />
+          <Playoffs
+            compObject={compObject}
+            playoffs={playoffs}
+            allPlayoffs={allPlayoffs}
+          />
+          {golds.length > 0 && <Golds golds={golds} />}
+        </div>
       </TabsContent>
     </>
   )

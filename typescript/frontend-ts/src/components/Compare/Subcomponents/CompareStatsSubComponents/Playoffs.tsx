@@ -1,6 +1,11 @@
 import { CompareResponseObjectType } from '../../../types/teams/compare'
 import { CompareFormState } from '../../../types/teams/teams'
-
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/src/@/components/ui/card'
 type PlayoffProps = {
   playoffs: CompareResponseObjectType['playoffs']
   allPlayoffs: CompareResponseObjectType['allPlayoffs']
@@ -9,56 +14,50 @@ type PlayoffProps = {
 
 const Playoffs = ({ playoffs, allPlayoffs, compObject }: PlayoffProps) => {
   return (
-    <div>
-      <div>
-        <h3 className="text-sm font-semibold md:text-base lg:text-right">
-          Slutspel
-        </h3>
-        <table className="compareStats mb-3 w-full text-[8px] sm:text-sm">
-          <thead>
-            <tr key={`head-playoffs`}>
-              <th scope="col" className="w-32 text-left"></th>
-              <th scope="col" className="w-8 text-right"></th>
-            </tr>
-          </thead>
-          <tbody>
+    <>
+      <Card className="mt-2 w-full">
+        <CardHeader>
+          <CardTitle>Slutspel</CardTitle>
+        </CardHeader>
+        <CardContent className="compareFirstLast w-full text-[8px] sm:text-sm">
+          <div className="mb-2">
             {allPlayoffs.map((team) => {
               return (
-                <tr key={team.team} className="rounded">
-                  <td>{team.casual_name}</td>
-                  <td className="text-right">{team.playoffs}</td>
-                </tr>
+                <div key={team.team} className="card">
+                  <div className="line2">
+                    <div>{team.casual_name}</div>
+                    <div className="text-right">{team.playoffs}</div>
+                  </div>
+                </div>
               )
             })}
-          </tbody>
-        </table>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
       {!compObject.women && (
-        <div>
-          <h3 className="text-sm font-semibold md:text-base lg:text-right">
-            Slutspel sedan 1931
-          </h3>
-          <table className="compareStats mb-3 w-full text-[8px] sm:text-sm">
-            <thead>
-              <tr key={`head-playoffs`}>
-                <th scope="col" className="w-32 text-left"></th>
-                <th scope="col" className="w-8 text-right"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {playoffs.map((team) => {
-                return (
-                  <tr key={team.team} className="rounded">
-                    <td>{team.casual_name}</td>
-                    <td className="text-right">{team.playoffs}</td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
+        <>
+          <Card className="mt-2 w-full">
+            <CardHeader>
+              <CardTitle>Slutspel sedan 1931</CardTitle>
+            </CardHeader>
+            <CardContent className="compareFirstLast w-full text-[8px] sm:text-sm">
+              <div className="mb-2">
+                {playoffs.map((team) => {
+                  return (
+                    <div key={team.team} className="card">
+                      <div className="line2">
+                        <div>{team.casual_name}</div>
+                        <div className="text-right">{team.playoffs}</div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        </>
       )}
-    </div>
+    </>
   )
 }
 

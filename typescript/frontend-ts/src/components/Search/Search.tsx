@@ -43,7 +43,7 @@ const Search = () => {
 
   if (isTeamsLoading) {
     return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
         <Spinner />
       </div>
     )
@@ -51,7 +51,7 @@ const Search = () => {
 
   if (teamError) {
     return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
         Något gick fel.
       </div>
     )
@@ -64,7 +64,7 @@ const Search = () => {
   // console.log(searchResult)
 
   return (
-    <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
+    <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-foreground">
       <Tabs value={tab} onValueChange={setTab}>
         <div className="hidden items-center xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2">
           <div>

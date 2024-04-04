@@ -31,7 +31,7 @@ const Table = () => {
             Maratontabell {women ? 'Damer' : 'Herrar'} {homeAwayTitle}
           </h2>
 
-          <div className="mx-auto mt-4 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
+          <div className="mx-auto mt-4 flex min-h-screen max-w-7xl flex-col font-inter text-foreground">
             <MaratonTableHeader />
             <MaratonTables tabell={tabell} />
             <div ref={bottomRef}></div>

@@ -63,7 +63,7 @@ const Teams = () => {
 
   if (isLoading) {
     return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
         <Spinner />
       </div>
     )
@@ -71,7 +71,7 @@ const Teams = () => {
 
   if (error) {
     return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
         <Spinner />
       </div>
     )
@@ -91,7 +91,7 @@ const Teams = () => {
   }
 
   return (
-    <div className="mx-auto mb-2 min-h-screen max-w-7xl px-1 font-inter text-[#011d29] lg:px-0">
+    <div className="mx-auto mb-2 min-h-screen max-w-7xl px-1 font-inter text-foreground lg:px-0">
       <Form {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} id="search-form">
           <TeamsTabBar
@@ -103,7 +103,7 @@ const Teams = () => {
           {(tab === 'teams' || tab === 'map') && (
             <div className="mt-2 w-full">
               <Input
-                className="w-full border-[#011d29] text-[#011d29] focus:border-[#011d29]"
+                className="w-full border-[#011d29] text-foreground focus:border-[#011d29]"
                 type="text"
                 placeholder="Filter"
                 value={teamFilter}

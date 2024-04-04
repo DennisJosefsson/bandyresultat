@@ -18,7 +18,7 @@ const Map = ({ teams, setSearchParams }: MapProps) => {
   const { open } = useMenuContext()
   const methods = useFormContext()
   return (
-    <div className="mx-auto mb-2 min-h-screen max-w-7xl px-1 font-inter text-[#011d29] lg:px-0">
+    <div className="mx-auto mb-2 min-h-screen max-w-7xl px-1 font-inter text-foreground lg:px-0">
       {!open && (
         <div id="map" className="h-[400px] w-screen max-w-xl p-2">
           <MapContainer

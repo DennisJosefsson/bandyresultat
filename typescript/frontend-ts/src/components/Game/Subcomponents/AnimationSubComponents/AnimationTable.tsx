@@ -125,7 +125,7 @@ const AnimationTable = ({
                 key={`${team.teamId}-${index}`}
                 className={`${
                   serieObject?.serieStructure?.includes(index + 1)
-                    ? 'border-b-2 border-black'
+                    ? 'border-b-2 border-foreground'
                     : null
                 } ${favTeams.includes(team.teamId) ? 'font-bold' : null}`}
               >

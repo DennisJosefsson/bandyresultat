@@ -4,16 +4,19 @@ import kalenderbitare from '../../assets/kalenderbitare.png'
 
 const About = () => {
   return (
-    <div className="mx-auto min-h-screen max-w-7xl px-2 font-inter text-[#011d29] md:px-10 xl:px-0">
+    <div className="prose mx-auto min-h-screen max-w-7xl px-2 text-foreground md:px-10 xl:px-0">
       <div className="flex flex-col justify-start gap-4 [@media(min-width:1000px)]:flex-row [@media(min-width:1000px)px]:justify-between">
         <div className="mx-10 lg:mx-0 lg:w-1/2">
-          <h2 className="mb-2 text-center text-base font-bold md:mb-4 md:text-xl [@media(min-width:1000px)]:text-left">
+          <h2 className="text-foreground [@media(min-width:1000px)]:text-left">
             Om det här projektet
           </h2>
-          <p className="mb-2 text-justify text-sm md:text-base">
+          <p>
             Vi har väl alla någon gång undrat hur det var, den där
-            bandy&shy;vintern
-            <Link to="/season/1969" className="pl-1 font-bold">
+            bandy&shy;vintern{' '}
+            <Link
+              to="/season/1969"
+              className="text-foreground transition-colors hover:text-foreground"
+            >
               1968/69
             </Link>{' '}
             när Katrine&shy;holm vann SM-guld. När de slogs mot
@@ -21,14 +24,14 @@ const About = () => {
             av Värmbol. Kokade Närke och västra Sörmland av bandy&shy;eufori?
             Kunde man gå ut utan att få en tackling av Håkan Spång&shy;berg?
           </p>
-          <p className="mb-2 text-justify text-sm md:text-base">
+          <p>
             Sådant får man inte nödvändigt&shy;vis reda på här. Däremot kan man
             hitta resultaten, och det är just det som är syftet med den här
             sidan. Om du undrar över ett bandy&shy;resultat från förr eller vill
             jämföra två eller kanske fyra klubbar, så är mål&shy;bilden att du
             ska kunna göra det här.
           </p>
-          <p className="mb-2 text-justify text-sm md:text-base">
+          <p>
             Än så länge en målbild, för även om det är ganska så nära när det
             gäller herrarnas högsta serie så har det varit bra mycket
             knepi&shy;gare att hitta gamla res&shy;ultat från damernas matcher
@@ -38,19 +41,19 @@ const About = () => {
             1987/1988. Jag vill också tacka Johan Svedbom, Fredrik Axelsson och
             Stefan Svensson för bidrag till sidan.
           </p>
-          <p className="mb-2 text-justify text-sm md:text-base">
+          <p>
             Vad man däremot inte kommer att hitta är spelar&shy;statistik.
             Tyvärr, för det är något som verk&shy;ligen behövs. Men så länge det
             inte finns något någor&shy;lunda enkelt sätt att samman&shy;ställa
             sådan statistik så får det vänta.
           </p>
-          <p className="mb-2 text-justify text-sm md:text-base">
+          <p>
             Däremot är det inte helt omöjligt att stati&shy;stiken utökas så att
             även lägre divi&shy;sioner ingår, och kanske också Svenska Cupen.
           </p>
         </div>
         <div className="mx-10 lg:mx-0 lg:w-2/5">
-          <p className="mb-2 text-justify text-sm md:text-base [@media(min-width:1000px)]:mt-10">
+          <p className="[@media(min-width:1000px)]:mt-10">
             Jag som står bakom det här heter Dennis Josefsson, och jag kommer
             från Vetlanda. Det hade för&shy;modligen inte blivit något av detta
             om det inte funnits före&shy;gångare som förenklat
@@ -58,7 +61,7 @@ const About = () => {
             närmast på{' '}
             <a
               href="https://web.archive.org/web/20150222174940/http://www.jimbobandy.nu/"
-              className="font-semibold"
+              className="text-foreground transition-colors hover:text-foreground"
               target="_blank"
               rel="noreferrer"
             >
@@ -67,7 +70,7 @@ const About = () => {
             och{' '}
             <a
               href="http://www.bandysidan.nu/"
-              className="font-semibold"
+              className="text-foreground transition-colors hover:text-foreground"
               target="_blank"
               rel="noreferrer"
             >
@@ -76,16 +79,14 @@ const About = () => {
             .
           </p>
           <img src={kalenderbitare} alt="Kalenderbitare" className="mb-6" />
-          <h4 className="mb-2 text-center text-base font-bold md:mb-4 md:text-lg">
-            Det kostar inget att fråga
-          </h4>
-          <p className="mb-2 text-justify text-sm md:text-base">
+          <h4>Det kostar inget att fråga</h4>
+          <p>
             Jag kan inte lova något, men det är ju så att det går att ta reda på
             annan stati&shy;stik än den som pre&shy;senteras här. Så har du en
             speci&shy;fik fråga så är det bara att kon&shy;takta mig, på{' '}
             <a
               href="https://twitter.com/_DennisJ_"
-              className="font-semibold"
+              className="text-foreground transition-colors hover:text-foreground"
               target="_blank"
               rel="noreferrer"
             >
@@ -94,7 +95,7 @@ const About = () => {
             (så länge det finns) eller via{' '}
             <a
               href="mailto:dennis@bandyresultat.se"
-              className="font-semibold"
+              className="text-foreground transition-colors hover:text-foreground"
               target="_blank"
               rel="noreferrer"
             >
@@ -103,7 +104,7 @@ const About = () => {
             . För&shy;modligen är även jag själv intress&shy;erad av svaret, om
             jag bara hade vett att fråga.
           </p>
-          <p className="mb-2 text-justify text-sm md:text-base">
+          <p>
             Vill man ändå bidra med en korv med bröd till nästa bandymatch så
             kan man swisha till 0738137187. Märk kuvertet &quot;bandy, bandy,
             bandy&quot;.

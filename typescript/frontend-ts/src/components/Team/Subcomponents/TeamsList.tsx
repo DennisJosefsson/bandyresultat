@@ -33,7 +33,7 @@ const TeamsList = ({ teams, setSearchParams }: TeamsListProps) => {
                         return (
                           <FormItem
                             key={team.teamId}
-                            className="flex flex-row items-center justify-between space-x-3 space-y-0 rounded bg-white p-2 text-sm md:text-base"
+                            className="flex flex-row items-center justify-between space-x-3 space-y-0 rounded bg-background p-2 text-sm md:text-base"
                           >
                             <span
                               className={

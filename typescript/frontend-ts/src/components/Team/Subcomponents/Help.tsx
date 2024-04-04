@@ -1,4 +1,4 @@
-import { ButtonComponent } from '../../utilitycomponents/Components/ButtonComponents'
+import { Button } from '@/src/@/components/ui/button'
 import { useState } from 'react'
 import TeamsListHelp from './TeamsListHelpModal'
 import CompareHelp from '../../Compare/CompareHelpModal'
@@ -8,14 +8,20 @@ const Help = () => {
   return (
     <div className="mt-2">
       <div className="flex flex-row justify-center gap-2">
-        <ButtonComponent clickFunctions={() => setHelp('list')}>
+        <Button
+          onClick={() => setHelp('list')}
+          variant={help === 'list' ? 'default' : 'outline'}
+        >
           Lista/Karta
-        </ButtonComponent>
-        <ButtonComponent clickFunctions={() => setHelp('compare')}>
+        </Button>
+        <Button
+          onClick={() => setHelp('compare')}
+          variant={help === 'compare' ? 'default' : 'outline'}
+        >
           Jämförelse
-        </ButtonComponent>
+        </Button>
       </div>
-      <div>
+      <div className="flex flex-row justify-center">
         {help == 'list' && <TeamsListHelp />}
         {help == 'compare' && <CompareHelp />}
       </div>

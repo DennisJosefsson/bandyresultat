@@ -30,7 +30,7 @@ const Seasons = () => {
 
   return (
     <div
-      className="mx-auto mb-2 min-h-screen max-w-7xl font-inter text-[#011d29]"
+      className="mx-auto mb-2 min-h-screen max-w-7xl font-inter text-foreground"
       ref={topRef}
     >
       <FilterComponent

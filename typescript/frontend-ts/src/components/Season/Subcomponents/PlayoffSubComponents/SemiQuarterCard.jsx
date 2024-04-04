@@ -9,8 +9,8 @@ const SemiQuarterCard = ({
   favTeams,
 }) => {
   const styleClass = colStarts
-    ? `${colStarts[group.group]} cursor-pointer rounded bg-white p-2 shadow-md`
-    : 'cursor-pointer rounded bg-white p-2 shadow-md md:col-start-4 md:odd:col-start-2'
+    ? `${colStarts[group.group]} cursor-pointer rounded bg-background p-2 shadow-md`
+    : 'cursor-pointer rounded bg-background p-2 shadow-md md:col-start-4 md:odd:col-start-2'
 
   return (
     <div

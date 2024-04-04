@@ -1,6 +1,6 @@
 import { getLogin, logout } from '../requests/login'
 import { SyntheticEvent, useState } from 'react'
-
+import { Button } from '../@/components/ui/button'
 import LoginForm from './LoginForm/LoginForm'
 import useUserContext from '../hooks/contextHooks/useUserContext'
 
@@ -35,23 +35,13 @@ const Footer = () => {
   }
 
   return (
-    <footer className="mt-auto h-[10rem] bg-[#93B8C1] font-inter text-[#011d29]">
+    <footer className="mt-auto h-[10rem] bg-background font-inter text-foreground">
       <div className="mx-auto flex max-w-7xl flex-row justify-end">
         <div className="pt-2">
           {!user ? (
-            <div
-              onClick={() => setShowLoginModal(true)}
-              className="mb-4 mr-2 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mr-0"
-            >
-              Logga in
-            </div>
+            <Button onClick={() => setShowLoginModal(true)}>Logga in</Button>
           ) : (
-            <div
-              onClick={() => loggaUt()}
-              className="mb-4 mr-2 w-[84px] cursor-pointer rounded-md bg-[#011d29] px-1 py-0.5 text-center text-sm text-white lg:mb-6 lg:w-[128px] lg:px-2 lg:py-1 lg:text-lg xl:mr-0"
-            >
-              Logga ut
-            </div>
+            <Button onClick={() => loggaUt()}>Logga ut</Button>
           )}
         </div>
       </div>

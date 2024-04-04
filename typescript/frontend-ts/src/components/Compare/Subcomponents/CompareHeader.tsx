@@ -42,8 +42,8 @@ const Buttons = ({
         <Button onClick={() => navigate(-1)}>Tillbaka</Button>
       )}
       {length > 0 && (
-        <Button onClick={() => copy(compareLink)}>
-          {copiedText ? 'Kopierad!' : `Länk: ${compareLink}`}
+        <Button onClick={() => copy(compareLink)} size="sm">
+          {copiedText ? 'Kopierad!' : `Länk`}
         </Button>
       )}
     </div>
@@ -125,7 +125,7 @@ const CompareHeader = ({
             <div className="w-full">
               <div className="flex flex-row justify-between">
                 <CardTitle className="mb-2">Inbördes möten</CardTitle>
-                {/* <Buttons link={link} origin={origin} length={length} /> */}
+                <Buttons link={link} origin={origin} length={length} />
               </div>
 
               <CardDescription>

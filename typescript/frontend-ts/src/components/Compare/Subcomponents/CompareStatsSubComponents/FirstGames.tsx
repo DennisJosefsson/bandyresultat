@@ -2,6 +2,13 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/sv'
 import { CompareResponseObjectType } from '../../../types/teams/compare'
 import { CompareFormState } from '../../../types/teams/teams'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/src/@/components/ui/card'
 
 dayjs.locale('sv')
 
@@ -16,16 +23,18 @@ const FirstGames = ({ firstGames, compObject }: FirstGamesProps) => {
     : 'Obs! Speldatum 1 januari före 1931 gäller enbart tillsvidare, de betyder att faktiskt datum saknas.'
 
   return (
-    <div className="w-full">
-      <h3 className="text-sm font-semibold md:text-base">Första matcherna</h3>
-      <div className="compareFirstLast mb-3 w-full text-[8px] sm:text-sm">
-        <div>
+    <Card className="mt-2 w-full">
+      <CardHeader>
+        <CardTitle>Första matcherna</CardTitle>
+      </CardHeader>
+      <CardContent className="compareFirstLast w-full text-[8px] sm:text-sm">
+        <div className="mb-2">
           {firstGames.map((game) => {
             return (
               <div key={game.game_id} className="card">
                 <div className="line1">
                   {game.date && (
-                    <span>{dayjs(game.date).format('D MMMM YYYY')}:</span>
+                    <span>{dayjs(game.date).format('D MMMM YYYY')}</span>
                   )}
                 </div>
                 <div className="line2">
@@ -38,11 +47,9 @@ const FirstGames = ({ firstGames, compObject }: FirstGamesProps) => {
             )
           })}
         </div>
-      </div>
-      <p className="my-2 w-full bg-white p-1 text-[8px] font-bold md:text-xs">
-        {janFirstGames}
-      </p>
-    </div>
+        <CardFooter>{janFirstGames}</CardFooter>
+      </CardContent>
+    </Card>
   )
 }
 

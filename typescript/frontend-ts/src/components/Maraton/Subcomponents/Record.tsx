@@ -21,7 +21,7 @@ const Record = () => {
 
   return (
     <div
-      className="mx-auto mt-4 min-h-screen max-w-7xl font-inter text-[#011d29]"
+      className="mx-auto mt-4 min-h-screen max-w-7xl font-inter text-foreground"
       ref={topRef}
     >
       <div className="flex flex-col">

@@ -11,6 +11,7 @@ import { useGetFirstAndLastSeason } from '../../hooks/dataHooks/seasonHooks/useG
 import { inputSeasonId } from '../types/season/seasonId.js'
 import SeasonComponentSwitch from './Subcomponents/SeasonComponentSwitch.js'
 import SeasonTabBar from './Subcomponents/SeasonTabBar.js'
+import { Card, CardContent } from '@/src/@/components/ui/card.js'
 
 const Season = () => {
   const unparsedSeasonId = useParams().seasonId
@@ -21,7 +22,7 @@ const Season = () => {
 
   if (!unparsedSeasonId) {
     return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
         Kolla länken, måste ange säsongsId.
       </div>
     )
@@ -29,7 +30,7 @@ const Season = () => {
   const parsedSeasonId = inputSeasonId.safeParse(unparsedSeasonId)
   if (!parsedSeasonId.success || parsedSeasonId.data > lastSeason) {
     return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-[#011d29]">
+      <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
         Kolla länken, angivna årtalet är felaktigt.
       </div>
     )
@@ -38,21 +39,26 @@ const Season = () => {
   const seasonId = parsedSeasonId.data
 
   return (
-    <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-[#011d29]">
-      <SeasonHeader seasonId={seasonId} women={women} />
-
-      <SeasonTabBar tab={tab} setSearchParams={setSearchParams} />
-      <div>
-        <ErrorBoundary
-          FallbackComponent={ErrorFallback}
-          onError={logError}
-          resetKeys={[tab]}
-        >
-          <SeasonContextProvider seasonId={seasonId}>
-            <SeasonComponentSwitch tab={tab} />
-          </SeasonContextProvider>
-        </ErrorBoundary>
-      </div>
+    <div className="mx-auto mt-2 flex min-h-screen flex-col px-2 font-inter text-foreground">
+      <Card className="mb-2">
+        <CardContent className="mt-2">
+          <SeasonHeader seasonId={seasonId} women={women} tab={tab} />
+          <SeasonTabBar tab={tab} setSearchParams={setSearchParams} />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent className="mt-2">
+          <ErrorBoundary
+            FallbackComponent={ErrorFallback}
+            onError={logError}
+            resetKeys={[tab]}
+          >
+            <SeasonContextProvider seasonId={seasonId}>
+              <SeasonComponentSwitch tab={tab} />
+            </SeasonContextProvider>
+          </ErrorBoundary>
+        </CardContent>
+      </Card>
     </div>
   )
 }

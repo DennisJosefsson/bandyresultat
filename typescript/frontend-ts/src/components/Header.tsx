@@ -1,124 +1,136 @@
 import { Link } from 'react-router-dom'
-
-import useScrollDirection from '../hooks/domHooks/useScrollDirection'
+import { Sheet, SheetTrigger, SheetContent } from '../@/components/ui/sheet'
+import { Button } from '../@/components/ui/button'
+import { Menu } from 'lucide-react'
+import ModeToggle from './utilitycomponents/Components/ModeToggle'
 import useUserContext from '../hooks/contextHooks/useUserContext'
 import useMenuContext from '../hooks/contextHooks/useMenuContext'
 
 const Header = () => {
   const { user } = useUserContext()
   const { open, dispatch } = useMenuContext()
-  const scrollDirection = useScrollDirection()
 
   return (
-    <header
-      className={`sticky ${
-        scrollDirection === 'down' ? '-top-[81px]' : 'top-0'
-      } z-10000 h-[81px] bg-white pt-6 font-poppins text-[#011d29] transition-all duration-500`}
-    >
-      <section className="mx-auto flex max-w-7xl items-center justify-between">
+    <header className="sticky top-0 z-[10000] mb-4 flex h-16 flex-row items-center justify-between gap-4 border-b bg-background px-4 font-poppins text-foreground md:px-6">
+      <div className="flex flex-row gap-8">
         <h1 className="pl-4 text-base font-bold uppercase tracking-[0.2rem] md:text-2xl lg:text-4xl xl:pl-0 ">
           <Link to="/">Bandyresultat</Link>
         </h1>
-        <div>
-          <nav>
-            <div className="lg:hidden">
-              <div
-                className="cursor-pointer pr-4"
+        <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+          <Link
+            to="/seasons"
+            className="text-foreground transition-colors hover:text-foreground"
+          >
+            Säsonger
+          </Link>
+          <Link
+            to="/teams"
+            className="text-foreground transition-colors hover:text-foreground"
+          >
+            Lag
+          </Link>
+          <Link
+            to="/search"
+            className="text-foreground transition-colors hover:text-foreground"
+          >
+            Sök
+          </Link>
+          <Link
+            to="/tables?tab=maraton&table=all"
+            className="text-foreground transition-colors hover:text-foreground"
+          >
+            Maratontabeller
+          </Link>
+          {user && (
+            <Link
+              to="/dashboard"
+              className="text-foreground transition-colors hover:text-foreground"
+            >
+              Dashboard
+            </Link>
+          )}
+          <Link
+            to="/about"
+            className="text-foreground transition-colors hover:text-foreground"
+          >
+            Om sidan
+          </Link>
+        </nav>
+      </div>
+      <div className="flex flex-row gap-2">
+        <Sheet open={open} onOpenChange={() => dispatch({ type: 'TOGGLE' })}>
+          <SheetTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="shrink-0 md:hidden"
+            >
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle navigation menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent>
+            <nav className="grid gap-6 text-lg font-medium">
+              <Link
+                to="/"
+                className="hover:text-foreground"
                 onClick={() => dispatch({ type: 'TOGGLE' })}
               >
-                <svg viewBox="0 0 24 24" width="24" height="24">
-                  <rect width="24" height="4" rx="2" />
-                  <rect y="8" width="24" height="4" rx="2" />
-                  <rect y="16" width="24" height="4" rx="2" />
-                </svg>
-              </div>
-              <div className={open ? 'showMenuNav' : 'hideMenuNav'}>
-                <div
-                  className="absolute right-0 top-0 cursor-pointer px-3 py-4"
-                  onClick={() => dispatch({ type: 'CLOSE' })}
-                >
-                  <svg
-                    className="h-8 w-8 text-[#011d29]"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
-                </div>
-                <ul className="header flex min-h-[250px] flex-col items-center justify-between">
-                  <li onClick={() => dispatch({ type: 'CLOSE' })}>
-                    <Link to="/seasons" className="hover:opacity-90">
-                      Säsonger
-                    </Link>
-                  </li>
-                  <li onClick={() => dispatch({ type: 'CLOSE' })}>
-                    <Link to="/teams" className="hover:opacity-90">
-                      Lag
-                    </Link>
-                  </li>
-                  <li onClick={() => dispatch({ type: 'CLOSE' })}>
-                    <Link to="/search" className="hover:opacity-90">
-                      Sök
-                    </Link>
-                  </li>
-                  <li onClick={() => dispatch({ type: 'CLOSE' })}>
-                    <Link
-                      to="/tables?tab=maraton&table=all"
-                      className="hover:opacity-90"
-                    >
-                      Maratontabeller
-                    </Link>
-                  </li>
-                  {user && (
-                    <li onClick={() => dispatch({ type: 'CLOSE' })}>
-                      <Link to="/dashboard" className="hover:opacity-90">
-                        Dashboard
-                      </Link>
-                    </li>
-                  )}
-                  <li onClick={() => dispatch({ type: 'CLOSE' })}>
-                    <Link to="/about" className="hover:opacity-90">
-                      Om sidan
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="lg: hidden space-x-8 pr-2 text-xl font-bold lg:block xl:pr-0">
-              <Link to="/seasons" className="hover:opacity-90">
+                Hem
+              </Link>
+
+              <Link
+                to="/seasons"
+                className="hover:text-foreground"
+                onClick={() => dispatch({ type: 'TOGGLE' })}
+              >
                 Säsonger
               </Link>
-              <Link to="/teams" className="hover:opacity-90">
+              <Link
+                to="/teams"
+                className="hover:text-foreground"
+                onClick={() => dispatch({ type: 'TOGGLE' })}
+              >
                 Lag
               </Link>
-              <Link to="/search" className="hover:opacity-90">
+              <Link
+                to="/search"
+                className="hover:text-foreground"
+                onClick={() => dispatch({ type: 'TOGGLE' })}
+              >
                 Sök
               </Link>
               <Link
                 to="/tables?tab=maraton&table=all"
-                className="hover:opacity-90"
+                className="hover:text-foreground"
+                onClick={() => dispatch({ type: 'TOGGLE' })}
               >
                 Maratontabeller
               </Link>
               {user && (
-                <Link to="/dashboard" className="hover:opacity-90">
+                <Link
+                  to="/dashboard"
+                  className="hover:text-foreground"
+                  onClick={() => dispatch({ type: 'TOGGLE' })}
+                >
                   Dashboard
                 </Link>
               )}
-              <Link to="/about" className="hover:opacity-90">
+              <Link
+                to="/about"
+                className="hover:text-foreground"
+                onClick={() => dispatch({ type: 'TOGGLE' })}
+              >
                 Om sidan
               </Link>
-            </div>
-          </nav>
+            </nav>
+          </SheetContent>
+        </Sheet>
+        <div>
+          <ModeToggle />
         </div>
-      </section>
-
-      <hr className="mx-auto my-2 h-px border-0 bg-[#011d29] dark:bg-gray-700 xl:w-[1280px]" />
+      </div>
+      {/* <hr className="mx-auto my-2 h-px border-0 bg-[#011d29] dark:bg-gray-700 xl:w-[1280px]" /> */}
     </header>
   )
 }

@@ -18,7 +18,7 @@ const PlayoffSeriesPopup = ({
   showPopup,
 }: PlayoffSeriesPopupProps) => {
   // return (
-  //   <div className="fixed left-1/2 top-1/2 z-50 mx-auto h-auto min-w-[33%] -translate-x-1/2 -translate-y-1/2 justify-center rounded-md border-2 border-[#011d29] bg-white p-8 text-[10px] xs:text-xs md:text-sm">
+  //   <div className="fixed left-1/2 top-1/2 z-50 mx-auto h-auto min-w-[33%] -translate-x-1/2 -translate-y-1/2 justify-center rounded-md border-2 border-[#011d29] bg-background p-8 text-[10px] xs:text-xs md:text-sm">
   //     <div className="mx-auto">
   //       {gameData && (
   //         <div>

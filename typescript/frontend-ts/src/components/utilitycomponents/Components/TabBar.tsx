@@ -35,7 +35,7 @@ export const TabBarDivided = ({
 }) => {
   return (
     <div>
-      <div className="hidden items-center text-sm font-bold xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
+      <div className="hidden items-center xs:mb-2 xs:flex xs:flex-row xs:justify-between xs:gap-1 md:gap-2 md:text-lg">
         <div className="flex flex-row xs:gap-1 md:gap-2">
           {tabBarObject.tabBarArray.map((currTab) => {
             return <div key={currTab.tabName}>{currTab.tab}</div>
@@ -47,7 +47,7 @@ export const TabBarDivided = ({
         </div>
       </div>
       {!onlyDesktop && (
-        <div className="flex flex-row justify-between gap-1  text-sm font-bold xs:mb-2 xs:hidden md:gap-2 md:text-lg">
+        <div className="flex flex-row justify-between gap-1  xs:mb-2 xs:hidden md:gap-2 md:text-lg">
           <div className="flex flex-row xs:gap-1 md:gap-2">
             {tabBarObject.tabBarArray.map((currTab) => {
               return <div key={currTab.tabName}>{currTab.tab}</div>

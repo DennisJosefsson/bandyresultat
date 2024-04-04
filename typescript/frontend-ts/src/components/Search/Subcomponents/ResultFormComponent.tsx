@@ -12,7 +12,7 @@ const operatorSelection = [
 const ResultFormComponent = () => {
   const methods = useFormContext()
   return (
-    <div className="mb-2 flex w-[18rem] flex-col rounded bg-white lg:w-full">
+    <div className="mb-2 flex w-[18rem] flex-col rounded bg-background lg:w-full">
       <div className="w grid grid-cols-1 gap-2 lg:grid-cols-2">
         <div className="flex max-w-[16rem] flex-col lg:col-span-2">
           <InputComponent

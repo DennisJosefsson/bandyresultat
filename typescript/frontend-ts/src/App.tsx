@@ -40,7 +40,7 @@ const App = () => {
   const { user } = useUserContext()
   return (
     <Router>
-      <div className="flex flex-col bg-white text-[#011d29] lg:min-h-screen">
+      <div className="flex flex-col bg-muted/65 text-foreground lg:min-h-screen">
         <Header />
         <main className="mb-4">
           <Routes>

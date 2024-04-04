@@ -91,7 +91,7 @@ export const SearchSelectComponent = ({
                     />
                     <ScrollArea>
                       <CommandEmpty>Inget sådant lag.</CommandEmpty>
-                      <CommandGroup className="max-h-64 overflow-y-scroll bg-white">
+                      <CommandGroup className="max-h-64 overflow-y-scroll bg-background">
                         {selectionArray.map((team) => (
                           <CommandItem
                             value={team.label}

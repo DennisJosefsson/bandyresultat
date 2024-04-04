@@ -32,7 +32,7 @@ const ErrorComponent = ({ errors }: { errors: FieldErrors }) => {
     return null
   }
   return (
-    <div className="mb-2 rounded border-red-700 bg-white p-2 text-sm font-semibold text-red-700 md:text-base">
+    <div className="mb-2 rounded border-red-700 bg-background p-2 text-sm font-semibold text-red-700 md:text-base">
       {Object.keys(errors).map((fieldName) => (
         <ErrorMessage
           errors={errors}
@@ -202,7 +202,7 @@ const GameForm = ({
       <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
         <div className="fixed inset-2 mx-auto my-6 w-auto max-w-3xl overflow-y-auto">
           {/*content*/}
-          <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
+          <div className="relative flex w-full flex-col rounded-lg border-0 bg-background shadow-lg outline-none focus:outline-none">
             {/*header*/}
             <div className="flex items-start justify-between rounded-t border-b border-solid border-slate-200 p-5">
               <h3 className="text-3xl font-semibold">Matchformulär</h3>
@@ -319,7 +319,7 @@ const GameForm = ({
                         <fieldset className="mb-2 grid grid-cols-2 self-start">
                           <div className="mb-1 mr-2 flex items-center">
                             <input
-                              className="content-center border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                              className="content-center border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                               type="radio"
                               value="final"
                               {...register('category')}
@@ -330,7 +330,7 @@ const GameForm = ({
                           </div>
                           <div className="mb-1 mr-2 flex items-center">
                             <input
-                              className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                              className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                               type="radio"
                               value="semi"
                               {...register('category')}
@@ -341,7 +341,7 @@ const GameForm = ({
                           </div>
                           <div className="mb-1 mr-2 flex items-center">
                             <input
-                              className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                              className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                               type="radio"
                               value="quarter"
                               {...register('category')}
@@ -352,7 +352,7 @@ const GameForm = ({
                           </div>
                           <div className="mb-1 mr-2 flex items-center">
                             <input
-                              className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                              className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                               type="radio"
                               value="eight"
                               {...register('category')}
@@ -363,7 +363,7 @@ const GameForm = ({
                           </div>
                           <div className="mb-1 mr-2 flex items-center">
                             <input
-                              className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                              className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                               type="radio"
                               value="regular"
                               {...register('category')}
@@ -374,7 +374,7 @@ const GameForm = ({
                           </div>
                           <div className="mb-1 mr-2 flex items-center">
                             <input
-                              className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                              className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                               type="radio"
                               value="qualification"
                               {...register('category')}
@@ -400,7 +400,7 @@ const GameForm = ({
                                 className="mb-1 mr-2 flex items-center"
                               >
                                 <input
-                                  className="border-[#011d29] text-[#011d29] focus:border-[#011d29] focus:ring-0"
+                                  className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
                                   type="radio"
                                   value={group.value}
                                   {...register('group')}
