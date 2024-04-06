@@ -23,7 +23,10 @@ const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
   const { dispatch, women } = useGenderContext()
   const seasonTabBarObject = {
     gender: (
-      <Button onClick={() => dispatch({ type: 'TOGGLE' })}>
+      <Button
+        onClick={() => dispatch({ type: 'TOGGLE' })}
+        size={matches ? 'default' : 'icon'}
+      >
         {women ? (
           matches ? (
             'Herrar'
@@ -45,6 +48,7 @@ const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
             onClick={() => {
               setSearchParams({ tab: 'games' })
             }}
+            size={matches ? 'default' : 'icon'}
           >
             {matches ? 'Matcher' : <CalendarIcon />}
           </Button>
@@ -59,6 +63,7 @@ const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
             onClick={() => {
               setSearchParams({ tab: 'tables' })
             }}
+            size={matches ? 'default' : 'icon'}
           >
             {matches ? 'Tabell' : <ListIcon />}
           </Button>
@@ -73,6 +78,7 @@ const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
             onClick={() => {
               setSearchParams({ tab: 'playoff' })
             }}
+            size={matches ? 'default' : 'icon'}
           >
             {matches ? 'Slutspel' : <TrophyIcon />}
           </Button>
@@ -87,6 +93,7 @@ const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
             onClick={() => {
               setSearchParams({ tab: 'roundForRound' })
             }}
+            size={matches ? 'default' : 'icon'}
           >
             {matches ? 'Utveckling' : <DevIcon />}
           </Button>
@@ -101,6 +108,7 @@ const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
             onClick={() => {
               setSearchParams({ tab: 'stats' })
             }}
+            size={matches ? 'default' : 'icon'}
           >
             {matches ? 'Statistik' : <StatsIcon />}
           </Button>
@@ -115,6 +123,7 @@ const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
             onClick={() => {
               setSearchParams({ tab: 'map' })
             }}
+            size={matches ? 'default' : 'icon'}
           >
             {matches ? 'Karta' : <MapIcon />}
           </Button>

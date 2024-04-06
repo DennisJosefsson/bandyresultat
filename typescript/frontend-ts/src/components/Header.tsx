@@ -66,7 +66,7 @@ const Header = () => {
               className="shrink-0 md:hidden"
             >
               <Menu className="h-5 w-5" />
-              <span className="sr-only">Toggle navigation menu</span>
+              <span className="sr-only">Öppnar och stänger menyn.</span>
             </Button>
           </SheetTrigger>
           <SheetContent>

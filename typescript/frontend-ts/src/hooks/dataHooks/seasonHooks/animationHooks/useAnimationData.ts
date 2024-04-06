@@ -3,12 +3,15 @@ import { getAnimation } from '../../../../requests/games'
 import { useEffect } from 'react'
 import useGenderContext from '../../../contextHooks/useGenderContext'
 import { SetStateAction, Dispatch } from 'react'
+import { CarouselApi } from '@/src/@/components/ui/carousel'
 
 const useAnimationData = (
   seasonId: number,
   group: string | null,
   setGroup: Dispatch<SetStateAction<string | null>>,
-  setRound: Dispatch<SetStateAction<number[]>>,
+  setRound: Dispatch<SetStateAction<number>>,
+  api: CarouselApi | undefined,
+  dateApi: CarouselApi | undefined,
 ) => {
   const { women } = useGenderContext()
   const { data, isLoading, error, isSuccess } = useQuery(
@@ -25,7 +28,9 @@ const useAnimationData = (
         setGroup(groupArray[0])
       }
     }
-    setRound([0])
+    setRound(0)
+    api?.scrollTo(0)
+    dateApi?.scrollTo(0)
   }, [data, isLoading, error, women, seasonId])
 
   // useEffect(() => {
@@ -38,6 +43,14 @@ const useAnimationData = (
 
   const dateArray = animationObject
     ? animationObject.games.find((item) => item.group === group)?.dates
+    : []
+
+  const justDatesArray = dateArray
+    ? Array.from(dateArray, (item) => {
+        const dateArray = item.date.split('-')
+        const date = `${parseInt(dateArray[2])}/${parseInt(dateArray[1])}`
+        return date
+      })
     : []
 
   const dateArrayLength = dateArray ? dateArray.length : 0
@@ -59,6 +72,7 @@ const useAnimationData = (
     animationObject,
     dateArray,
     dateArrayLength,
+    justDatesArray,
     groupName,
     groupArray,
     seriesArray,

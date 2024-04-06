@@ -1,68 +1,82 @@
 import { Dispatch, SetStateAction } from 'react'
+
 import {
-  LeftArrow,
-  RightArrow,
-} from '../../../utilitycomponents/Components/icons'
-import { Slider } from '@/src/@/components/ui/slider'
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/src/@/components/ui/carousel'
 
 type AnimationClickerProps = {
-  round: number[]
-  setRound: Dispatch<SetStateAction<number[]>>
   groupName: string | undefined
   arrayLength: number
+  justDatesArray: string[]
+  setApi: Dispatch<SetStateAction<CarouselApi>>
+  api: CarouselApi | undefined
+  setDateApi: Dispatch<SetStateAction<CarouselApi>>
 }
 
 const AnimationClicker = ({
-  round,
-  setRound,
   groupName,
   arrayLength,
+  setApi,
+  api,
+  setDateApi,
+  justDatesArray,
 }: AnimationClickerProps) => {
   return (
-    <div className="flex flex-col">
-      {groupName && (
-        <>
-          <div className="mb-2 flex w-full flex-row items-center justify-evenly">
-            <div
-              onClick={() =>
-                round[0] > 0 && setRound((current) => [current[0] - 1])
-              }
-              className={
-                round[0] > 0
-                  ? 'mt-3 w-6 cursor-pointer rounded-md py-3 text-left text-foreground'
-                  : 'mt-3 w-6 cursor-not-allowed rounded-md py-3 text-left text-slate-400'
-              }
-            >
-              <LeftArrow />
-            </div>
-            <div className="mt-3 py-1 text-center font-bold md:text-xl">
-              {groupName}
-            </div>
-            <div
-              onClick={() =>
-                round[0] < arrayLength - 1 &&
-                setRound((current) => [current[0] + 1])
-              }
-              className={
-                round[0] < arrayLength - 1
-                  ? 'mt-3 w-6 cursor-pointer rounded-md py-3 text-right text-foreground'
-                  : 'mt-3 w-6 cursor-not-allowed rounded-md py-3 text-right text-slate-400'
-              }
-            >
-              <RightArrow />
-            </div>
-          </div>
-          <div className="mb-2">
-            <Slider
-              value={round}
-              onValueChange={setRound}
-              max={arrayLength - 1}
-              step={1}
-              className="m-auto w-[55%]"
-            />
-          </div>
-        </>
-      )}
+    <div className="mt-4 flex flex-col gap-4">
+      <div className="flex flex-row items-center justify-center">
+        {groupName && (
+          <Carousel
+            setApi={setApi}
+            className="w-full max-w-sm"
+            opts={{ loop: true, containScroll: 'keepSnaps' }}
+          >
+            <CarouselContent>
+              {Array.from({ length: arrayLength }).map((_, index) => {
+                return (
+                  <CarouselItem>
+                    <div className="flex cursor-pointer flex-row items-center justify-center">
+                      Matchdag {index + 1}
+                    </div>
+                  </CarouselItem>
+                )
+              })}
+            </CarouselContent>
+            <CarouselPrevious className="h-6 w-6" />
+            <CarouselNext className="h-6 w-6" />
+          </Carousel>
+        )}
+      </div>
+      <div className="flex flex-row items-center justify-center">
+        {justDatesArray.length > 0 ? (
+          <Carousel
+            className="w-full max-w-sm"
+            setApi={setDateApi}
+            opts={{ containScroll: 'keepSnaps', dragFree: true, loop: true }}
+          >
+            <CarouselContent>
+              {justDatesArray.map((date, index) => {
+                return (
+                  <CarouselItem key={date} className="basis-1/5">
+                    <div
+                      className="flex cursor-pointer flex-row items-center justify-center text-[8px] md:text-[10px]"
+                      onClick={() => api && api.scrollTo(index)}
+                    >
+                      {date}
+                    </div>
+                  </CarouselItem>
+                )
+              })}
+            </CarouselContent>
+            <CarouselPrevious className="h-6 w-6" />
+            <CarouselNext className="h-6 w-6" />
+          </Carousel>
+        ) : null}
+      </div>
     </div>
   )
 }

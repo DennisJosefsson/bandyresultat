@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Loading,
   DataError,
@@ -13,11 +13,14 @@ import GroupSelector from './AnimationSubComponents/GroupSelector'
 import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
 import useSeasonContext from '../../../hooks/contextHooks/useSeasonContext'
 import useAnimationData from '../../../hooks/dataHooks/seasonHooks/animationHooks/useAnimationData.ts'
+import { CarouselApi } from '@/src/@/components/ui/carousel.tsx'
 
 const Animation = () => {
   const { seasonId } = useSeasonContext()
   const [group, setGroup] = useState<string | null>(null)
-  const [round, setRound] = useState<number[]>([0])
+  const [round, setRound] = useState<number>(0)
+  const [api, setApi] = useState<CarouselApi>()
+  const [dateApi, setDateApi] = useState<CarouselApi>()
 
   const {
     isLoading,
@@ -28,9 +31,19 @@ const Animation = () => {
     dateArray,
     dateArrayLength,
     animationObject,
-  } = useAnimationData(seasonId, group, setGroup, setRound)
+    justDatesArray,
+  } = useAnimationData(seasonId, group, setGroup, setRound, api, dateApi)
 
   const { women } = useGenderContext()
+
+  useEffect(() => {
+    if (!api || !dateApi) return
+    api.on('select', () => {
+      setRound(api.selectedScrollSnap())
+
+      dateApi.scrollTo(api.selectedScrollSnap())
+    })
+  }, [api])
 
   // useEffect(() => {
   //   if (!isLoading && !error && data !== undefined) {
@@ -81,21 +94,25 @@ const Animation = () => {
             setRound={setRound}
             setGroup={setGroup}
             groupName={groupName}
+            api={api}
+            dateApi={dateApi}
           />
         )}
 
         {groupName !== '' && animationObject.games.length > 0 && (
           <div>
             <AnimationClicker
-              round={round}
-              setRound={setRound}
               arrayLength={dateArrayLength}
               groupName={groupName}
+              setApi={setApi}
+              api={api}
+              setDateApi={setDateApi}
+              justDatesArray={justDatesArray}
             />
 
             {dateArray ? (
               <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-8">
-                <AnimationGamesList dateArray={dateArray} round={round[0]} />
+                <AnimationGamesList dateArray={dateArray} round={round} />
                 <AnimationTable
                   dateArray={dateArray}
                   round={round}
