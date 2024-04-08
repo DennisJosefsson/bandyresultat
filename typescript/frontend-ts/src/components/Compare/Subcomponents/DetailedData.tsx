@@ -25,7 +25,9 @@ const DetailedData = ({ categoryData, compObject }: DetailedDataProps) => {
         return (
           <Card key={category.category} className="mb-2">
             <CardHeader>
-              <CardTitle>{groupConstant[category.category]}</CardTitle>
+              <CardTitle className="text-xs md:text-sm">
+                {groupConstant[category.category]}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <Table className="w-full table-fixed">

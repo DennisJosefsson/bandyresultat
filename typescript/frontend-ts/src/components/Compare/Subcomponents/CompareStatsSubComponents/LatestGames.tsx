@@ -17,9 +17,7 @@ const LatestGames = ({ latestGames }: LatestGamesProps) => {
   return (
     <Card className="mt-2 w-full">
       <CardHeader>
-        <CardTitle className="text-sm font-semibold md:text-base">
-          Senaste matcherna
-        </CardTitle>
+        <CardTitle className="text-xs md:text-sm">Senaste matcherna</CardTitle>
       </CardHeader>
       <CardContent className="compareFirstLast mb-3 w-full text-[8px] sm:text-sm">
         <div>

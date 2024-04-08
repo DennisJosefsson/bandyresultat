@@ -32,6 +32,7 @@ const TeamsTabBar = ({ tab, setTab, removeTeamIdParam }: TeamsTabBarProps) => {
           tab !== 'map' && setTab('teams')
           removeTeamIdParam()
         }}
+        size={matches ? 'default' : 'icon'}
       >
         {women ? (
           matches ? (
@@ -53,6 +54,7 @@ const TeamsTabBar = ({ tab, setTab, removeTeamIdParam }: TeamsTabBarProps) => {
           setTab('help')
           removeTeamIdParam()
         }}
+        size={matches ? 'default' : 'icon'}
       >
         {matches ? 'Hjälp' : <QuestionIcon />}
       </Button>
@@ -66,6 +68,7 @@ const TeamsTabBar = ({ tab, setTab, removeTeamIdParam }: TeamsTabBarProps) => {
               setTab('teams')
               removeTeamIdParam()
             }}
+            size={matches ? 'default' : 'icon'}
           >
             {matches ? 'Laglista' : <ListIcon />}
           </Button>
@@ -80,6 +83,7 @@ const TeamsTabBar = ({ tab, setTab, removeTeamIdParam }: TeamsTabBarProps) => {
               setTab('map')
               removeTeamIdParam()
             }}
+            size={matches ? 'default' : 'icon'}
           >
             {matches ? 'Karta' : <MapIcon />}
           </Button>
@@ -94,6 +98,7 @@ const TeamsTabBar = ({ tab, setTab, removeTeamIdParam }: TeamsTabBarProps) => {
               setTab('selection')
               removeTeamIdParam()
             }}
+            size={matches ? 'default' : 'icon'}
           >
             {matches ? 'Sökval' : <SelectionIcon />}
           </Button>
@@ -110,6 +115,7 @@ const TeamsTabBar = ({ tab, setTab, removeTeamIdParam }: TeamsTabBarProps) => {
               setTab('compare')
               removeTeamIdParam()
             }}
+            size={matches ? 'default' : 'icon'}
           >
             {matches ? 'Jämför' : <SearchIcon />}
           </Button>

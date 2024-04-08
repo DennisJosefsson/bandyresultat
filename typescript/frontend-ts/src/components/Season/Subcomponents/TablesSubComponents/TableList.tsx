@@ -18,18 +18,6 @@ const TableList = ({
   seriesInfo,
   homeAwayTitle,
 }: TableListProps) => {
-  // const [width, setWidth] = useState(window.innerWidth)
-  // const [sortColumn, setSortColumn] = useState('tablePointsDesc')
-  // const { favTeams } = useTeampreferenceContext()
-  // const breakpoint = 576
-
-  // useEffect(() => {
-  //   const handleWindowResize = () => setWidth(window.innerWidth)
-  //   window.addEventListener('resize', handleWindowResize)
-
-  //   return () => window.removeEventListener('resize', handleWindowResize)
-  // }, [])
-
   return (
     <div className="mb-6">
       {tableArray.map((group) => {
@@ -39,7 +27,7 @@ const TableList = ({
         if (!serieObject) throw new Error('Missing serieObject')
         const serieName = serieObject.serieName
         const teamObject = group.tables.reduce(
-          (o, key) => ({ ...o, [key.lag.name]: key.team }),
+          (o, key) => ({ ...o, [key.lag.casualName]: key.team }),
           {},
         )
         const serieStructure = serieObject.serieStructure
@@ -50,18 +38,12 @@ const TableList = ({
                 <h2 className="ml-1 text-sm font-bold lg:text-base xl:ml-0 xl:text-xl">
                   Kvalgrupp {homeAwayTitle}
                 </h2>
-                {/* <p className="m-1 text-[8px] sm:text-xs xl:m-0">
-                  Sorteras efter {sortTitles[sortColumn]}
-                </p> */}
               </>
             ) : (
               <>
                 <h2 className="ml-1 text-sm font-bold lg:text-base xl:ml-0 xl:text-xl">
                   {serieName} {homeAwayTitle}
                 </h2>
-                {/* <p className="m-1 text-[8px] sm:text-xs xl:m-0">
-                  Sorteras efter {sortTitles[sortColumn]}
-                </p> */}
               </>
             )}
             <div>

@@ -42,7 +42,11 @@ const Buttons = ({
         <Button onClick={() => navigate(-1)}>Tillbaka</Button>
       )}
       {length > 0 && (
-        <Button onClick={() => copy(compareLink)} size="sm">
+        <Button
+          onClick={() => copy(compareLink)}
+          size="sm"
+          className="truncate text-[8px] sm:text-[10px] lg:text-sm"
+        >
           {copiedText ? 'Kopierad!' : `Länk`}
         </Button>
       )}
@@ -95,7 +99,7 @@ const CompareHeader = ({
       {length === 0 && (
         <CardHeader>
           <div className="flex flex-row justify-between">
-            <CardTitle className="mb-2 w-[90%] text-base font-bold md:text-lg lg:mb-4 xl:w-[36rem]">
+            <CardTitle>
               Lagen har inte mötts {catString} mellan {seasonNames[0].year} och{' '}
               {seasonNames[1].year}.
             </CardTitle>
@@ -128,7 +132,7 @@ const CompareHeader = ({
                 <Buttons link={link} origin={origin} length={length} />
               </div>
 
-              <CardDescription>
+              <CardDescription className="text-[10px] sm:text-sm">
                 Möten mellan {teamString} {catString}{' '}
                 {compObject.startSeason === compObject.endSeason
                   ? `säsongen ${seasonNames[0].year}`

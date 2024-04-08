@@ -25,7 +25,7 @@ const AllData = ({ allData, compObject, sortedData }: AllDataProps) => {
     return (
       <Card className="mb-2">
         <CardHeader>
-          <CardTitle>Sammanlagt</CardTitle>
+          <CardTitle className="text-xs md:text-sm">Sammanlagt</CardTitle>
         </CardHeader>
         <CardContent>
           <Table className="w-full table-fixed">
@@ -43,7 +43,7 @@ const AllData = ({ allData, compObject, sortedData }: AllDataProps) => {
     return (
       <Card className="mb-2">
         <CardHeader>
-          <CardTitle>Sammanlagt</CardTitle>
+          <CardTitle className="text-xs md:text-sm">Sammanlagt</CardTitle>
         </CardHeader>
         <CardContent>
           <Table className="w-full table-fixed">

@@ -8,6 +8,7 @@ export const tableObject = z.object({
   lag: z.object({
     shortName: z.string(),
     name: z.string(),
+    casualName: z.string(),
   }),
   totalGames: z.number(),
   totalWins: z.number(),

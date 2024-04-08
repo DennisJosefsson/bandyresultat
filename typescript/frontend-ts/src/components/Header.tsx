@@ -11,9 +11,9 @@ const Header = () => {
   const { open, dispatch } = useMenuContext()
 
   return (
-    <header className="sticky top-0 z-[10000] mb-4 flex h-16 flex-row items-center justify-between gap-4 border-b bg-background px-4 font-poppins text-foreground md:px-6">
+    <header className="sticky top-0 z-[10000] mb-4 flex h-16 flex-row items-center justify-between gap-4 border-b bg-background px-2 font-poppins text-foreground md:px-6">
       <div className="flex flex-row gap-8">
-        <h1 className="pl-4 text-base font-bold uppercase tracking-[0.2rem] md:text-2xl lg:text-4xl xl:pl-0 ">
+        <h1 className="text-base font-bold uppercase tracking-[0.2rem] md:text-2xl lg:text-4xl xl:pl-0 ">
           <Link to="/">Bandyresultat</Link>
         </h1>
         <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">

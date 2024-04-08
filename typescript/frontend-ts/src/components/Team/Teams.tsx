@@ -14,6 +14,7 @@ import useGenderContext from '../../hooks/contextHooks/useGenderContext'
 //import { CompareFormState } from '../types/teams/teams'
 import { useGetTeamsList } from '@/src/hooks/dataHooks/teamHooks/useGetTeamsList'
 import { Form } from '@/src/@/components/ui/form'
+import { Card, CardContent } from '@/src/@/components/ui/card'
 
 import {
   useCompare,
@@ -94,38 +95,48 @@ const Teams = () => {
     <div className="mx-auto mb-2 min-h-screen max-w-7xl px-1 font-inter text-foreground lg:px-0">
       <Form {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} id="search-form">
-          <TeamsTabBar
-            tab={tab}
-            setTab={setTab}
-            removeTeamIdParam={removeTeamIdParam}
-          />
-
-          {(tab === 'teams' || tab === 'map') && (
-            <div className="mt-2 w-full">
-              <Input
-                className="w-full border-[#011d29] text-foreground focus:border-[#011d29]"
-                type="text"
-                placeholder="Filter"
-                value={teamFilter}
-                name="teamFilter"
-                onChange={(event) =>
-                  setTeamFilter(
-                    event.target.value.replace(/[^a-z0-9\u00C0-\u017F]/gi, ''),
-                  )
-                }
-                onKeyDown={handleKeyDown}
+          <Card className="mb-2 items-center">
+            <CardContent className="p-2 pt-2 md:p-6 md:pt-6">
+              <TeamsTabBar
+                tab={tab}
+                setTab={setTab}
+                removeTeamIdParam={removeTeamIdParam}
               />
-            </div>
-          )}
-          <div>
-            <ErrorBoundary
-              FallbackComponent={ErrorFallback}
-              onError={logError}
-              resetKeys={[tab]}
-            >
-              <TeamsComponentSwitch tab={tab} teamFilter={teamFilter} />
-            </ErrorBoundary>
-          </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent>
+              {(tab === 'teams' || tab === 'map') && (
+                <div className="mt-2 w-full">
+                  <Input
+                    className="w-full border-[#011d29] text-foreground focus:border-[#011d29]"
+                    type="text"
+                    placeholder="Filter"
+                    value={teamFilter}
+                    name="teamFilter"
+                    onChange={(event) =>
+                      setTeamFilter(
+                        event.target.value.replace(
+                          /[^a-z0-9\u00C0-\u017F]/gi,
+                          '',
+                        ),
+                      )
+                    }
+                    onKeyDown={handleKeyDown}
+                  />
+                </div>
+              )}
+              <div>
+                <ErrorBoundary
+                  FallbackComponent={ErrorFallback}
+                  onError={logError}
+                  resetKeys={[tab]}
+                >
+                  <TeamsComponentSwitch tab={tab} teamFilter={teamFilter} />
+                </ErrorBoundary>
+              </div>
+            </CardContent>
+          </Card>
         </form>
       </Form>
     </div>

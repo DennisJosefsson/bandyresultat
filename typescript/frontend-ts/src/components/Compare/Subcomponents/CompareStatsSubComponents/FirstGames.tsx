@@ -25,7 +25,7 @@ const FirstGames = ({ firstGames, compObject }: FirstGamesProps) => {
   return (
     <Card className="mt-2 w-full">
       <CardHeader>
-        <CardTitle>Första matcherna</CardTitle>
+        <CardTitle className="text-xs md:text-sm">Första matcherna</CardTitle>
       </CardHeader>
       <CardContent className="compareFirstLast w-full text-[8px] sm:text-sm">
         <div className="mb-2">

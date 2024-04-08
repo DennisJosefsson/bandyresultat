@@ -16,17 +16,6 @@ const StaticTableList = ({
   seriesInfo,
   serieName,
 }: StaticTableListProps) => {
-  // const [width, setWidth] = useState(window.innerWidth)
-  // const [sortColumn, setSortColumn] = useState<string>('staticPointsDesc')
-  // const breakpoint = 576
-
-  // useEffect(() => {
-  //   const handleWindowResize = () => setWidth(window.innerWidth)
-  //   window.addEventListener('resize', handleWindowResize)
-
-  //   return () => window.removeEventListener('resize', handleWindowResize)
-  // }, [])
-
   const group = tableArray[0]?.group
 
   const serieObject = seriesInfo.find((serie) => serie.serieGroupCode === group)
@@ -43,9 +32,7 @@ const StaticTableList = ({
         <h2 className="text-sm font-bold lg:text-base xl:text-xl">
           {serieName}
         </h2>
-        {/* <p className="m-2 text-[8px] sm:text-xs xl:m-0">
-          Sorteras efter {sortTitles[sortColumn]}
-        </p> */}
+
         <div>
           <DataTable
             columns={columns}

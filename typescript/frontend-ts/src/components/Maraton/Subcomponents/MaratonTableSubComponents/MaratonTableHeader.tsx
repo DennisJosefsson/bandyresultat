@@ -9,6 +9,8 @@ const MaratonTableHeader = () => {
       <div>
         <Button
           variant={selectedTable === 'all' ? 'default' : 'outline'}
+          size="sm"
+          className="truncate text-[8px] sm:text-[10px] lg:text-sm"
           onClick={() => {
             setSearchParams({ tab: 'maraton', table: 'all' })
             setHomeAwayTitle('')
@@ -20,6 +22,8 @@ const MaratonTableHeader = () => {
       <div>
         <Button
           variant={selectedTable === 'home' ? 'default' : 'outline'}
+          size="sm"
+          className="truncate text-[8px] sm:text-[10px] lg:text-sm"
           onClick={() => {
             setSearchParams({ tab: 'maraton', table: 'home' })
             setHomeAwayTitle('Hemma')
@@ -31,6 +35,8 @@ const MaratonTableHeader = () => {
       <div>
         <Button
           variant={selectedTable === 'away' ? 'default' : 'outline'}
+          size="sm"
+          className="truncate text-[8px] sm:text-[10px] lg:text-sm"
           onClick={() => {
             setSearchParams({ tab: 'maraton', table: 'away' })
             setHomeAwayTitle('Borta')

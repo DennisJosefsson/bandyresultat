@@ -25,6 +25,7 @@ const MaratonTabBar = ({ tab, setSearchParams }: MaratonTabBarProps) => {
           dispatch({ type: 'TOGGLE' })
         }}
         variant="default"
+        size={matches ? 'default' : 'icon'}
       >
         {women ? (
           matches ? (
@@ -43,6 +44,7 @@ const MaratonTabBar = ({ tab, setSearchParams }: MaratonTabBarProps) => {
       <Button
         onClick={() => setSearchParams({ tab: 'help' })}
         variant={tab === 'help' ? 'default' : 'outline'}
+        size={matches ? 'default' : 'icon'}
       >
         {matches ? 'Hjälp' : <QuestionIcon />}
       </Button>
@@ -55,6 +57,7 @@ const MaratonTabBar = ({ tab, setSearchParams }: MaratonTabBarProps) => {
             onClick={() => {
               setSearchParams({ tab: 'maraton', table: 'all' })
             }}
+            size={matches ? 'default' : 'icon'}
           >
             {matches ? 'Maratontabeller' : <ListIcon />}
           </Button>
@@ -68,6 +71,7 @@ const MaratonTabBar = ({ tab, setSearchParams }: MaratonTabBarProps) => {
             onClick={() => {
               setSearchParams({ tab: 'records', record: 'generalStats' })
             }}
+            size={matches ? 'default' : 'icon'}
           >
             {matches ? 'Rekord' : <StatsIcon />}
           </Button>

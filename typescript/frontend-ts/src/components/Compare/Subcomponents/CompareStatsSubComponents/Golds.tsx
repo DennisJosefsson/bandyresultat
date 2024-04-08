@@ -13,7 +13,7 @@ const Golds = ({ golds }: GoldsProps) => {
   return (
     <Card className="mt-2 w-full">
       <CardHeader>
-        <CardTitle>SM-Guld</CardTitle>
+        <CardTitle className="text-xs md:text-sm">SM-Guld</CardTitle>
       </CardHeader>
       <CardContent className="compareFirstLast w-full text-[8px] sm:text-sm">
         <div className="mb-2">

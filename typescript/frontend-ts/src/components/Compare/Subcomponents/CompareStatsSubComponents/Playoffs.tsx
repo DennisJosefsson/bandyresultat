@@ -17,7 +17,7 @@ const Playoffs = ({ playoffs, allPlayoffs, compObject }: PlayoffProps) => {
     <>
       <Card className="mt-2 w-full">
         <CardHeader>
-          <CardTitle>Slutspel</CardTitle>
+          <CardTitle className="text-xs md:text-sm">Slutspel</CardTitle>
         </CardHeader>
         <CardContent className="compareFirstLast w-full text-[8px] sm:text-sm">
           <div className="mb-2">
@@ -38,7 +38,9 @@ const Playoffs = ({ playoffs, allPlayoffs, compObject }: PlayoffProps) => {
         <>
           <Card className="mt-2 w-full">
             <CardHeader>
-              <CardTitle>Slutspel sedan 1931</CardTitle>
+              <CardTitle className="text-xs md:text-sm">
+                Slutspel sedan 1931
+              </CardTitle>
             </CardHeader>
             <CardContent className="compareFirstLast w-full text-[8px] sm:text-sm">
               <div className="mb-2">

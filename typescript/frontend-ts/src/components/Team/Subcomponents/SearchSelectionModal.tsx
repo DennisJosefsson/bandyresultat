@@ -22,7 +22,7 @@ const SearchSelection = () => {
 
   return (
     <>
-      <div className="mx-2 font-inter text-foreground xl:mx-0">
+      <div className="m-2 font-inter text-foreground xl:mx-0">
         {!open && (
           <div className="text-left">
             <CheckboxComponent

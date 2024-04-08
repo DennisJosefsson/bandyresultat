@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   ColumnDef,
   flexRender,
@@ -16,6 +16,9 @@ import {
   TableRow,
 } from '@/src/@/components/ui/table'
 import useTeampreferenceContext from '@/src/hooks/contextHooks/useTeampreferenceContext'
+import { useMediaQuery } from 'usehooks-ts'
+
+import { showColumns, hideColumns } from './columns'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -30,7 +33,9 @@ const DataTable = <TData, TValue>({
   data,
   teamObject,
 }: DataTableProps<TData, TValue>) => {
+  const matches = useMediaQuery('(min-width: 640px)')
   const [sorting, setSorting] = useState<SortingState>([])
+  const [columnVisibility, setColumnVisibility] = useState({})
   const table = useReactTable({
     data,
     columns,
@@ -39,10 +44,18 @@ const DataTable = <TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     state: {
       sorting,
+      columnVisibility,
     },
+    onColumnVisibilityChange: setColumnVisibility,
   })
 
   const { favTeams } = useTeampreferenceContext()
+
+  useEffect(() => {
+    matches
+      ? setColumnVisibility(showColumns)
+      : setColumnVisibility(hideColumns)
+  }, [matches])
 
   const getString = (x: unknown): string => {
     if (!x) throw new Error('Missing string')
@@ -52,14 +65,17 @@ const DataTable = <TData, TValue>({
 
   return (
     <div>
-      <Table>
+      <Table className="container text-[8px] sm:text-[10px] lg:text-sm">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               <TableHead key={'position'}>P</TableHead>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className={`px-0 py-1 max-w-[${header.column.getSize()}px]`}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -81,7 +97,7 @@ const DataTable = <TData, TValue>({
                 data-state={row.getIsSelected() && 'selected'}
                 className={`${
                   favTeams.includes(
-                    teamObject[getString(row.getValue('lag_name'))],
+                    teamObject[getString(row.getValue('lag_casualName'))],
                   )
                     ? 'font-bold'
                     : null
@@ -90,7 +106,10 @@ const DataTable = <TData, TValue>({
                 <TableCell key={`index-${index}`}>{index + 1}</TableCell>
                 {row.getVisibleCells().map((cell) => {
                   return (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className={`px-0 py-1 max-w-[${cell.column.getSize()}px]`}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
