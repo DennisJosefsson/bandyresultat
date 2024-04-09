@@ -83,7 +83,7 @@ export const teamAndSeasonAttributes = z.object({
   }),
 })
 
-type StreakType = {
+export type StreakType = {
   team: number
   name: string
   game_count: number

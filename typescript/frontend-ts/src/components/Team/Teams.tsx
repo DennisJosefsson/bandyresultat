@@ -92,7 +92,7 @@ const Teams = () => {
   }
 
   return (
-    <div className="mx-auto mb-2 min-h-screen max-w-7xl px-1 font-inter text-foreground lg:px-0">
+    <div className="mx-auto mb-2 min-h-screen px-1 font-inter text-foreground">
       <Form {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)} id="search-form">
           <Card className="mb-2 items-center">

@@ -1,22 +1,50 @@
 import TeamSeasonCuriosities from './CuriositiesSubComponents/TeamSeasonCuriosities'
-import UnbeatenStreak from './CuriositiesSubComponents/UnbeatenStreak'
-import WinStreak from './CuriositiesSubComponents/WinStreak'
-import DrawStreak from './CuriositiesSubComponents/DrawStreak'
-import LosingStreak from './CuriositiesSubComponents/LosingStreak'
-import NoWinStreak from './CuriositiesSubComponents/NoWinStreak'
+
 import { SingleTeam } from '../../../types/teams/teams'
+import StreakComponent from './CuriositiesSubComponents/StreakComponent'
 const TeamCuriosities = ({ team }: { team: SingleTeam }) => {
   return (
     <div>
-      <h2 className="text-sm font-bold xs:text-base md:text-xl lg:text-right">
-        Kuriosa
-      </h2>
       <TeamSeasonCuriosities team={team} />
-      <UnbeatenStreak team={team} />
-      <WinStreak team={team} />
-      <DrawStreak team={team} />
-      <LosingStreak team={team} />
-      <NoWinStreak team={team} />
+      <div className="grid grid-cols-1 gap-1 lg:grid-cols-2 lg:gap-2">
+        <StreakComponent>
+          <StreakComponent.Title>Obesegrade</StreakComponent.Title>
+          <StreakComponent.Content
+            streak={team.unbeatenStreak}
+            limit={5}
+          ></StreakComponent.Content>
+        </StreakComponent>
+        <StreakComponent>
+          <StreakComponent.Title>Vinster i rad</StreakComponent.Title>
+          <StreakComponent.Content
+            streak={team.winStreak}
+            limit={5}
+          ></StreakComponent.Content>
+        </StreakComponent>
+        <StreakComponent>
+          <StreakComponent.Title>Oavgjorda</StreakComponent.Title>
+          <StreakComponent.Content
+            streak={team.drawStreak}
+            limit={2}
+          ></StreakComponent.Content>
+        </StreakComponent>
+        <StreakComponent>
+          <StreakComponent.Title>Förluster</StreakComponent.Title>
+          <StreakComponent.Content
+            streak={team.losingStreak}
+            limit={5}
+          ></StreakComponent.Content>
+        </StreakComponent>
+        <StreakComponent>
+          <StreakComponent.Title>
+            Matcher i rad utan vinst
+          </StreakComponent.Title>
+          <StreakComponent.Content
+            streak={team.noWinStreak}
+            limit={5}
+          ></StreakComponent.Content>
+        </StreakComponent>
+      </div>
     </div>
   )
 }

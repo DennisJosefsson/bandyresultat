@@ -39,14 +39,12 @@ const Buttons = ({
   return (
     <div className="mb-2 flex flex-col-reverse justify-end gap-2 xl:mb-6 xl:flex-row xl:justify-end">
       {origin === 'gamesList' && (
-        <Button onClick={() => navigate(-1)}>Tillbaka</Button>
+        <Button onClick={() => navigate(-1)} size="sm">
+          Tillbaka
+        </Button>
       )}
       {length > 0 && (
-        <Button
-          onClick={() => copy(compareLink)}
-          size="sm"
-          className="truncate text-[8px] sm:text-[10px] lg:text-sm"
-        >
+        <Button onClick={() => copy(compareLink)} size="sm">
           {copiedText ? 'Kopierad!' : `Länk`}
         </Button>
       )}

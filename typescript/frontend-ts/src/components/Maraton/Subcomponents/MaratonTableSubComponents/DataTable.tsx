@@ -72,10 +72,7 @@ const DataTable = <TData, TValue>({
               <TableHead key={'position'}>P</TableHead>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead
-                    key={header.id}
-                    className={`px-0 py-1 max-w-[${header.column.getSize()}px]`}
-                  >
+                  <TableHead key={header.id} className="px-0 py-1">
                     {header.isPlaceholder
                       ? null
                       : flexRender(

@@ -262,7 +262,7 @@
   }
 
   .teamCurCard {
-    @apply m-1 mb-2 flex flex-col rounded  p-1 text-[10px] xxs:text-xs md:p-2 md:text-sm lg:mr-0;
+    @apply m-1 mb-2 flex flex-col rounded bg-muted-foreground/20 p-1 text-[10px] xxs:text-xs md:p-2 lg:mr-0 lg:text-sm;
   }
 
   .teamCurCard .curCard1st {

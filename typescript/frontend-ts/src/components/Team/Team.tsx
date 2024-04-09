@@ -7,6 +7,13 @@ import TeamTable from './Subcomponents/TeamInfoSubComponents/TeamTable'
 import TeamCuriosities from './Subcomponents/TeamInfoSubComponents/TeamCuriosities'
 import TeamHeader from './Subcomponents/TeamInfoSubComponents/TeamHeader'
 import TeamFiveSeasonsTables from './Subcomponents/TeamInfoSubComponents/TeamFiveSeasons'
+import { CardContent } from '@/src/@/components/ui/card'
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from '@/src/@/components/ui/tabs'
 
 const Team = ({ teamId }: { teamId: number }) => {
   useEffect(() => {
@@ -47,38 +54,43 @@ const Team = ({ teamId }: { teamId: number }) => {
   return (
     <>
       {team && (
-        <div className="mx-auto mt-2 flex min-h-screen max-w-7xl flex-col font-inter text-foreground">
+        <div className="mx-auto mt-2 flex min-h-screen flex-col font-inter text-foreground">
           <TeamHeader team={team} teamId={teamId} />
-          <div className="mx-2 flex flex-col-reverse justify-between lg:flex-row-reverse xl:mx-0">
-            <div className="max-w-[30rem]">
-              <TeamCuriosities team={team} />
-            </div>
-            <div>
-              <h2 className="ml-0 text-base font-bold md:text-xl">Tabeller</h2>
-              <TeamTable tabeller={team.tabeller} />
-              {team.tabeller.length === 0 && (
-                <h2 className="mb-2 ml-0 text-base font-bold md:text-xl">
-                  Tyvärr saknas tabelldata
-                </h2>
-              )}
-              {team.tabeller.length > 0 && (
-                <>
-                  <h2 className="ml-0 text-base font-bold md:text-xl">
-                    Tabeller
-                  </h2>
-                  <TeamTable tabeller={team.tabeller} />
-                </>
-              )}
-              {team.sortedFiveSeasons.length > 1 && (
-                <>
+          <CardContent>
+            <Tabs defaultValue="tables">
+              <TabsList>
+                <TabsTrigger value="tables">Tabeller</TabsTrigger>
+                <TabsTrigger value="fiveSeasons">
+                  Senaste säsongerna
+                </TabsTrigger>
+                <TabsTrigger value="stats">Statistik</TabsTrigger>
+              </TabsList>
+              <TabsContent value="tables">
+                {team.tabeller.length === 0 && (
                   <h2 className="mb-2 ml-0 text-base font-bold md:text-xl">
-                    Senaste säsongerna
+                    Tyvärr saknas tabelldata
                   </h2>
-                  <TeamFiveSeasonsTables tableArray={team.sortedFiveSeasons} />
-                </>
-              )}
-            </div>
-          </div>
+                )}
+                {team.tabeller.length > 0 && (
+                  <>
+                    <TeamTable tabeller={team.tabeller} />
+                  </>
+                )}
+              </TabsContent>
+              <TabsContent value="fiveSeasons">
+                {team.sortedFiveSeasons.length > 1 && (
+                  <>
+                    <TeamFiveSeasonsTables
+                      tableArray={team.sortedFiveSeasons}
+                    />
+                  </>
+                )}
+              </TabsContent>
+              <TabsContent value="stats">
+                <TeamCuriosities team={team} />
+              </TabsContent>
+            </Tabs>
+          </CardContent>
         </div>
       )}
     </>

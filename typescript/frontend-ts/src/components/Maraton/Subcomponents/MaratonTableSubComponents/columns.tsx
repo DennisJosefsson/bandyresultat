@@ -42,7 +42,6 @@ export const columns: ColumnDef<MaratonTabell>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           size="icon"
-          className="text-[8px] sm:text-[10px] lg:text-sm"
         >
           M
           {column.getIsSorted() === 'desc' ? (
@@ -60,7 +59,6 @@ export const columns: ColumnDef<MaratonTabell>[] = [
         {row.getValue('totalGames')}
       </div>
     ),
-    maxSize: 16,
   },
   {
     accessorKey: 'totalWins',
@@ -70,7 +68,6 @@ export const columns: ColumnDef<MaratonTabell>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           size="icon"
-          className="text-[8px] sm:text-[10px] lg:text-sm"
         >
           V
           {column.getIsSorted() === 'desc' ? (
@@ -88,7 +85,6 @@ export const columns: ColumnDef<MaratonTabell>[] = [
         {row.getValue('totalWins')}
       </div>
     ),
-    maxSize: 16,
   },
   {
     accessorKey: 'totalDraws',
@@ -98,7 +94,6 @@ export const columns: ColumnDef<MaratonTabell>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           size="icon"
-          className="text-[8px] sm:text-[10px] lg:text-sm"
         >
           O
           {column.getIsSorted() === 'desc' ? (
@@ -116,7 +111,6 @@ export const columns: ColumnDef<MaratonTabell>[] = [
         {row.getValue('totalDraws')}
       </div>
     ),
-    maxSize: 16,
   },
   {
     accessorKey: 'totalLost',
@@ -126,7 +120,6 @@ export const columns: ColumnDef<MaratonTabell>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           size="icon"
-          className="text-[8px] sm:text-[10px] lg:text-sm"
         >
           F
           {column.getIsSorted() === 'desc' ? (
@@ -144,7 +137,6 @@ export const columns: ColumnDef<MaratonTabell>[] = [
         {row.getValue('totalLost')}
       </div>
     ),
-    maxSize: 16,
   },
   {
     accessorKey: 'totalGoalsScored',
@@ -154,9 +146,8 @@ export const columns: ColumnDef<MaratonTabell>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           size="icon"
-          className="text-[8px] sm:text-[10px] lg:text-sm"
         >
-          GM
+          G
           {column.getIsSorted() === 'desc' ? (
             <ArrowDownIcon className="ml-2 h-4 w-4" />
           ) : column.getIsSorted() === 'asc' ? (
@@ -172,7 +163,6 @@ export const columns: ColumnDef<MaratonTabell>[] = [
         {row.getValue('totalGoalsScored')}
       </div>
     ),
-    maxSize: 16,
   },
   {
     accessorKey: 'totalGoalsConceded',
@@ -182,9 +172,8 @@ export const columns: ColumnDef<MaratonTabell>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           size="icon"
-          className="text-[8px] sm:text-[10px] lg:text-sm"
         >
-          IM
+          I
           {column.getIsSorted() === 'desc' ? (
             <ArrowDownIcon className="ml-2 h-4 w-4" />
           ) : column.getIsSorted() === 'asc' ? (
@@ -200,7 +189,6 @@ export const columns: ColumnDef<MaratonTabell>[] = [
         {row.getValue('totalGoalsConceded')}
       </div>
     ),
-    maxSize: 16,
   },
   {
     accessorKey: 'totalGoalDifference',
@@ -210,9 +198,8 @@ export const columns: ColumnDef<MaratonTabell>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           size="icon"
-          className="text-[8px] sm:text-[10px] lg:text-sm"
         >
-          MS
+          S
           {column.getIsSorted() === 'desc' ? (
             <ArrowDownIcon className="ml-2 h-4 w-4" />
           ) : column.getIsSorted() === 'asc' ? (
@@ -228,7 +215,6 @@ export const columns: ColumnDef<MaratonTabell>[] = [
         {row.getValue('totalGoalDifference')}
       </div>
     ),
-    maxSize: 16,
   },
   {
     accessorKey: 'totalPoints',
@@ -238,7 +224,6 @@ export const columns: ColumnDef<MaratonTabell>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           size="icon"
-          className="text-[8px] sm:text-[10px] lg:text-sm"
         >
           P
           {column.getIsSorted() === 'desc' ? (
@@ -256,6 +241,5 @@ export const columns: ColumnDef<MaratonTabell>[] = [
         {row.getValue('totalPoints')}
       </div>
     ),
-    maxSize: 16,
   },
 ]

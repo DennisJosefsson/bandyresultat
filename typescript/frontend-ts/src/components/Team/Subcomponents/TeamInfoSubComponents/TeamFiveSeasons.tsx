@@ -22,10 +22,7 @@ const TeamFiveSeasonsTables = ({ tableArray }: TeamFiveSeasonsTablesProps) => {
       {tableArray.sort(sortedSeasons).map((season) => {
         return (
           <div key={season.season}>
-            <h2 className="text-sm font-bold xs:text-base md:text-lg">
-              {season.season}
-            </h2>
-            <TeamTable tabeller={season.tables} />
+            <TeamTable tabeller={season.tables} season={season.season} />
           </div>
         )
       })}
