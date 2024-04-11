@@ -451,23 +451,44 @@ where team = $teamId and "category" = any(array['quarter', 'semi', 'final']) and
     fiveSeasonsLeagueTable.parse(latestFiveSeasons)
   )
 
-  if (!team) {
-    throw new Error('No such team in the database')
-  } else {
-    res.json({
-      team,
-      tabeller,
-      noWinStreak,
-      unbeatenStreak,
-      winStreak,
-      drawStreak,
-      losingStreak,
-      finalsAndWins,
-      playoffStreak,
-      playoffCount,
-      sortedFiveSeasons,
-    })
-  }
+  const womensTeam = team.get().women ? true : false
+
+  const chartData = await sequelize.query(
+    `with filtered_seasons as (select * from seasons where women = $womensTeam),
+season_data as (select f.season_id as "seasonId", f."year", t.teamseason_id as "teamseasonId", t.qualification, t.neg_qualification as "negQualification",t.promoted,t.relegated,t."position",t.points, t.playoff, t.eight,t.quarter,t.semi ,t."final",t.gold  from filtered_seasons f
+full outer join teamseasons t on (t.season_id = f.season_id and t.team_id = $teamId) 
+order by f.season_id asc
+limit (select count(*) from filtered_seasons))
+select * from season_data
+where "seasonId" >= (
+	select "seasonId" from season_data where "teamseasonId" is not null
+	order by "seasonId" asc 
+	limit 1
+) and "seasonId" <= (
+	select "seasonId" from season_data where "teamseasonId" is not null
+	order by "seasonId" desc 
+	limit 1
+);`,
+    {
+      bind: { teamId: teamId, womensTeam: womensTeam },
+      type: QueryTypes.SELECT,
+    }
+  )
+
+  res.json({
+    team,
+    tabeller,
+    noWinStreak,
+    unbeatenStreak,
+    winStreak,
+    drawStreak,
+    losingStreak,
+    finalsAndWins,
+    playoffStreak,
+    playoffCount,
+    sortedFiveSeasons,
+    chartData,
+  })
 }) as RequestHandler)
 
 export default singleTeamRouter

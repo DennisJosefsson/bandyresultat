@@ -19,6 +19,17 @@ export const teamSeasonAttributes = z.object({
   tableId: z.number().nullable().optional(),
   women: z.boolean(),
   qualification: z.boolean(),
+  negQualification: z.boolean().optional(),
+  promoted: z.boolean().optional(),
+  relegated: z.boolean().optional(),
+  position: z.number().optional(),
+  points: z.number().optional(),
+  playoff: z.boolean().optional(),
+  eight: z.boolean().optional(),
+  quarter: z.boolean().optional(),
+  semi: z.boolean().optional(),
+  final: z.boolean().optional(),
+  gold: z.boolean().optional(),
 })
 
 const teamSeasonInput = teamSeasonAttributes.omit({ teamseasonId: true })
@@ -56,7 +67,49 @@ class TeamSeason extends Model<TeamSeasonAttributes, TeamSeasonInput> {
 
   @Default(false)
   @Column
-  declare qualification: boolean
+  declare qualification?: boolean
+
+  @Default(false)
+  @Column
+  declare negQualification?: boolean
+
+  @Default(false)
+  @Column
+  declare relegated?: boolean
+
+  @Default(false)
+  @Column
+  declare promoted?: boolean
+
+  @Default(false)
+  @Column
+  declare playoff?: boolean
+
+  @Default(false)
+  @Column
+  declare eight?: boolean
+
+  @Default(false)
+  @Column
+  declare quarter?: boolean
+
+  @Default(false)
+  @Column
+  declare semi?: boolean
+
+  @Default(false)
+  @Column
+  declare final?: boolean
+
+  @Default(false)
+  @Column
+  declare gold?: boolean
+
+  @Column
+  declare position?: number
+
+  @Column
+  declare points?: number
 }
 
 export default TeamSeason
