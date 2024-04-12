@@ -17,14 +17,11 @@ import {
 import { SingleSeasonTableObjectType } from '../../../types/tables/tables'
 import { GameObjectType } from '../../../types/games/games'
 import useTeampreferenceContext from '../../../../hooks/contextHooks/useTeampreferenceContext'
-import { Dispatch, SetStateAction } from 'react'
 
 type SeasonPlayoffTablesProps = {
   tables: SingleSeasonTableObjectType[]
   playoffGames: GameObjectType[]
   final: GameObjectType[]
-  setGameData: Dispatch<SetStateAction<GameObjectType[] | null>>
-  setShowPopup: Dispatch<SetStateAction<boolean>>
   women: boolean
   seasonId: number
 }
@@ -33,8 +30,6 @@ const SeasonPlayoffTables = ({
   tables,
   playoffGames,
   final,
-  setGameData,
-  setShowPopup,
   women,
   seasonId,
 }: SeasonPlayoffTablesProps) => {
@@ -104,8 +99,6 @@ const SeasonPlayoffTables = ({
                     group={group}
                     colStarts={semiColStarts}
                     playoffGames={playoffGames}
-                    setShowPopup={setShowPopup}
-                    setGameData={setGameData}
                     favTeams={favTeams}
                     tables={semiTables}
                   />
@@ -136,8 +129,6 @@ const SeasonPlayoffTables = ({
                   group={group}
                   colStarts={quarterColStarts}
                   playoffGames={playoffGames}
-                  setShowPopup={setShowPopup}
-                  setGameData={setGameData}
                   favTeams={favTeams}
                   tables={quarterTables}
                 />
@@ -155,8 +146,6 @@ const SeasonPlayoffTables = ({
                   group={group}
                   colStarts={quarterColStartsTwoQuarter}
                   playoffGames={playoffGames}
-                  setShowPopup={setShowPopup}
-                  setGameData={setGameData}
                   favTeams={favTeams}
                   tables={quarterTables}
                 />
@@ -186,8 +175,6 @@ const SeasonPlayoffTables = ({
                   group={group}
                   colStarts={eightColStarts}
                   playoffGames={playoffGames}
-                  setShowPopup={setShowPopup}
-                  setGameData={setGameData}
                   favTeams={favTeams}
                   tables={eightTables}
                 />
@@ -204,8 +191,6 @@ const SeasonPlayoffTables = ({
                   group={group}
                   colStarts={eightColStartsFourTeams}
                   playoffGames={playoffGames}
-                  setShowPopup={setShowPopup}
-                  setGameData={setGameData}
                   favTeams={favTeams}
                   tables={eightTables}
                 />

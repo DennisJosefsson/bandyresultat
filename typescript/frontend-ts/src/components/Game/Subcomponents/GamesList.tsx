@@ -1,7 +1,5 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react'
 import { Link } from 'react-router-dom'
-import dayjs from 'dayjs'
-import 'dayjs/locale/sv'
 import useUserContext from '../../../hooks/contextHooks/useUserContext'
 import useTeampreferenceContext from '../../../hooks/contextHooks/useTeampreferenceContext'
 import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
@@ -10,8 +8,7 @@ import { SortedGamesType } from '../../utilitycomponents/functions/sortFunction'
 import { SerieAttributes } from '../../types/series/series'
 import { Button } from '@/src/@/components/ui/button'
 import { PlusIcon } from '@radix-ui/react-icons'
-
-dayjs.locale('sv')
+import Date from '../../utilitycomponents/Components/Date'
 
 type GameListProps = {
   gamesArray: SortedGamesType
@@ -80,7 +77,7 @@ const GamesList = ({
                     <div key={`${date.date}-${Math.random()}`}>
                       {date.date !== 'null' && (
                         <h3 className="text-[0.75rem] md:text-sm">
-                          {dayjs(date.date).format('D MMMM YYYY')}
+                          <Date>{date.date}</Date>
                         </h3>
                       )}
                       <div className="w-full">

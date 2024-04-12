@@ -60,6 +60,17 @@ export const teamSeasonAttributes = z.object({
   tableId: z.number().nullable().optional(),
   women: z.boolean(),
   qualification: z.boolean(),
+  negQualification: z.boolean().nullable().optional(),
+  promoted: z.boolean().nullable().optional(),
+  relegated: z.boolean().nullable().optional(),
+  position: z.number().nullable().optional(),
+  points: z.number().nullable().optional(),
+  playoff: z.boolean().nullable().optional(),
+  eight: z.boolean().nullable().optional(),
+  quarter: z.boolean().nullable().optional(),
+  semi: z.boolean().nullable().optional(),
+  final: z.boolean().nullable().optional(),
+  gold: z.boolean().nullable().optional(),
 })
 
 export const teamAndSeasonAttributes = z.object({
@@ -73,24 +84,39 @@ export const teamAndSeasonAttributes = z.object({
   long: z.number().optional().nullable(),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
-  teamseason: z.object({
-    teamseasonId: z.number(),
-    seasonId: z.number(),
-    teamId: z.number(),
-    tableId: z.number().nullable().optional(),
-    women: z.boolean(),
-    qualification: z.boolean(),
-  }),
+  teamseason: teamSeasonAttributes,
 })
 
-export type StreakType = {
-  team: number
-  name: string
-  game_count: number
-  start_date: string
-  end_date: string
-  women: boolean
-}
+export const streakType = z.object({
+  team: z.number(),
+  name: z.string(),
+  game_count: z.number(),
+  start_date: z.string(),
+  end_date: z.string(),
+  women: z.boolean(),
+})
+
+export type StreakType = z.infer<typeof streakType>
+
+export const teamChartType = z.object({
+  seasonId: z.number(),
+  year: z.string(),
+  teamseasonId: z.number(),
+  qualification: z.boolean().nullable(),
+  negQualification: z.boolean().nullable(),
+  promoted: z.boolean().nullable(),
+  relegated: z.boolean().nullable(),
+  position: z.number().nullable(),
+  points: z.number().nullable(),
+  playoff: z.boolean().nullable(),
+  eight: z.boolean().nullable(),
+  quarter: z.boolean().nullable(),
+  semi: z.boolean().nullable(),
+  final: z.boolean().nullable(),
+  gold: z.boolean().nullable(),
+})
+
+export type TeamChartType = z.infer<typeof teamChartType>
 
 export type TeamAttributes = z.infer<typeof teamAttributes>
 export type TeamSeasonAttributes = z.infer<typeof teamSeasonAttributes>
@@ -113,4 +139,5 @@ export type SingleTeam = {
     end_year: string
   }[]
   playoffCount: { playoff_count: string }[]
+  chartData: TeamChartType[]
 }

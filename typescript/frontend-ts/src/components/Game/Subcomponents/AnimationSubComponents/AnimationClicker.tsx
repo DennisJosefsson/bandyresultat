@@ -38,7 +38,7 @@ const AnimationClicker = ({
             <CarouselContent>
               {Array.from({ length: arrayLength }).map((_, index) => {
                 return (
-                  <CarouselItem>
+                  <CarouselItem key={index}>
                     <div className="flex cursor-pointer flex-row items-center justify-center">
                       Matchdag {index + 1}
                     </div>

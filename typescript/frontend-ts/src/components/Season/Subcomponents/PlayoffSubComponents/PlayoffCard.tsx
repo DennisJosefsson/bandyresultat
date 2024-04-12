@@ -9,10 +9,8 @@ import { Dialog, DialogContent } from '@/src/@/components/ui/dialog'
 import useTeampreferenceContext from '@/src/hooks/contextHooks/useTeampreferenceContext'
 import { ReactNode, useState } from 'react'
 import { GameObjectType } from '@/src/components/types/games/games'
-import dayjs from 'dayjs'
-import 'dayjs/locale/sv'
 import { DialogTrigger } from '@radix-ui/react-dialog'
-dayjs.locale('sv')
+import Date from '@/src/components/utilitycomponents/Components/Date'
 
 const PlayoffCard = ({
   styleClass = '',
@@ -43,11 +41,7 @@ const PlayoffCard = ({
               {playoffGames.map((game, index) => (
                 <div key={`${game.date}-${index}`} className="flex flex-col">
                   <div>
-                    {game.date !== null && (
-                      <span className="font-bold">
-                        {dayjs(game.date).format('D MMMM YYYY')}:
-                      </span>
-                    )}
+                    <Date className="font-bold">{game.date}</Date>
                   </div>
                   <div>
                     <span> {game.homeTeam.casualName}</span>-

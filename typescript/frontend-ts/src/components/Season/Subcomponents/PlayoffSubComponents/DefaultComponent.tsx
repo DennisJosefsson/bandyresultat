@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react'
 import { GameObjectType } from '../../../types/games/games'
 import { groupConstant } from '../../../utilitycomponents/functions/constants'
 import { TableObjectType } from '../../../types/tables/tables'
@@ -25,8 +24,6 @@ type TableType = {
 type DefaultComponentProps = {
   group: GroupType
   colStarts: ColstartsType
-  setGameData: Dispatch<SetStateAction<GameObjectType[] | null>>
-  setShowPopup: Dispatch<SetStateAction<boolean>>
   playoffGames: GameObjectType[]
   favTeams: number[]
   tables: TableType[]

@@ -1,7 +1,4 @@
-import dayjs from 'dayjs'
-import 'dayjs/locale/sv'
-
-dayjs.locale('sv')
+import Date from '@/src/components/utilitycomponents/Components/Date'
 
 type MaxDiffType = {
   home_name: string
@@ -40,7 +37,7 @@ const MaxDiffStatsCard = ({
                 </div>
                 <div className="streak2nd">
                   <div className="dates">
-                    {dayjs(game.datum).format('D MMMM YYYY')}
+                    <Date>{game.datum}</Date>
                   </div>
                 </div>
               </div>
@@ -61,7 +58,7 @@ const MaxDiffStatsCard = ({
                 </div>
                 <div className="streak2nd">
                   <div className="dates">
-                    {dayjs(game.datum).format('D MMMM YYYY')}
+                    <Date>{game.datum}</Date>
                   </div>
                 </div>
               </div>

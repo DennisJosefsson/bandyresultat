@@ -6,9 +6,7 @@ import {
 } from '@/src/@/components/ui/card'
 import { StreakType } from '@/src/components/types/teams/teams'
 import { ReactNode } from 'react'
-import dayjs from 'dayjs'
-import 'dayjs/locale/sv'
-dayjs.locale('sv')
+import Date from '@/src/components/utilitycomponents/Components/Date'
 
 const StreakComponent = ({ children }: { children: ReactNode }) => {
   return <Card className="mb-2">{children}</Card>
@@ -41,8 +39,8 @@ function Content({ streak, limit }: { streak: StreakType[]; limit: number }) {
               className="mb-1 flex flex-row justify-between rounded bg-muted-foreground/20 px-3 py-1"
             >
               <div>
-                {`${dayjs(streak.start_date).format('D MMMM YYYY')} -
-                ${dayjs(streak.end_date).format('D MMMM YYYY')}`}
+                <Date>{streak.start_date}</Date> -{' '}
+                <Date>{streak.end_date}</Date>
               </div>
               <div>{streak.game_count} matcher</div>
             </div>

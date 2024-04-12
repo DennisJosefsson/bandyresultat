@@ -1,7 +1,4 @@
-import dayjs from 'dayjs'
-import 'dayjs/locale/sv'
-dayjs.locale('sv')
-
+import Date from '@/src/components/utilitycomponents/Components/Date'
 type StreakType = {
   women: boolean
   team: number
@@ -34,8 +31,7 @@ const StreakStatsCard = ({ streak, title }: StreakStatsCard) => {
             </div>
             <div className="streak2nd">
               <div className="dates">
-                {dayjs(team.start_date).format('D MMMM YYYY')} -
-                {dayjs(team.end_date).format('D MMMM YYYY')}
+                <Date>{team.start_date}</Date> - <Date>{team.end_date}</Date>
               </div>
             </div>
           </div>

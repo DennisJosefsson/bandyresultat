@@ -1,13 +1,10 @@
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
-import PlayoffSeriesPopup from './PlayoffSubComponents/PlayoffSeriesPopup'
 import {
   Loading,
   DataError,
 } from '../../utilitycomponents/Components/LoadingOrError'
 import SeasonPlayoffTables from './PlayoffSubComponents/SeasonPlayoffTables'
 import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
-import { GameObjectType } from '../../types/games/games'
 import useScrollTo from '../../../hooks/domHooks/useScrollTo'
 import useSeasonContext from '../../../hooks/contextHooks/useSeasonContext'
 import { useGetPlayoffData } from '../../../hooks/dataHooks/seasonHooks/playoffHooks/useGetPlayoffData'
@@ -17,8 +14,6 @@ const Playoff = () => {
   const { women } = useGenderContext()
   const { seasonId } = useSeasonContext()
   const { lastSeason } = useGetFirstAndLastSeason()
-  const [gameData, setGameData] = useState<GameObjectType[] | null>(null)
-  const [showPopup, setShowPopup] = useState<boolean>(false)
 
   const { isLoading, error, isSuccess, tables, final, playoffGames } =
     useGetPlayoffData(seasonId)
@@ -52,19 +47,10 @@ const Playoff = () => {
           tables={tables}
           playoffGames={playoffGames}
           final={final}
-          setGameData={setGameData}
-          setShowPopup={setShowPopup}
           women={women}
           seasonId={seasonId}
         />
       ) : null}
-      {showPopup && (
-        <PlayoffSeriesPopup
-          gameData={gameData}
-          setShowPopup={setShowPopup}
-          showPopup={showPopup}
-        />
-      )}
     </div>
   )
 }

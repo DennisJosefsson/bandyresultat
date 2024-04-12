@@ -1,5 +1,3 @@
-import dayjs from 'dayjs'
-import 'dayjs/locale/sv'
 import { CompareResponseObjectType } from '../../../types/teams/compare'
 import { CompareFormState } from '../../../types/teams/teams'
 import {
@@ -9,8 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/src/@/components/ui/card'
-
-dayjs.locale('sv')
+import Date from '@/src/components/utilitycomponents/Components/Date'
 
 type FirstGamesProps = {
   firstGames: CompareResponseObjectType['firstGames']
@@ -33,9 +30,7 @@ const FirstGames = ({ firstGames, compObject }: FirstGamesProps) => {
             return (
               <div key={game.game_id} className="card">
                 <div className="line1">
-                  {game.date && (
-                    <span>{dayjs(game.date).format('D MMMM YYYY')}</span>
-                  )}
+                  <Date>{game.date}</Date>
                 </div>
                 <div className="line2">
                   <div>

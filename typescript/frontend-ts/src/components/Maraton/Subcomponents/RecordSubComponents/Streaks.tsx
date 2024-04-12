@@ -1,10 +1,7 @@
 import StreakCard from './StreakCard'
 import { Card } from '@/src/@/components/ui/card'
-import dayjs from 'dayjs'
-import 'dayjs/locale/sv'
-
 import { useGetRecordData } from '@/src/hooks/dataHooks/maratonHooks/useGetRecordData'
-dayjs.locale('sv')
+import Date from '@/src/components/utilitycomponents/Components/Date'
 
 const Streaks = () => {
   const { data } = useGetRecordData()
@@ -55,7 +52,7 @@ const Streaks = () => {
                         </div>
                         <div className="record2nd">
                           <div className="dates">
-                            {dayjs(team.date).format('D MMMM YYYY')}
+                            <Date>{team.date}</Date>
                           </div>
                           <div className="text-right">{team.opp.shortName}</div>
                         </div>

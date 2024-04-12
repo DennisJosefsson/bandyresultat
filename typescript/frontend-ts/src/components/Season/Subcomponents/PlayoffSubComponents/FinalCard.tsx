@@ -1,9 +1,6 @@
-import dayjs from 'dayjs'
-import 'dayjs/locale/sv'
 import { GameObjectType } from '../../../types/games/games'
 import PlayoffCard from './PlayoffCard'
-dayjs.locale('sv')
-
+import Date from '@/src/components/utilitycomponents/Components/Date'
 type FinalCardProps = {
   game: GameObjectType
   favTeams: number[]
@@ -16,7 +13,7 @@ const FinalCard = ({ game }: FinalCardProps) => {
         <PlayoffCard.Title>
           <PlayoffCard.Group>Final</PlayoffCard.Group>
           <PlayoffCard.Result>
-            {dayjs(game.date).format('D MMMM YYYY')}
+            <Date>{game.date}</Date>
           </PlayoffCard.Result>
         </PlayoffCard.Title>
         <PlayoffCard.Content>

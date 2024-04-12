@@ -1,9 +1,6 @@
-import dayjs from 'dayjs'
-import 'dayjs/locale/sv'
 import { GameObjectWithSeasonType } from '../../../types/games/games'
 import useTeampreferenceContext from '../../../../hooks/contextHooks/useTeampreferenceContext'
-
-dayjs.locale('sv')
+import Date from '@/src/components/utilitycomponents/Components/Date'
 
 type DateArrayItem = {
   date: string
@@ -21,14 +18,7 @@ const AnimationGamesList = ({ dateArray, round }: AnimationGamesListProps) => {
   return (
     <div className="mx-2 xl:mx-0">
       <div>
-        {dateArray[round]?.date !== null && (
-          <span className="text-sm font-bold md:text-base">
-            {dayjs(dateArray[round]?.date).format('D MMMM YYYY') !==
-            'Invalid Date'
-              ? dayjs(dateArray[round]?.date).format('D MMMM YYYY')
-              : 'Saknar speldatum'}
-          </span>
-        )}
+        <Date>{dateArray[round]?.date}</Date>
       </div>
       {dateArray[round]?.games.map((game) => {
         return (

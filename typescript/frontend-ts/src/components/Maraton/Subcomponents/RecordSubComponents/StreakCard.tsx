@@ -1,7 +1,5 @@
 import { Card } from '@/src/@/components/ui/card'
-import dayjs from 'dayjs'
-import 'dayjs/locale/sv'
-dayjs.locale('sv')
+import Date from '@/src/components/utilitycomponents/Components/Date'
 
 type StreakCardProps = {
   streak: {
@@ -34,8 +32,8 @@ const StreakCard = ({ streak, title }: StreakCardProps) => {
                 </div>
                 <div className="record2nd">
                   <div className="dates">
-                    {dayjs(streak.start_date).format('D MMMM YYYY')}-
-                    {dayjs(streak.end_date).format('D MMMM YYYY')}
+                    <Date>{streak.start_date}</Date> -{' '}
+                    <Date>{streak.end_date}</Date>
                   </div>
                 </div>
               </div>

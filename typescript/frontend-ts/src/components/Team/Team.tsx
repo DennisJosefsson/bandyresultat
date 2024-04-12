@@ -1,7 +1,3 @@
-import { useQuery } from 'react-query'
-import { getSingleTeam } from '../../requests/teams'
-import { useEffect } from 'react'
-
 import Spinner from '../utilitycomponents/Components/Spinner'
 import TeamTable from './Subcomponents/TeamInfoSubComponents/TeamTable'
 import TeamCuriosities from './Subcomponents/TeamInfoSubComponents/TeamCuriosities'
@@ -14,16 +10,14 @@ import {
   TabsTrigger,
   TabsContent,
 } from '@/src/@/components/ui/tabs'
+import useScrollTo from '@/src/hooks/domHooks/useScrollTo'
+import { useGetSingleTeam } from '@/src/hooks/dataHooks/teamHooks/useGetSingleTeam'
+import TeamChart from './Subcomponents/TeamInfoSubComponents/TeamChart'
 
 const Team = ({ teamId }: { teamId: number }) => {
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-  }, [])
+  useScrollTo()
 
-  const { data, isLoading, error, isSuccess } = useQuery(
-    ['teams', teamId],
-    () => getSingleTeam(teamId),
-  )
+  const { data, isLoading, error, isSuccess } = useGetSingleTeam(teamId)
 
   if (isLoading) {
     return (
@@ -64,6 +58,7 @@ const Team = ({ teamId }: { teamId: number }) => {
                   Senaste säsongerna
                 </TabsTrigger>
                 <TabsTrigger value="stats">Statistik</TabsTrigger>
+                <TabsTrigger value="chart">Diagram</TabsTrigger>
               </TabsList>
               <TabsContent value="tables">
                 {team.tabeller.length === 0 && (
@@ -88,6 +83,9 @@ const Team = ({ teamId }: { teamId: number }) => {
               </TabsContent>
               <TabsContent value="stats">
                 <TeamCuriosities team={team} />
+              </TabsContent>
+              <TabsContent value="chart">
+                <TeamChart chartData={team.chartData} />
               </TabsContent>
             </Tabs>
           </CardContent>

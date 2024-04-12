@@ -1,9 +1,5 @@
-import dayjs from 'dayjs'
-import 'dayjs/locale/sv'
 import useTeampreferenceContext from '../../../hooks/contextHooks/useTeampreferenceContext'
-
-dayjs.locale('sv')
-
+import Date from '../../utilitycomponents/Components/Date'
 type Game = {
   homeTeam: { casualName: string }
   awayTeam: { casualName: string }
@@ -44,13 +40,8 @@ const ResultComponent = ({ gameArray }: ResultComponentProps) => {
               </div>
               <div className="record2nd">
                 <div className="dates">
-                  {game.date && (
-                    <span className="mr-1">
-                      {dayjs(game.date).format('D MMMM YYYY')}
-                    </span>
-                  )}
-                  {game.qualification && <span>(K)</span>}
-                  {!game.date && <span className="invisible">Gömt datum </span>}
+                  <Date>{game.date}</Date>
+                  {game.qualification && <span className="ml-1">(K)</span>}
                 </div>
               </div>
             </div>
