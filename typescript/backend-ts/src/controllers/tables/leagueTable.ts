@@ -241,8 +241,6 @@ leagueTableRouter.get('/:seasonId', (async (
     const bonusPointsObject = JSON.parse(
       seriesWithBonusPoints.bonusPoints
     ) as BonusPoints
-    console.log(seriesWithBonusPoints)
-    console.log(bonusPointsObject)
 
     const updatedTable = tabell.map((table) => {
       return table.group === seriesWithBonusPoints.serieGroupCode &&
@@ -258,6 +256,116 @@ leagueTableRouter.get('/:seasonId', (async (
     return res
       .status(200)
       .json({ tabell: updatedTable, hemmaTabell, bortaTabell, playoffGames })
+  }
+
+  if (seasonYear && ['1933', '1937'].includes(seasonYear)) {
+    const games = await TeamGame.findAll({
+      where: {
+        group: {
+          [Op.startsWith]: seasonYear === '1933' ? 'Div' : 'Avd',
+        },
+        [Op.not]: {
+          opponent: seasonYear === '1933' ? [5, 31, 57, 29] : [5, 64, 57, 17],
+        },
+      },
+      include: [
+        {
+          model: Season,
+          attributes: ['seasonId', 'year'],
+          where: { year: { [Op.eq]: seasonYear } },
+        },
+      ],
+      raw: true,
+      nest: true,
+    })
+
+    games.forEach((game) => {
+      const tableIndex = tabell.findIndex(
+        (table) =>
+          table.team === game.team && table.group.includes('Nedflyttning')
+      )
+
+      if (tableIndex === -1) return
+
+      tabell[tableIndex].totalGames = tabell[tableIndex].totalGames + 1
+      tabell[tableIndex].totalWins =
+        tabell[tableIndex].totalWins + (game.win ? 1 : 0)
+      tabell[tableIndex].totalDraws =
+        tabell[tableIndex].totalDraws + (game.draw ? 1 : 0)
+      tabell[tableIndex].totalLost =
+        tabell[tableIndex].totalLost + (game.lost ? 1 : 0)
+      tabell[tableIndex].totalGoalsScored =
+        tabell[tableIndex].totalGoalsScored + game.goalsScored
+      tabell[tableIndex].totalGoalsConceded =
+        tabell[tableIndex].totalGoalsConceded + game.goalsConceded
+      tabell[tableIndex].totalGoalDifference =
+        tabell[tableIndex].totalGoalDifference + game.goalDifference
+      tabell[tableIndex].totalPoints =
+        tabell[tableIndex].totalPoints + game.points
+    })
+
+    const homeGames = games.filter((game) => game.homeGame === true)
+
+    homeGames.forEach((game) => {
+      const tableIndex = hemmaTabell.findIndex(
+        (table) =>
+          table.team === game.team && table.group.includes('Nedflyttning')
+      )
+
+      if (tableIndex === -1) return
+
+      hemmaTabell[tableIndex].totalGames =
+        hemmaTabell[tableIndex].totalGames + 1
+      hemmaTabell[tableIndex].totalWins =
+        hemmaTabell[tableIndex].totalWins + (game.win ? 1 : 0)
+      hemmaTabell[tableIndex].totalDraws =
+        hemmaTabell[tableIndex].totalDraws + (game.draw ? 1 : 0)
+      hemmaTabell[tableIndex].totalLost =
+        hemmaTabell[tableIndex].totalLost + (game.lost ? 1 : 0)
+      hemmaTabell[tableIndex].totalGoalsScored =
+        hemmaTabell[tableIndex].totalGoalsScored + game.goalsScored
+      hemmaTabell[tableIndex].totalGoalsConceded =
+        hemmaTabell[tableIndex].totalGoalsConceded + game.goalsConceded
+      hemmaTabell[tableIndex].totalGoalDifference =
+        hemmaTabell[tableIndex].totalGoalDifference + game.goalDifference
+      hemmaTabell[tableIndex].totalPoints =
+        hemmaTabell[tableIndex].totalPoints + game.points
+    })
+
+    const awayGames = games.filter((game) => game.homeGame === false)
+
+    awayGames.forEach((game) => {
+      const tableIndex = bortaTabell.findIndex(
+        (table) =>
+          table.team === game.team && table.group.includes('Nedflyttning')
+      )
+
+      if (tableIndex === -1) return
+
+      bortaTabell[tableIndex].totalGames =
+        bortaTabell[tableIndex].totalGames + 1
+      bortaTabell[tableIndex].totalWins =
+        bortaTabell[tableIndex].totalWins + (game.win ? 1 : 0)
+      bortaTabell[tableIndex].totalDraws =
+        bortaTabell[tableIndex].totalDraws + (game.draw ? 1 : 0)
+      bortaTabell[tableIndex].totalLost =
+        bortaTabell[tableIndex].totalLost + (game.lost ? 1 : 0)
+      bortaTabell[tableIndex].totalGoalsScored =
+        bortaTabell[tableIndex].totalGoalsScored + game.goalsScored
+      bortaTabell[tableIndex].totalGoalsConceded =
+        bortaTabell[tableIndex].totalGoalsConceded + game.goalsConceded
+      bortaTabell[tableIndex].totalGoalDifference =
+        bortaTabell[tableIndex].totalGoalDifference + game.goalDifference
+      bortaTabell[tableIndex].totalPoints =
+        bortaTabell[tableIndex].totalPoints + game.points
+    })
+
+    return res.status(200).json({
+      tabell,
+      hemmaTabell,
+      bortaTabell,
+      playoffGames,
+    })
   }
 
   res.status(200).json({ tabell, hemmaTabell, bortaTabell, playoffGames })

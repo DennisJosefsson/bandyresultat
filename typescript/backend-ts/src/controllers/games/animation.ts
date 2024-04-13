@@ -20,6 +20,10 @@ import {
 
 const animationRouter = Router()
 
+const getTime = (date?: Date): number => {
+  return date != null ? date.getTime() : 0
+}
+
 animationRouter.get('/animation/:seasonId', (async (
   req: Request,
   res: Response,
@@ -82,6 +86,45 @@ animationRouter.get('/animation/:seasonId', (async (
       logging: false,
       context: { origin: 'GET Animation Data Router' },
     })
+  }
+
+  if (seasonYear && ['1933', '1937'].includes(seasonYear)) {
+    const excludeTeams =
+      seasonYear === '1933' ? [5, 31, 57, 29] : [5, 64, 57, 17]
+    const groupName = seasonYear === '1933' ? 'Div' : 'Avd'
+    const selectedGames = games.filter((game) => {
+      if (
+        game.group.includes(groupName) &&
+        !excludeTeams.includes(game.homeTeamId) &&
+        !excludeTeams.includes(game.awayTeamId)
+      )
+        return true
+      return false
+    })
+
+    const newGameArray = selectedGames.map((game) => {
+      let newGroup: string
+      switch (game.group) {
+        case 'AvdA':
+        case 'AvdB':
+        case 'Div1NorrA':
+        case 'Div1NorrB':
+          newGroup = 'NedflyttningNorr'
+          break
+        case 'AvdC':
+        case 'AvdD':
+        case 'Div1SydA':
+        case 'Div1SydB':
+          newGroup = 'NedflyttningSyd'
+          break
+        default:
+          newGroup = ''
+      }
+
+      return { ...game, group: newGroup }
+    })
+    newGameArray.forEach((game) => games.push(game as Game))
+    games.sort((a, b) => getTime(new Date(a.date)) - getTime(new Date(b.date)))
   }
 
   const mensTeamArray = teams
