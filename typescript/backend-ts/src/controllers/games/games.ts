@@ -52,7 +52,7 @@ gameRouter.get('/', (async (
   if (!games || games.length === 0) {
     throw new NotFoundError({
       code: 404,
-      message: 'No games',
+      message: 'Inga matcher hittade.',
       logging: false,
       context: { origin: 'GET All Games Router' },
     })
@@ -91,7 +91,7 @@ gameRouter.get('/season/:seasonId', (async (
   if (!games || games.length === 0) {
     throw new NotFoundError({
       code: 404,
-      message: 'No games',
+      message: 'Inga matcher än för denna säsong.',
       logging: false,
       context: { origin: 'GET Games Season Router' },
     })

@@ -28,18 +28,18 @@ export type ErrorState =
 
 const Search = () => {
   const { women, dispatch } = useGenderContext()
+  const [tab, setTab] = useState<string>('search')
+
   const [searchParams, setSearchParams] = useState<SearchParamsObject | null>(
     null,
   )
-  const [tab, setTab] = useState<string>('search')
 
   const [error, setError] = useState<ErrorState>({ error: false })
-
   const methods = useSearchForm()
-  useSearchLinks(setError, setSearchParams, methods)
-  //const { open } = useMenuContext()
 
   const { isLoading: isTeamsLoading, error: teamError } = useGetSearchTeams()
+
+  useSearchLinks(setError, setSearchParams, methods)
 
   if (isTeamsLoading) {
     return (

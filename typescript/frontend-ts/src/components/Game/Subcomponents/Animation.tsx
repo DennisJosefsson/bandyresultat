@@ -57,7 +57,7 @@ const Animation = () => {
   //   setRound([0])
   // }, [data, isLoading, error, women, seasonId])
 
-  if (error) return <DataError />
+  if (error) return <DataError error={error} />
 
   if (isLoading) return <Loading />
 

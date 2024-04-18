@@ -3,8 +3,13 @@ import { SyntheticEvent, useState } from 'react'
 import { Button } from '../@/components/ui/button'
 import LoginForm from './LoginForm/LoginForm'
 import useUserContext from '../hooks/contextHooks/useUserContext'
+import { Dialog } from '../@/components/ui/dialog'
+import { Toaster } from '../@/components/ui/toaster'
+import { useToast } from '../@/components/ui/use-toast'
+import { AxiosError } from 'axios'
 
 const Footer = () => {
+  const { toast } = useToast()
   const { user, dispatch } = useUserContext()
   const [userName, setUserName] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -13,14 +18,28 @@ const Footer = () => {
   const handleResponse = async (event: SyntheticEvent) => {
     event.preventDefault()
     setShowLoginModal(false)
-    const response = await getLogin(userName, password)
-    if (response.success && user === false) {
-      dispatch({ type: 'LOGIN' })
-      window.alert('Inloggad.')
-    } else if (user === true) {
-      window.alert('Redan inloggad.')
-    } else {
-      window.alert('Du får inte logga in.')
+    if (user === true) {
+      toast({ variant: 'destructive', title: 'Redan inloggad.' })
+      return
+    }
+    try {
+      const response = await getLogin(userName, password)
+      if (response.success && user === false) {
+        dispatch({ type: 'LOGIN' })
+        toast({ duration: 1500, title: 'Inloggad' })
+      }
+      return
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const message = `${error.response?.data.errors}`
+        toast({
+          duration: 2500,
+          variant: 'destructive',
+          title: 'Du får inte logga in.',
+          description: message,
+        })
+        return
+      }
     }
   }
 
@@ -28,9 +47,13 @@ const Footer = () => {
     const response = await logout()
     if (response.success) {
       dispatch({ type: 'LOGOUT' })
-      window.alert('Utloggad.')
+      toast({ duration: 1500, title: 'Utloggad.' })
     } else {
-      window.alert('Något gick fel.')
+      toast({
+        duration: 2500,
+        variant: 'destructive',
+        title: 'Något gick fel.',
+      })
     }
   }
 
@@ -43,20 +66,19 @@ const Footer = () => {
           ) : (
             <Button onClick={() => loggaUt()}>Logga ut</Button>
           )}
+          <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
+            <LoginForm
+              userName={userName}
+              setUserName={setUserName}
+              password={password}
+              setPassword={setPassword}
+              setShowModal={setShowLoginModal}
+              handleResponse={handleResponse}
+            />
+          </Dialog>
+          <Toaster />
         </div>
       </div>
-      {showLoginModal ? (
-        <>
-          <LoginForm
-            userName={userName}
-            setUserName={setUserName}
-            password={password}
-            setPassword={setPassword}
-            setShowModal={setShowLoginModal}
-            handleResponse={handleResponse}
-          />
-        </>
-      ) : null}
     </footer>
   )
 }

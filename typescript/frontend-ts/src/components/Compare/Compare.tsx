@@ -1,15 +1,14 @@
-import { useEffect, useState } from 'react'
-
 import Spinner from '../utilitycomponents/Components/Spinner'
 
 import AllData from './Subcomponents/AllData'
 import DetailedData from './Subcomponents/DetailedData'
 import CompareStats from './Subcomponents/CompareStats'
 import CompareHeader from './Subcomponents/CompareHeader'
-import { compareFormState } from '../types/teams/teams'
-import { useFormContext } from 'react-hook-form'
-import { useCompareResults } from '@/src/hooks/dataHooks/teamHooks/useCompare'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { UseFormReturn } from 'react-hook-form'
+import {
+  useCompareLocationData,
+  useCompareResults,
+} from '@/src/hooks/dataHooks/teamHooks/useCompare'
 import {
   Tabs,
   TabsList,
@@ -17,49 +16,44 @@ import {
   TabsContent,
 } from '@/src/@/components/ui/tabs'
 import { Card, CardContent } from '@/src/@/components/ui/card'
+import useScrollTo from '@/src/hooks/domHooks/useScrollTo'
+import { CompareFormState } from '../types/teams/teams'
+import { Dispatch, SetStateAction } from 'react'
 
-type ErrorState = { error: false } | { error: true; message: string }
+type ErrorState =
+  | {
+      error: true
+      message: string
+    }
+  | { error: false }
 
-const Compare = () => {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const [customError, setCustomError] = useState<ErrorState>({ error: false })
-  const methods = useFormContext()
+type CompareProps = {
+  compObjectParams: CompareFormState | null
+  setCompObjectParams: Dispatch<SetStateAction<CompareFormState | null>>
+  customError: ErrorState
+  setCustomError: Dispatch<SetStateAction<ErrorState>>
+  methods: UseFormReturn<CompareFormState>
+}
+
+const Compare = ({
+  methods,
+  compObjectParams,
+  setCompObjectParams,
+  customError,
+  setCustomError,
+}: CompareProps) => {
   const {
     data,
     isLoading,
     error,
     isSuccess,
-    compObjectParams,
-    setCompObjectParams,
-  } = useCompareResults()
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-  }, [])
 
-  useEffect(() => {
-    if (location.state) {
-      const parsedFormData = compareFormState.safeParse(
-        location.state.compObject,
-      )
-      if (!parsedFormData.success) {
-        setCustomError({ error: true, message: parsedFormData.error.message })
-        navigate(location.pathname, { replace: true })
-      }
-      if (parsedFormData.success) {
-        setCompObjectParams(parsedFormData.data)
-        navigate(location.pathname, { replace: true })
-      }
-    } else {
-      const parsedFormData = compareFormState.safeParse(methods.getValues())
-      if (!parsedFormData.success) {
-        setCustomError({ error: true, message: parsedFormData.error.message })
-      }
-      if (parsedFormData.success) {
-        setCompObjectParams(parsedFormData.data)
-      }
-    }
-  }, [])
+    compareLink,
+  } = useCompareResults(compObjectParams)
+
+  useScrollTo()
+
+  useCompareLocationData(setCustomError, setCompObjectParams, methods)
 
   if (isLoading) {
     return (
@@ -70,6 +64,7 @@ const Compare = () => {
   }
 
   if (customError.error) {
+    console.log('customError', customError.error)
     return <div>{customError.message}</div>
   }
 
@@ -87,6 +82,7 @@ const Compare = () => {
         </div>
       )
     }
+    console.log('error from nullobject', error.message)
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
         {error.message}
@@ -103,7 +99,7 @@ const Compare = () => {
           <CompareHeader
             length={compareData.allData.length}
             seasonNames={compareData.seasonNames}
-            link={compareData.link}
+            link={compareLink}
             compObject={compObjectParams}
             compareAllGames={compareData.compareAllGames}
             origin={origin}

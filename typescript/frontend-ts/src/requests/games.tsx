@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { baseUrl, mobileBaseUrl, header } from '../config/requestConfig'
 import {
   GameFormObjectType,
@@ -14,6 +14,7 @@ import {
 } from '../components/types/games/search'
 import { SeasonStatsObjectType } from '../components/types/games/stats'
 import { AnimationObject } from '../components/types/games/animation'
+
 const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
 
 const gamesApi = axios.create({
@@ -23,27 +24,39 @@ const gamesApi = axios.create({
 
 export const getGames = async () => {
   const response = await gamesApi.get('/')
+  if (response instanceof AxiosError) {
+    return response
+  }
   return response.data
 }
 
 export const getStreaks = async (
   params: StreakParams,
-): Promise<StreakObjectTypes> => {
+): Promise<StreakObjectTypes | AxiosError> => {
   const response = await gamesApi.post('/streaks', params)
+  if (response instanceof AxiosError) {
+    return response
+  }
   return response.data
 }
 
 export const getSearch = async (
   searchParams: SearchParamsObject | null,
-): Promise<SearchResponseObject> => {
+): Promise<SearchResponseObject | AxiosError> => {
   const response = await gamesApi.post('/search', searchParams)
+  if (response instanceof AxiosError) {
+    return response
+  }
   return response.data
 }
 
 export const getSeasonGames = async (
   seasonId: number,
-): Promise<GameObjectType[]> => {
+): Promise<GameObjectType[] | AxiosError> => {
   const response = await gamesApi.get(`/season/${seasonId}`)
+  if (response instanceof AxiosError) {
+    return response
+  }
   return response.data
 }
 
@@ -56,8 +69,11 @@ export const getSeasonStats = async (
 
 export const getAnimation = async (
   seasonId: number,
-): Promise<AnimationObject> => {
+): Promise<AnimationObject | AxiosError> => {
   const response = await gamesApi.get(`/animation/${seasonId}`)
+  if (response instanceof AxiosError) {
+    return response
+  }
   return response.data
 }
 
@@ -68,6 +84,9 @@ export const getSingleGame = async ({ gameId }: { gameId: number }) => {
 
 export const postGame = async (newGameData: GameFormObjectType | null) => {
   const response = await gamesApi.post('/', newGameData)
+  if (response instanceof AxiosError) {
+    return response
+  }
   return response.data
 }
 

@@ -6,16 +6,30 @@ import Compare from '../../Compare/Compare'
 import { useGetTeamsList } from '@/src/hooks/dataHooks/teamHooks/useGetTeamsList'
 import Team from '../Team'
 import { useSearchParams } from 'react-router-dom'
-import { teamIdFromParams } from '../../types/teams/teams'
-import { useState, useEffect } from 'react'
+import { CompareFormState, teamIdFromParams } from '../../types/teams/teams'
+import { useState, useEffect, Dispatch, SetStateAction } from 'react'
+import { UseFormReturn } from 'react-hook-form'
+import { ErrorState } from '../../Search/Search'
+
+type TeamsComponentSwitchProps = {
+  compObjectParams: CompareFormState | null
+  setCompObjectParams: Dispatch<SetStateAction<CompareFormState | null>>
+  customError: ErrorState
+  setCustomError: Dispatch<SetStateAction<ErrorState>>
+  tab: string
+  teamFilter: string
+  methods: UseFormReturn<CompareFormState>
+}
 
 const TeamsComponentSwitch = ({
   tab,
   teamFilter,
-}: {
-  tab: string
-  teamFilter: string
-}) => {
+  methods,
+  compObjectParams,
+  setCompObjectParams,
+  customError,
+  setCustomError,
+}: TeamsComponentSwitchProps) => {
   const { teams } = useGetTeamsList(teamFilter)
   const [parsedTeamId, setParsedTeamId] = useState<number | null>(null)
   const [searchParams, setSearchParams] = useSearchParams(location.search)
@@ -38,7 +52,15 @@ const TeamsComponentSwitch = ({
       )
       break
     case 'compare':
-      pageContent = <Compare />
+      pageContent = (
+        <Compare
+          methods={methods}
+          compObjectParams={compObjectParams}
+          setCompObjectParams={setCompObjectParams}
+          customError={customError}
+          setCustomError={setCustomError}
+        />
+      )
       break
     case 'selection':
       pageContent = <SearchSelection />

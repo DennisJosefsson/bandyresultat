@@ -9,23 +9,25 @@ import Spinner from '../utilitycomponents/Components/Spinner'
 
 import { Input } from '@/src/@/components/ui/input'
 //import FormStateComponent from './Subcomponents/FormStateComponent'
-import { teamIdFromParams } from '../types/teams/teams'
+import { CompareFormState, teamIdFromParams } from '../types/teams/teams'
 import useGenderContext from '../../hooks/contextHooks/useGenderContext'
 //import { CompareFormState } from '../types/teams/teams'
 import { useGetTeamsList } from '@/src/hooks/dataHooks/teamHooks/useGetTeamsList'
 import { Form } from '@/src/@/components/ui/form'
 import { Card, CardContent } from '@/src/@/components/ui/card'
 
-import {
-  useCompare,
-  useCompareResults,
-} from '@/src/hooks/dataHooks/teamHooks/useCompare'
+import { useCompare } from '@/src/hooks/dataHooks/teamHooks/useCompare'
 import TeamsTabBar from './Subcomponents/TeamsTabBar'
+import { ErrorState } from '../Search/Search'
 
 const Teams = () => {
   const location = useLocation()
   const [searchParams, setSearchParams] = useSearchParams(location.search)
+  const [compObjectParams, setCompObjectParams] =
+    useState<CompareFormState | null>(null)
+  const [customError, setCustomError] = useState<ErrorState>({ error: false })
   const teamId = searchParams.get('teamId')
+  const link = searchParams.get('link')
 
   const { women, dispatch } = useGenderContext()
 
@@ -36,7 +38,8 @@ const Teams = () => {
   const [teamFilter, setTeamFilter] = useState<string>('')
 
   const methods = useCompare()
-  const { onSubmit } = useCompareResults()
+
+  const onSubmit = (data: CompareFormState) => setCompObjectParams(data)
 
   const { isLoading, error } = useGetTeamsList(teamFilter)
 
@@ -52,6 +55,9 @@ const Teams = () => {
       setStateNull(true)
       setTab('compare')
     }
+    if (link) {
+      setTab('compare')
+    }
     if (teamId) {
       const parsedTeamId = teamIdFromParams.safeParse(teamId)
       if (!parsedTeamId.success) {
@@ -60,7 +66,7 @@ const Teams = () => {
 
       setTab('singleTeam')
     }
-  }, [teamId, location.state])
+  }, [link, teamId, location.state])
 
   if (isLoading) {
     return (
@@ -132,7 +138,15 @@ const Teams = () => {
                   onError={logError}
                   resetKeys={[tab]}
                 >
-                  <TeamsComponentSwitch tab={tab} teamFilter={teamFilter} />
+                  <TeamsComponentSwitch
+                    tab={tab}
+                    teamFilter={teamFilter}
+                    methods={methods}
+                    compObjectParams={compObjectParams}
+                    setCompObjectParams={setCompObjectParams}
+                    customError={customError}
+                    setCustomError={setCustomError}
+                  />
                 </ErrorBoundary>
               </div>
             </CardContent>

@@ -1,7 +1,11 @@
 import axios from 'axios'
 import { baseUrl, mobileBaseUrl, header } from '../config/requestConfig'
-import { SeasonObjectType } from '../components/types/season/seasons'
+import {
+  PostNewSeasonType,
+  SeasonObjectType,
+} from '../components/types/season/seasons'
 import { TeamSeasonStateType } from '../reducers/teamseasonReducer'
+import { SerieAttributes } from '../components/types/series/series'
 
 const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
 
@@ -22,9 +26,20 @@ export const getSingleSeason = async (
   return response.data
 }
 
-// export const postSeason = async (season) => {
-//   return await seasonsApi.post('/', season)
-// }
+type PostNewSeasonReturnType = {
+  womenSeason: PostNewSeasonType
+  menSeason: PostNewSeasonType
+  newSeries: SerieAttributes[]
+}
+
+export const postSeason = async ({
+  yearString,
+}: {
+  yearString: string
+}): Promise<PostNewSeasonReturnType> => {
+  const response = await seasonsApi.post('/', { yearString })
+  return response.data
+}
 
 export const postTeamSeason = async ({
   formState,

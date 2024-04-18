@@ -2,7 +2,7 @@ import { groupConstant } from '../../utilitycomponents/functions/constants'
 
 import { useNavigate } from 'react-router-dom'
 import { CompareFormState } from '../../types/teams/teams'
-import { CompareLink } from '../../types/link/link'
+
 import { CompareResponseObjectType } from '../../types/teams/compare'
 import { useCopyToClipboard } from 'usehooks-ts'
 import {
@@ -15,7 +15,7 @@ import { Button } from '@/src/@/components/ui/button'
 type CompareHeaderProps = {
   length: number
   compObject: CompareFormState | null
-  link: CompareLink
+  link: string
   compareAllGames: CompareResponseObjectType['compareAllGames']
   seasonNames: CompareResponseObjectType['seasonNames']
   origin: string
@@ -26,14 +26,10 @@ const Buttons = ({
   origin,
   length,
 }: {
-  link: CompareLink
+  link: string
   origin: string | undefined
   length: number
 }) => {
-  const baseUrl = import.meta.env.PROD
-    ? 'https://bandyresultat.se'
-    : 'http://localhost:5173'
-  const compareLink = `${baseUrl}/link/${link[0].linkName}`
   const navigate = useNavigate()
   const [copiedText, copy] = useCopyToClipboard()
   return (
@@ -44,7 +40,7 @@ const Buttons = ({
         </Button>
       )}
       {length > 0 && (
-        <Button onClick={() => copy(compareLink)} size="sm">
+        <Button onClick={() => copy(link)} size="sm">
           {copiedText ? 'Kopierad!' : `Länk`}
         </Button>
       )}

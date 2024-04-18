@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { Icon, LatLngExpression } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
-import useMenuContext from '../../../hooks/contextHooks/useMenuContext'
+
 import { useMapData } from '../../../hooks/dataHooks/seasonHooks/mapHooks/useMapData'
 import useSeasonContext from '../../../hooks/contextHooks/useSeasonContext'
 
@@ -14,7 +14,6 @@ const Map = () => {
   const { teams, qualificationTeams, bounds, isLoading, error } =
     useMapData(seasonId)
   const { women } = useGenderContext()
-  const { open } = useMenuContext()
 
   if (isLoading) {
     return (
@@ -59,7 +58,7 @@ const Map = () => {
 
   return (
     <div>
-      {!open && teams && qualificationTeams && (
+      {teams && qualificationTeams && (
         <div id="map" className="h-[400px] w-screen max-w-xl p-2">
           <MapContainer
             bounds={bounds}

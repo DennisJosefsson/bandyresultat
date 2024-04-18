@@ -1,4 +1,4 @@
-import { useState, useRef, KeyboardEvent } from 'react'
+import { useState, KeyboardEvent } from 'react'
 
 import SeasonsList from './Subcomponents/SeasonsList'
 import FilterComponent from './Subcomponents/FilterComponent'
@@ -6,14 +6,11 @@ import {
   Loading,
   DataError,
 } from '../utilitycomponents/Components/LoadingOrError'
-import ScrollRefComponent from '../utilitycomponents/Components/ScrollRefComponent'
 import useScrollTo from '../../hooks/domHooks/useScrollTo'
 import useGetAllSeasons from '../../hooks/dataHooks/seasonHooks/useGetAllSeasons'
 
 const Seasons = () => {
   const [seasonFilter, setSeasonFilter] = useState('')
-  const topRef = useRef(null)
-  const bottomRef = useRef(null)
   const { seasons, isLoading, error } = useGetAllSeasons()
 
   useScrollTo()
@@ -29,10 +26,7 @@ const Seasons = () => {
   }
 
   return (
-    <div
-      className="mx-auto mb-2 min-h-screen max-w-7xl font-inter text-foreground"
-      ref={topRef}
-    >
+    <div className="mx-auto mb-2 min-h-screen max-w-7xl font-inter text-foreground">
       <FilterComponent
         seasonFilter={seasonFilter}
         setSeasonFilter={setSeasonFilter}
@@ -45,9 +39,7 @@ const Seasons = () => {
             season.year.includes(seasonFilter),
           )}
         />
-        <div ref={bottomRef}></div>
       </div>
-      <ScrollRefComponent bottomRef={bottomRef} topRef={topRef} />
     </div>
   )
 }

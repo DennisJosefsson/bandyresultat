@@ -6,7 +6,7 @@ export const serieAttributes = z.object({
   serieCategory: z.string(),
   serieName: z.string(),
   serieStructure: z.array(z.number()).nullable().optional(),
-  season: z.string(),
+  seasonId: z.number(),
   bonusPoints: z.string().nullable().optional(),
   comment: z.string().nullable().optional(),
   women: z.boolean().optional(),

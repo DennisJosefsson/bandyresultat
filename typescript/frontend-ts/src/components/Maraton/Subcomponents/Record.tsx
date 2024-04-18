@@ -15,7 +15,7 @@ const Record = () => {
   const topRef = useRef(null)
   const bottomRef = useRef(null)
 
-  if (error) return <DataError />
+  if (error) return <DataError error={error} />
 
   if (isLoading) return <Loading />
 

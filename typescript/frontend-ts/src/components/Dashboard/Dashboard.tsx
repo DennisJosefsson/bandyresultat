@@ -1,53 +1,22 @@
 import { useState } from 'react'
-import { useQuery } from 'react-query'
-
-import MetadataForm from '../Metadata/MetadataForm'
-import TeamSeasonForm from '../Season/Subcomponents/TeamSeasonForm'
 import TeamForm from '../Team/Subcomponents/TeamForm'
 import Errors from './Errors'
-import { getSeasons } from '../../requests/seasons'
-import { getTeams } from '../../requests/teams'
-import SeriesModal from './SeriesModal'
+import Seasons from './Seasons'
 import { TabBarDivided } from '../utilitycomponents/Components/TabBar'
 import useGenderContext from '../../hooks/contextHooks/useGenderContext'
 import { Button } from '@/src/@/components/ui/button'
+import {
+  Card,
+  CardTitle,
+  CardContent,
+  CardHeader,
+} from '@/src/@/components/ui/card'
+import NewSeason from './NewSeason'
 
 const Dashboard = () => {
-  const {
-    data: seasons,
-    isLoading: isSeasonLoading,
-    error: seasonsError,
-    isSuccess: isSeasonSuccess,
-  } = useQuery('allSeasons', getSeasons)
-  const {
-    data: teams,
-    isLoading: isTeamsLoading,
-    error: teamsError,
-    isSuccess: isTeamsSuccess,
-  } = useQuery(['teams'], getTeams)
-
-  const [seasonId, setSeasonId] = useState<number | null>(null)
-  const [seasonFilter, setSeasonFilter] = useState<string>('')
   const [tab, setTab] = useState<string>('error')
 
   const { women, dispatch } = useGenderContext()
-
-  if (isSeasonLoading || isTeamsLoading) {
-    return <div className="mx-auto max-w-7xl">Loading...</div>
-  }
-
-  if (seasonsError || teamsError) {
-    return <div className="mx-auto max-w-7xl">There was an error</div>
-  }
-
-  const filteredSeasons = isSeasonSuccess
-    ? seasons
-        .filter((season) => season.women === women)
-        .filter((season) => season.year.includes(seasonFilter))
-    : []
-  const teamsArray = isTeamsSuccess
-    ? teams.filter((season) => season.women === women)
-    : []
 
   const dashboardTabBarObject = {
     gender: (
@@ -73,7 +42,6 @@ const Dashboard = () => {
         ),
 
         tabName: 'error',
-        conditional: true,
       },
       {
         tab: (
@@ -83,7 +51,7 @@ const Dashboard = () => {
               setTab('addteams')
             }}
           >
-            Lägg till lag
+            Nytt lag
           </Button>
         ),
         tabName: 'addteams',
@@ -92,134 +60,58 @@ const Dashboard = () => {
       {
         tab: (
           <Button
-            variant={tab === 'serie' ? 'default' : 'outline'}
+            variant={tab === 'seasons' ? 'default' : 'outline'}
             onClick={() => {
-              setTab('serie')
+              setTab('seasons')
             }}
           >
-            Serie
+            Säsonger
           </Button>
         ),
-        tabName: 'serie',
-        conditional: true,
+        tabName: 'seasons',
       },
       {
         tab: (
           <Button
-            variant={tab === 'teamseason' ? 'default' : 'outline'}
+            variant={tab === 'newSeason' ? 'default' : 'outline'}
             onClick={() => {
-              setTab('teamseason')
+              setTab('newSeason')
             }}
           >
-            Teamseason
+            Ny säsong
           </Button>
         ),
-        tabName: 'teamseason',
-        conditional: false,
+        tabName: 'newSeason',
       },
-      {
-        tab: (
-          <Button
-            variant={tab === 'metadata' ? 'default' : 'outline'}
-            onClick={() => {
-              setTab('metadata')
-            }}
-          >
-            Metadata
-          </Button>
-        ),
-        tabName: 'metadata',
-        conditional: false,
-      },
-    ].filter((item) => {
-      if (seasonId === null) {
-        if (item.conditional !== false) return item
-      } else {
-        return item
-      }
-    }),
+    ],
   }
-
-  const handleSeasonChange = (checkedSeasonId: number) => {
-    if (seasonId === checkedSeasonId) {
-      setSeasonId(null)
-    } else {
-      setSeasonId(checkedSeasonId)
-    }
-  }
-
-  const seasonObject = filteredSeasons.find(
-    (season) => season.seasonId === seasonId,
-  )
 
   return (
     <div className="mx-auto min-h-screen max-w-7xl font-inter text-foreground">
-      <h2 className="text-2xl font-bold">
-        Dashboard {women ? 'Damer' : 'Herrar'}
-      </h2>
-      <TabBarDivided tabBarObject={dashboardTabBarObject} onlyDesktop />
-      <div className=" flex flex-row-reverse justify-between">
-        <div>
-          <div>
-            <input
-              type="text"
-              value={seasonFilter}
-              onChange={(event) => setSeasonFilter(event.target.value)}
-            />
+      <Card className="mb-2">
+        <CardHeader>
+          <CardTitle>Dashboard {women ? 'Damer' : 'Herrar'}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <TabBarDivided tabBarObject={dashboardTabBarObject} />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent>
+          <div className="justify-self-center">
+            {tab === 'error' && <Errors />}
+
+            {tab === 'seasons' && <Seasons />}
+
+            {tab === 'addteams' && (
+              <>
+                <TeamForm />
+              </>
+            )}
+            {tab === 'newSeason' && <NewSeason />}
           </div>
-        </div>
-
-        <div className="justify-self-center">
-          {tab === 'error' && <Errors />}
-
-          {tab === 'metadata' && seasonObject && seasonId && (
-            <>
-              <MetadataForm
-                teams={teamsArray}
-                seasonId={seasonId}
-                name={seasonObject?.year}
-              />
-            </>
-          )}
-
-          {tab === 'serie' && <SeriesModal women={women} />}
-
-          {tab === 'teamseason' && seasonId && (
-            <>
-              <TeamSeasonForm
-                teams={teamsArray}
-                seasonId={seasonId}
-                women={women}
-              />
-            </>
-          )}
-
-          {tab === 'addteams' && (
-            <>
-              <TeamForm />
-            </>
-          )}
-          <ul>
-            {filteredSeasons.length < 12 &&
-              filteredSeasons.map((season) => {
-                return (
-                  <li key={season.seasonId}>
-                    <div className="flex flex-row">
-                      <div className="w-32">{season.year}</div>
-                      <div>
-                        <input
-                          type="checkbox"
-                          onChange={() => handleSeasonChange(season.seasonId)}
-                          checked={season.seasonId === seasonId}
-                        />
-                      </div>
-                    </div>
-                  </li>
-                )
-              })}
-          </ul>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

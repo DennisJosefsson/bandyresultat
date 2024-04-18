@@ -82,7 +82,7 @@ animationRouter.get('/animation/:seasonId', (async (
   if (!games || games.length === 0) {
     throw new NotFoundError({
       code: 404,
-      message: 'No animation data',
+      message: 'Ingen data för denna säsong.',
       logging: false,
       context: { origin: 'GET Animation Data Router' },
     })

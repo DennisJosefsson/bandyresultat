@@ -4,11 +4,11 @@ import { Button } from '../@/components/ui/button'
 import { Menu } from 'lucide-react'
 import ModeToggle from './utilitycomponents/Components/ModeToggle'
 import useUserContext from '../hooks/contextHooks/useUserContext'
-import useMenuContext from '../hooks/contextHooks/useMenuContext'
+import { useState } from 'react'
 
 const Header = () => {
+  const [open, setOpen] = useState<boolean>(false)
   const { user } = useUserContext()
-  const { open, dispatch } = useMenuContext()
 
   return (
     <header className="sticky top-0 z-[10000] mb-4 flex h-16 flex-row items-center justify-between gap-4 border-b bg-background px-2 font-poppins text-foreground md:px-6">
@@ -58,7 +58,7 @@ const Header = () => {
         </nav>
       </div>
       <div className="flex flex-row gap-2">
-        <Sheet open={open} onOpenChange={() => dispatch({ type: 'TOGGLE' })}>
+        <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button
               variant="outline"
@@ -74,7 +74,7 @@ const Header = () => {
               <Link
                 to="/"
                 className="hover:text-foreground"
-                onClick={() => dispatch({ type: 'TOGGLE' })}
+                onClick={() => (open ? setOpen(false) : setOpen(true))}
               >
                 Hem
               </Link>
@@ -82,28 +82,28 @@ const Header = () => {
               <Link
                 to="/seasons"
                 className="hover:text-foreground"
-                onClick={() => dispatch({ type: 'TOGGLE' })}
+                onClick={() => (open ? setOpen(false) : setOpen(true))}
               >
                 Säsonger
               </Link>
               <Link
                 to="/teams"
                 className="hover:text-foreground"
-                onClick={() => dispatch({ type: 'TOGGLE' })}
+                onClick={() => (open ? setOpen(false) : setOpen(true))}
               >
                 Lag
               </Link>
               <Link
                 to="/search"
                 className="hover:text-foreground"
-                onClick={() => dispatch({ type: 'TOGGLE' })}
+                onClick={() => (open ? setOpen(false) : setOpen(true))}
               >
                 Sök
               </Link>
               <Link
                 to="/tables?tab=maraton&table=all"
                 className="hover:text-foreground"
-                onClick={() => dispatch({ type: 'TOGGLE' })}
+                onClick={() => (open ? setOpen(false) : setOpen(true))}
               >
                 Maratontabeller
               </Link>
@@ -111,7 +111,7 @@ const Header = () => {
                 <Link
                   to="/dashboard"
                   className="hover:text-foreground"
-                  onClick={() => dispatch({ type: 'TOGGLE' })}
+                  onClick={() => (open ? setOpen(false) : setOpen(true))}
                 >
                   Dashboard
                 </Link>
@@ -119,7 +119,7 @@ const Header = () => {
               <Link
                 to="/about"
                 className="hover:text-foreground"
-                onClick={() => dispatch({ type: 'TOGGLE' })}
+                onClick={() => (open ? setOpen(false) : setOpen(true))}
               >
                 Om sidan
               </Link>

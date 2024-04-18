@@ -3,6 +3,14 @@ import { useQueryClient, useMutation } from 'react-query'
 import metadataFormReducer from '../../reducers/metadataFormReducer'
 import { TeamAttributes } from '../types/teams/teams'
 import { postMetadata } from '../../requests/metadata'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/src/@/components/ui/card'
+import { Label } from '@/src/@/components/ui/label'
+import { Input } from '@/src/@/components/ui/input'
 
 const initFunction = (seasonId: number, name: string) => {
   return {
@@ -91,56 +99,46 @@ const MetadataForm = ({ seasonId, name, teams }: MetdataFormProps) => {
 
   return (
     <>
-      <div>
-        {/*header*/}
-        <div className="flex items-start justify-between rounded-t border-b border-solid border-slate-200 p-5">
-          <h3 className="text-lg font-semibold">Metadata</h3>
-        </div>
-        {/*body*/}
-        <div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Metadata</CardTitle>
+        </CardHeader>
+
+        <CardContent>
           <form onSubmit={handleSubmit} id="metadataForm">
             <div className="flex w-[540px] flex-auto flex-col p-5 px-16">
               <div className="p-1">
-                <label
-                  htmlFor="name"
-                  className="flex flex-row text-sm font-medium text-gray-900"
-                >
-                  <div className="w-32">Serienamn:</div>
-                  <div>
-                    <input
-                      className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                      type="text"
-                      name="name"
-                      value={formState.name}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </label>
+                <Label htmlFor="name">Serienamn</Label>
+
+                <div>
+                  <Input
+                    className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
+                    type="text"
+                    name="name"
+                    value={formState.name}
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
               <div className="p-1">
-                <label
-                  htmlFor="winnerName"
-                  className="flex flex-row text-sm font-medium text-gray-900"
-                >
-                  <div className="w-32">SM-guld:</div>
-                  <div>
-                    <select
-                      className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                      name="winnerName"
-                      id="winnerName"
-                      value={formState.winnerName}
-                      onChange={handleChange}
-                    >
-                      {teamSelection.map((team, index) => {
-                        return (
-                          <option key={index} value={team.value}>
-                            {team.label}
-                          </option>
-                        )
-                      })}
-                    </select>
-                  </div>
-                </label>
+                <Label htmlFor="winnerName">SM-guld:</Label>
+                <div>
+                  <select
+                    className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
+                    name="winnerName"
+                    id="winnerName"
+                    value={formState.winnerName}
+                    onChange={handleChange}
+                  >
+                    {teamSelection.map((team, index) => {
+                      return (
+                        <option key={index} value={team.value}>
+                          {team.label}
+                        </option>
+                      )
+                    })}
+                  </select>
+                </div>
               </div>
               <div className="flex-row">
                 <div className="p-1">
@@ -303,7 +301,7 @@ const MetadataForm = ({ seasonId, name, teams }: MetdataFormProps) => {
               </div>
             </div>
           </form>
-        </div>
+        </CardContent>
         {/*footer*/}
         <div className="flex items-center justify-end rounded-b border-t border-solid border-slate-200 p-6">
           <input
@@ -313,7 +311,7 @@ const MetadataForm = ({ seasonId, name, teams }: MetdataFormProps) => {
             value="Spara"
           />
         </div>
-      </div>
+      </Card>
     </>
   )
 }

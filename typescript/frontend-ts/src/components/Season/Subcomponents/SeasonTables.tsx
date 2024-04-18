@@ -92,7 +92,8 @@ const SeasonTables = () => {
     )
   }
 
-  if (season.error || tables.error) return <DataError />
+  if (season.error || tables.error)
+    return <DataError error={season.error || tables.error} />
 
   if (season.isLoading || tables.isLoading) return <Loading />
 }

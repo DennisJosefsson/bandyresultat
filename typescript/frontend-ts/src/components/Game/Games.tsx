@@ -56,7 +56,8 @@ const Games = () => {
     setTeamFilter('')
   }, [seasonId])
 
-  if (error || seasonError || allSeasonsError) return <DataError />
+  if (error || seasonError || allSeasonsError)
+    return <DataError error={error || seasonError || allSeasonsError} />
 
   if (isLoading || isSeasonLoading || isAllSeasonsLoading) return <Loading />
 

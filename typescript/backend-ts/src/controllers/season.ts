@@ -7,6 +7,7 @@ import {
 } from 'express'
 import Season from '../models/Season.js'
 import newSeasonEntry, {
+  fullNewSeason,
   updateSeasonEntry,
 } from '../utils/postFunctions/newSeasonEntry.js'
 import NotFoundError from '../utils/middleware/errors/NotFoundError.js'
@@ -18,6 +19,7 @@ import IDCheck from '../utils/postFunctions/IDCheck.js'
 import authControl from '../utils/middleware/authControl.js'
 import Metadata from '../models/Metadata.js'
 import TeamTable from '../models/TeamTable.js'
+import BadRequestError from '../utils/middleware/errors/BadRequestError.js'
 
 const seasonRouter = Router()
 
@@ -65,14 +67,31 @@ seasonRouter.get('/', (async (
   res.status(200).json(seasons)
 }) as RequestHandler)
 
-seasonRouter.post('/', authControl, (async (
+seasonRouter.post('/', (async (
   req: Request,
   res: Response,
   _next: NextFunction
 ) => {
-  const newSeasonObject = newSeasonEntry(req.body)
-  const [newSeason] = await Season.upsert(newSeasonObject)
-  return res.status(201).json(newSeason)
+  const { newSeasonArray } = newSeasonEntry(req.body)
+  const [[womenSeason, womenCreated], [menSeason, menCreated]] =
+    await Promise.all(newSeasonArray)
+  if (!womenCreated && !menCreated) {
+    throw new BadRequestError({
+      code: 400,
+      message: 'Säsong finns redan.',
+      logging: true,
+      context: { origin: 'NewSeasonEntry' },
+    })
+  } else if (womenCreated && menCreated) {
+    const womenSeasonId = womenSeason.get().seasonId
+    const menSeasonId = menSeason.get().seasonId
+
+    const fullSeasonArray = fullNewSeason({ womenSeasonId, menSeasonId })
+
+    const newSeries = await Promise.all(fullSeasonArray)
+
+    return res.status(201).json({ womenSeason, menSeason, newSeries })
+  }
 }) as RequestHandler)
 
 seasonRouter.put('/', authControl, (async (

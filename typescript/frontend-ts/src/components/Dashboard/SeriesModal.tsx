@@ -24,7 +24,13 @@ const ErrorComponent = ({ errors }: { errors: FieldErrors }) => {
   )
 }
 
-const SeriesModal = ({ women }: { women: boolean }) => {
+const SeriesModal = ({
+  women,
+  seasonId,
+}: {
+  women: boolean
+  seasonId: number
+}) => {
   const [serieData, setSerieData] = useState<SerieAttributes | null>(null)
   const { data } = useQuery({
     queryKey: ['search', serieData],
@@ -44,7 +50,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
       serieStructure: [],
       serieName: '',
       comment: '',
-      season: '',
+      seasonId: seasonId,
       women: women,
     },
     criteriaMode: 'all',
@@ -54,7 +60,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
 
   useEffect(() => {
     if (data && data.success === false) {
-      setError('season', {
+      setError('seasonId', {
         type: 'manual',
         message: data.message,
       })
@@ -117,21 +123,7 @@ const SeriesModal = ({ women }: { women: boolean }) => {
                 </div>
               </label>
             </div>
-            <div className="p-1">
-              <label
-                htmlFor="season"
-                className="flex flex-row text-sm font-medium text-gray-900"
-              >
-                <div className="w-32">Säsong:</div>
-                <div>
-                  <input
-                    className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                    type="text"
-                    {...register('season')}
-                  />
-                </div>
-              </label>
-            </div>
+
             <div>
               <fieldset className="mb-2 grid grid-cols-2">
                 <legend className="mb-2 font-bold underline underline-offset-2">

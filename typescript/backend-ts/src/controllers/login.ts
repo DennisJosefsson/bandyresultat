@@ -44,7 +44,7 @@ loginRouter.post('/', (async (
   if (!user) {
     throw new NotFoundError({
       code: 404,
-      message: 'User does not exist',
+      message: 'Fel användarnamn.',
       logging: false,
       context: { origin: 'Login Router' },
     })
@@ -65,7 +65,7 @@ loginRouter.post('/', (async (
     } else {
       throw new LoginError({
         code: 401,
-        message: 'Wrong password',
+        message: 'Fel lösenord.',
         logging: false,
         context: { origin: 'Login Router' },
       })

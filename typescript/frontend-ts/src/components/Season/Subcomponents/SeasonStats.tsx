@@ -17,7 +17,7 @@ const SeasonStats = () => {
 
   useScrollTo()
 
-  if (error) return <DataError />
+  if (error) return <DataError error={error} />
 
   if (isLoading) return <Loading />
 
