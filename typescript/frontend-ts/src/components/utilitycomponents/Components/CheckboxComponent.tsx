@@ -8,8 +8,9 @@ import {
   FormItem,
 } from '@/src/@/components/ui/form'
 import { Checkbox } from '@/src/@/components/ui/checkbox'
+import { cn } from '@/src/@/lib/utils'
 
-type CheckboxArray = { value: string; label: string }[]
+type CheckboxArray = { value: string | number; label: string }[]
 
 interface CheckboxComponentProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -20,6 +21,7 @@ interface CheckboxComponentProps<
   name: TName
   checkboxArray: CheckboxArray
   label: string
+  className?: string
 }
 
 export const CheckboxComponent = <
@@ -31,6 +33,7 @@ export const CheckboxComponent = <
   description,
   checkboxArray,
   label,
+  className,
 }: CheckboxComponentProps<TFieldValues, TName>) => {
   return (
     <FormField
@@ -42,7 +45,12 @@ export const CheckboxComponent = <
             <FormLabel className="text-sm md:text-base">{label}</FormLabel>
             <FormDescription>{description}</FormDescription>
           </div>
-          <div className="grid grid-cols-1 gap-y-1 lg:grid-cols-3 lg:gap-x-16">
+          <div
+            className={cn(
+              'grid grid-cols-1 gap-y-1 lg:grid-cols-3 lg:gap-x-16',
+              className,
+            )}
+          >
             {checkboxArray.map((item) => (
               <FormField
                 key={item.value}

@@ -1,323 +1,156 @@
-import { FieldErrors, useForm } from 'react-hook-form'
-import { ErrorMessage } from '@hookform/error-message'
-import { useQuery } from 'react-query'
+import { useForm } from 'react-hook-form'
+
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { postSerie } from '../../requests/series'
-import { useState, useEffect } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import { SerieAttributes, serieAttributes } from '../types/series/series'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Form } from '@/src/@/components/ui/form'
 
-const ErrorComponent = ({ errors }: { errors: FieldErrors }) => {
-  if (Object.keys(errors).length === 0) {
-    return null
-  }
-  return (
-    <div className="mb-2 rounded border-red-700 bg-background p-2 text-sm font-semibold text-red-700 md:text-base">
-      {Object.keys(errors).map((fieldName) => (
-        <ErrorMessage
-          errors={errors}
-          name={fieldName}
-          as="div"
-          key={fieldName}
-        />
-      ))}
-    </div>
-  )
+//import { InputComponent } from '../utilitycomponents/Components/InputComponent'
+//import { CheckboxComponent } from '../utilitycomponents/Components/CheckboxComponent'
+//import TextAreaComponent from '../utilitycomponents/Components/TextAreaComponent'
+import { Button } from '@/src/@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/src/@/components/ui/card'
+import { useToast } from '@/src/@/components/ui/use-toast'
+import { AxiosError } from 'axios'
+import { FormComponent } from '../utilitycomponents/Components/ReactHookFormComponents/FormComponent'
+
+type SeriesModalProps = {
+  women: boolean
+  seasonId: number
+  serieData: SerieAttributes | null
+  setSerieData: Dispatch<SetStateAction<SerieAttributes | null>>
+  setFormContent: Dispatch<SetStateAction<string | null>>
+  setTab: Dispatch<SetStateAction<string>>
 }
 
 const SeriesModal = ({
   women,
   seasonId,
-}: {
-  women: boolean
-  seasonId: number
-}) => {
-  const [serieData, setSerieData] = useState<SerieAttributes | null>(null)
-  const { data } = useQuery({
-    queryKey: ['search', serieData],
-    queryFn: () => postSerie(serieData),
-    enabled: !!serieData,
-  })
+  serieData,
+  setSerieData,
+  setFormContent,
+  setTab,
+}: SeriesModalProps) => {
+  const { toast } = useToast()
 
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors },
-  } = useForm<SerieAttributes>({
+  const mutation = useMutation({
+    mutationFn: (formData: SerieAttributes) => postSerie(formData),
+    onSuccess: (data) => onSuccessSubmit(data),
+    onError: (error) => onSubmitError(error),
+  })
+  const client = useQueryClient()
+  const form = useForm<SerieAttributes>({
     defaultValues: {
-      serieCategory: '',
-      serieGroupCode: '',
-      serieStructure: [],
-      serieName: '',
-      comment: '',
+      serieCategory: serieData ? serieData.serieCategory : '',
+      serieGroupCode: serieData ? serieData.serieGroupCode : '',
+      serieStructure: serieData ? serieData.serieStructure : [],
+      serieName: serieData ? serieData.serieName : '',
+      comment: serieData ? serieData.comment : '',
       seasonId: seasonId,
       women: women,
+      serieId: serieData ? serieData.serieId : null,
     },
     criteriaMode: 'all',
     mode: 'onBlur',
     resolver: zodResolver(serieAttributes),
   })
 
-  useEffect(() => {
-    if (data && data.success === false) {
-      setError('seasonId', {
-        type: 'manual',
-        message: data.message,
+  const onSubmit = (serieFormData: SerieAttributes) => {
+    mutation.mutate(serieFormData)
+  }
+
+  const onSubmitError = (error: unknown) => {
+    if (error instanceof AxiosError) {
+      toast({
+        duration: 5000,
+        title: 'Fel',
+        description: error.response?.data.errors,
+        variant: 'destructive',
+      })
+    } else {
+      toast({
+        duration: 5000,
+        title: 'Något gick fel',
+        variant: 'destructive',
       })
     }
-  }, [data, setError])
+  }
 
-  const onSubmit = (formData: SerieAttributes) => setSerieData(formData)
+  const onSuccessSubmit = (data: SerieAttributes) => {
+    client.invalidateQueries({ queryKey: ['singleSeason'] })
+    toast({
+      duration: 5000,
+      title: serieData ? 'Uppdaterad serie' : 'Ny serie',
+      description: data.serieName,
+    })
+
+    setSerieData(null)
+    setTab('sections')
+    setFormContent(null)
+  }
+
+  const serieStructureArray = Array.from(
+    { length: 14 },
+    (_, index) => index + 1,
+  ).map((_, index) => {
+    return { value: index + 1, label: `${index + 1}` }
+  })
 
   return (
-    <>
-      <div className="flex items-start justify-between rounded-t border-b border-solid border-slate-200 p-5">
-        <h3 className="text-lg font-semibold">Serie</h3>
-      </div>
-      {/*body*/}
-      <div>
-        <form onSubmit={handleSubmit(onSubmit)} id="seriedataForm">
-          <div className="flex w-[540px] flex-auto flex-col p-5 px-16">
-            <div className="p-1">
-              <label
-                htmlFor="serieName"
-                className="flex flex-row text-sm font-medium text-gray-900"
-              >
-                <div className="w-32">Serienamn:</div>
-                <div>
-                  <input
-                    className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                    type="text"
-                    {...register('serieName')}
-                  />
-                </div>
-              </label>
-            </div>
-            <div className="p-1">
-              <label
-                htmlFor="serieGroup"
-                className="flex flex-row text-sm font-medium text-gray-900"
-              >
-                <div className="w-32">Grupp:</div>
-                <div>
-                  <input
-                    className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                    type="text"
-                    {...register('serieGroupCode')}
-                  />
-                </div>
-              </label>
-            </div>
-            <div className="p-1">
-              <label
-                htmlFor="serieCategory"
-                className="flex flex-row text-sm font-medium text-gray-900"
-              >
-                <div className="w-32">Kategori:</div>
-                <div>
-                  <input
-                    className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                    type="text"
-                    {...register('serieCategory')}
-                  />
-                </div>
-              </label>
-            </div>
-
-            <div>
-              <fieldset className="mb-2 grid grid-cols-2">
-                <legend className="mb-2 font-bold underline underline-offset-2">
-                  Seriestruktur
-                </legend>
-                <div className="mb-1 mr-2 flex items-center">
-                  <input
-                    className="content-center border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                    type="checkbox"
-                    value="1"
-                    {...register('serieStructure')}
-                  />
-                  <label htmlFor="1" className="pl-2">
-                    1
-                  </label>
-                </div>
-                <div className="mb-1 mr-2 flex items-center">
-                  <input
-                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                    type="checkbox"
-                    value="2"
-                    {...register('serieStructure')}
-                  />
-                  <label htmlFor="2" className="pl-2">
-                    2
-                  </label>
-                </div>
-                <div className="mb-1 mr-2 flex items-center">
-                  <input
-                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                    type="checkbox"
-                    value="3"
-                    {...register('serieStructure')}
-                  />
-                  <label htmlFor="3" className="pl-2">
-                    3
-                  </label>
-                </div>
-                <div className="mb-1 mr-2 flex items-center">
-                  <input
-                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                    type="checkbox"
-                    value="4"
-                    {...register('serieStructure')}
-                  />
-                  <label htmlFor="4" className="pl-2">
-                    4
-                  </label>
-                </div>
-                <div className="mb-1 mr-2 flex items-center">
-                  <input
-                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                    type="checkbox"
-                    value="5"
-                    {...register('serieStructure')}
-                  />
-                  <label htmlFor="5" className="pl-2">
-                    5
-                  </label>
-                </div>
-                <div className="mb-1 mr-2 flex items-center">
-                  <input
-                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                    type="checkbox"
-                    value="6"
-                    {...register('serieStructure')}
-                  />
-                  <label htmlFor="6" className="pl-2">
-                    6
-                  </label>
-                </div>
-                <div className="mb-1 mr-2 flex items-center">
-                  <input
-                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                    type="checkbox"
-                    value="7"
-                    {...register('serieStructure')}
-                  />
-                  <label htmlFor="7" className="pl-2">
-                    7
-                  </label>
-                </div>
-                <div className="mb-1 mr-2 flex items-center">
-                  <input
-                    className="content-center border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                    type="checkbox"
-                    value="8"
-                    {...register('serieStructure')}
-                  />
-                  <label htmlFor="8" className="pl-2">
-                    8
-                  </label>
-                </div>
-                <div className="mb-1 mr-2 flex items-center">
-                  <input
-                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                    type="checkbox"
-                    value="9"
-                    {...register('serieStructure')}
-                  />
-                  <label htmlFor="9" className="pl-2">
-                    9
-                  </label>
-                </div>
-                <div className="mb-1 mr-2 flex items-center">
-                  <input
-                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                    type="checkbox"
-                    value="10"
-                    {...register('serieStructure')}
-                  />
-                  <label htmlFor="10" className="pl-2">
-                    10
-                  </label>
-                </div>
-                <div className="mb-1 mr-2 flex items-center">
-                  <input
-                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                    type="checkbox"
-                    value="11"
-                    {...register('serieStructure')}
-                  />
-                  <label htmlFor="11" className="pl-2">
-                    11
-                  </label>
-                </div>
-                <div className="mb-1 mr-2 flex items-center">
-                  <input
-                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                    type="checkbox"
-                    value="12"
-                    {...register('serieStructure')}
-                  />
-                  <label htmlFor="12" className="pl-2">
-                    12
-                  </label>
-                </div>
-                <div className="mb-1 mr-2 flex items-center">
-                  <input
-                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                    type="checkbox"
-                    value="13"
-                    {...register('serieStructure')}
-                  />
-                  <label htmlFor="13" className="pl-2">
-                    13
-                  </label>
-                </div>
-                <div className="mb-1 mr-2 flex items-center">
-                  <input
-                    className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                    type="checkbox"
-                    value="14"
-                    {...register('serieStructure')}
-                  />
-                  <label htmlFor="14" className="pl-2">
-                    14
-                  </label>
-                </div>
-              </fieldset>
-            </div>
-            <div className="p-1">
-              <label
-                htmlFor="comment"
-                className="flex flex-row text-sm font-medium text-gray-900"
-              >
-                <div className="w-32">Kommentar:</div>
-                <div>
-                  <textarea
-                    className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                    {...register('comment')}
-                  ></textarea>
-                </div>
-              </label>
-            </div>
-          </div>
-        </form>
-        <div>
-          <ErrorComponent errors={errors} />
-          {data && data.success !== false && (
-            <div className="p-2">Ny seriedata: {data.serieName}</div>
-          )}
+    <Card>
+      <CardHeader>
+        <div className="flex flex-row justify-between">
+          <CardTitle>Serie</CardTitle>
+          <Button type="submit" form="seriedataForm">
+            Skicka
+          </Button>
         </div>
-      </div>
-      {/*footer*/}
-      <div className="flex items-center justify-end rounded-b border-t border-solid border-slate-200 p-6">
-        <input
-          className="mb-1 mr-1 rounded bg-emerald-500 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:shadow-lg focus:outline-none active:bg-emerald-600"
-          type="submit"
-          form="seriedataForm"
-          value="Spara"
-        />
-      </div>
-    </>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} id="seriedataForm">
+            <div className="flex flex-auto flex-col p-5 px-16">
+              <div className="grid grid-cols-3 gap-x-20 gap-y-4">
+                <FormComponent name="serieName" methods={form}>
+                  <FormComponent.Label>Serienamn</FormComponent.Label>
+                  <FormComponent.Input />
+                </FormComponent>
+
+                <FormComponent name="serieGroupCode" methods={form}>
+                  <FormComponent.Label>Grupp</FormComponent.Label>
+                  <FormComponent.Input />
+                </FormComponent>
+
+                <FormComponent name="serieCategory" methods={form}>
+                  <FormComponent.Label>Kategori</FormComponent.Label>
+                  <FormComponent.Input />
+                </FormComponent>
+
+                <FormComponent name="serieStructure" methods={form}>
+                  <FormComponent.Label>Seriestruktur</FormComponent.Label>
+                  <FormComponent.MultiCheckbox
+                    className="grid grid-cols-1 gap-y-1 lg:grid-cols-3 lg:gap-x-16"
+                    checkboxArray={serieStructureArray}
+                  />
+                </FormComponent>
+
+                <FormComponent name="comment" methods={form}>
+                  <FormComponent.Label>Kommentar</FormComponent.Label>
+                  <FormComponent.Textarea className="min-w-[320px]" />
+                </FormComponent>
+              </div>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   )
 }
 

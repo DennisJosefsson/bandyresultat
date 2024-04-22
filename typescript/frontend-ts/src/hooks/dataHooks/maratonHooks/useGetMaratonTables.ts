@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { maratonTabell } from '../../../requests/tables'
 import useGenderContext from '../../contextHooks/useGenderContext'
 import { useSearchParams, useLocation } from 'react-router-dom'
@@ -21,10 +21,10 @@ export const useGetMaratonTables = () => {
       : '',
   )
   const { women } = useGenderContext()
-  const { data, isLoading, error, isSuccess } = useQuery(
-    'maratonTabell',
-    maratonTabell,
-  )
+  const { data, isLoading, error, isSuccess } = useQuery({
+    queryKey: ['maratonTabell'],
+    queryFn: maratonTabell,
+  })
 
   let tabell
   switch (selectedTable) {

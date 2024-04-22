@@ -1,11 +1,11 @@
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { getSeasons } from '../../../requests/seasons'
 
 const useGetAllSeasons = () => {
-  const { data, isLoading, error, isSuccess } = useQuery(
-    'allSeasons',
-    getSeasons,
-  )
+  const { data, isLoading, error, isSuccess } = useQuery({
+    queryKey: ['allSeasons'],
+    queryFn: getSeasons,
+  })
 
   const seasons = isSuccess ? data : []
 

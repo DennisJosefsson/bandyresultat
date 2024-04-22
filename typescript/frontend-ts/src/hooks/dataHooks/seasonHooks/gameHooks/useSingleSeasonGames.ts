@@ -1,14 +1,14 @@
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { getSeasonGames } from '../../../../requests/games'
 import useGenderContext from '../../../contextHooks/useGenderContext'
 import { gameSortFunction } from '../../../../components/utilitycomponents/functions/sortFunction'
 
 export const useSingleSeasonGames = (seasonId: number, teamFilter: string) => {
   const { women } = useGenderContext()
-  const { data, isLoading, error, isSuccess } = useQuery(
-    ['singleSeasonGames', seasonId],
-    () => getSeasonGames(seasonId),
-  )
+  const { data, isLoading, error, isSuccess } = useQuery({
+    queryKey: ['singleSeasonGames', seasonId],
+    queryFn: () => getSeasonGames(seasonId),
+  })
 
   const games = isSuccess
     ? data

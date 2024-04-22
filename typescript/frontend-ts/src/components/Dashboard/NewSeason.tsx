@@ -2,11 +2,11 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Form } from '@/src/@/components/ui/form'
-import { InputComponent } from '../utilitycomponents/Components/InputComponent'
+
 import { Button } from '@/src/@/components/ui/button'
 import { postSeason } from '@/src/requests/seasons'
-import { useState } from 'react'
-import { useQuery } from 'react-query'
+
+import { useMutation } from '@tanstack/react-query'
 
 import { AxiosError } from 'axios'
 
@@ -16,6 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/src/@/components/ui/card'
+import { FormComponent } from '../utilitycomponents/Components/ReactHookFormComponents/FormComponent'
 
 const formSchema = z.object({
   yearString: z
@@ -31,13 +32,10 @@ const formSchema = z.object({
 })
 
 const NewSeason = () => {
-  const [newSeasonData, setNewSeasonData] = useState<z.infer<
-    typeof formSchema
-  > | null>(null)
-  const { data, error } = useQuery({
-    queryKey: ['newSeason', newSeasonData],
-    queryFn: () => newSeasonData && postSeason(newSeasonData),
-    enabled: !!newSeasonData,
+  const { data, error, mutate } = useMutation({
+    mutationFn: (data: z.infer<typeof formSchema>) => {
+      return postSeason(data)
+    },
   })
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,34 +45,30 @@ const NewSeason = () => {
   })
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    if (values) {
-      setNewSeasonData(values)
-    }
+    mutate(values)
   }
 
   const womenSeason = data?.womenSeason
   const menSeason = data?.menSeason
   const newSeries = data?.newSeries
 
-  console.log('error', error, 'errorType', typeof error)
-
   const errorMessage =
     error && error instanceof AxiosError ? error.response?.data.errors : null
-
-  console.log(data)
 
   return (
     <div className="flex flex-row gap-x-8">
       <div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <InputComponent
-              methods={form}
-              label="Säsongsnamn"
-              placeholder=""
-              description='Skriv in namnet på säsongen i format "2024/2025" och det skapas ny herr- och damsäsong, med tillhörande seriegrupper.'
-              name="yearString"
-            />
+            <FormComponent name="yearString" methods={form}>
+              <FormComponent.Label>Säsongsnamn</FormComponent.Label>
+              <FormComponent.Input />
+              <FormComponent.Description>
+                Skriv in namnet på säsongen i format "2024/2025" och det skapas
+                ny herr- och damsäsong, med tillhörande seriegrupper.
+              </FormComponent.Description>
+            </FormComponent>
+
             <Button type="submit">Skicka</Button>
           </form>
         </Form>

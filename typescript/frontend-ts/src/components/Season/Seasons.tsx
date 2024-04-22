@@ -8,7 +8,7 @@ import {
 } from '../utilitycomponents/Components/LoadingOrError'
 import ScrollRefComponent from '../utilitycomponents/Components/ScrollRefComponent'
 import useScrollTo from '../../hooks/domHooks/useScrollTo'
-import useGetAllSeasons from '../../hooks/dataHooks/seasonHooks/useGetAllSeasons'
+import useGetAllSeasons from '@/src/hooks/dataHooks/seasonHooks/useGetAllSeasons'
 
 const Seasons = () => {
   const [seasonFilter, setSeasonFilter] = useState('')

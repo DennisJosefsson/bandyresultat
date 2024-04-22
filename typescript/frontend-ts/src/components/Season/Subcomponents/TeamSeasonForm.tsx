@@ -1,5 +1,5 @@
 import { Reducer, SyntheticEvent, useReducer, useState } from 'react'
-import { useQueryClient, useMutation } from 'react-query'
+import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { Plus, Minus } from 'lucide-react'
 import { postTeamSeason } from '../../../requests/seasons'
 

@@ -12,11 +12,11 @@ import { Input } from '@/src/@/components/ui/input'
 import { CompareFormState, teamIdFromParams } from '../types/teams/teams'
 import useGenderContext from '../../hooks/contextHooks/useGenderContext'
 //import { CompareFormState } from '../types/teams/teams'
-import { useGetTeamsList } from '@/src/hooks/dataHooks/teamHooks/useGetTeamsList'
+import { useGetTeamsList } from '@/src/hooks/dataHooks/teamHooks/useGetTeamsList.ts'
 import { Form } from '@/src/@/components/ui/form'
 import { Card, CardContent } from '@/src/@/components/ui/card'
 
-import { useCompare } from '@/src/hooks/dataHooks/teamHooks/useCompare'
+import { useCompare } from '@/src/hooks/dataHooks/teamHooks/useCompare.ts'
 import TeamsTabBar from './Subcomponents/TeamsTabBar'
 import { ErrorState } from '../Search/Search'
 

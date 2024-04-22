@@ -16,7 +16,7 @@ import Game from './Game.js'
 import TeamGame from './TeamGame.js'
 
 export const serieAttributes = z.object({
-  serieId: z.number(),
+  serieId: z.number().optional().nullable(),
   serieGroupCode: z.string(),
   serieCategory: z.string(),
   serieName: z.string(),

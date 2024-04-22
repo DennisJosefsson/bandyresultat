@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import { baseUrl, mobileBaseUrl, header } from '../config/requestConfig'
 import {
-  GameFormObjectType,
+  InputGameObjectType,
   GameObjectType,
 } from '../components/types/games/games'
 import {
@@ -32,31 +32,25 @@ export const getGames = async () => {
 
 export const getStreaks = async (
   params: StreakParams,
-): Promise<StreakObjectTypes | AxiosError> => {
+): Promise<StreakObjectTypes> => {
   const response = await gamesApi.post('/streaks', params)
-  if (response instanceof AxiosError) {
-    return response
-  }
+
   return response.data
 }
 
 export const getSearch = async (
   searchParams: SearchParamsObject | null,
-): Promise<SearchResponseObject | AxiosError> => {
+): Promise<SearchResponseObject> => {
   const response = await gamesApi.post('/search', searchParams)
-  if (response instanceof AxiosError) {
-    return response
-  }
+
   return response.data
 }
 
 export const getSeasonGames = async (
   seasonId: number,
-): Promise<GameObjectType[] | AxiosError> => {
+): Promise<GameObjectType[]> => {
   const response = await gamesApi.get(`/season/${seasonId}`)
-  if (response instanceof AxiosError) {
-    return response
-  }
+
   return response.data
 }
 
@@ -69,11 +63,9 @@ export const getSeasonStats = async (
 
 export const getAnimation = async (
   seasonId: number,
-): Promise<AnimationObject | AxiosError> => {
+): Promise<AnimationObject> => {
   const response = await gamesApi.get(`/animation/${seasonId}`)
-  if (response instanceof AxiosError) {
-    return response
-  }
+
   return response.data
 }
 
@@ -82,7 +74,7 @@ export const getSingleGame = async ({ gameId }: { gameId: number }) => {
   return response.data
 }
 
-export const postGame = async (newGameData: GameFormObjectType | null) => {
+export const postGame = async (newGameData: InputGameObjectType | null) => {
   const response = await gamesApi.post('/', newGameData)
   if (response instanceof AxiosError) {
     return response

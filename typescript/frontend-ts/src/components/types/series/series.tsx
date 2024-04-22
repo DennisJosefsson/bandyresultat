@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const serieAttributes = z.object({
-  serieId: z.number().optional(),
+  serieId: z.number().optional().nullable(),
   serieGroupCode: z.string(),
   serieCategory: z.string(),
   serieName: z.string(),

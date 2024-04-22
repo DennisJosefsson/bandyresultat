@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { getAnimation } from '../../../../requests/games'
 import { useEffect } from 'react'
 import useGenderContext from '../../../contextHooks/useGenderContext'
@@ -14,10 +14,10 @@ const useAnimationData = (
   dateApi: CarouselApi | undefined,
 ) => {
   const { women } = useGenderContext()
-  const { data, isLoading, error, isSuccess } = useQuery(
-    ['animationData', seasonId],
-    () => getAnimation(seasonId),
-  )
+  const { data, isLoading, error, isSuccess } = useQuery({
+    queryKey: ['animationData', seasonId],
+    queryFn: () => getAnimation(seasonId),
+  })
 
   useEffect(() => {
     if (!isLoading && !error && isSuccess) {

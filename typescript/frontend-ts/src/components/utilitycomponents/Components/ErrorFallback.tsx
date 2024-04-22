@@ -1,5 +1,5 @@
 import { postError } from '../../../requests/errors'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import Spinner from './Spinner'
 import { FallbackProps } from 'react-error-boundary'
 

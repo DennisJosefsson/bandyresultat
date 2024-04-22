@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { getStreaks } from '../../../requests/games'
 import { useSearchParams } from 'react-router-dom'
 import useGenderContext from '../../contextHooks/useGenderContext'
@@ -29,10 +29,10 @@ export const useGetRecordData = () => {
   const [title, setTitle] = useState<string>(
     record && fields.includes(record) ? titles[record] : 'Statistik',
   )
-  const { data, isLoading, error, isSuccess } = useQuery(
-    ['streaks', params],
-    () => getStreaks(params),
-  )
+  const { data, isLoading, error, isSuccess } = useQuery({
+    queryKey: ['streaks', params],
+    queryFn: () => getStreaks(params),
+  })
 
   useEffect(() => {
     setParams((params) => ({ ...params, women: women }))

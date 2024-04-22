@@ -1,15 +1,9 @@
-import { Dispatch, SetStateAction, useState } from 'react'
-import {
-  useForm,
-  Controller,
-  FieldErrors,
-  SubmitHandler,
-} from 'react-hook-form'
+import { Dispatch, SetStateAction } from 'react'
+import { useForm, FieldErrors, SubmitHandler } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { postGame, deleteGame } from '../../../requests/games'
-import { useQuery, useQueryClient, useMutation } from 'react-query'
-import Select from 'react-select'
-import { selectStyles } from '../../utilitycomponents/Components/selectStyles'
+import { useQueryClient, useMutation } from '@tanstack/react-query'
+import { sortOrder } from '../../utilitycomponents/functions/constants'
 import {
   inputGameObject,
   InputGameObjectType,
@@ -18,6 +12,18 @@ import {
 } from '../../types/games/games'
 import { SeasonObjectType } from '../../types/season/seasons'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useToast } from '@/src/@/components/ui/use-toast'
+import { AxiosError } from 'axios'
+import {
+  Card,
+  CardContent,
+  CardTitle,
+  CardHeader,
+} from '@/src/@/components/ui/card'
+import { Form } from '@/src/@/components/ui/form'
+import { Button } from '@/src/@/components/ui/button'
+import { FormComponent } from '../../utilitycomponents/Components/ReactHookFormComponents/FormComponent'
+import { ScrollArea } from '@/src/@/components/ui/scroll-area'
 
 type GameFormPropTypes = {
   season: SeasonObjectType[]
@@ -75,14 +81,8 @@ const initEdit = (gameData: GameObjectType): InputGameObjectType => {
   return {
     gameId: gameData.gameId,
     seasonId: gameData.seasonId,
-    homeTeamId: {
-      value: gameData.homeTeam.teamId,
-      label: gameData.homeTeam.casualName,
-    },
-    awayTeamId: {
-      value: gameData.awayTeam.teamId,
-      label: gameData.awayTeam.casualName,
-    },
+    homeTeamId: gameData.homeTeamId,
+    awayTeamId: gameData.awayTeamId,
     result: gameData.result,
     halftimeResult: gameData.halftimeResult,
     date: gameData.date,
@@ -95,6 +95,15 @@ const initEdit = (gameData: GameObjectType): InputGameObjectType => {
   }
 }
 
+const categoryArray = [
+  { value: 'final', label: 'Final' },
+  { value: 'semi', label: 'Semi' },
+  { value: 'quarter', label: 'Kvart' },
+  { value: 'eight', label: 'Åttondel' },
+  { value: 'regular', label: 'Grundserie' },
+  { value: 'qualification', label: 'Kvalmatch' },
+]
+
 const GameForm = ({
   season,
   setShowModal,
@@ -102,41 +111,56 @@ const GameForm = ({
   setGameData,
   women,
 }: GameFormPropTypes) => {
-  const [newGameData, setNewGameData] = useState<GameFormObjectType | null>(
-    null,
-  )
-  const [error, setError] = useState<string | null>(null)
-  const [playoff, setPlayoff] = useState<boolean>(false)
-  const [extraTime, setExtraTime] = useState<boolean>(false)
-  const [penalties, setPenalties] = useState<boolean>(false)
+  const { toast } = useToast()
+
   const client = useQueryClient()
-  const { data } = useQuery({
-    queryKey: ['game', newGameData],
-    queryFn: () => postGame(newGameData),
-    enabled: !!newGameData,
+  const submitMutation = useMutation({
+    mutationFn: (newGameData: GameFormObjectType) => postGame(newGameData),
     onSuccess: () => onSuccessSubmit(),
+    onError: (error) => onErrorFunction(error),
   })
 
-  const mutation = useMutation({
+  const deleteMutation = useMutation({
     mutationFn: ({ gameId }: { gameId: number }) => deleteGame(gameId),
     onSuccess: () => onSuccessDeleteMutation(),
-    onError: (error: Error) => setError(error.message),
+    onError: (error) => onErrorFunction(error),
   })
 
   const onSuccessDeleteMutation = () => {
     client.invalidateQueries({ queryKey: ['singleSeasonGames'] })
-    setTimeout(() => {
-      setGameData(null)
-      setShowModal(false)
-    }, 500)
+    toast({
+      duration: 5000,
+      title: 'Match borttagen',
+    })
+    setGameData(null)
+    setShowModal(false)
   }
 
   const onSuccessSubmit = () => {
     client.invalidateQueries({ queryKey: ['singleSeasonGames'] })
-    setTimeout(() => {
-      setGameData(null)
-      setShowModal(false)
-    }, 750)
+    toast({
+      duration: 5000,
+      title: 'Match inlagd/uppdaterad',
+    })
+    setGameData(null)
+    setShowModal(false)
+  }
+
+  const onErrorFunction = (error: unknown) => {
+    if (error instanceof AxiosError) {
+      toast({
+        duration: 5000,
+        title: 'Fel',
+        description: error.response?.data.errors,
+        variant: 'destructive',
+      })
+    } else {
+      toast({
+        duration: 5000,
+        title: 'Något gick fel',
+        variant: 'destructive',
+      })
+    }
   }
 
   const teamSelection = season[0].teams.map((team) => {
@@ -145,395 +169,191 @@ const GameForm = ({
 
   teamSelection.push({ value: 176, label: 'Ej Bestämt' })
 
-  const groupSelection = [
-    { value: 'elitserien', label: 'Elitserien' },
-    { value: 'allsvenskan', label: 'Allsvenskan' },
-    { value: 'KvalA', label: 'Kvalgrupp A' },
-    { value: 'KvalB', label: 'Kvalgrupp B' },
-    { value: 'E1', label: 'Åttondel 1' },
-    { value: 'E2', label: 'Åttondel 2' },
-    { value: 'Q1', label: 'Kvartsfinal 1' },
-    { value: 'Q2', label: 'Kvartsfinal 2' },
-    { value: 'Q3', label: 'Kvartsfinal 3' },
-    { value: 'Q4', label: 'Kvartsfinal 4' },
-    { value: 'S1', label: 'Semifinal 1' },
-    { value: 'S2', label: 'Semifinal 2' },
-    { value: 'final', label: 'Final' },
-  ]
+  const groupArray = season[0].series
+    .map((serie) => {
+      return { value: serie.serieGroupCode, label: serie.serieName }
+    })
+    .sort((a, b) => {
+      if (sortOrder.indexOf(a.value) > sortOrder.indexOf(b.value)) {
+        return 1
+      } else if (sortOrder.indexOf(a.value) < sortOrder.indexOf(b.value)) {
+        return -1
+      } else {
+        return 0
+      }
+    })
 
-  const {
-    register,
-    setValue,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<InputGameObjectType>({
+  const form = useForm<InputGameObjectType>({
     defaultValues: gameData
       ? initEdit(gameData)
       : initAdd({ seasonId: season[0].seasonId, women }),
     criteriaMode: 'all',
-    mode: 'onBlur',
+    mode: 'onChange',
     resolver: zodResolver(inputGameObject),
   })
 
+  const {
+    handleSubmit,
+    getValues,
+    formState: { errors },
+  } = form
+
+  console.log('logging from GameForm', getValues('homeTeamId'))
+
   const onSubmit: SubmitHandler<InputGameObjectType> = (formData) => {
-    if (
-      !formData.homeTeamId ||
-      !formData.homeTeamId.value ||
-      !formData.awayTeamId ||
-      !formData.awayTeamId.value
-    ) {
+    if (!formData.homeTeamId || !formData.awayTeamId) {
       throw new Error('Missing teamId formData')
     }
     const gameData = {
       ...formData,
-      homeTeamId: formData.homeTeamId.value,
-      awayTeamId: formData.awayTeamId.value,
+      homeTeamId: formData.homeTeamId,
+      awayTeamId: formData.awayTeamId,
     }
 
-    setNewGameData(gameData)
-    setTimeout(() => {
-      setShowModal(false)
-    }, 3000)
+    submitMutation.mutate(gameData)
   }
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
-        <div className="fixed inset-2 mx-auto my-6 w-auto max-w-3xl overflow-y-auto">
+      <div className="fixed inset-y-40 z-50 m-2 flex items-center justify-center overflow-x-hidden outline-none focus:outline-none">
+        <div className="fixed inset-2 mx-auto my-6 w-auto max-w-3xl">
           {/*content*/}
-          <div className="relative flex w-full flex-col rounded-lg border-0 bg-background shadow-lg outline-none focus:outline-none">
-            {/*header*/}
-            <div className="flex items-start justify-between rounded-t border-b border-solid border-slate-200 p-5">
-              <h3 className="text-3xl font-semibold">Matchformulär</h3>
-              <button
-                className="float-right ml-auto border-0 bg-transparent p-1 text-3xl font-semibold leading-none text-black opacity-5 outline-none focus:outline-none"
-                onClick={() => setShowModal(false)}
-              >
-                <span className="block h-6 w-6 bg-transparent text-2xl text-black opacity-5 outline-none focus:outline-none">
-                  ×
-                </span>
-              </button>
-            </div>
+          <Card className="relative flex w-full flex-col">
+            <CardHeader>
+              <div className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Matchformulär</CardTitle>
+                </div>
+                <div className="flex flex-row gap-8">
+                  {gameData && gameData.gameId && (
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() =>
+                        gameData.gameId !== undefined &&
+                        deleteMutation.mutate({ gameId: gameData.gameId })
+                      }
+                    >
+                      Ta bort
+                    </Button>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => {
+                      setGameData(null)
+                      setShowModal(false)
+                    }}
+                  >
+                    Stäng
+                  </Button>
+                  <Button size="sm" type="submit" form="GameForm">
+                    Spara
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
             {/*body*/}
-            <div>
-              <form onSubmit={handleSubmit(onSubmit)} id="GameForm">
-                <div className="flex w-[640px] flex-auto flex-col justify-start p-5 px-16">
-                  <div className="p-1">
-                    <label
-                      htmlFor="homeTeamId"
-                      className="flex flex-row text-sm font-medium text-gray-900"
-                    >
-                      <div className="w-32">Hemmalag:</div>
-                      <div>
-                        <Controller
-                          name="homeTeamId"
-                          control={control}
-                          rules={{ required: 'Måste ange hemmalag' }}
-                          render={({ field }) => (
-                            <Select
-                              options={teamSelection}
-                              {...field}
-                              styles={selectStyles}
-                            />
-                          )}
+            <ScrollArea className="h-[400px]">
+              <CardContent>
+                <Form {...form}>
+                  <form onSubmit={handleSubmit(onSubmit)} id="GameForm">
+                    <div className="p-1">
+                      <FormComponent methods={form} name="homeTeamId">
+                        <FormComponent.Label>Hemmalag</FormComponent.Label>
+                        <FormComponent.Select
+                          selectionArray={teamSelection}
+                          placeholder="Välj lag"
                         />
-                      </div>
-                    </label>
-                  </div>
-                  <div className="p-1">
-                    <label
-                      htmlFor="awayTeamId"
-                      className="flex flex-row text-sm font-medium text-gray-900"
-                    >
-                      <div className="w-32">Bortalag:</div>
-                      <div>
-                        <Controller
-                          name="awayTeamId"
-                          control={control}
-                          rules={{ required: 'Måste ange bortalag' }}
-                          render={({ field }) => (
-                            <Select
-                              options={teamSelection}
-                              {...field}
-                              styles={selectStyles}
-                            />
-                          )}
+                      </FormComponent>
+                    </div>
+                    <div className="p-1">
+                      <FormComponent methods={form} name="awayTeamId">
+                        <FormComponent.Label>Bortalag</FormComponent.Label>
+                        <FormComponent.Select
+                          selectionArray={teamSelection}
+                          placeholder="Välj lag"
                         />
+                      </FormComponent>
+                    </div>
+                    <div className="flex flex-col py-2">
+                      <div className="p-1">
+                        <FormComponent methods={form} name="result">
+                          <FormComponent.Label>Resultat</FormComponent.Label>
+                          <FormComponent.Input />
+                        </FormComponent>
                       </div>
-                    </label>
-                  </div>
-                  <div className="flex flex-col py-2">
-                    <div className="p-1">
-                      <label
-                        htmlFor="result"
-                        className="flex flex-row text-sm font-medium text-gray-900"
-                      >
-                        <div className="w-32">Slutresultat:</div>
-                        <div>
-                          <input
-                            className="w-24 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                            type="text"
-                            {...register('result')}
+                      <div className="p-1">
+                        <FormComponent methods={form} name="halftimeResult">
+                          <FormComponent.Label>
+                            Halvtidsresultat
+                          </FormComponent.Label>
+                          <FormComponent.Input />
+                        </FormComponent>
+                      </div>
+                      <div className="p-1">
+                        <FormComponent methods={form} name="date">
+                          <FormComponent.Label>Datum</FormComponent.Label>
+                          <FormComponent.Input />
+                        </FormComponent>
+                      </div>
+
+                      <div className="p-1">
+                        <FormComponent methods={form} name="category">
+                          <FormComponent.Label>Kategori</FormComponent.Label>
+                          <FormComponent.RadioGroup
+                            radioGroupArray={categoryArray}
+                            className="grid grid-cols-3 gap-2"
                           />
-                        </div>
-                      </label>
-                    </div>
-                    <div className="p-1">
-                      <label
-                        htmlFor="halftimeResult"
-                        className="flex flex-row text-sm font-medium text-gray-900"
-                      >
-                        <div className="w-32">Halvtidsresultat:</div>
-                        <div>
-                          <input
-                            className="w-24 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                            type="text"
-                            {...register('halftimeResult')}
+                        </FormComponent>
+                      </div>
+                      <div className="p-1">
+                        <FormComponent methods={form} name="group">
+                          <FormComponent.Label>Grupp</FormComponent.Label>
+                          <FormComponent.RadioGroup
+                            radioGroupArray={groupArray}
+                            className="grid grid-cols-2 gap-2"
                           />
-                        </div>
-                      </label>
-                    </div>
-                    <div className="p-1">
-                      <label
-                        htmlFor="date"
-                        className="flex flex-row text-sm font-medium text-gray-900"
-                      >
-                        <div className="w-32">Datum:</div>
-                        <div>
-                          <input
-                            className="w-32 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                            type="text"
-                            {...register('date')}
-                          />
-                        </div>
-                      </label>
+                        </FormComponent>
+                      </div>
                     </div>
 
-                    <div className="p-1">
-                      <label
-                        htmlFor="category"
-                        className="flex flex-row text-sm font-medium text-gray-900"
-                      >
-                        <div className="w-32">Kategori:</div>
-                        <fieldset className="mb-2 grid grid-cols-2 self-start">
-                          <div className="mb-1 mr-2 flex items-center">
-                            <input
-                              className="content-center border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                              type="radio"
-                              value="final"
-                              {...register('category')}
-                            />
-                            <label htmlFor="final" className="pl-2">
-                              Final
-                            </label>
+                    <div className="flex flex-row gap-4">
+                      <div className="p-1">
+                        <FormComponent methods={form} name="playoff">
+                          <div className="flex flex-row items-center gap-2">
+                            <FormComponent.Label>Slutspel</FormComponent.Label>
+                            <FormComponent.SingleCheckbox />
                           </div>
-                          <div className="mb-1 mr-2 flex items-center">
-                            <input
-                              className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                              type="radio"
-                              value="semi"
-                              {...register('category')}
-                            />
-                            <label htmlFor="semi" className="pl-2">
-                              Semifinal
-                            </label>
-                          </div>
-                          <div className="mb-1 mr-2 flex items-center">
-                            <input
-                              className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                              type="radio"
-                              value="quarter"
-                              {...register('category')}
-                            />
-                            <label htmlFor="quarter" className="pl-2">
-                              Kvartsfinal
-                            </label>
-                          </div>
-                          <div className="mb-1 mr-2 flex items-center">
-                            <input
-                              className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                              type="radio"
-                              value="eight"
-                              {...register('category')}
-                            />
-                            <label htmlFor="eight" className="pl-2">
-                              Åttondelsfinal
-                            </label>
-                          </div>
-                          <div className="mb-1 mr-2 flex items-center">
-                            <input
-                              className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                              type="radio"
-                              value="regular"
-                              {...register('category')}
-                            />
-                            <label htmlFor="regular" className="pl-2">
-                              Grundserie
-                            </label>
-                          </div>
-                          <div className="mb-1 mr-2 flex items-center">
-                            <input
-                              className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                              type="radio"
-                              value="qualification"
-                              {...register('category')}
-                            />
-                            <label htmlFor="qualification" className="pl-2">
-                              Kvalmatch
-                            </label>
-                          </div>
-                        </fieldset>
-                      </label>
-                    </div>
-                    <div className="p-1">
-                      <label
-                        htmlFor="group"
-                        className="flex flex-row text-sm font-medium text-gray-900"
-                      >
-                        <div className="w-32">Grupp:</div>
-                        <fieldset className="mb-2 grid grid-cols-2 self-start">
-                          {groupSelection.map((group) => {
-                            return (
-                              <div
-                                key={group.value}
-                                className="mb-1 mr-2 flex items-center"
-                              >
-                                <input
-                                  className="border-[#011d29] text-foreground focus:border-[#011d29] focus:ring-0"
-                                  type="radio"
-                                  value={group.value}
-                                  {...register('group')}
-                                />
-                                <label htmlFor={group.value} className="pl-2">
-                                  {group.label}
-                                </label>
-                              </div>
-                            )
-                          })}
-                        </fieldset>
-                      </label>
-                    </div>
-                  </div>
+                        </FormComponent>
+                      </div>
 
-                  <div className="flex flex-row">
-                    <div className="p-1">
-                      <label
-                        htmlFor="playoff"
-                        className="flex flex-row  space-x-2 text-sm font-medium text-gray-900 "
-                      >
-                        <div className="w-32">Slutspel?</div>
-                        <div>
-                          <input
-                            className="text-gray-900 focus:ring-gray-500"
-                            type="checkbox"
-                            {...register('playoff')}
-                            checked={playoff}
-                            onChange={(event) => {
-                              setValue(
-                                'playoff',
-                                event.target.checked ? true : false,
-                              )
-                              setPlayoff(!playoff)
-                            }}
-                          />
-                        </div>
-                      </label>
-                    </div>
+                      <div className="p-1">
+                        <FormComponent methods={form} name="extraTime">
+                          <div className="flex flex-row items-center gap-2">
+                            <FormComponent.Label>Övertid</FormComponent.Label>
+                            <FormComponent.SingleCheckbox />
+                          </div>
+                        </FormComponent>
+                      </div>
 
-                    <div className="p-1">
-                      <label
-                        htmlFor="extraTime"
-                        className="flex flex-row  space-x-2 text-sm font-medium text-gray-900 "
-                      >
-                        <div className="w-32">Övertid?</div>
-                        <div>
-                          <input
-                            className="text-gray-900 focus:ring-gray-500"
-                            type="checkbox"
-                            {...register('extraTime')}
-                            checked={extraTime}
-                            onChange={(event) => {
-                              setValue(
-                                'extraTime',
-                                event.target.checked ? true : false,
-                              )
-                              setExtraTime(!extraTime)
-                            }}
-                          />
-                        </div>
-                      </label>
+                      <div className="p-1">
+                        <FormComponent methods={form} name="penalties">
+                          <div className="flex flex-row items-center gap-2">
+                            <FormComponent.Label>Straffar</FormComponent.Label>
+                            <FormComponent.SingleCheckbox />
+                          </div>
+                        </FormComponent>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex flex-row">
-                    <div className="p-1">
-                      <label
-                        htmlFor="penalties"
-                        className="flex flex-row  space-x-2 text-sm font-medium text-gray-900 "
-                      >
-                        <div className="w-32">Straffar?</div>
-                        <div>
-                          <input
-                            className="text-gray-900 focus:ring-gray-500"
-                            type="checkbox"
-                            {...register('penalties')}
-                            checked={penalties}
-                            onChange={(event) => {
-                              setValue(
-                                'penalties',
-                                event.target.checked ? true : false,
-                              )
-                              setPenalties(!penalties)
-                            }}
-                          />
-                        </div>
-                      </label>
-                    </div>
-                  </div>
+                  </form>
+                </Form>
+                <div>
+                  <ErrorComponent errors={errors} />
                 </div>
-              </form>
-            </div>
-            <div>
-              <ErrorComponent errors={errors} />
-              {error && <div className="p-2">{error}</div>}
-              {data && (
-                <div className="p-2">
-                  Ny match: {data.game.date} {data.game.result}
-                </div>
-              )}
-            </div>
-            {/*footer*/}
-            <div className="flex items-center justify-end rounded-b border-t border-solid border-slate-200 p-6">
-              {gameData && gameData.gameId && (
-                <button
-                  className="mb-1 mr-1 rounded bg-red-500 px-6 py-2 text-sm font-bold uppercase text-white outline-none transition-all duration-150 ease-linear focus:outline-none"
-                  type="button"
-                  onClick={() =>
-                    gameData.gameId !== undefined &&
-                    mutation.mutate({ gameId: gameData.gameId })
-                  }
-                >
-                  Ta bort
-                </button>
-              )}
-              <button
-                className="background-transparent mb-1 mr-1 px-6 py-2 text-sm font-bold uppercase text-red-500 outline-none transition-all duration-150 ease-linear focus:outline-none"
-                type="button"
-                onClick={() => {
-                  setGameData(null)
-                  setShowModal(false)
-                }}
-              >
-                Stäng
-              </button>
-              <input
-                className="mb-1 mr-1 rounded bg-emerald-500 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:shadow-lg focus:outline-none active:bg-emerald-600"
-                type="submit"
-                form="GameForm"
-                value="Spara"
-              />
-            </div>
-          </div>
+              </CardContent>
+            </ScrollArea>
+          </Card>
         </div>
       </div>
       <div className="fixed inset-0 z-40 bg-black opacity-25"></div>

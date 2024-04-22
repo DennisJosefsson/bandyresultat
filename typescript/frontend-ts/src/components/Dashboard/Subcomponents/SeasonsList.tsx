@@ -3,58 +3,90 @@ import { SeasonObjectType } from '../../types/season/seasons'
 import { useState } from 'react'
 import TeamSeasonForm from '../../Season/Subcomponents/TeamSeasonForm'
 import SingleSeason from '../SingleSeason'
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from '@/src/@/components/ui/tabs'
+import SeriesModal from '../SeriesModal'
+import { SerieAttributes } from '../../types/series/series'
 
 const SeasonsList = ({ seasons }: { seasons: SeasonObjectType[] }) => {
   const [seasonId, setSeasonId] = useState<number>(0)
   const [year, setYear] = useState<string>('')
   const [open, setOpen] = useState<boolean>(false)
-  const [tab, setTab] = useState<string | null>(null)
+  const [tab, setTab] = useState<string>('sections')
+  const [formContent, setFormContent] = useState<string | null>(null)
   const [women, setWomen] = useState<boolean>(false)
+  const [serieData, setSerieData] = useState<SerieAttributes | null>(null)
+
   return (
     <>
-      <div className="grid grid-cols-2 justify-between gap-x-8 gap-y-2 pt-2">
-        {seasons.map((season) => {
-          return (
-            <div
-              key={season.seasonId}
-              className="flex flex-row items-center justify-between bg-background px-2 py-1 text-sm lg:text-base"
-            >
+      <div className="grid grid-cols-4 justify-between gap-x-8 gap-y-2 pt-2">
+        {seasons
+          .sort((a, b) => {
+            if (a.year < b.year) {
+              return 1
+            }
+            if (a.year > b.year) {
+              return -1
+            }
+            return 0
+          })
+          .map((season) => {
+            return (
               <div
-                className="cursor-pointer font-semibold"
-                onClick={() => {
-                  setTab('singleSeason')
-                  setYear(season.year)
-                  setWomen(season.women)
-                  setOpen(true)
-                }}
+                key={season.seasonId}
+                className="flex flex-row items-center justify-between bg-background px-2 py-1 text-sm lg:text-base"
               >
-                {season.year} {season.women ? 'Dam' : 'Herr'}
+                <div
+                  className="cursor-pointer font-semibold"
+                  onClick={() => {
+                    setTab('sections')
+                    setYear(season.year)
+                    setWomen(season.women)
+                    setOpen(true)
+                    setSeasonId(season.seasonId)
+                  }}
+                >
+                  {season.year} {season.women ? 'Dam' : 'Herr'}
+                </div>
               </div>
-              <div
-                className="cursor-pointer rounded-md bg-background px-2 py-1 text-center lg:bg-background xl:p-0"
-                onClick={() => {
-                  setTab('teamseason')
-                  setOpen(true)
-                  setSeasonId(season.seasonId)
-                  setWomen(season.women)
-                }}
-              >
-                Lag
-              </div>
-              <div className="cursor-pointer rounded-md bg-background px-2 py-1 text-center lg:bg-background xl:p-0">
-                Matcher
-              </div>
-            </div>
-          )
-        })}
+            )
+          })}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetContent side="bottom" className="h-[90%] overflow-auto">
-            {tab === 'teamseason' && (
-              <TeamSeasonForm women={women} seasonId={seasonId} />
-            )}
-            {tab === 'singleSeason' && (
-              <SingleSeason year={year} women={women} />
-            )}
+            <Tabs value={tab} onValueChange={setTab}>
+              <TabsList>
+                <TabsTrigger value="sections">Sektioner</TabsTrigger>
+                <TabsTrigger value="forms">Formulär</TabsTrigger>
+              </TabsList>
+              <TabsContent value="sections">
+                <SingleSeason
+                  year={year}
+                  women={women}
+                  setFormContent={setFormContent}
+                  setTab={setTab}
+                  setSerieData={setSerieData}
+                />
+              </TabsContent>
+              <TabsContent value="forms">
+                {formContent === 'teamseason' && (
+                  <TeamSeasonForm women={women} seasonId={seasonId} />
+                )}
+                {formContent === 'series' && (
+                  <SeriesModal
+                    women={women}
+                    seasonId={seasonId}
+                    serieData={serieData}
+                    setFormContent={setFormContent}
+                    setTab={setTab}
+                    setSerieData={setSerieData}
+                  />
+                )}
+              </TabsContent>
+            </Tabs>
           </SheetContent>
         </Sheet>
       </div>

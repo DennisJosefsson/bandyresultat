@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { FieldValues, Path, UseFormReturn } from 'react-hook-form'
-import { SearchParamsObject } from '../../types/games/search'
+import { FieldValues, Path, UseFormReturn, PathValue } from 'react-hook-form'
+
 import {
   FormField,
   FormItem,
@@ -25,6 +25,7 @@ import {
   CommandGroup,
   CommandEmpty,
   CommandItem,
+  CommandList,
 } from '@/src/@/components/ui/command'
 import { cn } from '@/src/@/lib/utils'
 import { ScrollArea, ScrollBar } from '@/src/@/components/ui/scroll-area'
@@ -36,101 +37,128 @@ import {
   SelectValue,
 } from '@/src/@/components/ui/select'
 
-type Props = {
-  methods: UseFormReturn<SearchParamsObject>
+interface SearchSelectComponentProps<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends Path<TFieldValues> = Path<TFieldValues>,
+> {
+  methods: UseFormReturn<TFieldValues>
   selectionArray: {
     value: number
     label: string
   }[]
-  name: keyof SearchParamsObject
+  name: TName
   label: string
 }
 
-export const SearchSelectComponent = ({
+export const SearchSelectComponent = <
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends Path<TFieldValues> = Path<TFieldValues>,
+>({
   methods,
   selectionArray,
   name,
   label,
-}: Props) => {
+}: SearchSelectComponentProps<TFieldValues, TName>) => {
   const [open, setOpen] = useState(false)
   return (
     <>
       <FormField
         control={methods.control}
         name={name}
-        render={({ field }) => (
-          <FormItem className="flex flex-col">
-            <FormLabel className="text-sm md:text-base">{label}</FormLabel>
-            <div className="flex flex-row items-center gap-1">
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      className={cn(
-                        'w-[240px] justify-between',
-                        !field.value && 'text-muted-foreground',
-                      )}
-                    >
-                      {field.value
-                        ? selectionArray.find(
-                            (team) => team.value.toString() === field.value,
-                          )?.label
-                        : 'Lag'}
+        render={({ field }) => {
+          console.log('logging from select component', field.value.value)
+          return (
+            <FormItem className="flex flex-col">
+              <FormLabel className="text-sm md:text-base">{label}</FormLabel>
+              <div className="flex flex-row items-center gap-1">
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          'w-[240px] justify-between',
+                          !field.value && 'text-muted-foreground',
+                        )}
+                      >
+                        {field.value
+                          ? selectionArray.find(
+                              (team) => team.value === field.value.value,
+                            )?.label
+                          : 'Lag'}
 
-                      <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-[240px] p-0">
-                  <Command>
-                    <CommandInput
-                      placeholder="Sök"
-                      className="h-8 w-[240px] p-1"
-                    />
-                    <ScrollArea>
-                      <CommandEmpty>Inget sådant lag.</CommandEmpty>
-                      <CommandGroup className="max-h-64 overflow-y-scroll bg-background">
-                        {selectionArray.map((team) => (
-                          <CommandItem
-                            value={team.label}
-                            key={team.value}
-                            onSelect={() => {
-                              methods.setValue(`${name}`, team.value.toString())
-                              setOpen(false)
-                            }}
-                          >
-                            {team.label}
-                            <CheckIcon
-                              className={cn(
-                                'ml-auto h-4 w-4',
-                                team.value.toString() === field.value
-                                  ? 'opacity-100'
-                                  : 'opacity-0',
-                              )}
-                            />
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                      <ScrollBar orientation="vertical" />
-                    </ScrollArea>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-              {field.value !== '' && (
-                <CrossCircledIcon
-                  onClick={() => {
-                    methods.setValue(`${name}`, '')
-                    setOpen(false)
-                  }}
-                  className="ml-2 h-4 w-4 shrink-0 opacity-50"
-                />
-              )}
-            </div>
-            <FormMessage />
-          </FormItem>
-        )}
+                        <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[240px] p-0">
+                    <Command>
+                      <CommandInput
+                        placeholder="Sök"
+                        className="h-8 w-[240px] p-1"
+                      />
+                      <ScrollArea>
+                        <CommandList>
+                          <CommandEmpty>Inget sådant lag.</CommandEmpty>
+                          <CommandGroup className="max-h-64 overflow-y-scroll bg-background">
+                            {selectionArray.map((team) => (
+                              <CommandItem
+                                value={team.label}
+                                key={team.value}
+                                onSelect={() => {
+                                  methods.setValue(
+                                    `${name}.value` as TName,
+                                    team.value as PathValue<
+                                      TFieldValues,
+                                      TName
+                                    >,
+                                  )
+                                  methods.setValue(
+                                    `${name}.label` as TName,
+                                    team.label as PathValue<
+                                      TFieldValues,
+                                      TName
+                                    >,
+                                  )
+                                  setOpen(false)
+                                }}
+                              >
+                                {team.label}
+                                <CheckIcon
+                                  className={cn(
+                                    'ml-auto h-4 w-4',
+                                    team.value.toString() === field.value
+                                      ? 'opacity-100'
+                                      : 'opacity-0',
+                                  )}
+                                />
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                        <ScrollBar orientation="vertical" />
+                      </ScrollArea>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                {field.value !== '' && (
+                  <CrossCircledIcon
+                    onClick={() => {
+                      methods.setValue(
+                        name,
+                        '' as PathValue<TFieldValues, Path<TFieldValues>>,
+                      )
+                      setOpen(false)
+                    }}
+                    className="ml-2 h-4 w-4 shrink-0 opacity-50"
+                  />
+                )}
+              </div>
+              <FormMessage />
+            </FormItem>
+          )
+        }}
       />
     </>
   )

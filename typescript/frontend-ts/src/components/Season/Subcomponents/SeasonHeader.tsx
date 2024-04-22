@@ -11,7 +11,7 @@ import {
 } from '@/src/@/components/ui/carousel'
 
 import { Button } from '@/src/@/components/ui/button'
-import useGetAllSeasons from '@/src/hooks/dataHooks/seasonHooks/useGetAllSeasons'
+import useGetAllSeasons from '@/src/hooks/dataHooks/seasonHooks/useGetAllSeasons.js'
 import { useState, useEffect } from 'react'
 
 type SeasonHeaderProps = {

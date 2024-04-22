@@ -1,5 +1,5 @@
 import { SyntheticEvent, ChangeEvent, useReducer } from 'react'
-import { useQueryClient, useMutation } from 'react-query'
+import { useQueryClient, useMutation } from '@tanstack/react-query'
 import teamFormReducer from '../../../reducers/teamFormReducer'
 import { postTeam } from '../../../requests/teams'
 

@@ -6,7 +6,7 @@ import SeasonStats from './SeasonStats'
 import SeasonTables from './SeasonTables'
 import Animation from '../../Game/Subcomponents/Animation'
 import Map from './Map'
-import { useGetFirstAndLastSeason } from '../../../hooks/dataHooks/seasonHooks/useGetFirstAndLastSeason'
+import { useGetFirstAndLastSeason } from '@/src/hooks/dataHooks/seasonHooks/useGetFirstAndLastSeason'
 
 const SeasonComponentSwitch = ({ tab }: { tab: string | null }) => {
   const { seasonId } = useSeasonContext()

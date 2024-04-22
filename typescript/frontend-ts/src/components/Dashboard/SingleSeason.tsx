@@ -9,8 +9,24 @@ import {
   CardHeader,
   CardTitle,
 } from '@/src/@/components/ui/card'
+import { Dispatch, SetStateAction } from 'react'
+import { SerieAttributes } from '../types/series/series'
 
-const SingleSeason = ({ women, year }: { women: boolean; year: string }) => {
+type SingleSeasonProps = {
+  women: boolean
+  year: string
+  setFormContent: Dispatch<SetStateAction<string | null>>
+  setTab: Dispatch<SetStateAction<string>>
+  setSerieData: Dispatch<SetStateAction<SerieAttributes | null>>
+}
+
+const SingleSeason = ({
+  women,
+  year,
+  setFormContent,
+  setTab,
+  setSerieData,
+}: SingleSeasonProps) => {
   const seasonId = parseInt(year.slice(-4))
   const { data, isLoading, error } = useGetSingleSeason(seasonId)
 
@@ -36,9 +52,24 @@ const SingleSeason = ({ women, year }: { women: boolean; year: string }) => {
                   <CardTitle>Lag</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {season.teams.map((team) => {
-                    return <div key={team.teamId}>{team.casualName}</div>
-                  })}
+                  <div className="flex flex-col gap-2 text-sm">
+                    <div>
+                      <p
+                        className="cursor-pointer text-accent-foreground"
+                        onClick={() => {
+                          setTab('forms')
+                          setFormContent('teamseason')
+                        }}
+                      >
+                        Lägg till lag
+                      </p>
+                    </div>
+                    <div>
+                      {season.teams.map((team) => {
+                        return <div key={team.teamId}>{team.casualName}</div>
+                      })}
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
               <Card>
@@ -46,9 +77,41 @@ const SingleSeason = ({ women, year }: { women: boolean; year: string }) => {
                   <CardTitle>Serier</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {season.series.map((serie) => {
-                    return <div key={serie.serieId}>{serie.serieName}</div>
-                  })}
+                  <div className="flex flex-col gap-2 text-sm">
+                    <div>
+                      <p
+                        className="cursor-pointer text-accent-foreground"
+                        onClick={() => {
+                          setTab('forms')
+                          setFormContent('series')
+                        }}
+                      >
+                        Lägg till serie
+                      </p>
+                    </div>
+                    <div>
+                      {season.series.map((serie) => {
+                        return (
+                          <div
+                            key={serie.serieId}
+                            className="flex w-60 flex-row justify-between"
+                          >
+                            <div>{serie.serieName}</div>
+                            <div
+                              className="cursor-pointer"
+                              onClick={() => {
+                                setSerieData(serie)
+                                setTab('forms')
+                                setFormContent('series')
+                              }}
+                            >
+                              Ändra
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>

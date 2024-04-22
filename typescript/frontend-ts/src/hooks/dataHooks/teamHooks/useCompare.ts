@@ -6,7 +6,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UseFormReturn, useForm } from 'react-hook-form'
 import { compareTeams } from '@/src/requests/tables'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import useGetAllSeasons from '../seasonHooks/useGetAllSeasons'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { ErrorState } from '@/src/components/Search/Search'

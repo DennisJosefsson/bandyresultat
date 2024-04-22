@@ -4,7 +4,7 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom'
-
+import { Toaster } from '@/src/@/components/ui/toaster'
 import Home from './components/Home'
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -64,6 +64,7 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="*" element={<Home />} />
           </Routes>
+          <Toaster />
         </main>
         <Footer />
       </div>

@@ -4,7 +4,7 @@ import { Button } from '../@/components/ui/button'
 import LoginForm from './LoginForm/LoginForm'
 import useUserContext from '../hooks/contextHooks/useUserContext'
 import { Dialog } from '../@/components/ui/dialog'
-import { Toaster } from '../@/components/ui/toaster'
+
 import { useToast } from '../@/components/ui/use-toast'
 import { AxiosError } from 'axios'
 
@@ -76,7 +76,6 @@ const Footer = () => {
               handleResponse={handleResponse}
             />
           </Dialog>
-          <Toaster />
         </div>
       </div>
     </footer>

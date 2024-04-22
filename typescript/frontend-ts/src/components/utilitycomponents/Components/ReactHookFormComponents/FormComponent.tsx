@@ -1,48 +1,41 @@
 import {
   FormField,
-  FormControl,
   FormLabel,
   FormMessage,
   FormDescription,
   FormItem,
+  useFormField,
 } from '@/src/@/components/ui/form'
-import { Input } from '@/src/@/components/ui/input'
+
 import { ReactNode } from 'react'
 import { FieldValues, UseFormReturn, Path } from 'react-hook-form'
+import Input from './Input'
+import Textarea from './Textarea'
+import MultiCheckbox from './MultiCheckbox'
+import SingleCheckbox from './SingleCheckbox'
+import Select from './Select'
+import RadioGroup from './RadioGroup'
 
-interface InputComponentProps<
+interface FormComponentProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends Path<TFieldValues> = Path<TFieldValues>,
 > {
   methods: UseFormReturn<TFieldValues>
-  placeholder: string
   name: TName
   children: ReactNode
 }
 
-export function InputComponent<
+export function FormComponent<
   TFieldValues extends FieldValues = FieldValues,
   TName extends Path<TFieldValues> = Path<TFieldValues>,
->({
-  methods,
-  name,
-  children,
-  placeholder,
-}: InputComponentProps<TFieldValues, TName>) {
+>({ methods, name, children }: FormComponentProps<TFieldValues, TName>) {
   return (
     <FormField
       control={methods.control}
       name={name}
-      render={({ field }) => (
-        <FormItem className="w-[200px] md:w-[232px]">
+      render={() => (
+        <FormItem>
           {children}
-          <FormControl>
-            <Input
-              placeholder={placeholder}
-              {...field}
-              className="ml-px max-w-[20rem]"
-            />
-          </FormControl>
 
           <FormMessage />
         </FormItem>
@@ -51,11 +44,22 @@ export function InputComponent<
   )
 }
 
-InputComponent.Label = Label
-InputComponent.Description = Description
+FormComponent.Label = Label
+FormComponent.Description = Description
+FormComponent.Input = Input
+FormComponent.Textarea = Textarea
+FormComponent.MultiCheckbox = MultiCheckbox
+FormComponent.SingleCheckbox = SingleCheckbox
+FormComponent.Select = Select
+FormComponent.RadioGroup = RadioGroup
 
 function Label({ children, ...otherProps }: { children: ReactNode }) {
-  return <FormLabel {...otherProps}>{children}</FormLabel>
+  const { id } = useFormField()
+  return (
+    <FormLabel {...otherProps} htmlFor={id}>
+      {children}
+    </FormLabel>
+  )
 }
 
 function Description({ children, ...otherProps }: { children: ReactNode }) {

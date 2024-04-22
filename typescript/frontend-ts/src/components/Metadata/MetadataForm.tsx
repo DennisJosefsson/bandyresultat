@@ -1,5 +1,5 @@
 import { ChangeEvent, SyntheticEvent, useReducer } from 'react'
-import { useQueryClient, useMutation } from 'react-query'
+import { useQueryClient, useMutation } from '@tanstack/react-query'
 import metadataFormReducer from '../../reducers/metadataFormReducer'
 import { TeamAttributes } from '../types/teams/teams'
 import { postMetadata } from '../../requests/metadata'

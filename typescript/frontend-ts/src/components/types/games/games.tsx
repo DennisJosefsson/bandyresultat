@@ -3,18 +3,8 @@ import { z } from 'zod'
 export const inputGameObject = z.object({
   gameId: z.number().int().positive().optional(),
   seasonId: z.number(),
-  homeTeamId: z
-    .object({
-      value: z.number(),
-      label: z.string(),
-    })
-    .optional(),
-  awayTeamId: z
-    .object({
-      value: z.number(),
-      label: z.string(),
-    })
-    .optional(),
+  homeTeamId: z.coerce.number().optional(),
+  awayTeamId: z.coerce.number().optional(),
   result: z
     .string()
     .regex(/^\d{1,2}-\d{1,2}$/, { message: 'Fel resultat, ny match' })

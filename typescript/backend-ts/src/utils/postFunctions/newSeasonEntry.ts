@@ -140,13 +140,13 @@ export const fullNewSeason = (object: unknown) => {
     },
     {
       seasonId: womenId,
-      serieGroupCode: 'regular',
+      serieGroupCode: 'elitserien',
       serieCategory: 'regular',
       serieName: 'Elitserien',
     },
     {
       seasonId: menId,
-      serieGroupCode: 'regular',
+      serieGroupCode: 'elitserien',
       serieCategory: 'regular',
       serieName: 'Elitserien',
     },

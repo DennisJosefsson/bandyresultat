@@ -1,8 +1,11 @@
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { getErrors } from '../../requests/errors'
 
 const Errors = () => {
-  const { data, isLoading, error } = useQuery(['getErrors'], () => getErrors())
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['getErrors'],
+    queryFn: () => getErrors(),
+  })
 
   if (isLoading) {
     return <div className="mx-auto max-w-7xl">Loading...</div>
