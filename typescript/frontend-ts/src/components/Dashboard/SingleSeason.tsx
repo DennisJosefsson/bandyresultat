@@ -11,6 +11,8 @@ import {
 } from '@/src/@/components/ui/card'
 import { Dispatch, SetStateAction } from 'react'
 import { SerieAttributes } from '../types/series/series'
+import { TeamAndSeasonAttributes } from '../types/teams/teams'
+import useGetMetaData from '@/src/hooks/dataHooks/seasonHooks/metadataHooks/useGetMetadata'
 
 type SingleSeasonProps = {
   women: boolean
@@ -18,6 +20,7 @@ type SingleSeasonProps = {
   setFormContent: Dispatch<SetStateAction<string | null>>
   setTab: Dispatch<SetStateAction<string>>
   setSerieData: Dispatch<SetStateAction<SerieAttributes | null>>
+  setTeams: Dispatch<SetStateAction<TeamAndSeasonAttributes[] | null>>
 }
 
 const SingleSeason = ({
@@ -26,15 +29,19 @@ const SingleSeason = ({
   setFormContent,
   setTab,
   setSerieData,
+  setTeams,
 }: SingleSeasonProps) => {
   const seasonId = parseInt(year.slice(-4))
   const { data, isLoading, error } = useGetSingleSeason(seasonId)
-
+  const { data: metadata } = useGetMetaData(year)
   if (error) return <DataError error={error} />
 
   if (isLoading) return <Loading />
 
   const season = data?.find((season) => season.women === women)
+  const metadataObject = metadata?.find(
+    (item) => item.seasonId === season?.seasonId,
+  )
 
   return (
     <>
@@ -46,7 +53,7 @@ const SingleSeason = ({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               <Card>
                 <CardHeader>
                   <CardTitle>Lag</CardTitle>
@@ -110,6 +117,45 @@ const SingleSeason = ({
                           </div>
                         )
                       })}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Metadata</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-col gap-2 text-sm">
+                    <div>
+                      <p
+                        className="cursor-pointer text-accent-foreground"
+                        onClick={() => {
+                          setTab('forms')
+                          setTeams(season.teams)
+                          setFormContent('metadata')
+                        }}
+                      >
+                        Ändra metadata
+                      </p>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="flex flex-row items-center justify-between">
+                        <div>Finalstad:</div>{' '}
+                        <div>{metadataObject?.hostCity}</div>
+                      </div>
+                      <div className="flex flex-row items-center justify-between">
+                        <div>Finaldatum:</div>{' '}
+                        <div>{metadataObject?.finalDate}</div>
+                      </div>
+                      <div className="flex flex-row items-center justify-between">
+                        <div>SM-Guld:</div>
+                        <div> {metadataObject?.winnerName}</div>
+                      </div>
+                      <div className="flex flex-row items-center justify-between">
+                        <div>Kommentar:</div>{' '}
+                        <div>{metadataObject?.comment}</div>
+                      </div>
                     </div>
                   </div>
                 </CardContent>

@@ -194,7 +194,6 @@ const GameForm = ({
 
   const {
     handleSubmit,
-    getValues,
     formState: { errors },
   } = form
 

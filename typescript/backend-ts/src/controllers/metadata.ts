@@ -22,6 +22,7 @@ metadataRouter.get('/:seasonId', (async (
   res: Response,
   _next: NextFunction
 ) => {
+  console.log('seasonId ------->', req.params.seasonId)
   const seasonYear = seasonIdCheck.parse(req.params.seasonId)
   const metadata = await Metadata.findAll({
     include: {
@@ -42,7 +43,7 @@ metadataRouter.get('/:seasonId', (async (
   }
 }) as RequestHandler)
 
-metadataRouter.post('/', authControl, (async (
+metadataRouter.post('/', (async (
   req: Request,
   res: Response,
   _next: NextFunction

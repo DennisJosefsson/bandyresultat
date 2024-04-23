@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { baseUrl, mobileBaseUrl, header } from '../config/requestConfig'
-import { MetadataState } from '../reducers/metadataFormReducer'
+
+import { MetadataType } from '../components/types/metadata/metadata'
 
 const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
 
@@ -14,17 +15,16 @@ export const getMetadata = async () => {
   return response.data
 }
 
-export const getSingleMetadata = async ({ seasonId }: { seasonId: number }) => {
+export const getSingleMetadata = async (
+  year: string,
+): Promise<MetadataType[]> => {
+  const seasonId = year.slice(-4)
   const response = await metadataApi.get(`/${seasonId}`)
   return response.data
 }
 
-export const postMetadata = async ({
-  formState,
-}: {
-  formState: MetadataState
-}) => {
-  return await metadataApi.post('/', formState)
+export const postMetadata = async (formData: MetadataType) => {
+  return await metadataApi.post('/', formData)
 }
 
 export default metadataApi

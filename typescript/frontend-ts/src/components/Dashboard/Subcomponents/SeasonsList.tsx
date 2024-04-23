@@ -11,11 +11,14 @@ import {
 } from '@/src/@/components/ui/tabs'
 import SeriesModal from '../SeriesModal'
 import { SerieAttributes } from '../../types/series/series'
+import { TeamAndSeasonAttributes } from '../../types/teams/teams'
+import MetadataForm from '../../Metadata/MetadataForm'
 
 const SeasonsList = ({ seasons }: { seasons: SeasonObjectType[] }) => {
   const [seasonId, setSeasonId] = useState<number>(0)
   const [year, setYear] = useState<string>('')
   const [open, setOpen] = useState<boolean>(false)
+  const [teams, setTeams] = useState<TeamAndSeasonAttributes[] | null>(null)
   const [tab, setTab] = useState<string>('sections')
   const [formContent, setFormContent] = useState<string | null>(null)
   const [women, setWomen] = useState<boolean>(false)
@@ -69,6 +72,7 @@ const SeasonsList = ({ seasons }: { seasons: SeasonObjectType[] }) => {
                   setFormContent={setFormContent}
                   setTab={setTab}
                   setSerieData={setSerieData}
+                  setTeams={setTeams}
                 />
               </TabsContent>
               <TabsContent value="forms">
@@ -83,6 +87,15 @@ const SeasonsList = ({ seasons }: { seasons: SeasonObjectType[] }) => {
                     setFormContent={setFormContent}
                     setTab={setTab}
                     setSerieData={setSerieData}
+                  />
+                )}
+                {formContent === 'metadata' && (
+                  <MetadataForm
+                    seasonId={seasonId}
+                    year={year}
+                    teams={teams}
+                    setTab={setTab}
+                    setFormContent={setFormContent}
                   />
                 )}
               </TabsContent>

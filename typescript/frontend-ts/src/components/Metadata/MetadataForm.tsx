@@ -1,7 +1,6 @@
-import { ChangeEvent, SyntheticEvent, useReducer } from 'react'
-import { useQueryClient, useMutation } from '@tanstack/react-query'
-import metadataFormReducer from '../../reducers/metadataFormReducer'
-import { TeamAttributes } from '../types/teams/teams'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Dispatch, SetStateAction } from 'react'
+import { TeamAndSeasonAttributes } from '../types/teams/teams'
 import { postMetadata } from '../../requests/metadata'
 import {
   Card,
@@ -9,308 +8,185 @@ import {
   CardHeader,
   CardTitle,
 } from '@/src/@/components/ui/card'
-import { Label } from '@/src/@/components/ui/label'
-import { Input } from '@/src/@/components/ui/input'
-
-const initFunction = (seasonId: number, name: string) => {
-  return {
-    seasonId: seasonId,
-    name: '',
-    year: name,
-    winnerId: null,
-    winnerName: '',
-    hostCity: '',
-    finalDate: '',
-    northSouth: false,
-    multipleGroupStages: false,
-    eight: false,
-    quarter: true,
-    semi: true,
-    final: true,
-    comment: '',
-  }
-}
+import { useToast } from '@/src/@/components/ui/use-toast'
+import useMetadataForm from '@/src/hooks/dataHooks/seasonHooks/metadataHooks/useMetadataForm'
+import { Form } from '@/src/@/components/ui/form'
+import { Button } from '@/src/@/components/ui/button'
+import { SubmitHandler } from 'react-hook-form'
+import { MetadataType } from '../types/metadata/metadata'
+import { FormComponent } from '../utilitycomponents/Components/ReactHookFormComponents/FormComponent'
 
 type TeamSelection = {
-  value: string
+  value: number
   label: string
 }[]
 
-type MetdataFormProps = {
+type MetadataFormProps = {
   seasonId: number
-  name: string
-  teams: TeamAttributes[]
+  year: string
+  teams: TeamAndSeasonAttributes[] | null
+  setFormContent: Dispatch<SetStateAction<string | null>>
+  setTab: Dispatch<SetStateAction<string>>
 }
 
-const MetadataForm = ({ seasonId, name, teams }: MetdataFormProps) => {
+const MetadataForm = ({
+  seasonId,
+  teams,
+  year,
+  setTab,
+  setFormContent,
+}: MetadataFormProps) => {
+  const form = useMetadataForm({ seasonId: seasonId, year: year })
   const mutation = useMutation({
     mutationFn: postMetadata,
+    onSuccess: () => onSuccessMutation(),
   })
+  const client = useQueryClient()
+  const { toast } = useToast()
+  if (!teams) {
+    throw new Error('Missing team data')
+  }
   const teamSelection: TeamSelection = teams.map((team) => {
-    return { value: team.name, label: team.name }
+    return { value: team.teamId, label: team.name }
   })
 
-  const teamNameIdObj = Object.fromEntries(
-    teams.map((team) => [team.name, team.teamId]),
-  )
-
-  const [formState, dispatch] = useReducer(
-    metadataFormReducer,
-    initFunction(seasonId, name),
-  )
-
-  const queryClient = useQueryClient()
-
-  const handleSubmit = (event: SyntheticEvent) => {
-    event.preventDefault()
-
-    mutation.mutate({ formState })
-    queryClient.invalidateQueries({ queryKey: ['singleSeason'] })
+  const handleSubmit: SubmitHandler<MetadataType> = (formData) => {
+    mutation.mutate(formData)
   }
 
-  const toggleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'TOGGLE', field: event?.target.name })
-  }
+  const onSuccessMutation = () => {
+    client.invalidateQueries({ queryKey: ['seasonMetadata'] })
+    toast({
+      duration: 5000,
+      title: 'Uppdaterad metadata',
+      description: <pre className="bg-primary p-2 text-white">{year}</pre>,
+    })
 
-  const handleChange = (
-    event: ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
-  ) => {
-    if (event.target.name === 'winnerName') {
-      dispatch({
-        type: 'INPUT',
-        field: 'winnerId',
-        payload: teamNameIdObj[event.target.value],
-      })
-      dispatch({
-        type: 'INPUT',
-        field: event.target.name,
-        payload: event.target.value,
-      })
-    } else {
-      dispatch({
-        type: 'INPUT',
-        field: event.target.name,
-        payload: event.target.value,
-      })
-    }
+    setTab('sections')
+    setFormContent(null)
   }
 
   return (
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Metadata</CardTitle>
+          <div className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Metadata</CardTitle>
+            </div>
+            <div>
+              <Button type="submit" size="sm" form="metadataForm">
+                Skicka
+              </Button>
+            </div>
+          </div>
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit} id="metadataForm">
-            <div className="flex w-[540px] flex-auto flex-col p-5 px-16">
-              <div className="p-1">
-                <Label htmlFor="name">Serienamn</Label>
-
-                <div>
-                  <Input
-                    className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                    type="text"
-                    name="name"
-                    value={formState.name}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="p-1">
-                <Label htmlFor="winnerName">SM-guld:</Label>
-                <div>
-                  <select
-                    className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                    name="winnerName"
-                    id="winnerName"
-                    value={formState.winnerName}
-                    onChange={handleChange}
-                  >
-                    {teamSelection.map((team, index) => {
-                      return (
-                        <option key={index} value={team.value}>
-                          {team.label}
-                        </option>
-                      )
-                    })}
-                  </select>
-                </div>
-              </div>
-              <div className="flex-row">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmit)} id="metadataForm">
+              <div className="flex flex-auto flex-col p-5 px-16">
                 <div className="p-1">
-                  <label
-                    htmlFor="hostCity"
-                    className="flex flex-row text-sm font-medium text-gray-900"
-                  >
-                    <div className="w-32">Finalstad:</div>
-                    <div>
-                      <input
-                        className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                        type="text"
-                        name="hostCity"
-                        value={formState.hostCity}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </label>
+                  <FormComponent name="name" methods={form}>
+                    <FormComponent.Label>Serienamn</FormComponent.Label>
+                    <FormComponent.Input />
+                  </FormComponent>
                 </div>
                 <div className="p-1">
-                  <label
-                    htmlFor="finalDate"
-                    className="flex flex-row text-sm font-medium text-gray-900"
-                  >
-                    <div className="w-32">Finaldatum:</div>
-                    <div>
-                      <input
-                        className="w-72 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900"
-                        type="text"
-                        name="finalDate"
-                        value={formState.finalDate}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </label>
+                  <FormComponent name="winnerName" methods={form}>
+                    <FormComponent.Label>SM-Guld</FormComponent.Label>
+                    <FormComponent.Input />
+                  </FormComponent>
                 </div>
-              </div>
-              <div className="flex flex-row space-x-2">
-                <div className="m-1 p-1">
-                  <label
-                    htmlFor="final"
-                    className="flex flex-row  space-x-2 text-sm font-medium text-gray-900 "
-                  >
-                    <div>Final?</div>
-                    <div>
-                      <input
-                        className="text-gray-900 focus:ring-gray-500"
-                        type="checkbox"
-                        name="final"
-                        checked={formState.final}
-                        onChange={toggleChange}
-                      />
-                    </div>
-                  </label>
-                </div>
-
-                <div className="m-1 p-1">
-                  <label
-                    htmlFor="semi"
-                    className="flex flex-row  space-x-2 text-sm font-medium text-gray-900"
-                  >
-                    <div>Semifinal?</div>
-                    <div>
-                      <input
-                        className="text-gray-900 focus:ring-gray-500"
-                        type="checkbox"
-                        name="semi"
-                        checked={formState.semi}
-                        onChange={toggleChange}
-                      />
-                    </div>
-                  </label>
-                </div>
-                <div className="m-1 p-1">
-                  <label
-                    htmlFor="quarter"
-                    className="flex flex-row  space-x-2 text-sm font-medium text-gray-900"
-                  >
-                    <div>Kvartsfinal?</div>
-                    <div>
-                      <input
-                        className="text-gray-900 focus:ring-gray-500"
-                        type="checkbox"
-                        name="quarter"
-                        checked={formState.quarter}
-                        onChange={toggleChange}
-                      />
-                    </div>
-                  </label>
-                </div>
-              </div>
-              <div className="p-1 ">
-                <label
-                  htmlFor="eight"
-                  className="flex flex-row  space-x-2 text-sm font-medium text-gray-900"
-                >
-                  <div>Åttondelsfinal?</div>
-                  <div>
-                    <input
-                      className="text-gray-900 focus:ring-gray-500"
-                      type="checkbox"
-                      name="eight"
-                      checked={formState.eight}
-                      onChange={toggleChange}
+                <div className="p-1">
+                  <FormComponent name="winnerId" methods={form}>
+                    <FormComponent.Label>Vinnar-id</FormComponent.Label>
+                    <FormComponent.Select
+                      selectionArray={teamSelection}
+                      placeholder="Välj lag"
                     />
+                  </FormComponent>
+                </div>
+                <div className="flex-row">
+                  <div className="p-1">
+                    <FormComponent name="hostCity" methods={form}>
+                      <FormComponent.Label>Finalstad</FormComponent.Label>
+                      <FormComponent.Input />
+                    </FormComponent>
                   </div>
-                </label>
-              </div>
-              <div className="flex flex-row space-x-2">
-                <div className="p-1">
-                  <label
-                    htmlFor="northSouth"
-                    className="flex flex-row  space-x-2 text-sm font-medium text-gray-900"
-                  >
-                    <div>Norr- och södergrupp?</div>
-                    <div>
-                      <input
-                        className="text-gray-900 focus:ring-gray-500"
-                        type="checkbox"
-                        name="northSouth"
-                        checked={formState.northSouth}
-                        onChange={toggleChange}
-                      />
-                    </div>
-                  </label>
+                  <div className="p-1">
+                    <FormComponent name="finalDate" methods={form}>
+                      <FormComponent.Label>Finaldatum</FormComponent.Label>
+                      <FormComponent.Input />
+                    </FormComponent>
+                  </div>
                 </div>
-                <div className="p-1">
-                  <label
-                    htmlFor="multipleGroupStages"
-                    className="flex flex-row  space-x-2 text-sm font-medium text-gray-900"
-                  >
-                    <div>Dubbla gruppspel?</div>
-                    <div>
-                      <input
-                        className="text-gray-900 focus:ring-gray-500"
-                        type="checkbox"
-                        name="multipleGroupStages"
-                        checked={formState.multipleGroupStages}
-                        onChange={toggleChange}
-                      />
-                    </div>
-                  </label>
-                </div>
-              </div>
+                <div className="flex flex-row space-x-2">
+                  <div className="p-1">
+                    <FormComponent name="final" methods={form}>
+                      <div className="flex flex-row items-center gap-2">
+                        <FormComponent.Label>Final</FormComponent.Label>
+                        <FormComponent.SingleCheckbox />
+                      </div>
+                    </FormComponent>
+                  </div>
 
-              <div className="p-1">
-                <label
-                  htmlFor="comment"
-                  className="mb-2 block text-sm font-medium text-gray-900"
-                >
-                  <div className="w-32">Kommentar:</div>
-                  <textarea
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900"
-                    rows={4}
-                    name="comment"
-                    value={formState.comment}
-                    onChange={handleChange}
-                  />
-                </label>
+                  <div className="p-1">
+                    <FormComponent name="semi" methods={form}>
+                      <div className="flex flex-row items-center gap-2">
+                        <FormComponent.Label>Semi</FormComponent.Label>
+                        <FormComponent.SingleCheckbox />
+                      </div>
+                    </FormComponent>
+                  </div>
+                  <div className="p-1">
+                    <FormComponent name="quarter" methods={form}>
+                      <div className="flex flex-row items-center gap-2">
+                        <FormComponent.Label>Kvart</FormComponent.Label>
+                        <FormComponent.SingleCheckbox />
+                      </div>
+                    </FormComponent>
+                  </div>
+
+                  <div className="p-1">
+                    <FormComponent name="eight" methods={form}>
+                      <div className="flex flex-row items-center gap-2">
+                        <FormComponent.Label>Åttondel</FormComponent.Label>
+                        <FormComponent.SingleCheckbox />
+                      </div>
+                    </FormComponent>
+                  </div>
+
+                  <div className="p-1">
+                    <FormComponent name="northSouth" methods={form}>
+                      <div className="flex flex-row items-center gap-2">
+                        <FormComponent.Label>Norr/Söder</FormComponent.Label>
+                        <FormComponent.SingleCheckbox />
+                      </div>
+                    </FormComponent>
+                  </div>
+                  <div className="p-1">
+                    <FormComponent name="multipleGroupStages" methods={form}>
+                      <div className="flex flex-row items-center gap-2">
+                        <FormComponent.Label>
+                          Dubbla gruppspel
+                        </FormComponent.Label>
+                        <FormComponent.SingleCheckbox />
+                      </div>
+                    </FormComponent>
+                  </div>
+                </div>
+
+                <div className="p-1">
+                  <FormComponent name="comment" methods={form}>
+                    <FormComponent.Label>Kommentar</FormComponent.Label>
+                    <FormComponent.Textarea />
+                  </FormComponent>
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </Form>
         </CardContent>
-        {/*footer*/}
-        <div className="flex items-center justify-end rounded-b border-t border-solid border-slate-200 p-6">
-          <input
-            className="mb-1 mr-1 rounded bg-emerald-500 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:shadow-lg focus:outline-none active:bg-emerald-600"
-            type="submit"
-            form="metadataForm"
-            value="Spara"
-          />
-        </div>
       </Card>
     </>
   )
