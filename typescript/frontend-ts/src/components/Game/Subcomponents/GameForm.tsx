@@ -198,8 +198,6 @@ const GameForm = ({
     formState: { errors },
   } = form
 
-  console.log('logging from GameForm', getValues())
-
   const onSubmit: SubmitHandler<InputGameObjectType> = (formData) => {
     const gameData = {
       ...formData,

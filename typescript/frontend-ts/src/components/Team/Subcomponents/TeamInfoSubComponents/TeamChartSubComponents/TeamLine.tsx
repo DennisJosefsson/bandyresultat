@@ -98,7 +98,7 @@ const TeamLine = ({ renderData, renderLength }: TeamLineProps) => {
             type="monotone"
             dataKey="dataPoint"
             stroke="currentColor"
-            className="fill-primary"
+            className="text-primary"
             strokeWidth={5}
             dot={false}
           />

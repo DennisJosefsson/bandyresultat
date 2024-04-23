@@ -61,7 +61,12 @@ const TeamBarChart = ({ chartData }: { chartData: TeamChartType[] }) => {
                 fill="currentColor"
                 className="fill-primary text-[8px] md:text-sm"
               >
-                <LabelList dataKey="position" position="center" />
+                <LabelList
+                  dataKey="position"
+                  position="center"
+                  fill="currentColor"
+                  className="text-primary-foreground"
+                />
               </Bar>
             </BarChart>
           </ResponsiveContainer>

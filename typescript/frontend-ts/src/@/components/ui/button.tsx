@@ -10,16 +10,16 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-slate-900 text-slate-50 hover:bg-slate-900/90 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90',
+          'bg-primary text-primary-foreground hover:bg-primary/90 dark:bg-primary-foreground dark:text-primary dark:hover:bg-primary-foreground/90',
         destructive:
-          'bg-red-500 text-slate-50 shadow-sm hover:bg-red-500/90 dark:bg-red-900 dark:text-slate-50 dark:hover:bg-red-900/90',
+          'bg-red-500 text-primary-foreground shadow-sm hover:bg-red-500/90 dark:bg-red-900 dark:text-primary-foreground dark:hover:bg-red-900/90',
         outline:
-          'border border-slate-200 bg-white shadow-sm hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50',
+          'border border-slate-200 bg-white shadow-sm hover:bg-slate-100 hover:text-primary dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-primary-foreground',
         secondary:
-          'bg-slate-100 text-slate-900 shadow-sm hover:bg-slate-100/80 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-800/80',
+          'bg-slate-100 text-primary shadow-sm hover:bg-slate-100/80 dark:bg-slate-800 dark:text-primary-foreground dark:hover:bg-slate-800/80',
         ghost:
-          'hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50',
-        link: 'text-slate-900 underline-offset-4 hover:underline dark:text-slate-50',
+          'hover:bg-slate-100 hover:text-primary dark:hover:bg-slate-800 dark:hover:text-primary-foreground',
+        link: 'text-primary underline-offset-4 hover:underline dark:text-primary-foreground',
       },
       size: {
         default: 'h-9 px-4 py-2',

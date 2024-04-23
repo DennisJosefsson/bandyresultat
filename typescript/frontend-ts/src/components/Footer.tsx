@@ -58,7 +58,7 @@ const Footer = () => {
   }
 
   return (
-    <footer className="mt-auto h-[10rem] bg-background font-inter text-foreground">
+    <footer className="mt-auto h-[10rem] bg-background px-0 font-inter text-foreground dark:bg-slate-950 dark:text-slate-50">
       <div className="mx-auto flex max-w-7xl flex-row justify-end">
         <div className="pt-2">
           {!user ? (

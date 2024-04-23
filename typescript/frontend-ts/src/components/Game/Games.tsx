@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-import ScrollRefComponent from '../utilitycomponents/Components/ScrollRefComponent'
 import GameForm from './Subcomponents/GameForm'
 import {
   Loading,
@@ -27,9 +26,6 @@ const Games = () => {
   const { women } = useGenderContext()
 
   const { user } = useUserContext()
-
-  const topRef = useRef<HTMLDivElement>(null)
-  const bottomRef = useRef<HTMLDivElement>(null)
 
   const [teamFilter, setTeamFilter] = useState<string>('')
 
@@ -76,10 +72,7 @@ const Games = () => {
   }
 
   return (
-    <div
-      className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-foreground"
-      ref={topRef}
-    >
+    <div className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-foreground">
       <FilterComponent setTeamFilter={setTeamFilter} teamFilter={teamFilter} />
 
       {seasonId <= lastSeason && (
@@ -122,9 +115,6 @@ const Games = () => {
           />
         </>
       ) : null}
-
-      <div ref={bottomRef}></div>
-      <ScrollRefComponent bottomRef={bottomRef} topRef={topRef} />
     </div>
   )
 }
