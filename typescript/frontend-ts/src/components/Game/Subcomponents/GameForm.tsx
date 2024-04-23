@@ -198,16 +198,13 @@ const GameForm = ({
     formState: { errors },
   } = form
 
-  console.log('logging from GameForm', getValues('homeTeamId'))
+  console.log('logging from GameForm', getValues())
 
   const onSubmit: SubmitHandler<InputGameObjectType> = (formData) => {
-    if (!formData.homeTeamId || !formData.awayTeamId) {
-      throw new Error('Missing teamId formData')
-    }
     const gameData = {
       ...formData,
-      homeTeamId: formData.homeTeamId,
-      awayTeamId: formData.awayTeamId,
+      homeTeamId: formData.homeTeamId ?? 176,
+      awayTeamId: formData.awayTeamId ?? 176,
     }
 
     submitMutation.mutate(gameData)

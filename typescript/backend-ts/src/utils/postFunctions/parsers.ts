@@ -49,7 +49,7 @@ export const parseDate = (date: unknown): string => {
 }
 
 export const parseNumber = (num: unknown): number => {
-  if (!num || !isNumber(num)) {
+  if (!isNumber(num)) {
     throw new BadRequestError({
       code: 400,
       message: 'Incorrect or missing number property',

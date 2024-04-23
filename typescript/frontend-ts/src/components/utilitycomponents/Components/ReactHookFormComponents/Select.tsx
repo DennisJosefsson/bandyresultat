@@ -25,8 +25,8 @@ const SelectComponent = ({
   return (
     <Select
       onValueChange={field.onChange}
-      defaultValue={field.value.toString()}
-      value={field.value.toString()}
+      defaultValue={field.value ? field.value.toString() : placeholder}
+      value={field.value?.toString()}
     >
       <FormControl>
         <SelectTrigger className="ml-px">
