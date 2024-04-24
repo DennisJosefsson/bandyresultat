@@ -7,7 +7,6 @@ import {
 import { Toaster } from '@/src/@/components/ui/toaster'
 import Home from './components/Home'
 import Header from './components/Header'
-import Footer from './components/Footer'
 
 import Teams from './components/Team/Teams'
 import Season from './components/Season/Season'
@@ -68,7 +67,6 @@ const App = () => {
             </Routes>
             <Toaster />
           </main>
-          <Footer />
         </ScrollArea>
       </div>
     </Router>

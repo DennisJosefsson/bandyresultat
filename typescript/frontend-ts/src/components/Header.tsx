@@ -3,6 +3,7 @@ import { Sheet, SheetTrigger, SheetContent } from '../@/components/ui/sheet'
 import { Button } from '../@/components/ui/button'
 import { Menu } from 'lucide-react'
 import ModeToggle from './utilitycomponents/Components/ModeToggle'
+import LoginComponent from './LoginForm/LoginComponent'
 import useUserContext from '../hooks/contextHooks/useUserContext'
 import { useState } from 'react'
 
@@ -126,7 +127,8 @@ const Header = () => {
             </nav>
           </SheetContent>
         </Sheet>
-        <div>
+        <div className="flex flex-row items-center gap-2">
+          <LoginComponent />
           <ModeToggle />
         </div>
       </div>

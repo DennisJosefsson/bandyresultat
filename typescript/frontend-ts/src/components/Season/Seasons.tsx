@@ -9,6 +9,7 @@ import {
 
 import useScrollTo from '../../hooks/domHooks/useScrollTo'
 import useGetAllSeasons from '@/src/hooks/dataHooks/seasonHooks/useGetAllSeasons'
+import { Card, CardContent } from '@/src/@/components/ui/card'
 
 const Seasons = () => {
   const [seasonFilter, setSeasonFilter] = useState('')
@@ -27,20 +28,24 @@ const Seasons = () => {
   }
 
   return (
-    <div className="mx-auto mb-2 min-h-screen max-w-7xl font-inter text-foreground">
-      <FilterComponent
-        seasonFilter={seasonFilter}
-        setSeasonFilter={setSeasonFilter}
-        handleKeyDown={handleKeyDown}
-      />
+    <div className="mx-auto mb-2 min-h-screen px-1 font-inter text-foreground">
+      <Card>
+        <CardContent>
+          <FilterComponent
+            seasonFilter={seasonFilter}
+            setSeasonFilter={setSeasonFilter}
+            handleKeyDown={handleKeyDown}
+          />
 
-      <div className="self-center">
-        <SeasonsList
-          seasons={seasons.filter((season) =>
-            season.year.includes(seasonFilter),
-          )}
-        />
-      </div>
+          <div className="self-center">
+            <SeasonsList
+              seasons={seasons.filter((season) =>
+                season.year.includes(seasonFilter),
+              )}
+            />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
