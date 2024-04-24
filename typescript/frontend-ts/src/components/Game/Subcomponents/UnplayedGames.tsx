@@ -32,7 +32,7 @@ const UnplayedGames = ({
   const { startSeason, endSeason } = useGamesSeason()
   return (
     <div>
-      <h1 className="text-[1rem] font-bold md:text-[1.25rem]">Spelade</h1>
+      <h1 className="text-[1rem] font-bold md:text-[1.25rem]">Kommande</h1>
       <div className="w-full px-2 xl:px-0">
         {unplayedFinalGames.length > 0 && (
           <GamesList

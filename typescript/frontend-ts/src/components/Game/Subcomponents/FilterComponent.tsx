@@ -17,7 +17,7 @@ const FilterComponent = ({
     <div className="w-full ">
       <form>
         <Input
-          className="w-full border-[#011d29] focus:border-[#011d29]"
+          className="w-full border-foreground bg-muted focus:border-foreground dark:bg-muted/50"
           type="text"
           placeholder="Filter"
           value={teamFilter}

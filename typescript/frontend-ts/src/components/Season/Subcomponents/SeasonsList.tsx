@@ -13,21 +13,21 @@ const SeasonsList = ({ seasons }: { seasons: SeasonObjectType[] }) => {
           return (
             <div
               key={season.seasonId}
-              className="flex flex-row items-center justify-between bg-background px-2 py-1 text-sm lg:text-base"
+              className="flex flex-row items-center justify-between bg-muted px-2  py-1 text-sm dark:bg-muted/50 lg:text-base"
             >
               <div className="w-28 font-semibold">{season.year}</div>
-              <div className="rounded-md bg-background px-2 py-1 text-center lg:bg-background xl:p-0">
+              <div className="rounded-md px-2 py-1 text-center  xl:p-0">
                 <Link
                   to={`/season/${seasonYear}?tab=tables`}
-                  className="font-medium tabular-nums hover:font-bold lg:font-normal"
+                  className="font-medium tabular-nums hover:font-bold hover:text-primary lg:font-normal"
                 >
                   Tabeller
                 </Link>
               </div>
-              <div className="rounded-md bg-background px-2 py-1 text-center lg:bg-background xl:p-0">
+              <div className="rounded-md px-2 py-1 text-center  xl:p-0">
                 <Link
                   to={`/season/${seasonYear}?tab=games`}
-                  className="font-medium hover:font-bold lg:font-normal"
+                  className="font-medium hover:font-bold hover:text-primary lg:font-normal"
                 >
                   Matcher
                 </Link>

@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react'
 import { useForm, FieldErrors, SubmitHandler } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
-import { postGame, deleteGame } from '../../../requests/games'
+import { postGame } from '../../../requests/games'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { sortOrder } from '../../utilitycomponents/functions/constants'
 import {
@@ -120,22 +120,6 @@ const GameForm = ({
     onError: (error) => onErrorFunction(error),
   })
 
-  const deleteMutation = useMutation({
-    mutationFn: ({ gameId }: { gameId: number }) => deleteGame(gameId),
-    onSuccess: () => onSuccessDeleteMutation(),
-    onError: (error) => onErrorFunction(error),
-  })
-
-  const onSuccessDeleteMutation = () => {
-    client.invalidateQueries({ queryKey: ['singleSeasonGames'] })
-    toast({
-      duration: 5000,
-      title: 'Match borttagen',
-    })
-    setGameData(null)
-    setShowModal(false)
-  }
-
   const onSuccessSubmit = () => {
     client.invalidateQueries({ queryKey: ['singleSeasonGames'] })
     toast({
@@ -219,18 +203,6 @@ const GameForm = ({
                   <CardTitle>Matchformulär</CardTitle>
                 </div>
                 <div className="flex flex-row gap-8">
-                  {gameData && gameData.gameId && (
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() =>
-                        gameData.gameId !== undefined &&
-                        deleteMutation.mutate({ gameId: gameData.gameId })
-                      }
-                    >
-                      Ta bort
-                    </Button>
-                  )}
                   <Button
                     size="sm"
                     variant="secondary"
@@ -350,7 +322,6 @@ const GameForm = ({
           </Card>
         </div>
       </div>
-      <div className="fixed inset-0 z-40 bg-black opacity-25"></div>
     </>
   )
 }

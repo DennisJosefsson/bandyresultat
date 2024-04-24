@@ -40,7 +40,7 @@ const App = () => {
   const { user } = useUserContext()
   return (
     <Router>
-      <div className="flex flex-col bg-muted/65 text-foreground lg:min-h-screen">
+      <div className="flex flex-col bg-muted/90 text-foreground lg:min-h-screen">
         <Header />
         <ScrollArea className="content-container px-2">
           <main className="mb-4">

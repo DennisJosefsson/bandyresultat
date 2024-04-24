@@ -33,7 +33,7 @@ const TeamsList = ({ teams, setSearchParams }: TeamsListProps) => {
                         return (
                           <FormItem
                             key={team.teamId}
-                            className="flex flex-row items-center justify-between space-x-3 space-y-0 rounded bg-muted/90 p-2 text-sm has-[:checked]:bg-primary has-[:checked]:text-white md:text-base"
+                            className="flex flex-row items-center justify-between space-x-3 space-y-0 rounded bg-muted p-2 text-sm has-[:checked]:text-white dark:bg-muted/50 dark:has-[:checked]:bg-primary md:text-base"
                           >
                             <span
                               className={
@@ -65,7 +65,7 @@ const TeamsList = ({ teams, setSearchParams }: TeamsListProps) => {
                                         ),
                                       )
                                 }}
-                                className="data-[state=checked]:border-white data-[state=checked]:bg-primary data-[state=checked]:text-white dark:data-[state=checked]:border-white dark:data-[state=checked]:bg-primary dark:data-[state=checked]:text-white"
+                                className="bg-muted data-[state=checked]:border-white data-[state=checked]:bg-primary data-[state=checked]:text-white dark:bg-muted/50 dark:data-[state=checked]:border-white dark:data-[state=checked]:bg-primary dark:data-[state=checked]:text-white"
                               />
                             </FormControl>
                           </FormItem>
