@@ -70,6 +70,16 @@ const SingleSeason = ({
                       >
                         Lägg till lag
                       </p>
+                      <p
+                        className="cursor-pointer text-accent-foreground"
+                        onClick={() => {
+                          setTeams(season.teams)
+                          setTab('forms')
+                          setFormContent('bulkAddGame')
+                        }}
+                      >
+                        Lägg till matcher
+                      </p>
                     </div>
                     <div>
                       {season.teams.map((team) => {

@@ -13,6 +13,7 @@ import SeriesModal from '../SeriesModal'
 import { SerieAttributes } from '../../types/series/series'
 import { TeamAndSeasonAttributes } from '../../types/teams/teams'
 import MetadataForm from '../../Metadata/MetadataForm'
+import BulkAddGame from './BulkAddGame/BulkAddGame'
 
 const SeasonsList = ({ seasons }: { seasons: SeasonObjectType[] }) => {
   const [seasonId, setSeasonId] = useState<number>(0)
@@ -98,6 +99,7 @@ const SeasonsList = ({ seasons }: { seasons: SeasonObjectType[] }) => {
                     setFormContent={setFormContent}
                   />
                 )}
+                {formContent === 'bulkAddGame' && <BulkAddGame teams={teams} />}
               </TabsContent>
             </Tabs>
           </SheetContent>
