@@ -5,7 +5,7 @@ export const metadataType = z.object({
   seasonId: z.number(),
   name: z.string(),
   year: z.string(),
-  winnerId: z.number().nullable(),
+  winnerId: z.coerce.number().nullable(),
   winnerName: z.string(),
   hostCity: z.string(),
   finalDate: z.string(),

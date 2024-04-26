@@ -15,6 +15,7 @@ import { Button } from '@/src/@/components/ui/button'
 import { SubmitHandler } from 'react-hook-form'
 import { MetadataType } from '../types/metadata/metadata'
 import { FormComponent } from '../utilitycomponents/Components/ReactHookFormComponents/FormComponent'
+import { AxiosError } from 'axios'
 
 type TeamSelection = {
   value: number
@@ -40,6 +41,7 @@ const MetadataForm = ({
   const mutation = useMutation({
     mutationFn: postMetadata,
     onSuccess: () => onSuccessMutation(),
+    onError: (error) => onErrorMutation(error),
   })
   const client = useQueryClient()
   const { toast } = useToast()
@@ -66,6 +68,23 @@ const MetadataForm = ({
     setFormContent(null)
   }
 
+  const onErrorMutation = (error: unknown) => {
+    if (error instanceof AxiosError) {
+      toast({
+        duration: 5000,
+        title: 'Fel',
+        description: error.response?.data.errors,
+        variant: 'destructive',
+      })
+    } else {
+      toast({
+        duration: 5000,
+        title: 'Något gick fel',
+        variant: 'destructive',
+      })
+    }
+  }
+
   return (
     <>
       <Card>
@@ -86,6 +105,12 @@ const MetadataForm = ({
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} id="metadataForm">
               <div className="flex flex-auto flex-col p-5 px-16">
+                <div className="p-1">
+                  <FormComponent name="year" methods={form}>
+                    <FormComponent.Label>År</FormComponent.Label>
+                    <FormComponent.Input />
+                  </FormComponent>
+                </div>
                 <div className="p-1">
                   <FormComponent name="name" methods={form}>
                     <FormComponent.Label>Serienamn</FormComponent.Label>

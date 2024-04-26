@@ -22,6 +22,7 @@ const useMetadataForm = ({
     mode: 'onChange',
     defaultValues: {
       metadataId: undefined,
+      seasonId: seasonId,
       name: '',
       year: '',
       winnerId: undefined,
