@@ -5,6 +5,11 @@ type Games = {
   date: string
   homeTeam: string
   awayTeam: string
+  seasonId: number
+  category: string
+  group: string
+  women: boolean
+  serieId: number | undefined | null
 }
 
 type GamesProps = {
@@ -30,7 +35,7 @@ const GameTable = ({ games, teams }: GamesProps) => {
   })
   return (
     <div>
-      <div>Lag:{teamString}</div>
+      <div className="mb-4 text-sm">Lag:{teamString}</div>
 
       {gameTable ? <BulkGameForm gameArray={gameTable} /> : null}
     </div>

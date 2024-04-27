@@ -4,7 +4,7 @@ import {
   PostNewSeasonType,
   SeasonObjectType,
 } from '../components/types/season/seasons'
-import { TeamSeasonStateType } from '../reducers/teamseasonReducer'
+
 import { SerieAttributes } from '../components/types/series/series'
 
 const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
@@ -39,18 +39,6 @@ export const postSeason = async ({
 }): Promise<PostNewSeasonReturnType> => {
   const response = await seasonsApi.post('/', { yearString })
   return response.data
-}
-
-export const postTeamSeason = async ({
-  formState,
-  seasonId,
-  women,
-}: {
-  formState: TeamSeasonStateType
-  seasonId: number
-  women: boolean
-}) => {
-  return await seasonsApi.post('/teamseason', { formState, seasonId, women })
 }
 
 export default seasonsApi

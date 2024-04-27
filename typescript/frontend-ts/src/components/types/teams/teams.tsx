@@ -54,23 +54,23 @@ export const teamAttributes = z.object({
 })
 
 export const teamSeasonAttributes = z.object({
-  teamseasonId: z.number(),
+  teamseasonId: z.number().optional(),
   seasonId: z.number(),
   teamId: z.number(),
   tableId: z.number().nullable().optional(),
   women: z.boolean(),
   qualification: z.boolean(),
-  negQualification: z.boolean().nullable().optional(),
-  promoted: z.boolean().nullable().optional(),
-  relegated: z.boolean().nullable().optional(),
-  position: z.number().nullable().optional(),
-  points: z.number().nullable().optional(),
-  playoff: z.boolean().nullable().optional(),
-  eight: z.boolean().nullable().optional(),
-  quarter: z.boolean().nullable().optional(),
-  semi: z.boolean().nullable().optional(),
-  final: z.boolean().nullable().optional(),
-  gold: z.boolean().nullable().optional(),
+  negQualification: z.boolean().optional(),
+  promoted: z.boolean().optional(),
+  relegated: z.boolean().optional(),
+  position: z.number().optional().nullable(),
+  points: z.number().optional().nullable(),
+  playoff: z.boolean().optional(),
+  eight: z.boolean().optional(),
+  quarter: z.boolean().optional(),
+  semi: z.boolean().optional(),
+  final: z.boolean().optional(),
+  gold: z.boolean().optional(),
 })
 
 export const teamAndSeasonAttributes = z.object({

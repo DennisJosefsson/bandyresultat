@@ -1,12 +1,15 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { Textarea } from '@/src/@/components/ui/textarea'
 import { Label } from '@/src/@/components/ui/label'
-//import { Input } from '@/src/@/components/ui/input'
+
 import { z } from 'zod'
 import GameTable from './GameTable'
 import { TeamAndSeasonAttributes } from '../../../types/teams/teams'
-import BulkGameForm from './BulkGameForm'
+
 import { Button } from '@/src/@/components/ui/button'
+import { SerieAttributes } from '@/src/components/types/series/series'
+import { RadioGroup, RadioGroupItem } from '@/src/@/components/ui/radio-group'
+import { sortOrder } from '@/src/components/utilitycomponents/functions/constants'
 
 interface FormElements extends HTMLFormControlsCollection {
   pasteArea: HTMLInputElement
@@ -17,17 +20,51 @@ interface PasteAreaFormElement extends HTMLFormElement {
 
 const testDate = z.string().regex(/^[a-öA-Ö]{3}\s\d{1,2}\/\d{1,2}$/)
 
+const categoryArray = [
+  { value: 'final', label: 'Final' },
+  { value: 'semi', label: 'Semi' },
+  { value: 'quarter', label: 'Kvart' },
+  { value: 'eight', label: 'Åttondel' },
+  { value: 'regular', label: 'Grundserie' },
+  { value: 'qualification', label: 'Kval' },
+]
+
 type BulkAddGameProps = {
   teams: TeamAndSeasonAttributes[] | null
+  seasonId: number
+  series: SerieAttributes[] | null
+  seasonYear: string
+  women: boolean
 }
 
-const BulkAddGame = ({ teams }: BulkAddGameProps) => {
-  const seasonYear = '2023/2024'
+const BulkAddGame = ({
+  teams,
+  seasonId,
+  series,
+  seasonYear,
+  women,
+}: BulkAddGameProps) => {
   const firstYear = seasonYear.split('/')[0]
   const secondYear = seasonYear.split('/')[1]
   const [gamesList, setGamesList] = useState<string>('')
   const [pastedContent, setPastedContent] = useState<string>('')
+  const [category, setCategory] = useState<string>('regular')
+  const [group, setGroup] = useState<string>('elitserien')
   const lines = gamesList ? gamesList.split('\n') : []
+
+  const groupArray = series
+    ?.map((serie) => {
+      return { value: serie.serieGroupCode, label: serie.serieName }
+    })
+    .sort((a, b) => {
+      if (sortOrder.indexOf(a.value) > sortOrder.indexOf(b.value)) {
+        return 1
+      } else if (sortOrder.indexOf(a.value) < sortOrder.indexOf(b.value)) {
+        return -1
+      } else {
+        return 0
+      }
+    })
 
   const chunkedLines = lines?.reduce((resultArray, item, index) => {
     const chunkIndex = Math.floor(index / 5)
@@ -55,6 +92,11 @@ const BulkAddGame = ({ teams }: BulkAddGameProps) => {
       date: parseDate(line[0]),
       homeTeam: line[2].trimEnd(),
       awayTeam: line[4].trimEnd(),
+      seasonId: seasonId,
+      category: category,
+      group: group,
+      women: women,
+      serieId: series?.find((serie) => serie.serieGroupCode === group)?.serieId,
     }
   })
 
@@ -69,12 +111,41 @@ const BulkAddGame = ({ teams }: BulkAddGameProps) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="mb-4">
+        <RadioGroup
+          value={category}
+          onValueChange={setCategory}
+          className="mb-4 flex flex-row gap-4"
+        >
+          {categoryArray.map((cat) => {
+            return (
+              <div key={cat.value} className="flex items-center space-x-2">
+                <Label htmlFor={cat.value}>{cat.label}</Label>
+                <RadioGroupItem value={cat.value} id={cat.value} />
+              </div>
+            )
+          })}
+        </RadioGroup>
+        <RadioGroup
+          value={group}
+          onValueChange={setGroup}
+          className="mb-4 flex flex-row flex-wrap gap-4"
+        >
+          {groupArray?.map((group) => {
+            return (
+              <div key={group.value} className="flex items-center space-x-2">
+                <Label htmlFor={group.value}>{group.label}</Label>
+                <RadioGroupItem value={group.value} id={group.value} />
+              </div>
+            )
+          })}
+        </RadioGroup>
         <Label htmlFor="pasteArea">Matcher</Label>
         <Textarea
           id="pasteArea"
           value={pastedContent}
           onChange={handleChange}
+          className="mb-4"
         />
         <Button type="submit">Uppdatera lista</Button>
       </form>

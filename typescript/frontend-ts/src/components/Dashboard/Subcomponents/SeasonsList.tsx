@@ -11,7 +11,10 @@ import {
 } from '@/src/@/components/ui/tabs'
 import SeriesModal from '../SeriesModal'
 import { SerieAttributes } from '../../types/series/series'
-import { TeamAndSeasonAttributes } from '../../types/teams/teams'
+import {
+  TeamAndSeasonAttributes,
+  TeamSeasonAttributes,
+} from '../../types/teams/teams'
 import MetadataForm from '../../Metadata/MetadataForm'
 import BulkAddGame from './BulkAddGame/BulkAddGame'
 
@@ -24,6 +27,10 @@ const SeasonsList = ({ seasons }: { seasons: SeasonObjectType[] }) => {
   const [formContent, setFormContent] = useState<string | null>(null)
   const [women, setWomen] = useState<boolean>(false)
   const [serieData, setSerieData] = useState<SerieAttributes | null>(null)
+  const [series, setSeries] = useState<SerieAttributes[] | null>(null)
+  const [teamSeasonData, setTeamSeasonData] = useState<
+    TeamSeasonAttributes[] | null
+  >(null)
 
   return (
     <>
@@ -74,11 +81,20 @@ const SeasonsList = ({ seasons }: { seasons: SeasonObjectType[] }) => {
                   setTab={setTab}
                   setSerieData={setSerieData}
                   setTeams={setTeams}
+                  setSeries={setSeries}
+                  setTeamSeasonData={setTeamSeasonData}
                 />
               </TabsContent>
               <TabsContent value="forms">
                 {formContent === 'teamseason' && (
-                  <TeamSeasonForm women={women} seasonId={seasonId} />
+                  <TeamSeasonForm
+                    women={women}
+                    seasonId={seasonId}
+                    teamSeasonData={teamSeasonData}
+                    setFormContent={setFormContent}
+                    setTab={setTab}
+                    setTeamSeasonData={setTeamSeasonData}
+                  />
                 )}
                 {formContent === 'series' && (
                   <SeriesModal
@@ -99,7 +115,15 @@ const SeasonsList = ({ seasons }: { seasons: SeasonObjectType[] }) => {
                     setFormContent={setFormContent}
                   />
                 )}
-                {formContent === 'bulkAddGame' && <BulkAddGame teams={teams} />}
+                {formContent === 'bulkAddGame' && (
+                  <BulkAddGame
+                    teams={teams}
+                    seasonYear={year}
+                    seasonId={seasonId}
+                    series={series}
+                    women={women}
+                  />
+                )}
               </TabsContent>
             </Tabs>
           </SheetContent>

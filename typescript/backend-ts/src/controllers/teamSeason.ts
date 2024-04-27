@@ -7,10 +7,10 @@ import {
 } from 'express'
 import TeamSeason from '../models/TeamSeason.js'
 import Season from '../models/Season.js'
-import newTeamSeasonEntry from '../utils/postFunctions/newTeamSeasonEntry.js'
 import seasonIdCheck from '../utils/postFunctions/seasonIdCheck.js'
 import NotFoundError from '../utils/middleware/errors/NotFoundError.js'
 import { Op } from 'sequelize'
+import teamSeasonUpsertPromise from '../utils/postFunctions/newTeamSeasonEntry.js'
 
 const teamSeasonRouter = Router()
 
@@ -60,9 +60,16 @@ teamSeasonRouter.post('/', (async (
   res: Response,
   _next: NextFunction
 ) => {
-  const newTeamSeasonObject = newTeamSeasonEntry(req.body)
-  const newTeamSeason = await TeamSeason.create(newTeamSeasonObject)
-  return res.status(201).json(newTeamSeason)
+  const parsedData = teamSeasonUpsertPromise(req.body)
+  if (!parsedData.teamseasonId) {
+    const teamSeasons = await TeamSeason.create(parsedData)
+    return res.status(201).json(teamSeasons)
+  } else {
+    const teamSeasons = await TeamSeason.update(parsedData, {
+      where: { teamseasonId: parsedData.teamseasonId },
+    })
+    return res.status(201).json(teamSeasons)
+  }
 }) as RequestHandler)
 
 export default teamSeasonRouter

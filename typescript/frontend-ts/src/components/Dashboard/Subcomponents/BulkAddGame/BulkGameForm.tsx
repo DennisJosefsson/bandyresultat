@@ -20,6 +20,11 @@ const initialData = [
     homeTeamId: '',
     awayTeam: '',
     awayTeamId: '',
+    seasonId: 0,
+    category: '',
+    group: '',
+    women: false,
+    serieId: 0,
   },
 ]
 
@@ -37,6 +42,11 @@ const bulkGameSchema = z.object({
         if (val === 'Fel namn') return false
         return true
       }),
+      seasonId: z.number(),
+      category: z.string(),
+      group: z.string(),
+      women: z.boolean(),
+      serieId: z.number().optional().nullable(),
     }),
   ),
 })
@@ -64,10 +74,8 @@ const BulkGameForm = ({ gameArray }: { gameArray: Game[] }) => {
   const form = useBulkGameForm({
     schema: bulkGameSchema,
     defaultValues: { games },
-    mode: 'onChange',
+    mode: 'onSubmit',
   })
-
-  useEffect(() => {})
 
   const { control, handleSubmit } = form
 

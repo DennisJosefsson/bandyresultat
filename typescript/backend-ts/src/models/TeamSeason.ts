@@ -7,13 +7,14 @@ import {
   PrimaryKey,
   ForeignKey,
   Default,
+  Unique,
 } from 'sequelize-typescript'
 import Team from './Team.js'
 import Season from './Season.js'
 import TeamTable from './TeamTable.js'
 
 export const teamSeasonAttributes = z.object({
-  teamseasonId: z.number(),
+  teamseasonId: z.number().optional(),
   seasonId: z.number(),
   teamId: z.number(),
   tableId: z.number().nullable().optional(),
@@ -22,8 +23,8 @@ export const teamSeasonAttributes = z.object({
   negQualification: z.boolean().nullable().optional(),
   promoted: z.boolean().nullable().optional(),
   relegated: z.boolean().nullable().optional(),
-  position: z.number().nullable().optional(),
-  points: z.number().nullable().optional(),
+  position: z.coerce.number().nullable().optional(),
+  points: z.coerce.number().nullable().optional(),
   playoff: z.boolean().nullable().optional(),
   eight: z.boolean().nullable().optional(),
   quarter: z.boolean().nullable().optional(),
@@ -46,8 +47,9 @@ export interface TeamSeasonOutput extends Required<TeamSeasonAttributes> {}
 })
 class TeamSeason extends Model<TeamSeasonAttributes, TeamSeasonInput> {
   @PrimaryKey
+  @Unique
   @Column
-  declare teamseasonId: number
+  declare teamseasonId?: number
 
   @ForeignKey(() => Season)
   @Column

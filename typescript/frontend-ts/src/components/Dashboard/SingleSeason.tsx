@@ -11,7 +11,10 @@ import {
 } from '@/src/@/components/ui/card'
 import { Dispatch, SetStateAction } from 'react'
 import { SerieAttributes } from '../types/series/series'
-import { TeamAndSeasonAttributes } from '../types/teams/teams'
+import {
+  TeamAndSeasonAttributes,
+  TeamSeasonAttributes,
+} from '../types/teams/teams'
 import useGetMetaData from '@/src/hooks/dataHooks/seasonHooks/metadataHooks/useGetMetadata'
 
 type SingleSeasonProps = {
@@ -20,7 +23,9 @@ type SingleSeasonProps = {
   setFormContent: Dispatch<SetStateAction<string | null>>
   setTab: Dispatch<SetStateAction<string>>
   setSerieData: Dispatch<SetStateAction<SerieAttributes | null>>
+  setSeries: Dispatch<SetStateAction<SerieAttributes[] | null>>
   setTeams: Dispatch<SetStateAction<TeamAndSeasonAttributes[] | null>>
+  setTeamSeasonData: Dispatch<SetStateAction<TeamSeasonAttributes[] | null>>
 }
 
 const SingleSeason = ({
@@ -30,6 +35,8 @@ const SingleSeason = ({
   setTab,
   setSerieData,
   setTeams,
+  setSeries,
+  setTeamSeasonData,
 }: SingleSeasonProps) => {
   const seasonId = parseInt(year.slice(-4))
   const { data, isLoading, error } = useGetSingleSeason(seasonId)
@@ -42,6 +49,8 @@ const SingleSeason = ({
   const metadataObject = metadata?.find(
     (item) => item.seasonId === season?.seasonId,
   )
+
+  const teamSeasonData = season?.teams?.map((team) => team.teamseason)
 
   return (
     <>
@@ -64,6 +73,7 @@ const SingleSeason = ({
                       <p
                         className="cursor-pointer text-accent-foreground"
                         onClick={() => {
+                          teamSeasonData && setTeamSeasonData(teamSeasonData)
                           setTab('forms')
                           setFormContent('teamseason')
                         }}
@@ -74,6 +84,7 @@ const SingleSeason = ({
                         className="cursor-pointer text-accent-foreground"
                         onClick={() => {
                           setTeams(season.teams)
+                          setSeries(season.series)
                           setTab('forms')
                           setFormContent('bulkAddGame')
                         }}

@@ -7,9 +7,6 @@ import { SerieAttributes, serieAttributes } from '../types/series/series'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Form } from '@/src/@/components/ui/form'
 
-//import { InputComponent } from '../utilitycomponents/Components/InputComponent'
-//import { CheckboxComponent } from '../utilitycomponents/Components/CheckboxComponent'
-//import TextAreaComponent from '../utilitycomponents/Components/TextAreaComponent'
 import { Button } from '@/src/@/components/ui/button'
 import {
   Card,
