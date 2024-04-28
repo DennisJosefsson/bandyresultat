@@ -16,6 +16,7 @@ import { SubmitHandler } from 'react-hook-form'
 import { MetadataType } from '../types/metadata/metadata'
 import { FormComponent } from '../utilitycomponents/Components/ReactHookFormComponents/FormComponent'
 import { AxiosError } from 'axios'
+import { FormContent } from '../Dashboard/Subcomponents/SeasonsList'
 
 type TeamSelection = {
   value: number
@@ -26,7 +27,7 @@ type MetadataFormProps = {
   seasonId: number
   year: string
   teams: TeamAndSeasonAttributes[] | null
-  setFormContent: Dispatch<SetStateAction<string | null>>
+  setFormContent: Dispatch<SetStateAction<FormContent>>
   setTab: Dispatch<SetStateAction<string>>
 }
 

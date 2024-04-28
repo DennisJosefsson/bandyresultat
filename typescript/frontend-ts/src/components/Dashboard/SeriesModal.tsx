@@ -17,13 +17,14 @@ import {
 import { useToast } from '@/src/@/components/ui/use-toast'
 import { AxiosError } from 'axios'
 import { FormComponent } from '../utilitycomponents/Components/ReactHookFormComponents/FormComponent'
+import { FormContent } from './Subcomponents/SeasonsList'
 
 type SeriesModalProps = {
   women: boolean
   seasonId: number
   serieData: SerieAttributes | null
   setSerieData: Dispatch<SetStateAction<SerieAttributes | null>>
-  setFormContent: Dispatch<SetStateAction<string | null>>
+  setFormContent: Dispatch<SetStateAction<FormContent>>
   setTab: Dispatch<SetStateAction<string>>
 }
 

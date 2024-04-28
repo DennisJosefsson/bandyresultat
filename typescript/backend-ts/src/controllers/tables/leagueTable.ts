@@ -13,7 +13,11 @@ import Team from '../../models/Team.js'
 import Season from '../../models/Season.js'
 import Serie from '../../models/Serie.js'
 import seasonIdCheck from '../../utils/postFunctions/seasonIdCheck.js'
-import { leagueTable } from '../../utils/responseTypes/tableTypes.js'
+import {
+  leagueTable,
+  miniTableItemArray,
+} from '../../utils/responseTypes/tableTypes.js'
+import { leagueTableParser } from '../../utils/postFunctions/leagueTableParser.js'
 
 type BonusPoints = {
   [key: string]: number
@@ -27,6 +31,44 @@ leagueTableRouter.get('/:seasonId', (async (
   _next: NextFunction
 ) => {
   const seasonYear = seasonIdCheck.parse(req.params.seasonId)
+
+  const getTeamArray = await TeamGame.findAll({
+    where: { playoff: false },
+    include: [
+      {
+        model: Season,
+        where: { year: { [Op.eq]: seasonYear } },
+        attributes: ['year', 'seasonId'],
+      },
+      {
+        model: Team,
+        attributes: ['name', 'teamId', 'casualName', 'shortName'],
+        as: 'lag',
+      },
+    ],
+    attributes: [
+      [sequelize.literal('DISTINCT (team)'), 'team'],
+      'group',
+      'category',
+      'women',
+    ],
+    group: [
+      'group',
+      'team',
+      'category',
+      'lag.name',
+      'lag.team_id',
+      'lag.casual_name',
+      'lag.short_name',
+      'season.season_id',
+      'season.year',
+      'teamgame.women',
+    ],
+    raw: true,
+    nest: true,
+  })
+
+  const teamArray = miniTableItemArray.parse(getTeamArray)
 
   const playoffGames = await Game.findAll({
     where: { playoff: true },
@@ -54,6 +96,7 @@ leagueTableRouter.get('/:seasonId', (async (
   })
 
   const getTable = await TeamGame.findAll({
+    where: { played: true },
     attributes: [
       'team',
       'group',
@@ -108,10 +151,12 @@ leagueTableRouter.get('/:seasonId', (async (
     nest: true,
   })
 
-  const tabell = leagueTable.parse(getTable)
+  const parsedTable = leagueTable.parse(getTable)
+
+  const tabell = leagueTableParser(teamArray, parsedTable)
 
   const getHomeTable = await TeamGame.findAll({
-    where: { homeGame: true },
+    where: { homeGame: true, played: true },
     attributes: [
       'team',
       'group',
@@ -166,10 +211,12 @@ leagueTableRouter.get('/:seasonId', (async (
     nest: true,
   })
 
-  const hemmaTabell = leagueTable.parse(getHomeTable)
+  const parsedHomeTable = leagueTable.parse(getHomeTable)
+
+  const hemmaTabell = leagueTableParser(teamArray, parsedHomeTable)
 
   const getAwayTable = await TeamGame.findAll({
-    where: { homeGame: false },
+    where: { homeGame: false, played: true },
     attributes: [
       'team',
       'group',
@@ -224,7 +271,9 @@ leagueTableRouter.get('/:seasonId', (async (
     nest: true,
   })
 
-  const bortaTabell = leagueTable.parse(getAwayTable)
+  const parsedAwayTable = leagueTable.parse(getAwayTable)
+
+  const bortaTabell = leagueTableParser(teamArray, parsedAwayTable)
 
   const series = await Serie.findAll({
     where: { serieCategory: 'regular' },
@@ -368,7 +417,9 @@ leagueTableRouter.get('/:seasonId', (async (
     })
   }
 
-  res.status(200).json({ tabell, hemmaTabell, bortaTabell, playoffGames })
+  res
+    .status(200)
+    .json({ tabell, hemmaTabell, bortaTabell, playoffGames, teamArray })
 }) as RequestHandler)
 
 export default leagueTableRouter

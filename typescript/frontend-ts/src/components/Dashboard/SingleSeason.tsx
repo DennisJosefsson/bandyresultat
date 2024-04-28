@@ -16,11 +16,12 @@ import {
   TeamSeasonAttributes,
 } from '../types/teams/teams'
 import useGetMetaData from '@/src/hooks/dataHooks/seasonHooks/metadataHooks/useGetMetadata'
+import { FormContent } from './Subcomponents/SeasonsList'
 
 type SingleSeasonProps = {
   women: boolean
   year: string
-  setFormContent: Dispatch<SetStateAction<string | null>>
+  setFormContent: Dispatch<SetStateAction<FormContent>>
   setTab: Dispatch<SetStateAction<string>>
   setSerieData: Dispatch<SetStateAction<SerieAttributes | null>>
   setSeries: Dispatch<SetStateAction<SerieAttributes[] | null>>

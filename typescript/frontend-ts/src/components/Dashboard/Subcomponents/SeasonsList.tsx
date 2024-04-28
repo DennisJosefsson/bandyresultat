@@ -18,13 +18,20 @@ import {
 import MetadataForm from '../../Metadata/MetadataForm'
 import BulkAddGame from './BulkAddGame/BulkAddGame'
 
+export type FormContent =
+  | 'teamseason'
+  | 'series'
+  | 'metadata'
+  | 'bulkAddGame'
+  | null
+
 const SeasonsList = ({ seasons }: { seasons: SeasonObjectType[] }) => {
   const [seasonId, setSeasonId] = useState<number>(0)
   const [year, setYear] = useState<string>('')
   const [open, setOpen] = useState<boolean>(false)
   const [teams, setTeams] = useState<TeamAndSeasonAttributes[] | null>(null)
   const [tab, setTab] = useState<string>('sections')
-  const [formContent, setFormContent] = useState<string | null>(null)
+  const [formContent, setFormContent] = useState<FormContent>(null)
   const [women, setWomen] = useState<boolean>(false)
   const [serieData, setSerieData] = useState<SerieAttributes | null>(null)
   const [series, setSeries] = useState<SerieAttributes[] | null>(null)
@@ -122,6 +129,8 @@ const SeasonsList = ({ seasons }: { seasons: SeasonObjectType[] }) => {
                     seasonId={seasonId}
                     series={series}
                     women={women}
+                    setTab={setTab}
+                    setFormContent={setFormContent}
                   />
                 )}
               </TabsContent>

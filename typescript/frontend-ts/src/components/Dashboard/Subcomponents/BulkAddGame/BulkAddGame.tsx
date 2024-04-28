@@ -1,4 +1,10 @@
-import { ChangeEvent, FormEvent, useState } from 'react'
+import {
+  ChangeEvent,
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useState,
+} from 'react'
 import { Textarea } from '@/src/@/components/ui/textarea'
 import { Label } from '@/src/@/components/ui/label'
 
@@ -10,6 +16,7 @@ import { Button } from '@/src/@/components/ui/button'
 import { SerieAttributes } from '@/src/components/types/series/series'
 import { RadioGroup, RadioGroupItem } from '@/src/@/components/ui/radio-group'
 import { sortOrder } from '@/src/components/utilitycomponents/functions/constants'
+import { FormContent } from '../SeasonsList'
 
 interface FormElements extends HTMLFormControlsCollection {
   pasteArea: HTMLInputElement
@@ -35,6 +42,8 @@ type BulkAddGameProps = {
   series: SerieAttributes[] | null
   seasonYear: string
   women: boolean
+  setTab: Dispatch<SetStateAction<string>>
+  setFormContent: Dispatch<SetStateAction<FormContent>>
 }
 
 const BulkAddGame = ({
@@ -43,6 +52,8 @@ const BulkAddGame = ({
   series,
   seasonYear,
   women,
+  setTab,
+  setFormContent,
 }: BulkAddGameProps) => {
   const firstYear = seasonYear.split('/')[0]
   const secondYear = seasonYear.split('/')[1]
@@ -146,11 +157,17 @@ const BulkAddGame = ({
           value={pastedContent}
           onChange={handleChange}
           className="mb-4"
+          rows={6}
         />
         <Button type="submit">Uppdatera lista</Button>
       </form>
 
-      <GameTable games={games} teams={teams} />
+      <GameTable
+        games={games}
+        teams={teams}
+        setTab={setTab}
+        setFormContent={setFormContent}
+      />
     </div>
   )
 }

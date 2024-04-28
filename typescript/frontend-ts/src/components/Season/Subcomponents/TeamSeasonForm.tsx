@@ -24,6 +24,7 @@ import {
 } from '@/src/@/components/ui/form'
 import { Switch } from '@/src/@/components/ui/switch'
 import { useToast } from '@/src/@/components/ui/use-toast'
+import { FormContent } from '../../Dashboard/Subcomponents/SeasonsList'
 
 const teamSeasonFormSchema = z.object({
   teamSeasons: z.array(
@@ -92,7 +93,7 @@ type TeamSeasonFormProps = {
   teamSeasonData: TeamSeasonAttributes[] | null
   setTeamSeasonData: Dispatch<SetStateAction<TeamSeasonAttributes[] | null>>
   setTab: Dispatch<SetStateAction<string>>
-  setFormContent: Dispatch<SetStateAction<string | null>>
+  setFormContent: Dispatch<SetStateAction<FormContent>>
 }
 
 const TeamSeasonForm = ({

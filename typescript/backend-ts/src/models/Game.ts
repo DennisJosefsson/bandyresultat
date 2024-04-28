@@ -19,8 +19,8 @@ export const gameAttributes = z.object({
   gameId: z.number().optional(),
   seasonId: z.number(),
   serieId: z.number(),
-  homeTeamId: z.number().optional().nullable(),
-  awayTeamId: z.number().optional().nullable(),
+  homeTeamId: z.coerce.number().optional().nullable(),
+  awayTeamId: z.coerce.number().optional().nullable(),
   result: z
     .string()
     .regex(/^\d{1,2}-\d{1,2}$/, { message: 'Fel resultat' })

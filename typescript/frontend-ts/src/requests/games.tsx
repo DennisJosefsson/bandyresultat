@@ -14,6 +14,7 @@ import {
 } from '../components/types/games/search'
 import { SeasonStatsObjectType } from '../components/types/games/stats'
 import { AnimationObject } from '../components/types/games/animation'
+import { Game } from '../components/Dashboard/Subcomponents/BulkAddGame/BulkGameForm'
 
 const backendUrl = import.meta.env.MODE === 'mobile' ? mobileBaseUrl : baseUrl
 
@@ -80,6 +81,12 @@ export const postGame = async (newGameData: InputGameObjectType | null) => {
     return response
   }
   return response.data
+}
+
+export const postBulkGames = async (games: Game[]) => {
+  const promise = Promise.all(games.map((game) => gamesApi.post('/', game)))
+  console.log(promise)
+  return promise
 }
 
 export const deleteGame = async (gameId: number) => {

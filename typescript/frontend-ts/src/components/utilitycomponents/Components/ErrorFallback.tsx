@@ -10,6 +10,7 @@ export interface FrontendError {
   origin: string
   date: string
   production: boolean
+  body: string
 }
 
 const ErrorFallback = ({ error }: FallbackProps) => {
@@ -21,11 +22,13 @@ const ErrorFallback = ({ error }: FallbackProps) => {
     origin: origin,
     date: new Date().toString(),
     production: import.meta.env.PROD,
+    body: '',
   }
 
-  const { isLoading } = useQuery(['errors', frontendError], () =>
-    postError(frontendError),
-  )
+  const { isLoading } = useQuery({
+    queryKey: ['errors', frontendError],
+    queryFn: () => postError(frontendError),
+  })
 
   if (isLoading) {
     return (

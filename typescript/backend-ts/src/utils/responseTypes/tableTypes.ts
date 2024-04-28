@@ -1,5 +1,22 @@
 import { z } from 'zod'
 
+export const miniTableItem = z.object({
+  team: z.number(),
+  women: z.boolean(),
+  category: z.string(),
+  group: z.string(),
+  lag: z.object({
+    casualName: z.string(),
+    name: z.string(),
+    shortName: z.string(),
+    teamId: z.number(),
+  }),
+  season: z.object({
+    seasonId: z.number(),
+    year: z.string(),
+  }),
+})
+
 const tableItem = z.object({
   category: z.string(),
   group: z.string(),
@@ -27,7 +44,9 @@ const tableItem = z.object({
 })
 
 export const leagueTable = z.array(tableItem)
+export const miniTableItemArray = z.array(miniTableItem)
 export type TableItem = z.infer<typeof tableItem>
+export type MiniTableItemArray = z.infer<typeof miniTableItemArray>
 export type LeagueTableType = z.infer<typeof leagueTable>
 
 export const fiveSeasonsLeagueTable = z.array(

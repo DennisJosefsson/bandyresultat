@@ -8,10 +8,10 @@ export const useGetSingleSeasonTables = (
   selectedTable: string,
 ) => {
   const { women } = useGenderContext()
-  const { data, isLoading, error, isSuccess } = useQuery(
-    ['singleSeasonTable', seasonId],
-    () => getSingleSeasonTable(seasonId),
-  )
+  const { data, isLoading, error, isSuccess } = useQuery({
+    queryKey: ['singleSeasonTable', seasonId],
+    queryFn: () => getSingleSeasonTable(seasonId),
+  })
 
   let regTables = isSuccess
     ? data.tabell.filter((table) => table.women === women)
