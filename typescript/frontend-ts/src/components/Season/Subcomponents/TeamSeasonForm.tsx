@@ -1,11 +1,4 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { useQueryClient, useMutation } from '@tanstack/react-query'
-
-import { postTeamSeason } from '../../../requests/teamSeason'
-import { useForm, useFieldArray, UseFormProps } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-
 import { useGetTeams } from '@/src/hooks/dataHooks/teamHooks/useGetTeams'
 import {
   DataError,
@@ -23,69 +16,14 @@ import {
   FormMessage,
 } from '@/src/@/components/ui/form'
 import { Switch } from '@/src/@/components/ui/switch'
-import { useToast } from '@/src/@/components/ui/use-toast'
+
 import { FormContent } from '../../Dashboard/Subcomponents/SeasonsList'
-
-const teamSeasonFormSchema = z.object({
-  teamSeasons: z.array(
-    z.object({
-      teamseasonId: z.number().optional(),
-      seasonId: z.number(),
-      teamId: z.number(),
-      tableId: z.number().nullable().optional(),
-      women: z.boolean(),
-      qualification: z.boolean(),
-      negQualification: z.boolean().optional(),
-      promoted: z.boolean().optional(),
-      relegated: z.boolean().optional(),
-      position: z.coerce.number().optional().nullable(),
-      points: z.coerce.number().optional().nullable(),
-      playoff: z.boolean().optional(),
-      eight: z.boolean().optional(),
-      quarter: z.boolean().optional(),
-      semi: z.boolean().optional(),
-      final: z.boolean().optional(),
-      gold: z.boolean().optional(),
-    }),
-  ),
-})
-
-type TeamSeason = z.infer<typeof teamSeasonFormSchema>['teamSeasons'][number]
-
-const initialData = [
-  {
-    seasonId: 0,
-    teamId: 0,
-    women: false,
-    qualification: false,
-    negQualification: false,
-    promoted: false,
-    relegated: false,
-    position: null,
-    points: null,
-    playoff: false,
-    eight: false,
-    quarter: false,
-    semi: false,
-    final: false,
-    gold: false,
-  },
-]
-
-const useTeamSeasonForm = <TSchema extends z.ZodType>(
-  props: Omit<UseFormProps<TSchema['_input']>, 'resolver'> & {
-    schema: TSchema
-  },
-) => {
-  const form = useForm<TSchema['_input']>({
-    ...props,
-    resolver: zodResolver(props.schema, undefined, {
-      raw: true,
-    }),
-  })
-
-  return form
-}
+import { useAddTeamSeasonMutation } from '@/src/hooks/dataHooks/teamHooks/useAddTeamSeasonMutation'
+import {
+  useAddTeamSeasonForm,
+  initialData,
+  TeamSeason,
+} from '@/src/hooks/dataHooks/teamHooks/useAddTeamSeasonForm'
 
 type TeamSeasonFormProps = {
   seasonId: number
@@ -104,31 +42,20 @@ const TeamSeasonForm = ({
   setTab,
   setFormContent,
 }: TeamSeasonFormProps) => {
-  const { toast } = useToast()
   const [teamSeasons, setTeamSeasons] = useState<TeamSeason[]>(() =>
     !teamSeasonData || (teamSeasonData && teamSeasonData.length === 0)
       ? initialData
       : teamSeasonData,
   )
   const { data, isLoading, error } = useGetTeams()
-  const mutation = useMutation({
-    mutationFn: postTeamSeason,
-    onSuccess: () => onMutationSuccess(),
-    onError: () => onMutationError(),
-  })
+  const mutation = useAddTeamSeasonMutation(
+    setTab,
+    setFormContent,
+    setTeamSeasonData,
+  )
 
-  const form = useTeamSeasonForm({
-    schema: teamSeasonFormSchema,
-    defaultValues: { teamSeasons },
-    mode: 'onSubmit',
-  })
-
-  const { control, handleSubmit } = form
-
-  const { fields, replace, remove, append } = useFieldArray({
-    name: 'teamSeasons',
-    control,
-  })
+  const { form, handleSubmit, fields, replace, remove, append } =
+    useAddTeamSeasonForm(teamSeasons)
 
   useEffect(() => {
     if (teamSeasonData) {
@@ -138,28 +65,6 @@ const TeamSeasonForm = ({
   }, [teamSeasonData])
 
   const [teamFilter, setTeamFilter] = useState('')
-
-  const queryClient = useQueryClient()
-
-  const onMutationSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: ['singleSeason'] })
-    toast({
-      duration: 5000,
-      title: 'Lag inlagda/uppdaterade',
-    })
-
-    setTeamSeasonData(null)
-    setTab('sections')
-    setFormContent(null)
-  }
-
-  const onMutationError = () => {
-    toast({
-      duration: 5000,
-      title: 'Lag inlagda/uppdaterade',
-      variant: 'destructive',
-    })
-  }
 
   const teamSelection = data
     ? data
