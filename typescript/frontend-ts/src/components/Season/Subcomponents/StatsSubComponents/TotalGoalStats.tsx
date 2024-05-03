@@ -1,6 +1,7 @@
 import useGenderContext from '../../../../hooks/contextHooks/useGenderContext'
 import useSeasonContext from '../../../../hooks/contextHooks/useSeasonContext'
 import { useGetGoalStats } from '../../../../hooks/dataHooks/seasonHooks/statsHooks/useGetGoalStats'
+
 import GoalStatsCard from './GoalStatsCard'
 
 const TotalGoalStats = () => {
@@ -15,6 +16,7 @@ const TotalGoalStats = () => {
 
     goalsScoredAwayTotalCat,
   } = useGetGoalStats(seasonId, women)
+
   return (
     <>
       {goalsScoredTotal && goalsScoredTotalCat ? (

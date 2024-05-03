@@ -59,7 +59,10 @@ const Map = () => {
   return (
     <div>
       {teams && qualificationTeams && (
-        <div id="map" className="h-[400px] w-screen max-w-xl p-2">
+        <div
+          id="map"
+          className="h-[400px] w-screen max-w-[280px] p-2 xs:max-w-[360px] sm:max-w-xl"
+        >
           <MapContainer
             bounds={bounds}
             center={[62, 15]}

@@ -28,33 +28,33 @@ const AnimationClicker = ({
 }: AnimationClickerProps) => {
   return (
     <div className="mt-4 flex flex-col gap-4">
-      <div className="flex flex-row items-center justify-center">
+      <div className="mb-1 flex flex-row items-center justify-center">
         {groupName && (
           <Carousel
             setApi={setApi}
-            className="w-full max-w-sm"
+            className="w-[50%] max-w-[240px] self-center xxs:max-w-xs xs:w-[60%] sm:max-w-sm md:max-w-2xl"
             opts={{ loop: true, containScroll: 'keepSnaps' }}
           >
-            <CarouselContent>
+            <CarouselContent className="-ml-1">
               {Array.from({ length: arrayLength }).map((_, index) => {
                 return (
                   <CarouselItem key={index}>
-                    <div className="flex cursor-pointer flex-row items-center justify-center">
+                    <div className="flex cursor-pointer flex-row items-center justify-center text-[10px] sm:text-xs lg:text-lg">
                       Matchdag {index + 1}
                     </div>
                   </CarouselItem>
                 )
               })}
             </CarouselContent>
-            <CarouselPrevious className="h-6 w-6" />
-            <CarouselNext className="h-6 w-6" />
+            <CarouselPrevious className="h-3 w-3 lg:h-6 lg:w-6" />
+            <CarouselNext className="h-3 w-3 lg:h-6 lg:w-6" />
           </Carousel>
         )}
       </div>
-      <div className="flex flex-row items-center justify-center">
+      <div className="mb-2 flex flex-row items-center justify-center">
         {justDatesArray.length > 0 ? (
           <Carousel
-            className="w-full max-w-sm"
+            className="w-[50%] max-w-[240px] self-center xxs:max-w-xs xs:w-[60%] sm:max-w-sm md:max-w-2xl"
             setApi={setDateApi}
             opts={{ containScroll: 'keepSnaps', dragFree: true, loop: true }}
           >
@@ -72,8 +72,8 @@ const AnimationClicker = ({
                 )
               })}
             </CarouselContent>
-            <CarouselPrevious className="h-6 w-6" />
-            <CarouselNext className="h-6 w-6" />
+            <CarouselPrevious className="h-3 w-3 lg:h-6 lg:w-6" />
+            <CarouselNext className="h-3 w-3 lg:h-6 lg:w-6" />
           </Carousel>
         ) : null}
       </div>

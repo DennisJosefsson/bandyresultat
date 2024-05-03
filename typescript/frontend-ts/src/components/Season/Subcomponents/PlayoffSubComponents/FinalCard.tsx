@@ -8,7 +8,7 @@ type FinalCardProps = {
 
 const FinalCard = ({ game }: FinalCardProps) => {
   return (
-    <div className="grid max-h-[10rem] w-auto min-w-[33%] grid-cols-1 justify-center md:mx-auto">
+    <div className="grid w-auto min-w-[33%] grid-cols-1 justify-center md:mx-auto">
       <PlayoffCard group="final">
         <PlayoffCard.Title>
           <PlayoffCard.Group>Final</PlayoffCard.Group>

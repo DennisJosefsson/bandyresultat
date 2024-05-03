@@ -17,7 +17,7 @@ const Header = () => {
         <h1 className="text-base font-bold uppercase tracking-[0.2rem] text-primary md:text-2xl lg:text-4xl xl:pl-0">
           <Link to="/">Bandyresultat</Link>
         </h1>
-        <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+        <nav className="hidden flex-col gap-6 text-lg font-medium lg:flex lg:flex-row lg:items-center lg:gap-6 lg:text-sm">
           <Link
             to="/seasons"
             className="text-foreground transition-colors hover:text-foreground"
@@ -64,7 +64,7 @@ const Header = () => {
             <Button
               variant="outline"
               size="icon"
-              className="shrink-0 md:hidden"
+              className="shrink-0 lg:hidden"
             >
               <Menu className="h-5 w-5" />
               <span className="sr-only">Öppnar och stänger menyn.</span>
@@ -127,10 +127,9 @@ const Header = () => {
             </nav>
           </SheetContent>
         </Sheet>
-        <div className="flex flex-row items-center gap-2">
-          <LoginComponent />
-          <ModeToggle />
-        </div>
+
+        <LoginComponent />
+        <ModeToggle />
       </div>
       {/* <hr className="mx-auto my-2 h-px border-0 bg-[#011d29] dark:bg-gray-700 xl:w-[1280px]" /> */}
     </header>

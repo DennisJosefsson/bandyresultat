@@ -63,7 +63,7 @@ function Title({ children }: { children: ReactNode }) {
   return (
     <CardHeader>
       <CardTitle>
-        <div className="flex flex-row justify-between text-sm lg:text-base">
+        <div className="flex flex-row justify-between text-[10px] sm:text-xs lg:text-sm xl:text-base">
           {children}
         </div>
       </CardTitle>
@@ -80,7 +80,11 @@ function Result({ children }: { children: ReactNode }) {
 }
 
 function Content({ children }: { children: ReactNode }) {
-  return <CardContent className="text-xs md:text-sm">{children}</CardContent>
+  return (
+    <CardContent className="text-[10px] sm:text-xs lg:text-sm">
+      {children}
+    </CardContent>
+  )
 }
 
 function Team({ teamId, children }: { teamId: number; children: ReactNode }) {

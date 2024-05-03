@@ -58,6 +58,10 @@ export const groupConstant: GroupConstant = {
   ElitSyd: 'Elitserien Södra',
   top: 'Toppen',
   bottom: 'Botten',
+  totalt: 'Totalt',
+  hemma: 'Hemma',
+  borta: 'Borta',
+  oavgjort: 'Oavgjort',
 }
 
 export const sortOrder = [
@@ -111,6 +115,10 @@ export const sortOrder = [
   'eight',
   'regular',
   'qualification',
+  'Totalt',
+  'Hemma',
+  'Borta',
+  'Oavgjort',
 ]
 
 export const semiColStarts: ColStarts = {

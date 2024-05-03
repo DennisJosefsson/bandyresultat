@@ -64,7 +64,7 @@ const SeasonPlayoffTables = ({
 
   return (
     <div className="m-0 mt-4 justify-self-center">
-      <div className="grid grid-rows-7 gap-6">
+      <div className="grid gap-2">
         {final.length === 0 && <NilFinalComponent />}
         {final.length > 0 && (
           <>

@@ -54,7 +54,7 @@ const TableList = ({
                 serieStructure={serieStructure}
               />
               {serieObject.comment && (
-                <p className="bg-background p-1 text-xs font-bold">
+                <p className="bg-background p-1 text-[8px] md:text-xs">
                   {serieObject.comment}
                 </p>
               )}

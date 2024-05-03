@@ -6,12 +6,10 @@ import {
   Loading,
   DataError,
 } from '../utilitycomponents/Components/LoadingOrError'
-import { ButtonComponent } from '../utilitycomponents/Components/ButtonComponents'
 
 import FilterComponent from './Subcomponents/FilterComponent'
 import { GameObjectType } from '../types/games/games'
 import useGenderContext from '../../hooks/contextHooks/useGenderContext'
-import useUserContext from '../../hooks/contextHooks/useUserContext'
 import useSeasonContext from '../../hooks/contextHooks/useSeasonContext'
 import useScrollTo from '../../hooks/domHooks/useScrollTo'
 import { useSingleSeasonGames } from '../../hooks/dataHooks/seasonHooks/gameHooks/useSingleSeasonGames'
@@ -24,8 +22,6 @@ import { useGetFirstAndLastSeason } from '../../hooks/dataHooks/seasonHooks/useG
 const Games = () => {
   const { seasonId } = useSeasonContext()
   const { women } = useGenderContext()
-
-  const { user } = useUserContext()
 
   const [teamFilter, setTeamFilter] = useState<string>('')
 
@@ -72,7 +68,7 @@ const Games = () => {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-7xl flex-col font-inter text-foreground">
+    <div className="mx-auto flex min-h-screen w-full flex-col font-inter text-foreground">
       <FilterComponent setTeamFilter={setTeamFilter} teamFilter={teamFilter} />
 
       {seasonId <= lastSeason && (
@@ -91,17 +87,6 @@ const Games = () => {
               setShowAddGameModal={setShowAddGameModal}
             />
           )}
-          <div>
-            {user && (
-              <div>
-                <ButtonComponent
-                  clickFunctions={() => setShowAddGameModal(true)}
-                >
-                  Lägg till Match
-                </ButtonComponent>
-              </div>
-            )}
-          </div>
         </div>
       )}
       {showAddGameModal ? (

@@ -19,7 +19,7 @@ type SeasonTabBarProps = {
 }
 
 const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
-  const matches = useMediaQuery('(min-width: 430px)')
+  const matches = useMediaQuery('(min-width: 640px)')
   const { dispatch, women } = useGenderContext()
   const seasonTabBarObject = {
     gender: (

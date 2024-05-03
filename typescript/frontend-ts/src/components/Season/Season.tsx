@@ -41,7 +41,7 @@ const Season = () => {
   return (
     <div className="mx-auto mt-2 flex min-h-screen flex-col px-2 font-inter text-foreground">
       <Card className="mb-2">
-        <CardContent className="mt-2">
+        <CardContent className="mt-2 max-w-full">
           <SeasonHeader seasonId={seasonId} women={women} tab={tab} />
           <SeasonTabBar tab={tab} setSearchParams={setSearchParams} />
         </CardContent>

@@ -16,15 +16,15 @@ const AnimationGamesList = ({ dateArray, round }: AnimationGamesListProps) => {
   const { favTeams } = useTeampreferenceContext()
 
   return (
-    <div className="mx-2 xl:mx-0">
-      <div>
+    <div className="mt-2 marker:mx-2 xl:mx-0">
+      <div className="text-[10px] sm:text-sm lg:text-base">
         <Date>{dateArray[round]?.date}</Date>
       </div>
       {dateArray[round]?.games.map((game) => {
         return (
           <div
             key={game.gameId}
-            className="flex flex-row justify-between border-b px-2 py-1 text-[10px] transition-colors hover:bg-slate-100/50 data-[state=selected]:bg-slate-100 dark:hover:bg-slate-800/50 dark:data-[state=selected]:bg-slate-800 md:text-sm xl:py-2 "
+            className="flex flex-row justify-between border-b px-2 py-1 text-[8px] transition-colors hover:bg-slate-100/50 data-[state=selected]:bg-slate-100 dark:hover:bg-slate-800/50 dark:data-[state=selected]:bg-slate-800 sm:text-[10px] lg:text-sm xl:py-2 "
           >
             <div>
               <span

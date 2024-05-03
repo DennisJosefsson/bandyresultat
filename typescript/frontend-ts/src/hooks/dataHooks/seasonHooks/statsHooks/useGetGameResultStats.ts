@@ -27,6 +27,33 @@ export const useGetGameResultStats = (seasonId: number, women: boolean) => {
     .filter((cat) => cat.women === women)
     .filter((cat) => cat.category !== 'final')
 
+  const pieChartData = [
+    {
+      win: 'Hemma',
+      count: winCountHomeTeam?.count ?? 0,
+      percent:
+        winCountHomeTeam?.count && gamesCountTotal?.count
+          ? (winCountHomeTeam?.count / gamesCountTotal?.count) * 100
+          : 0,
+    },
+    {
+      win: 'Borta',
+      count: winCountAwayTeam?.count ?? 0,
+      percent:
+        winCountAwayTeam?.count && gamesCountTotal?.count
+          ? (winCountAwayTeam?.count / gamesCountTotal?.count) * 100
+          : 0,
+    },
+    {
+      win: 'Oavgjort',
+      count: drawCount?.count ?? 0,
+      percent:
+        drawCount?.count && gamesCountTotal?.count
+          ? (drawCount?.count / gamesCountTotal?.count) * 100
+          : 0,
+    },
+  ]
+
   return {
     data,
     isLoading,
@@ -40,5 +67,6 @@ export const useGetGameResultStats = (seasonId: number, women: boolean) => {
     winCountHomeTeamCat,
     drawCount,
     drawCountCat,
+    pieChartData,
   }
 }

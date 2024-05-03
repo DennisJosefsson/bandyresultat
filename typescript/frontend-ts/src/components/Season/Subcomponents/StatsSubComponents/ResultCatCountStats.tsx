@@ -15,18 +15,19 @@ const ResultCatCountStats = () => {
     drawCountCat,
   } = useGetGameResultStats(seasonId, women)
 
+
   return (
     <>
       {winCountHomeTeamCat &&
       winCountAwayTeamCat &&
       winCountHomeTeamCat.length > 1 ? (
         <div>
-          <h4 className="ml-2 font-bold md:text-lg xl:ml-0">
+          <h4 className="ml-2 text-xs font-bold md:text-sm xl:ml-0 xl:text-base">
             Resultatstatistik kategori
           </h4>
           <div className="grid grid-cols-1 gap-y-4 pt-2 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:gap-x-44">
             <div>
-              <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
+              <h5 className="ml-2 text-xs font-bold md:text-sm xl:ml-0 xl:text-base">
                 Vinst hemmalag
               </h5>
               {sortStatsCat(winCountHomeTeamCat).map((cat) => {
@@ -40,7 +41,7 @@ const ResultCatCountStats = () => {
               })}
             </div>
             <div>
-              <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
+              <h5 className="ml-2 text-xs font-bold md:text-sm xl:ml-0 xl:text-base">
                 Vinst bortalag
               </h5>
               {sortStatsCat(winCountAwayTeamCat).map((cat) => {
@@ -55,7 +56,7 @@ const ResultCatCountStats = () => {
             </div>
             {drawCountCat && drawCountCat.length > 0 ? (
               <div>
-                <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
+                <h5 className="ml-2 text-xs font-bold md:text-sm xl:ml-0 xl:text-base">
                   Oavgjort
                 </h5>
                 {sortStatsCat(drawCountCat).map((cat) => {
@@ -76,12 +77,12 @@ const ResultCatCountStats = () => {
       winCountHomeTeamCat.length > 1 &&
       gamesCountTotalCat ? (
         <div>
-          <h4 className="ml-2 font-bold md:text-lg xl:ml-0">
+          <h4 className="ml-2 text-xs font-bold md:text-sm xl:ml-0 xl:text-base">
             Resultatstatistik kategori genomsnitt
           </h4>
           <div className="grid grid-cols-1 gap-y-4 pt-2 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:gap-x-44">
             <div>
-              <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
+              <h5 className="ml-2 text-xs font-bold md:text-sm xl:ml-0 xl:text-base">
                 Vinst hemmalag
               </h5>
               {sortStatsCat(winCountHomeTeamCat).map((cat) => {
@@ -102,7 +103,7 @@ const ResultCatCountStats = () => {
             </div>
             {winCountAwayTeamCat && winCountAwayTeamCat.length > 0 ? (
               <div>
-                <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
+                <h5 className="ml-2 text-xs font-bold md:text-sm xl:ml-0 xl:text-base">
                   Vinst bortalag
                 </h5>
                 {sortStatsCat(winCountAwayTeamCat).map((cat) => {
@@ -125,7 +126,7 @@ const ResultCatCountStats = () => {
             ) : null}
             {drawCountCat && drawCountCat.length > 0 ? (
               <div>
-                <h5 className="ml-2 text-sm font-bold md:text-base xl:ml-0">
+                <h5 className="ml-2 text-xs font-bold md:text-sm xl:ml-0 xl:text-base">
                   Oavgjort
                 </h5>
                 {sortStatsCat(drawCountCat).map((cat) => {

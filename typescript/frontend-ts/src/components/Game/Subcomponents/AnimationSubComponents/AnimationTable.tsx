@@ -82,38 +82,70 @@ const AnimationTable = ({
   )
 
   return (
-    <div className="mx-2 mt-4 xl:mx-0">
+    <div className="mx-2 mt-4 text-[8px] sm:text-[10px] lg:text-sm xl:mx-0">
       <Table>
         <TableCaption>{serieObject?.comment}</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead scope="col">P</TableHead>
-            <TableHead scope="col" className="text-left">
+            <TableHead
+              scope="col"
+              className="text-left text-[8px] sm:text-[10px] lg:text-sm"
+            >
+              P
+            </TableHead>
+            <TableHead
+              scope="col"
+              className="text-left text-[8px] sm:text-[10px] lg:text-sm"
+            >
               Lag
             </TableHead>
             <TableHead></TableHead>
-            <TableHead scope="col" className="text-right">
+            <TableHead
+              scope="col"
+              className="text-right text-[8px] sm:text-[10px] lg:text-sm"
+            >
               M
             </TableHead>
-            <TableHead scope="col" className="text-right">
+            <TableHead
+              scope="col"
+              className="text-right text-[8px] sm:text-[10px] lg:text-sm"
+            >
               V
             </TableHead>
-            <TableHead scope="col" className="text-right">
+            <TableHead
+              scope="col"
+              className="text-right text-[8px] sm:text-[10px] lg:text-sm"
+            >
               O
             </TableHead>
-            <TableHead scope="col" className="text-right">
+            <TableHead
+              scope="col"
+              className="text-right text-[8px] sm:text-[10px] lg:text-sm"
+            >
               F
             </TableHead>
-            <TableHead scope="col" className="text-right">
+            <TableHead
+              scope="col"
+              className="hidden text-right text-[8px] sm:text-[10px] md:table-cell lg:text-sm"
+            >
               GM
             </TableHead>
-            <TableHead scope="col" className="text-right">
+            <TableHead
+              scope="col"
+              className="hidden text-right text-[8px] sm:text-[10px] md:table-cell lg:text-sm"
+            >
               IM
             </TableHead>
-            <TableHead scope="col" className="text-right">
+            <TableHead
+              scope="col"
+              className="text-right text-[8px] sm:text-[10px] lg:text-sm"
+            >
               MS
             </TableHead>
-            <TableHead scope="col" className="text-right">
+            <TableHead
+              scope="col"
+              className="text-right text-[8px] sm:text-[10px] lg:text-sm"
+            >
               P
             </TableHead>
           </TableRow>
@@ -129,35 +161,39 @@ const AnimationTable = ({
                     : null
                 } ${favTeams.includes(team.teamId) ? 'font-bold' : null}`}
               >
-                <TableCell>{team.table.position}</TableCell>
-                <TableCell className="text-left">{team.casualName}</TableCell>
-                <TableCell className="text-slate-100">
+                <TableCell className="text-[8px] sm:text-[10px] lg:text-sm">
+                  {team.table.position}
+                </TableCell>
+                <TableCell className="truncate text-left text-[8px] sm:text-[10px] lg:text-sm">
+                  {team.casualName}
+                </TableCell>
+                <TableCell className="text-[8px] text-slate-100 sm:text-[10px] lg:text-sm">
                   {round > 0 &&
                     team.table.games > 0 &&
                     displayArrow(team.teamId)}
                 </TableCell>
-                <TableCell className="text-right tabular-nums">
+                <TableCell className="text-right text-[8px] tabular-nums sm:text-[10px] lg:text-sm">
                   {team.table.games}
                 </TableCell>
-                <TableCell className="text-right tabular-nums">
+                <TableCell className="text-right text-[8px] tabular-nums sm:text-[10px] lg:text-sm">
                   {team.table.wins}
                 </TableCell>
-                <TableCell className="text-right tabular-nums">
+                <TableCell className="text-right text-[8px] tabular-nums sm:text-[10px] lg:text-sm">
                   {team.table.draws}
                 </TableCell>
-                <TableCell className="text-right tabular-nums">
+                <TableCell className="text-right text-[8px] tabular-nums sm:text-[10px] lg:text-sm">
                   {team.table.lost}
                 </TableCell>
-                <TableCell className="text-right tabular-nums">
+                <TableCell className="hidden text-right text-[8px] tabular-nums sm:text-[10px] md:table-cell lg:text-sm">
                   {team.table.scoredGoals}
                 </TableCell>
-                <TableCell className="text-right tabular-nums">
+                <TableCell className="hidden text-right text-[8px] tabular-nums sm:text-[10px] md:table-cell lg:text-sm">
                   {team.table.concededGoals}
                 </TableCell>
-                <TableCell className="text-right tabular-nums">
+                <TableCell className="text-right text-[8px] tabular-nums sm:text-[10px] lg:text-sm">
                   {team.table.scoredGoals - team.table.concededGoals}
                 </TableCell>
-                <TableCell className="text-right tabular-nums">
+                <TableCell className="text-right text-[8px] tabular-nums sm:text-[10px] lg:text-sm">
                   {team.table.points}
                 </TableCell>
               </TableRow>
