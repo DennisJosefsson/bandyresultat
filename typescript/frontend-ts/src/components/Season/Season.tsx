@@ -1,9 +1,9 @@
 import { useParams, useSearchParams } from 'react-router-dom'
-
+import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { logError } from '../utilitycomponents/functions/logError.js'
 
-import ErrorFallback from '../utilitycomponents/Components/ErrorFallback.js'
+import ErrorFallback from '../utilitycomponents/Components/LoadingAndError/ErrorFallback'
 import SeasonHeader from './Subcomponents/SeasonHeader.jsx'
 import SeasonContextProvider from '../../contexts/seasonContext.js'
 import useGenderContext from '../../hooks/contextHooks/useGenderContext.js'
@@ -12,9 +12,11 @@ import { inputSeasonId } from '../types/season/seasonId.js'
 import SeasonComponentSwitch from './Subcomponents/SeasonComponentSwitch.js'
 import SeasonTabBar from './Subcomponents/SeasonTabBar.js'
 import { Card, CardContent } from '@/src/@/components/ui/card.js'
+import { Loading } from '../utilitycomponents/Components/LoadingAndError/LoadingOrError'
 
 const Season = () => {
   const unparsedSeasonId = useParams().seasonId
+
   const [searchParams, setSearchParams] = useSearchParams(location.search)
   const tab = searchParams.get('tab')
   const { lastSeason } = useGetFirstAndLastSeason()
@@ -54,7 +56,9 @@ const Season = () => {
             resetKeys={[tab]}
           >
             <SeasonContextProvider seasonId={seasonId}>
-              <SeasonComponentSwitch tab={tab} />
+              <Suspense fallback={<Loading />}>
+                <SeasonComponentSwitch tab={tab} />
+              </Suspense>
             </SeasonContextProvider>
           </ErrorBoundary>
         </CardContent>

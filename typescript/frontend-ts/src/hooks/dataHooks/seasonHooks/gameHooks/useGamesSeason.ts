@@ -3,11 +3,9 @@ import useGetAllSeasons from '../useGetAllSeasons'
 
 export const useGamesSeason = () => {
   const { women } = useGenderContext()
-  const { seasons, isLoading, error, isSuccess } = useGetAllSeasons()
+  const { seasons } = useGetAllSeasons()
 
-  const allSeasons = isSuccess
-    ? seasons.filter((season) => season.women === women)
-    : []
+  const allSeasons = seasons.filter((season) => season.women === women)
 
   const startSeasonObject = allSeasons.pop()
   const endSeasonObject = allSeasons.shift()
@@ -15,5 +13,5 @@ export const useGamesSeason = () => {
   const startSeason = startSeasonObject ? startSeasonObject.seasonId : null
   const endSeason = endSeasonObject ? endSeasonObject.seasonId : null
 
-  return { startSeason, endSeason, isLoading, error }
+  return { startSeason, endSeason }
 }

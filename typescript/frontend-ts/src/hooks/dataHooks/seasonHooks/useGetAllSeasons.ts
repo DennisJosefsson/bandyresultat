@@ -1,15 +1,17 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { getSeasons } from '../../../requests/seasons'
 
 const useGetAllSeasons = () => {
-  const { data, isLoading, error, isSuccess } = useQuery({
+  const {
+    data: seasons,
+    isLoading,
+    error,
+  } = useSuspenseQuery({
     queryKey: ['allSeasons'],
     queryFn: getSeasons,
   })
 
-  const seasons = isSuccess ? data : []
-
-  return { seasons, isLoading, error, isSuccess }
+  return { seasons, isLoading, error }
 }
 
 export default useGetAllSeasons

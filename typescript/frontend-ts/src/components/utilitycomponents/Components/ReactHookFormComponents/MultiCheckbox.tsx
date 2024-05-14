@@ -18,9 +18,9 @@ function MultiCheckboxComponent({
   checkboxArray,
   ...otherProps
 }: MultiCheckboxComponentProps) {
-  const { name, control, id } = useFormField()
+  const { name, control } = useFormField()
   return (
-    <div {...otherProps}>
+    <>
       {checkboxArray.map((item) => (
         <FormField
           key={item.value}
@@ -28,13 +28,13 @@ function MultiCheckboxComponent({
           name={name}
           render={({ field }) => {
             return (
-              <FormItem
-                key={item.value}
-                className="flex flex-row items-start space-x-3 space-y-0"
-              >
+              <FormItem key={item.value} {...otherProps}>
+                <FormLabel className="text-sm font-normal" htmlFor={item.label}>
+                  {item.label}
+                </FormLabel>
                 <FormControl>
                   <Checkbox
-                    id={id}
+                    id={item.label}
                     checked={field.value?.includes(item.value)}
                     onCheckedChange={(checked) => {
                       return checked
@@ -47,15 +47,12 @@ function MultiCheckboxComponent({
                     }}
                   />
                 </FormControl>
-                <FormLabel className="text-sm font-normal">
-                  {item.label}
-                </FormLabel>
               </FormItem>
             )
           }}
         />
       ))}
-    </div>
+    </>
   )
 }
 

@@ -1,4 +1,4 @@
-import Spinner from '../utilitycomponents/Components/Spinner'
+import Spinner from '../utilitycomponents/Components/LoadingAndError/Spinner'
 import SearchHelp from './Subcomponents/SearchFormModal'
 import { SearchParamsObject } from '../types/games/search'
 //import useMenuContext from '../../hooks/contextHooks/useMenuContext'

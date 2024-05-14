@@ -6,7 +6,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UseFormReturn, useForm } from 'react-hook-form'
 import { compareTeams } from '@/src/requests/tables'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, UseMutationResult } from '@tanstack/react-query'
 import useGetAllSeasons from '../seasonHooks/useGetAllSeasons'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { ErrorState } from '@/src/components/Search/Search'
@@ -18,6 +18,7 @@ import {
   useParams,
   useSearchParams,
 } from 'react-router-dom'
+import { CompareResponseObjectType } from '@/src/components/types/teams/compare'
 
 const initValues = (women: boolean): CompareFormState => {
   return {
@@ -47,30 +48,31 @@ export const useCompare = () => {
     resolver: zodResolver(compareFormState),
   })
 
-  return methods
-}
-
-export const useCompareResults = (
-  compObjectParams: CompareFormState | null,
-) => {
-  const { data, isLoading, error, isSuccess } = useQuery({
-    queryKey: ['compareTeams', compObjectParams],
-    queryFn: () => compObjectParams && compareTeams(compObjectParams),
-    enabled: !!compObjectParams,
+  const mutation = useMutation({
+    mutationFn: compareTeams,
   })
 
   const baseUrl = import.meta.env.PROD
     ? 'https://bandyresultat.se'
     : 'http://localhost:5173'
-  const compareLink = `${baseUrl}/teams?link=${data?.link[0].linkName}`
+  const compareLink = `${baseUrl}/teams?link=${mutation.data?.link[0].linkName}`
 
-  return {
-    data,
-    isLoading,
-    error,
-    isSuccess,
-    compareLink,
-  }
+  return { methods, mutation, compareLink }
+}
+
+export const useCompareResults = (data: CompareFormState) => {
+  const mutation = useMutation({
+    mutationFn: () => {
+      return compareTeams(data)
+    },
+  })
+
+  const baseUrl = import.meta.env.PROD
+    ? 'https://bandyresultat.se'
+    : 'http://localhost:5173'
+  const compareLink = `${baseUrl}/teams?link=${mutation.data?.link[0].linkName}`
+
+  return { mutation, compareLink }
 }
 
 export const useCompareSeasons = () => {
@@ -85,12 +87,19 @@ export const useCompareSeasons = () => {
     return { label: season.year, value: season.seasonId }
   })
 
-  return { startOptions, endOptions }
+  const endOptionsPlaceholder = endOptions[0]?.label
+
+  return { startOptions, endOptions, endOptionsPlaceholder }
 }
 
 export const useCompareLocationData = (
   setCustomError: Dispatch<SetStateAction<ErrorState>>,
-  setCompObjectParams: Dispatch<SetStateAction<CompareFormState | null>>,
+  mutation: UseMutationResult<
+    CompareResponseObjectType,
+    Error,
+    CompareFormState,
+    unknown
+  >,
   methods: UseFormReturn<CompareFormState>,
 ) => {
   const location = useLocation()
@@ -119,7 +128,7 @@ export const useCompareLocationData = (
         navigate(location.pathname, { replace: true })
       }
       if (parsedFormData.success) {
-        setCompObjectParams(parsedFormData.data)
+        mutation.mutate(parsedFormData.data)
         navigate(location.pathname, { replace: true })
       }
     } else if (!link) {
@@ -128,7 +137,7 @@ export const useCompareLocationData = (
         setCustomError({ error: true, message: parsedFormData.error.message })
       }
       if (parsedFormData.success) {
-        setCompObjectParams(parsedFormData.data)
+        mutation.mutate(parsedFormData.data)
       }
     }
   }, [])
@@ -167,7 +176,7 @@ export const useCompareLocationData = (
     ) {
       const searchData = compareFormState.safeParse(linkData.searchString)
       if (searchData.success) {
-        setCompObjectParams(searchData.data)
+        mutation.mutate(searchData.data)
         methods.reset(searchData.data)
         setLinkDataLoaded(true)
       } else {

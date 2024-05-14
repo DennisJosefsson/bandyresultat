@@ -1,7 +1,7 @@
 import {
   Loading,
   DataError,
-} from '../../utilitycomponents/Components/LoadingOrError'
+} from '../../utilitycomponents/Components/LoadingAndError/LoadingOrError'
 import StatsComponent from './StatsSubComponents/StatsComponent'
 import useGenderContext from '../../../hooks/contextHooks/useGenderContext'
 import useScrollTo from '../../../hooks/domHooks/useScrollTo'

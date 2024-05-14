@@ -3,7 +3,7 @@ import MaratonTables from './MaratonTableSubComponents/MaratonTables'
 import {
   Loading,
   DataError,
-} from '../../utilitycomponents/Components/LoadingOrError'
+} from '../../utilitycomponents/Components/LoadingAndError/LoadingOrError'
 
 import useScrollTo from '../../../hooks/domHooks/useScrollTo'
 import useGenderContext from '../../../hooks/contextHooks/useGenderContext'

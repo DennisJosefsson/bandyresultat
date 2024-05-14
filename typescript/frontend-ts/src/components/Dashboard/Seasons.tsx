@@ -5,7 +5,7 @@ import FilterComponent from './Subcomponents/FilterComponent'
 import {
   Loading,
   DataError,
-} from '../utilitycomponents/Components/LoadingOrError'
+} from '../utilitycomponents/Components/LoadingAndError/LoadingOrError'
 import useScrollTo from '../../hooks/domHooks/useScrollTo'
 import useGetAllSeasons from '../../hooks/dataHooks/seasonHooks/useGetAllSeasons'
 

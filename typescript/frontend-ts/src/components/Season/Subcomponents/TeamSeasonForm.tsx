@@ -3,7 +3,7 @@ import { useGetTeams } from '@/src/hooks/dataHooks/teamHooks/useGetTeams'
 import {
   DataError,
   Loading,
-} from '../../utilitycomponents/Components/LoadingOrError'
+} from '../../utilitycomponents/Components/LoadingAndError/LoadingOrError'
 import { Input } from '@/src/@/components/ui/input'
 import { Button } from '@/src/@/components/ui/button'
 import { TeamSeasonAttributes } from '../../types/teams/teams'

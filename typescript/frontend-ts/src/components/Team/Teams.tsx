@@ -1,30 +1,22 @@
 import { useState, useEffect, KeyboardEvent } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { logError } from '../utilitycomponents/functions/logError'
-import ErrorFallback from '../utilitycomponents/Components/ErrorFallback'
+import ErrorFallback from '../utilitycomponents/Components/LoadingAndError/ErrorFallback'
 import TeamsComponentSwitch from './Subcomponents/TeamsComponentSwitch'
 import { useSearchParams, useLocation } from 'react-router-dom'
-
-import Spinner from '../utilitycomponents/Components/Spinner'
-
 import { Input } from '@/src/@/components/ui/input'
-//import FormStateComponent from './Subcomponents/FormStateComponent'
-import { CompareFormState, teamIdFromParams } from '../types/teams/teams'
+import { teamIdFromParams } from '../types/teams/teams'
 import useGenderContext from '../../hooks/contextHooks/useGenderContext'
-//import { CompareFormState } from '../types/teams/teams'
-import { useGetTeamsList } from '@/src/hooks/dataHooks/teamHooks/useGetTeamsList.ts'
-import { Form } from '@/src/@/components/ui/form'
+
 import { Card, CardContent } from '@/src/@/components/ui/card'
 
-import { useCompare } from '@/src/hooks/dataHooks/teamHooks/useCompare.ts'
 import TeamsTabBar from './Subcomponents/TeamsTabBar'
 import { ErrorState } from '../Search/Search'
 
 const Teams = () => {
   const location = useLocation()
   const [searchParams, setSearchParams] = useSearchParams(location.search)
-  const [compObjectParams, setCompObjectParams] =
-    useState<CompareFormState | null>(null)
+
   const [customError, setCustomError] = useState<ErrorState>({ error: false })
   const teamId = searchParams.get('teamId')
   const link = searchParams.get('link')
@@ -36,12 +28,6 @@ const Teams = () => {
   const [stateNull, setStateNull] = useState<boolean>(false)
 
   const [teamFilter, setTeamFilter] = useState<string>('')
-
-  const methods = useCompare()
-
-  const onSubmit = (data: CompareFormState) => setCompObjectParams(data)
-
-  const { isLoading, error } = useGetTeamsList(teamFilter)
 
   useEffect(() => {
     if (location.state && !stateNull) {
@@ -68,22 +54,6 @@ const Teams = () => {
     }
   }, [link, teamId, location.state])
 
-  if (isLoading) {
-    return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
-        <Spinner />
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
-        <Spinner />
-      </div>
-    )
-  }
-
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault()
@@ -97,62 +67,54 @@ const Teams = () => {
     }
   }
 
+  //console.log(methods.getValues())
+
   return (
     <div className="mx-auto mb-2 min-h-screen px-1 font-inter text-foreground">
-      <Form {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)} id="search-form">
-          <Card className="mb-2 items-center">
-            <CardContent className="p-2 pt-2 md:p-6 md:pt-6">
-              <TeamsTabBar
-                tab={tab}
-                setTab={setTab}
-                removeTeamIdParam={removeTeamIdParam}
+      <Card className="mb-2 items-center">
+        <CardContent className="p-2 pt-2 md:p-6 md:pt-6">
+          <TeamsTabBar
+            tab={tab}
+            setTab={setTab}
+            removeTeamIdParam={removeTeamIdParam}
+          />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent>
+          {(tab === 'teams' || tab === 'map') && (
+            <div className="mt-2 w-full">
+              <Input
+                className="w-full border-[#011d29] text-foreground focus:border-[#011d29]"
+                type="text"
+                placeholder="Filter"
+                value={teamFilter}
+                name="teamFilter"
+                onChange={(event) =>
+                  setTeamFilter(
+                    event.target.value.replace(/[^a-z0-9\u00C0-\u017F]/gi, ''),
+                  )
+                }
+                onKeyDown={handleKeyDown}
               />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent>
-              {(tab === 'teams' || tab === 'map') && (
-                <div className="mt-2 w-full">
-                  <Input
-                    className="w-full border-[#011d29] text-foreground focus:border-[#011d29]"
-                    type="text"
-                    placeholder="Filter"
-                    value={teamFilter}
-                    name="teamFilter"
-                    onChange={(event) =>
-                      setTeamFilter(
-                        event.target.value.replace(
-                          /[^a-z0-9\u00C0-\u017F]/gi,
-                          '',
-                        ),
-                      )
-                    }
-                    onKeyDown={handleKeyDown}
-                  />
-                </div>
-              )}
-              <div>
-                <ErrorBoundary
-                  FallbackComponent={ErrorFallback}
-                  onError={logError}
-                  resetKeys={[tab]}
-                >
-                  <TeamsComponentSwitch
-                    tab={tab}
-                    teamFilter={teamFilter}
-                    methods={methods}
-                    compObjectParams={compObjectParams}
-                    setCompObjectParams={setCompObjectParams}
-                    customError={customError}
-                    setCustomError={setCustomError}
-                  />
-                </ErrorBoundary>
-              </div>
-            </CardContent>
-          </Card>
-        </form>
-      </Form>
+            </div>
+          )}
+          <div>
+            <ErrorBoundary
+              FallbackComponent={ErrorFallback}
+              onError={logError}
+              resetKeys={[tab]}
+            >
+              <TeamsComponentSwitch
+                tab={tab}
+                teamFilter={teamFilter}
+                customError={customError}
+                setCustomError={setCustomError}
+              />
+            </ErrorBoundary>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

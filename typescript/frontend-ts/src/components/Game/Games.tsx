@@ -2,10 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 import GameForm from './Subcomponents/GameForm'
-import {
-  Loading,
-  DataError,
-} from '../utilitycomponents/Components/LoadingOrError'
+import { DataError } from '../utilitycomponents/Components/LoadingAndError/LoadingOrError'
 
 import FilterComponent from './Subcomponents/FilterComponent'
 import { GameObjectType } from '../types/games/games'
@@ -16,7 +13,7 @@ import { useSingleSeasonGames } from '../../hooks/dataHooks/seasonHooks/gameHook
 import PlayedGames from './Subcomponents/PlayedGames'
 import UnplayedGames from './Subcomponents/UnplayedGames'
 import { useGamesSingleSeason } from '../../hooks/dataHooks/seasonHooks/gameHooks/useGamesSingleSeason'
-import { useGamesSeason } from '../../hooks/dataHooks/seasonHooks/gameHooks/useGamesSeason'
+
 import { useGetFirstAndLastSeason } from '../../hooks/dataHooks/seasonHooks/useGetFirstAndLastSeason'
 
 const Games = () => {
@@ -29,16 +26,9 @@ const Games = () => {
 
   const [gameData, setGameData] = useState<GameObjectType | null>(null)
 
-  const { playedGamesLength, unplayedGamesLength, isLoading, error } =
+  const { playedGamesLength, unplayedGamesLength, error } =
     useSingleSeasonGames(seasonId, teamFilter)
-  const {
-    genderSeason,
-    isLoading: isSeasonLoading,
-    error: seasonError,
-  } = useGamesSingleSeason(seasonId)
-
-  const { isLoading: isAllSeasonsLoading, error: allSeasonsError } =
-    useGamesSeason()
+  const { genderSeason, error: seasonError } = useGamesSingleSeason(seasonId)
 
   const { lastSeason } = useGetFirstAndLastSeason()
 
@@ -48,10 +38,7 @@ const Games = () => {
     setTeamFilter('')
   }, [seasonId])
 
-  if (error || seasonError || allSeasonsError)
-    return <DataError error={error || seasonError || allSeasonsError} />
-
-  if (isLoading || isSeasonLoading || isAllSeasonsLoading) return <Loading />
+  if (error || seasonError) return <DataError error={error || seasonError} />
 
   if (women && seasonId < 1973) {
     return (

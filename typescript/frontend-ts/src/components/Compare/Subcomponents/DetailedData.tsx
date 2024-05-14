@@ -1,7 +1,7 @@
 import { filterOpposition } from '../../utilitycomponents/functions/sortFunction'
 import { groupConstant } from '../../utilitycomponents/functions/constants'
 import { CompareResponseObjectType } from '../../types/teams/compare'
-import { CompareFormState } from '../../types/teams/teams'
+
 import { Table, TableBody } from '@/src/@/components/ui/table'
 import {
   Card,
@@ -12,12 +12,15 @@ import {
 import AllDataTableHeader from './AllDataTableHeader'
 
 import DataTableRow from './DataTableRow'
+import { useFormContext } from 'react-hook-form'
 type DetailedDataProps = {
   categoryData: CompareResponseObjectType['categoryData']
-  compObject: CompareFormState | null
 }
 
-const DetailedData = ({ categoryData, compObject }: DetailedDataProps) => {
+const DetailedData = ({ categoryData }: DetailedDataProps) => {
+  const { getValues } = useFormContext()
+
+  const compObject = getValues()
   if (!compObject) return null
   return (
     <div>

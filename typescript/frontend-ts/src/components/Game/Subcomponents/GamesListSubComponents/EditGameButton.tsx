@@ -16,6 +16,7 @@ import GameForm from '../GameForm'
 import { useGamesSingleSeason } from '@/src/hooks/dataHooks/seasonHooks/gameHooks/useGamesSingleSeason'
 import { Dialog } from '@/src/@/components/ui/dialog'
 import DeleteDialog from './DeleteDialog'
+import { setGame } from '../../zustand/gameStore'
 
 type EditGameButtonProps = {
   game: GameObjectType
@@ -27,7 +28,6 @@ const EditGameButton = ({ game }: EditGameButtonProps) => {
   const [showModal, setShowModal] = useState<boolean>(false)
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
   const [gameId, setGameId] = useState<number | null>(null)
-  const [gameData, setGameData] = useState<GameObjectType | null>(null)
   const { genderSeason } = useGamesSingleSeason(seasonId)
 
   return (
@@ -37,7 +37,7 @@ const EditGameButton = ({ game }: EditGameButtonProps) => {
           <Button
             variant="outline"
             onClick={() => {
-              setGameData(game)
+              setGame(game)
               setShowModal(true)
             }}
             size="icon"
@@ -48,7 +48,7 @@ const EditGameButton = ({ game }: EditGameButtonProps) => {
         <DropdownMenuContent align="end">
           <DropdownMenuItem
             onClick={() => {
-              setGameData(game)
+              setGame(game)
               setShowModal(true)
             }}
           >
@@ -70,8 +70,6 @@ const EditGameButton = ({ game }: EditGameButtonProps) => {
             women={women}
             season={genderSeason}
             setShowModal={setShowModal}
-            gameData={gameData}
-            setGameData={setGameData}
           />
         </>
       ) : null}

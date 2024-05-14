@@ -1,4 +1,4 @@
-import Spinner from '../utilitycomponents/Components/Spinner'
+import Spinner from '../utilitycomponents/Components/LoadingAndError/Spinner'
 import TeamTable from './Subcomponents/TeamInfoSubComponents/TeamTable'
 import TeamCuriosities from './Subcomponents/TeamInfoSubComponents/TeamCuriosities'
 import TeamHeader from './Subcomponents/TeamInfoSubComponents/TeamHeader'

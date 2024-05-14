@@ -19,11 +19,11 @@ export const compareFormState = z
   .object({
     teamArray: z
       .array(z.number())
-      .max(4, { message: 'Max 4 lag.' })
-      .min(2, { message: 'Minst 2 lag.' }),
+      .max(4, { message: 'Max max 4 lag' })
+      .min(2, { message: 'Välj minst 2 lag' }),
     categoryArray: z
       .array(z.string())
-      .min(1, { message: 'Minst en matchkategori.' }),
+      .min(1, { message: 'Välj minst en matchkategori' }),
     startSeason: z.string(),
     endSeason: z.string(),
     women: z.boolean(),

@@ -33,7 +33,7 @@ const SelectComponent = ({
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
       </FormControl>
-      <SelectContent>
+      <SelectContent className="w-60">
         {selectionArray.map((item) => {
           return (
             <SelectItem

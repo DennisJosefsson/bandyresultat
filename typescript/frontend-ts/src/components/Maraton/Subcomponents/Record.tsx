@@ -3,7 +3,7 @@ import RecordHeader from './RecordSubComponents/RecordHeader'
 import {
   Loading,
   DataError,
-} from '../../utilitycomponents/Components/LoadingOrError'
+} from '../../utilitycomponents/Components/LoadingAndError/LoadingOrError'
 
 import { useGetRecordData } from '../../../hooks/dataHooks/maratonHooks/useGetRecordData'
 import RecordComponentSwitch from './RecordSubComponents/RecordComponentSwitch'

@@ -5,18 +5,20 @@ import MarkerClusterGroup from 'react-leaflet-cluster'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 import 'leaflet/dist/leaflet.css'
-import { TeamAttributes } from '../../types/teams/teams'
+
 import { SetURLSearchParams } from 'react-router-dom'
 import { Button } from '@/src/@/components/ui/button'
+import { useGetTeamsList } from '@/src/hooks/dataHooks/teamHooks/useGetTeamsList'
 
 type MapProps = {
-  teams: TeamAttributes[]
+  teamFilter: string
   setSearchParams: SetURLSearchParams
 }
-const Map = ({ teams, setSearchParams }: MapProps) => {
+const Map = ({ teamFilter, setSearchParams }: MapProps) => {
   const methods = useFormContext()
+  const { teams } = useGetTeamsList(teamFilter)
   return (
-    <div className="mx-auto mb-2 min-h-screen max-w-7xl px-1 font-inter text-foreground lg:px-0">
+    <div className="mx-auto mb-2 min-h-screen px-1 font-inter text-foreground lg:px-0">
       <div id="map" className="h-[400px] w-screen max-w-xl p-2">
         <MapContainer
           center={[62, 15]}
@@ -34,7 +36,6 @@ const Map = ({ teams, setSearchParams }: MapProps) => {
               name="teamArray"
               render={() => (
                 <FormItem>
-                  <div className="grid w-2/3 grid-cols-1 justify-between gap-x-8 gap-y-2 pt-2 lg:grid-cols-3"></div>
                   {teams.map((team) => {
                     const position = [team.lat, team.long] as [number, number]
                     return (
@@ -44,10 +45,7 @@ const Map = ({ teams, setSearchParams }: MapProps) => {
                         name="teamArray"
                         render={({ field }) => {
                           return (
-                            <FormItem
-                              key={team.teamId}
-                              className="flex flex-row items-start space-x-3 space-y-0"
-                            >
+                            <FormItem key={team.teamId}>
                               <Marker key={team.teamId} position={position}>
                                 <Popup>
                                   <div className="flex flex-row items-center justify-evenly gap-2 p-2">

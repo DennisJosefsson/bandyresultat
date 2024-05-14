@@ -7,7 +7,7 @@ import {
   useFormField,
 } from '@/src/@/components/ui/form'
 
-import { ReactNode } from 'react'
+import { ReactNode, HTMLAttributes } from 'react'
 import { FieldValues, UseFormReturn, Path } from 'react-hook-form'
 import Input from './Input'
 import Textarea from './Textarea'
@@ -19,7 +19,7 @@ import RadioGroup from './RadioGroup'
 interface FormComponentProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends Path<TFieldValues> = Path<TFieldValues>,
-> {
+> extends HTMLAttributes<HTMLDivElement> {
   methods: UseFormReturn<TFieldValues>
   name: TName
   children: ReactNode
@@ -28,17 +28,24 @@ interface FormComponentProps<
 export function FormComponent<
   TFieldValues extends FieldValues = FieldValues,
   TName extends Path<TFieldValues> = Path<TFieldValues>,
->({ methods, name, children }: FormComponentProps<TFieldValues, TName>) {
+>({
+  methods,
+  name,
+  children,
+  ...otherProps
+}: FormComponentProps<TFieldValues, TName>) {
   return (
     <FormField
       control={methods.control}
       name={name}
       render={() => (
-        <FormItem>
-          {children}
+        <div {...otherProps}>
+          <FormItem>
+            {children}
 
-          <FormMessage />
-        </FormItem>
+            <FormMessage />
+          </FormItem>
+        </div>
       )}
     />
   )

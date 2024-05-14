@@ -1,5 +1,6 @@
+import { useFormContext } from 'react-hook-form'
 import { CompareResponseObjectType } from '../../../types/teams/compare'
-import { CompareFormState } from '../../../types/teams/teams'
+
 import {
   Card,
   CardContent,
@@ -9,10 +10,11 @@ import {
 type SeasonProps = {
   seasons: CompareResponseObjectType['seasons']
   allSeasons: CompareResponseObjectType['allSeasons']
-  compObject: CompareFormState
 }
 
-const Seasons = ({ seasons, allSeasons, compObject }: SeasonProps) => {
+const Seasons = ({ seasons, allSeasons }: SeasonProps) => {
+  const { getValues } = useFormContext()
+  const women = getValues('women')
   return (
     <>
       <Card className="mt-2 w-full">
@@ -34,7 +36,7 @@ const Seasons = ({ seasons, allSeasons, compObject }: SeasonProps) => {
           </div>
         </CardContent>
       </Card>
-      {!compObject.women && (
+      {!women && (
         <>
           <Card className="mt-2 w-full">
             <CardHeader>

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import Spinner from '../../utilitycomponents/Components/Spinner'
+import Spinner from '../../utilitycomponents/Components/LoadingAndError/Spinner'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { Icon, LatLngExpression } from 'leaflet'

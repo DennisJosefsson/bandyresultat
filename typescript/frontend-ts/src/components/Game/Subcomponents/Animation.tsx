@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import {
   Loading,
   DataError,
-} from '../../utilitycomponents/Components/LoadingOrError'
+} from '../../utilitycomponents/Components/LoadingAndError/LoadingOrError.tsx'
 
 import AnimationClicker from './AnimationSubComponents/AnimationClicker'
 import AnimationGamesList from './AnimationSubComponents/AnimationGamesList'

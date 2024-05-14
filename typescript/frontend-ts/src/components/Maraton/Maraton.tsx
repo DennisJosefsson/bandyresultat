@@ -1,6 +1,6 @@
 import { ErrorBoundary } from 'react-error-boundary'
 import { logError } from '../utilitycomponents/functions/logError.js'
-import ErrorFallback from '../utilitycomponents/Components/ErrorFallback.js'
+import ErrorFallback from '../utilitycomponents/Components/LoadingAndError/ErrorFallback.js'
 
 import MaratonTabBar from './Subcomponents/MaratonTabBar.js'
 import MaratonComponentSwitch from './Subcomponents/MaratonComponentSwitch.js'

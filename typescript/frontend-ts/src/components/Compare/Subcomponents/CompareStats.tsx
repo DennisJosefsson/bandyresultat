@@ -1,3 +1,4 @@
+import { FormState } from 'react-hook-form'
 import { CompareResponseObjectType } from '../../types/teams/compare'
 import { CompareFormState } from '../../types/teams/teams'
 import FirstGames from './CompareStatsSubComponents/FirstGames'
@@ -7,7 +8,7 @@ import Playoffs from './CompareStatsSubComponents/Playoffs'
 import Seasons from './CompareStatsSubComponents/Seasons'
 import { TabsContent } from '@/src/@/components/ui/tabs'
 type CompareStatsProps = {
-  compObject: CompareFormState | null
+  compObject: FormState<CompareFormState>
   firstGames: CompareResponseObjectType['firstGames']
   latestGames: CompareResponseObjectType['latestGames']
   golds: CompareResponseObjectType['golds']
@@ -32,22 +33,14 @@ const CompareStats = ({
     <>
       <TabsContent value="games">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <FirstGames compObject={compObject} firstGames={firstGames} />
+          <FirstGames firstGames={firstGames} />
           {latestGames.length > 0 && <LatestGames latestGames={latestGames} />}
         </div>
       </TabsContent>
       <TabsContent value="stats">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <Seasons
-            compObject={compObject}
-            seasons={seasons}
-            allSeasons={allSeasons}
-          />
-          <Playoffs
-            compObject={compObject}
-            playoffs={playoffs}
-            allPlayoffs={allPlayoffs}
-          />
+          <Seasons seasons={seasons} allSeasons={allSeasons} />
+          <Playoffs playoffs={playoffs} allPlayoffs={allPlayoffs} />
           {golds.length > 0 && <Golds golds={golds} />}
         </div>
       </TabsContent>

@@ -2,7 +2,7 @@ import { useGetSingleSeason } from '@/src/hooks/dataHooks/seasonHooks/useGetSing
 import {
   DataError,
   Loading,
-} from '../utilitycomponents/Components/LoadingOrError'
+} from '../utilitycomponents/Components/LoadingAndError/LoadingOrError'
 import {
   Card,
   CardContent,

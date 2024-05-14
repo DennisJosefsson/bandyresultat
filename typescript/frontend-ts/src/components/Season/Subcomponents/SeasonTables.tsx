@@ -3,7 +3,7 @@ import { useState } from 'react'
 import {
   DataError,
   Loading,
-} from '../../utilitycomponents/Components/LoadingOrError'
+} from '../../utilitycomponents/Components/LoadingAndError/LoadingOrError'
 import TableList from './TablesSubComponents/TableList'
 
 import SeasonTablesButtonList from './TablesSubComponents/SeasonTablesButtonList'

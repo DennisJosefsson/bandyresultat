@@ -7,6 +7,7 @@ const REJECT_STATUS_CODE = [400, 401, 402, 403, 404]
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      //gcTime: 1000 * 5,
       refetchOnWindowFocus: false,
       retry(failureCount, error) {
         if (failureCount > MAX_RETRIES) return false

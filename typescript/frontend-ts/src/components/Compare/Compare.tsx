@@ -1,14 +1,9 @@
-import Spinner from '../utilitycomponents/Components/Spinner'
-
 import AllData from './Subcomponents/AllData'
 import DetailedData from './Subcomponents/DetailedData'
 import CompareStats from './Subcomponents/CompareStats'
 import CompareHeader from './Subcomponents/CompareHeader'
 import { UseFormReturn } from 'react-hook-form'
-import {
-  useCompareLocationData,
-  useCompareResults,
-} from '@/src/hooks/dataHooks/teamHooks/useCompare'
+import { useCompareLocationData } from '@/src/hooks/dataHooks/teamHooks/useCompare'
 import {
   Tabs,
   TabsList,
@@ -19,6 +14,9 @@ import { Card, CardContent } from '@/src/@/components/ui/card'
 import useScrollTo from '@/src/hooks/domHooks/useScrollTo'
 import { CompareFormState } from '../types/teams/teams'
 import { Dispatch, SetStateAction } from 'react'
+import { UseMutationResult } from '@tanstack/react-query'
+
+import { CompareResponseObjectType } from '../types/teams/compare'
 
 type ErrorState =
   | {
@@ -28,47 +26,44 @@ type ErrorState =
   | { error: false }
 
 type CompareProps = {
-  compObjectParams: CompareFormState | null
-  setCompObjectParams: Dispatch<SetStateAction<CompareFormState | null>>
+  mutation: UseMutationResult<
+    CompareResponseObjectType,
+    Error,
+    CompareFormState,
+    unknown
+  >
   customError: ErrorState
   setCustomError: Dispatch<SetStateAction<ErrorState>>
   methods: UseFormReturn<CompareFormState>
+  compareLink: string
 }
 
 const Compare = ({
   methods,
-  compObjectParams,
-  setCompObjectParams,
+  mutation,
   customError,
   setCustomError,
+  compareLink,
 }: CompareProps) => {
-  const {
-    data,
-    isLoading,
-    error,
-    isSuccess,
-
-    compareLink,
-  } = useCompareResults(compObjectParams)
-
   useScrollTo()
 
-  useCompareLocationData(setCustomError, setCompObjectParams, methods)
+  useCompareLocationData(setCustomError, mutation, methods)
 
-  if (isLoading) {
-    return (
-      <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
-        <Spinner />
-      </div>
-    )
-  }
+  const error = mutation.error
 
   if (customError.error) {
-    console.log('customError', customError.error)
+    const errorArray = JSON.parse(customError.message)
+
+    if (Array.isArray(errorArray)) {
+      const errorString =
+        errorArray.map((error) => error.message).join(', ') + '.'
+
+      return <div>{errorString}</div>
+    }
     return <div>{customError.message}</div>
   }
 
-  if (error instanceof Error && error) {
+  if (error instanceof Error) {
     if (error.message === 'nullObject') {
       return (
         <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
@@ -82,7 +77,7 @@ const Compare = ({
         </div>
       )
     }
-    console.log('error from nullobject', error.message)
+
     return (
       <div className="mx-auto grid h-screen place-items-center font-inter text-foreground">
         {error.message}
@@ -90,7 +85,7 @@ const Compare = ({
     )
   }
 
-  const compareData = isSuccess ? data : null
+  const compareData = mutation.data ? mutation.data : null
 
   return (
     <>
@@ -100,7 +95,7 @@ const Compare = ({
             length={compareData.allData.length}
             seasonNames={compareData.seasonNames}
             link={compareLink}
-            compObject={compObjectParams}
+            compObject={methods.getValues()}
             compareAllGames={compareData.compareAllGames}
             origin={origin}
           />
@@ -116,16 +111,12 @@ const Compare = ({
                 <AllData
                   allData={compareData.allData}
                   sortedData={compareData.sortedData}
-                  compObject={compObjectParams}
                 />
-                <DetailedData
-                  categoryData={compareData.categoryData}
-                  compObject={compObjectParams}
-                />
+                <DetailedData categoryData={compareData.categoryData} />
               </TabsContent>
 
               <CompareStats
-                compObject={compObjectParams}
+                compObject={methods.formState}
                 firstGames={compareData.firstGames}
                 latestGames={compareData.latestGames}
                 golds={compareData.golds}

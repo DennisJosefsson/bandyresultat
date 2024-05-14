@@ -11,6 +11,7 @@ import { useGetFirstAndLastSeason } from '@/src/hooks/dataHooks/seasonHooks/useG
 const SeasonComponentSwitch = ({ tab }: { tab: string | null }) => {
   const { seasonId } = useSeasonContext()
   const { lastSeason } = useGetFirstAndLastSeason()
+
   let pageContent
   switch (tab) {
     case 'tables':

@@ -13,6 +13,15 @@ type GamesListItemProps = {
   game: GameObjectType
 }
 
+const categoryArray = [
+  'qualification',
+  'regular',
+  'eight',
+  'quarter',
+  'semi',
+  'final',
+]
+
 const GamesListItem = ({
   game,
   startSeason,
@@ -21,14 +30,6 @@ const GamesListItem = ({
   const { favTeams } = useTeampreferenceContext()
   const { women } = useGenderContext()
   const { user } = useUserContext()
-  const categoryArray = [
-    'qualification',
-    'regular',
-    'eight',
-    'quarter',
-    'semi',
-    'final',
-  ]
 
   return (
     <div key={game.gameId} className="flex w-full flex-row items-center gap-1">

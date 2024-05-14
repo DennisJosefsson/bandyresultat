@@ -1,19 +1,23 @@
-import { TeamAttributes } from '../../types/teams/teams'
 import useTeampreferenceContext from '../../../hooks/contextHooks/useTeampreferenceContext'
 import { FormField, FormItem, FormControl } from '@/src/@/components/ui/form'
 import { Checkbox } from '@/src/@/components/ui/checkbox'
 
-import { useFormContext } from 'react-hook-form'
 import { SetURLSearchParams } from 'react-router-dom'
+import { useGetTeamsList } from '@/src/hooks/dataHooks/teamHooks/useGetTeamsList'
+
+import { useFormContext } from 'react-hook-form'
 
 interface TeamsListProps {
-  teams: TeamAttributes[]
+  teamFilter: string
   setSearchParams: SetURLSearchParams
 }
 
-const TeamsList = ({ teams, setSearchParams }: TeamsListProps) => {
+const TeamsList = ({ teamFilter, setSearchParams }: TeamsListProps) => {
   const { favTeams } = useTeampreferenceContext()
   const methods = useFormContext()
+
+  const { teams } = useGetTeamsList(teamFilter)
+
   return (
     <div>
       <FormField
@@ -21,7 +25,7 @@ const TeamsList = ({ teams, setSearchParams }: TeamsListProps) => {
         name="teamArray"
         render={() => (
           <FormItem>
-            <div className="grid w-2/3 grid-cols-1 justify-between gap-x-8 gap-y-2 pt-2 lg:grid-cols-3">
+            <div className="grid w-2/3 grid-cols-1 gap-x-8 gap-y-2 pt-2 lg:grid-cols-3">
               {teams.map((team) => {
                 return (
                   <div key={team.teamId} className="">
@@ -32,8 +36,9 @@ const TeamsList = ({ teams, setSearchParams }: TeamsListProps) => {
                       render={({ field }) => {
                         return (
                           <FormItem
+                            id={team.teamId.toString()}
                             key={team.teamId}
-                            className="flex flex-row items-center justify-between space-x-3 space-y-0 rounded bg-muted p-2 text-sm has-[:checked]:text-white dark:bg-muted/50 dark:has-[:checked]:bg-primary md:text-base"
+                            className="flex flex-row items-center justify-between space-x-3 space-y-0 rounded bg-muted p-2 text-sm has-[:checked]:bg-primary has-[:checked]:text-white dark:bg-muted/50 md:text-base"
                           >
                             <span
                               className={
@@ -51,6 +56,7 @@ const TeamsList = ({ teams, setSearchParams }: TeamsListProps) => {
                             </span>
                             <FormControl>
                               <Checkbox
+                                name={field.name}
                                 checked={field.value?.includes(team.teamId)}
                                 onCheckedChange={(checked) => {
                                   return checked

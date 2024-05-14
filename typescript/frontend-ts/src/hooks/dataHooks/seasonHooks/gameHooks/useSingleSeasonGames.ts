@@ -1,28 +1,22 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { getSeasonGames } from '../../../../requests/games'
 import useGenderContext from '../../../contextHooks/useGenderContext'
 import { gameSortFunction } from '../../../../components/utilitycomponents/functions/sortFunction'
 
 export const useSingleSeasonGames = (seasonId: number, teamFilter: string) => {
   const { women } = useGenderContext()
-  const { data, isLoading, error, isSuccess } = useQuery({
+  const { data, isLoading, error } = useSuspenseQuery({
     queryKey: ['singleSeasonGames', seasonId],
     queryFn: () => getSeasonGames(seasonId),
   })
 
-  const games = isSuccess
-    ? data
-        .filter((table) => table.women === women)
-        .filter(
-          (game) =>
-            game.homeTeam?.name
-              .toLowerCase()
-              .includes(teamFilter.toLowerCase()) ||
-            game.awayTeam?.name
-              .toLowerCase()
-              .includes(teamFilter.toLowerCase()),
-        )
-    : []
+  const games = data
+    .filter((table) => table.women === women)
+    .filter(
+      (game) =>
+        game.homeTeam?.name.toLowerCase().includes(teamFilter.toLowerCase()) ||
+        game.awayTeam?.name.toLowerCase().includes(teamFilter.toLowerCase()),
+    )
 
   const playedGamesLength = games.filter((game) => game.played === true).length
   const unplayedGamesLength = games.filter((game) => !game.played).length
@@ -99,6 +93,5 @@ export const useSingleSeasonGames = (seasonId: number, teamFilter: string) => {
     unplayedGamesLength,
     isLoading,
     error,
-    isSuccess,
   }
 }

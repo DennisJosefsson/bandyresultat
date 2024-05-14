@@ -1,10 +1,9 @@
-import { useFormContext } from 'react-hook-form'
-
 import { useCompareSeasons } from '@/src/hooks/dataHooks/teamHooks/useCompare'
 import useGenderContext from '@/src/hooks/contextHooks/useGenderContext'
-import { FormComponent } from '../../utilitycomponents/Components/ReactHookFormComponents/FormComponent'
+import { FormComponent } from '../utilitycomponents/Components/ReactHookFormComponents/FormComponent'
+import { useFormContext } from 'react-hook-form'
 
-const categoryArray = [
+const categoryArraySelection = [
   { value: 'final', label: 'Final' },
   { value: 'semi', label: 'Semi' },
   { value: 'quarter', label: 'Kvart' },
@@ -13,8 +12,9 @@ const categoryArray = [
   { value: 'qualification', label: 'Kval' },
 ]
 
-const SearchSelection = () => {
+const CompareSelectionForm = () => {
   const methods = useFormContext()
+
   const { women } = useGenderContext()
   const { startOptions, endOptions, endOptionsPlaceholder } =
     useCompareSeasons()
@@ -31,7 +31,7 @@ const SearchSelection = () => {
               </FormComponent.Description>
               <div className="grid grid-cols-1 gap-y-1 lg:grid-cols-3 lg:gap-x-32">
                 <FormComponent.MultiCheckbox
-                  checkboxArray={categoryArray}
+                  checkboxArray={categoryArraySelection}
                   className="flex flex-row items-center justify-between space-x-3 space-y-0"
                 />
               </div>
@@ -61,4 +61,4 @@ const SearchSelection = () => {
   )
 }
 
-export default SearchSelection
+export default CompareSelectionForm

@@ -24,12 +24,11 @@ import { Form } from '@/src/@/components/ui/form'
 import { Button } from '@/src/@/components/ui/button'
 import { FormComponent } from '../../utilitycomponents/Components/ReactHookFormComponents/FormComponent'
 import { ScrollArea } from '@/src/@/components/ui/scroll-area'
+import { useGameStore, resetGame } from '../zustand/gameStore'
 
 type GameFormPropTypes = {
   season: SeasonObjectType[]
-  gameData: GameObjectType | null
   setShowModal: Dispatch<SetStateAction<boolean>>
-  setGameData: Dispatch<SetStateAction<GameObjectType | null>>
   women: boolean
 }
 
@@ -104,15 +103,9 @@ const categoryArray = [
   { value: 'qualification', label: 'Kvalmatch' },
 ]
 
-const GameForm = ({
-  season,
-  setShowModal,
-  gameData,
-  setGameData,
-  women,
-}: GameFormPropTypes) => {
+const GameForm = ({ season, setShowModal, women }: GameFormPropTypes) => {
   const { toast } = useToast()
-
+  const gameData = useGameStore((state) => state.game)
   const client = useQueryClient()
   const submitMutation = useMutation({
     mutationFn: (newGameData: GameFormObjectType) => postGame(newGameData),
@@ -126,7 +119,7 @@ const GameForm = ({
       duration: 5000,
       title: 'Match inlagd/uppdaterad',
     })
-    setGameData(null)
+    resetGame()
     setShowModal(false)
   }
 
@@ -207,7 +200,7 @@ const GameForm = ({
                     size="sm"
                     variant="secondary"
                     onClick={() => {
-                      setGameData(null)
+                      resetGame()
                       setShowModal(false)
                     }}
                   >

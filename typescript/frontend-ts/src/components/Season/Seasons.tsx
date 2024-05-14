@@ -1,11 +1,11 @@
-import { useState, KeyboardEvent } from 'react'
+import { useState, KeyboardEvent, Suspense } from 'react'
 
 import SeasonsList from './Subcomponents/SeasonsList'
 import FilterComponent from './Subcomponents/FilterComponent'
 import {
   Loading,
   DataError,
-} from '../utilitycomponents/Components/LoadingOrError'
+} from '../utilitycomponents/Components/LoadingAndError/LoadingOrError'
 
 import useScrollTo from '../../hooks/domHooks/useScrollTo'
 import useGetAllSeasons from '@/src/hooks/dataHooks/seasonHooks/useGetAllSeasons'
@@ -13,13 +13,11 @@ import { Card, CardContent } from '@/src/@/components/ui/card'
 
 const Seasons = () => {
   const [seasonFilter, setSeasonFilter] = useState('')
-  const { seasons, isLoading, error } = useGetAllSeasons()
+  const { seasons, error } = useGetAllSeasons()
 
   useScrollTo()
 
   if (error) return <DataError error={error} />
-
-  if (isLoading) return <Loading />
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
@@ -28,7 +26,7 @@ const Seasons = () => {
   }
 
   return (
-    <div className="mx-auto mb-2 min-h-screen px-1 font-inter text-foreground">
+    <div className="mx-auto mb-2 min-h-screen w-full px-1 font-inter text-foreground">
       <Card>
         <CardContent>
           <FilterComponent
@@ -38,11 +36,13 @@ const Seasons = () => {
           />
 
           <div className="self-center">
-            <SeasonsList
-              seasons={seasons.filter((season) =>
-                season.year.includes(seasonFilter),
-              )}
-            />
+            <Suspense fallback={<Loading />}>
+              <SeasonsList
+                seasons={seasons.filter((season) =>
+                  season.year.includes(seasonFilter),
+                )}
+              />
+            </Suspense>
           </div>
         </CardContent>
       </Card>

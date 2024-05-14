@@ -1,36 +1,34 @@
 import Help from './Help'
 import Map from './Map'
-import SearchSelection from './SearchSelectionModal'
+
 import TeamsList from './TeamsList'
 import Compare from '../../Compare/Compare'
-import { useGetTeamsList } from '@/src/hooks/dataHooks/teamHooks/useGetTeamsList'
 import Team from '../Team'
+
+import { useCompare } from '@/src/hooks/dataHooks/teamHooks/useCompare'
 import { useSearchParams } from 'react-router-dom'
-import { CompareFormState, teamIdFromParams } from '../../types/teams/teams'
-import { useState, useEffect, Dispatch, SetStateAction } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import { teamIdFromParams } from '../../types/teams/teams'
+import { useState, useEffect, Dispatch, SetStateAction, Suspense } from 'react'
+import { Form } from '@/src/@/components/ui/form'
 import { ErrorState } from '../../Search/Search'
+import Loading from '../../utilitycomponents/Components/LoadingAndError/Loading'
+import CompareSelectionForm from '../../Compare/CompareSelectionForm'
 
 type TeamsComponentSwitchProps = {
-  compObjectParams: CompareFormState | null
-  setCompObjectParams: Dispatch<SetStateAction<CompareFormState | null>>
   customError: ErrorState
   setCustomError: Dispatch<SetStateAction<ErrorState>>
   tab: string
   teamFilter: string
-  methods: UseFormReturn<CompareFormState>
 }
 
 const TeamsComponentSwitch = ({
   tab,
   teamFilter,
-  methods,
-  compObjectParams,
-  setCompObjectParams,
   customError,
   setCustomError,
 }: TeamsComponentSwitchProps) => {
-  const { teams } = useGetTeamsList(teamFilter)
+  const { methods, mutation, compareLink } = useCompare()
+
   const [parsedTeamId, setParsedTeamId] = useState<number | null>(null)
   const [searchParams, setSearchParams] = useSearchParams(location.search)
   const teamId = searchParams.get('teamId')
@@ -48,28 +46,41 @@ const TeamsComponentSwitch = ({
   switch (tab) {
     case 'teams':
       pageContent = (
-        <TeamsList teams={teams} setSearchParams={setSearchParams} />
+        <Suspense fallback={<Loading page="teamsList" />}>
+          <TeamsList
+            teamFilter={teamFilter}
+            setSearchParams={setSearchParams}
+          />
+        </Suspense>
       )
       break
     case 'compare':
       pageContent = (
         <Compare
           methods={methods}
-          compObjectParams={compObjectParams}
-          setCompObjectParams={setCompObjectParams}
+          mutation={mutation}
           customError={customError}
           setCustomError={setCustomError}
+          compareLink={compareLink}
         />
       )
       break
     case 'selection':
-      pageContent = <SearchSelection />
+      pageContent = (
+        <Suspense fallback={<Loading page="searchSelection" />}>
+          <CompareSelectionForm />
+        </Suspense>
+      )
       break
     case 'singleTeam':
       pageContent = parsedTeamId && <Team teamId={parsedTeamId} />
       break
     case 'map':
-      pageContent = <Map teams={teams} setSearchParams={setSearchParams} />
+      pageContent = (
+        <Suspense fallback={<Loading page="seasonMap" />}>
+          <Map teamFilter={teamFilter} setSearchParams={setSearchParams} />
+        </Suspense>
+      )
       break
     case 'help':
       pageContent = <Help />
@@ -78,7 +89,13 @@ const TeamsComponentSwitch = ({
       pageContent = <div>Något gick fel, ingen sida.</div>
       break
   }
-  return <>{pageContent}</>
+  return (
+    <>
+      <Form {...methods}>
+        <form>{pageContent}</form>
+      </Form>
+    </>
+  )
 }
 
 export default TeamsComponentSwitch
