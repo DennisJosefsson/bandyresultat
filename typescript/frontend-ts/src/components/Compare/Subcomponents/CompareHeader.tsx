@@ -1,6 +1,6 @@
 import { groupConstant } from '../../utilitycomponents/functions/constants'
 
-import { useNavigate } from 'react-router-dom'
+import { useRouter } from '@tanstack/react-router'
 import { CompareFormState } from '../../types/teams/teams'
 
 import { CompareResponseObjectType } from '../../types/teams/compare'
@@ -14,7 +14,7 @@ import { Button } from '@/src/@/components/ui/button'
 
 type CompareHeaderProps = {
   length: number
-  compObject: CompareFormState | null
+  searchObject: CompareFormState | null
   link: string
   compareAllGames: CompareResponseObjectType['compareAllGames']
   seasonNames: CompareResponseObjectType['seasonNames']
@@ -30,12 +30,12 @@ const Buttons = ({
   origin: string | undefined
   length: number
 }) => {
-  const navigate = useNavigate()
+  const router = useRouter()
   const [copiedText, copy] = useCopyToClipboard()
   return (
     <div className="mb-2 flex flex-col-reverse justify-end gap-2 xl:mb-6 xl:flex-row xl:justify-end">
       {origin === 'gamesList' && (
-        <Button onClick={() => navigate(-1)} size="sm">
+        <Button onClick={() => router.history.back()} size="sm">
           Tillbaka
         </Button>
       )}
@@ -50,15 +50,15 @@ const Buttons = ({
 
 const CompareHeader = ({
   length,
-  compObject,
+  searchObject,
   link,
   compareAllGames,
   seasonNames,
   origin,
 }: CompareHeaderProps) => {
-  if (!compObject) return null
+  if (!searchObject) return null
 
-  const catStringArray = compObject.categoryArray.map(
+  const catStringArray = searchObject.categoryArray.map(
     (cat) => groupConstant[cat],
   )
 
@@ -104,7 +104,7 @@ const CompareHeader = ({
       )}
       {length > 0 && (
         <CardHeader>
-          {compObject.teamArray.length > 2 && (
+          {searchObject.teamArray.length > 2 && (
             <div className="w-full">
               <div className="flex flex-row justify-between">
                 <CardTitle className="mb-2">Inbördes möten</CardTitle>
@@ -113,13 +113,13 @@ const CompareHeader = ({
 
               <CardDescription>
                 Möten mellan {teamString} {catString}{' '}
-                {compObject.startSeason === compObject.endSeason
+                {searchObject.startSeason === searchObject.endSeason
                   ? `säsongen ${seasonNames[0].year}`
                   : `${startSeasonName}-${endSeasonName}.`}
               </CardDescription>
             </div>
           )}
-          {compObject.teamArray.length === 2 && (
+          {searchObject.teamArray.length === 2 && (
             <div className="w-full">
               <div className="flex flex-row justify-between">
                 <CardTitle className="mb-2">Inbördes möten</CardTitle>
@@ -128,7 +128,7 @@ const CompareHeader = ({
 
               <CardDescription className="text-[10px] sm:text-sm">
                 Möten mellan {teamString} {catString}{' '}
-                {compObject.startSeason === compObject.endSeason
+                {searchObject.startSeason === searchObject.endSeason
                   ? `säsongen ${seasonNames[0].year}`
                   : `${startSeasonName}-${endSeasonName}.`}
               </CardDescription>

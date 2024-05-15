@@ -2,21 +2,16 @@ import { Dispatch, SetStateAction } from 'react'
 import useSeasonContext from '../../../hooks/contextHooks/useSeasonContext'
 import { useSingleSeasonGames } from '../../../hooks/dataHooks/seasonHooks/gameHooks/useSingleSeasonGames'
 import GamesList from './GamesList'
-import { GameObjectType } from '../../types/games/games'
+
 import { useGamesSingleSeason } from '../../../hooks/dataHooks/seasonHooks/gameHooks/useGamesSingleSeason'
 import { useGamesSeason } from '../../../hooks/dataHooks/seasonHooks/gameHooks/useGamesSeason'
 
 type PlayedGamesProps = {
   teamFilter: string
-  setGameData: Dispatch<SetStateAction<GameObjectType | null>>
   setShowAddGameModal: Dispatch<SetStateAction<boolean>>
 }
 
-const PlayedGames = ({
-  teamFilter,
-  setGameData,
-  setShowAddGameModal,
-}: PlayedGamesProps) => {
+const PlayedGames = ({ teamFilter, setShowAddGameModal }: PlayedGamesProps) => {
   const { seasonId } = useSeasonContext()
   const {
     playedEightGames,
@@ -39,7 +34,6 @@ const PlayedGames = ({
             gamesArray={playedFinalGames}
             title={'Final'}
             setShowModal={setShowAddGameModal}
-            setGameData={setGameData}
             seriesInfo={seriesInfo}
             startSeason={startSeason}
             endSeason={endSeason}
@@ -50,7 +44,6 @@ const PlayedGames = ({
             gamesArray={playedSemiGames}
             title={'Semifinaler'}
             setShowModal={setShowAddGameModal}
-            setGameData={setGameData}
             seriesInfo={seriesInfo}
             startSeason={startSeason}
             endSeason={endSeason}
@@ -61,7 +54,6 @@ const PlayedGames = ({
             gamesArray={playedQuarterGames}
             title={'Kvartsfinaler'}
             setShowModal={setShowAddGameModal}
-            setGameData={setGameData}
             seriesInfo={seriesInfo}
             startSeason={startSeason}
             endSeason={endSeason}
@@ -72,7 +64,6 @@ const PlayedGames = ({
             gamesArray={playedEightGames}
             title={'Åttondelsfinaler'}
             setShowModal={setShowAddGameModal}
-            setGameData={setGameData}
             seriesInfo={seriesInfo}
             startSeason={startSeason}
             endSeason={endSeason}
@@ -83,7 +74,6 @@ const PlayedGames = ({
             gamesArray={playedRegularGames}
             title={'Grundseriematcher'}
             setShowModal={setShowAddGameModal}
-            setGameData={setGameData}
             seriesInfo={seriesInfo}
             startSeason={startSeason}
             endSeason={endSeason}
@@ -95,7 +85,6 @@ const PlayedGames = ({
             gamesArray={playedQualificationGames}
             title={'Kvalmatcher'}
             setShowModal={setShowAddGameModal}
-            setGameData={setGameData}
             seriesInfo={seriesInfo}
             startSeason={startSeason}
             endSeason={endSeason}

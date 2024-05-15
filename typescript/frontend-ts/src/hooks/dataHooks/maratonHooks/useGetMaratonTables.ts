@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { maratonTabell } from '../../../requests/tables'
 import useGenderContext from '../../contextHooks/useGenderContext'
-import { useSearchParams, useLocation } from 'react-router-dom'
+import { useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
 
 type Title = {
@@ -12,13 +12,10 @@ const titles: Title = { all: '', home: 'Hemma', away: 'Borta' }
 const fields = ['all', 'home', 'away']
 
 export const useGetMaratonTables = () => {
-  const location = useLocation()
-  const [searchParams, setSearchParams] = useSearchParams(location.search)
-  const selectedTable = searchParams.get('table')
+  const { table } = useSearch({ from: '/maraton' })
+
   const [homeAwayTitle, setHomeAwayTitle] = useState(
-    selectedTable && fields.includes(selectedTable)
-      ? titles[selectedTable]
-      : '',
+    table && fields.includes(table) ? titles[table] : '',
   )
   const { women } = useGenderContext()
   const { data, isLoading, error, isSuccess } = useQuery({
@@ -27,32 +24,27 @@ export const useGetMaratonTables = () => {
   })
 
   let tabell
-  switch (selectedTable) {
+  switch (table) {
     case 'all':
       if (isSuccess)
-        tabell = data.maratonTabell.filter((table) => table.women === women)
+        tabell = data.maratonTabell.filter((item) => item.women === women)
       break
     case 'home':
       if (isSuccess)
-        tabell = data.maratonHemmaTabell.filter(
-          (table) => table.women === women,
-        )
+        tabell = data.maratonHemmaTabell.filter((item) => item.women === women)
       break
     case 'away':
       if (isSuccess)
-        tabell = data.maratonBortaTabell.filter(
-          (table) => table.women === women,
-        )
+        tabell = data.maratonBortaTabell.filter((item) => item.women === women)
       break
     default:
       if (isSuccess)
-        tabell = data.maratonTabell.filter((table) => table.women === women)
+        tabell = data.maratonTabell.filter((item) => item.women === women)
   }
 
   return {
     tabell,
-    selectedTable,
-    setSearchParams,
+    table,
     homeAwayTitle,
     setHomeAwayTitle,
     error,

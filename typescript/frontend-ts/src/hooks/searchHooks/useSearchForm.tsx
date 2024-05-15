@@ -6,7 +6,7 @@ import {
 } from '../../components/types/games/search'
 import { useGetTeams } from '../dataHooks/teamHooks/useGetTeams'
 import useGenderContext from '../contextHooks/useGenderContext'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useParams, useSearch } from '@tanstack/react-router'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getLinkData } from '../../requests/link'
@@ -95,9 +95,7 @@ export const useSearchLinks = (
 
   const [linkDataLoaded, setLinkDataLoaded] = useState<boolean>(false)
   const linkName = useParams().linkName
-  const [linkParam, setLinkParam] = useSearchParams()
-
-  const link = linkParam.get('link')
+  const { link } = useSearch({ from: '/search' })
 
   const { data: linkData } = useQuery({
     queryKey: ['linkData', linkDataParams],

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from '@tanstack/react-router'
 
 import kalenderbitare from '../../assets/kalenderbitare.png'
 
@@ -14,7 +14,9 @@ const About = () => {
             Vi har väl alla någon gång undrat hur det var, den där
             bandy&shy;vintern{' '}
             <Link
-              to="/season/1969"
+              to="/season/$seasonId"
+              params={{ seasonId: '1969' }}
+              search={{ tab: 'tables' }}
               className="text-foreground transition-colors hover:text-foreground"
             >
               1968/69

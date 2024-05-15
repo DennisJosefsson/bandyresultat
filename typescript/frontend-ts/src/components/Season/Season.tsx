@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useParams, useSearch } from '@tanstack/react-router'
 import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { logError } from '../utilitycomponents/functions/logError.js'
@@ -15,10 +15,13 @@ import { Card, CardContent } from '@/src/@/components/ui/card.js'
 import { Loading } from '../utilitycomponents/Components/LoadingAndError/LoadingOrError'
 
 const Season = () => {
-  const unparsedSeasonId = useParams().seasonId
+  const unparsedSeasonId = useParams({
+    from: '/season/$seasonId',
+    select: (params) => params.seasonId,
+  })
 
-  const [searchParams, setSearchParams] = useSearchParams(location.search)
-  const tab = searchParams.get('tab')
+  const { tab } = useSearch({ from: '/season/$seasonId' })
+
   const { lastSeason } = useGetFirstAndLastSeason()
   const { women } = useGenderContext()
 
@@ -45,7 +48,7 @@ const Season = () => {
       <Card className="mb-2">
         <CardContent className="mt-2 max-w-full">
           <SeasonHeader seasonId={seasonId} women={women} tab={tab} />
-          <SeasonTabBar tab={tab} setSearchParams={setSearchParams} />
+          <SeasonTabBar />
         </CardContent>
       </Card>
       <Card>

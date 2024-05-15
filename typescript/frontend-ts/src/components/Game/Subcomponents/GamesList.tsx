@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react'
-import { GameObjectType } from '../../types/games/games'
+
 import { SortedGamesType } from '../../utilitycomponents/functions/sortFunction'
 import { SerieAttributes } from '../../types/series/series'
 
@@ -10,16 +10,14 @@ type GameListProps = {
   gamesArray: SortedGamesType
   title: string
   setShowModal: Dispatch<SetStateAction<boolean>>
-  setGameData: Dispatch<SetStateAction<GameObjectType | null>>
   seriesInfo: SerieAttributes[]
-  startSeason: number | null
-  endSeason: number | null
+  startSeason: number
+  endSeason: number
 }
 
 const GamesList = ({
   gamesArray,
   title,
-
   seriesInfo,
   startSeason,
   endSeason,

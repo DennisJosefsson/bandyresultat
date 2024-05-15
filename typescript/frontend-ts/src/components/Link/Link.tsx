@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from '@tanstack/react-router'
 import { getLinkData } from '../../requests/link'
 import { link, LinkState } from '../types/link/link'
 

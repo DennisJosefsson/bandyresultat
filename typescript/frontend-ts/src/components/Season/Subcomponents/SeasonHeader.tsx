@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from '@tanstack/react-router'
 import {
   Carousel,
   CarouselApi,
@@ -15,7 +15,14 @@ import { useState, useEffect } from 'react'
 type SeasonHeaderProps = {
   seasonId: number
   women: boolean
-  tab: string | null
+  tab:
+    | 'map'
+    | 'playoff'
+    | 'tables'
+    | 'games'
+    | 'help'
+    | 'roundForRound'
+    | 'stats'
 }
 
 const SeasonHeader = ({ seasonId, tab }: SeasonHeaderProps) => {
@@ -80,8 +87,9 @@ const SeasonHeader = ({ seasonId, tab }: SeasonHeaderProps) => {
                     }
                   >
                     <Link
-                      to={`/season/${season.season}?tab=${tab}`}
-                      state={{ resetRound: true }}
+                      to="/season/$seasonId"
+                      params={{ seasonId: season.season }}
+                      search={{ tab: tab }}
                     >
                       {season.year}
                     </Link>

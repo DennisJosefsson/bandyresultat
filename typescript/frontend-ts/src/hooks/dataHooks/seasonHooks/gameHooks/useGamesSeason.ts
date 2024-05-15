@@ -7,11 +7,8 @@ export const useGamesSeason = () => {
 
   const allSeasons = seasons.filter((season) => season.women === women)
 
-  const startSeasonObject = allSeasons.pop()
-  const endSeasonObject = allSeasons.shift()
-
-  const startSeason = startSeasonObject ? startSeasonObject.seasonId : null
-  const endSeason = endSeasonObject ? endSeasonObject.seasonId : null
+  const startSeason = allSeasons[allSeasons.length - 1].seasonId
+  const endSeason = allSeasons[0].seasonId
 
   return { startSeason, endSeason }
 }

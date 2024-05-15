@@ -1,5 +1,5 @@
 import { CompareResponseObjectType } from '../../types/teams/compare'
-
+import { CompareFormState } from '../../types/teams/teams'
 import AllDataTableHeader from './AllDataTableHeader'
 import { Table, TableBody } from '@/src/@/components/ui/table'
 
@@ -11,20 +11,17 @@ import {
 } from '@/src/@/components/ui/card'
 
 import DataTableRow from './DataTableRow'
-import { useFormContext } from 'react-hook-form'
 
 type AllDataProps = {
   allData: CompareResponseObjectType['allData']
   sortedData: CompareResponseObjectType['sortedData']
+  searchObject: CompareFormState
 }
 
-const AllData = ({ allData, sortedData }: AllDataProps) => {
-  const { getValues } = useFormContext()
+const AllData = ({ allData, sortedData, searchObject }: AllDataProps) => {
+  if (!searchObject) return null
 
-  const compObject = getValues()
-  if (!compObject) return null
-
-  if (compObject.teamArray.length > 2) {
+  if (searchObject.teamArray.length > 2) {
     return (
       <Card className="mb-2">
         <CardHeader>

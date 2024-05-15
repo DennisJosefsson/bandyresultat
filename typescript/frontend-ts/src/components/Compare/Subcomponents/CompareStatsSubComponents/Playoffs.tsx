@@ -1,4 +1,3 @@
-import { useFormContext } from 'react-hook-form'
 import { CompareResponseObjectType } from '../../../types/teams/compare'
 
 import {
@@ -7,14 +6,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/src/@/components/ui/card'
+import { CompareFormState } from '@/src/components/types/teams/teams'
 type PlayoffProps = {
   playoffs: CompareResponseObjectType['playoffs']
   allPlayoffs: CompareResponseObjectType['allPlayoffs']
+  searchObject: CompareFormState
 }
 
-const Playoffs = ({ playoffs, allPlayoffs }: PlayoffProps) => {
-  const { getValues } = useFormContext()
-  const women = getValues('women')
+const Playoffs = ({ playoffs, allPlayoffs, searchObject }: PlayoffProps) => {
+  const women = searchObject['women']
   return (
     <>
       <Card className="mt-2 w-full">

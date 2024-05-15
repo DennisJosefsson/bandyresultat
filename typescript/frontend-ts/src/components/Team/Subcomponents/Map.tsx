@@ -6,15 +6,15 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 import 'leaflet/dist/leaflet.css'
 
-import { SetURLSearchParams } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/src/@/components/ui/button'
 import { useGetTeamsList } from '@/src/hooks/dataHooks/teamHooks/useGetTeamsList'
 
 type MapProps = {
   teamFilter: string
-  setSearchParams: SetURLSearchParams
 }
-const Map = ({ teamFilter, setSearchParams }: MapProps) => {
+const Map = ({ teamFilter }: MapProps) => {
+  const navigate = useNavigate({ from: '/teams' })
   const methods = useFormContext()
   const { teams } = useGetTeamsList(teamFilter)
   return (
@@ -52,8 +52,10 @@ const Map = ({ teamFilter, setSearchParams }: MapProps) => {
                                     <Button
                                       variant="link"
                                       onClick={() =>
-                                        setSearchParams({
-                                          teamId: team.teamId.toString(),
+                                        navigate({
+                                          search: {
+                                            teamId: team.teamId,
+                                          },
                                         })
                                       }
                                     >

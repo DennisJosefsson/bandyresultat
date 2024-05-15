@@ -2,19 +2,17 @@ import { Dispatch, SetStateAction } from 'react'
 import useSeasonContext from '../../../hooks/contextHooks/useSeasonContext'
 import { useSingleSeasonGames } from '../../../hooks/dataHooks/seasonHooks/gameHooks/useSingleSeasonGames'
 import GamesList from './GamesList'
-import { GameObjectType } from '../../types/games/games'
+
 import { useGamesSeason } from '../../../hooks/dataHooks/seasonHooks/gameHooks/useGamesSeason'
 import { useGamesSingleSeason } from '../../../hooks/dataHooks/seasonHooks/gameHooks/useGamesSingleSeason'
 
 type UnplayedGamesProps = {
   teamFilter: string
-  setGameData: Dispatch<SetStateAction<GameObjectType | null>>
   setShowAddGameModal: Dispatch<SetStateAction<boolean>>
 }
 
 const UnplayedGames = ({
   teamFilter,
-  setGameData,
   setShowAddGameModal,
 }: UnplayedGamesProps) => {
   const { seasonId } = useSeasonContext()
@@ -39,7 +37,6 @@ const UnplayedGames = ({
             gamesArray={unplayedFinalGames}
             title={'Final'}
             setShowModal={setShowAddGameModal}
-            setGameData={setGameData}
             seriesInfo={seriesInfo}
             startSeason={startSeason}
             endSeason={endSeason}
@@ -50,7 +47,6 @@ const UnplayedGames = ({
             gamesArray={unplayedSemiGames}
             title={'Semifinaler'}
             setShowModal={setShowAddGameModal}
-            setGameData={setGameData}
             seriesInfo={seriesInfo}
             startSeason={startSeason}
             endSeason={endSeason}
@@ -61,7 +57,6 @@ const UnplayedGames = ({
             gamesArray={unplayedQuarterGames}
             title={'Kvartsfinaler'}
             setShowModal={setShowAddGameModal}
-            setGameData={setGameData}
             seriesInfo={seriesInfo}
             startSeason={startSeason}
             endSeason={endSeason}
@@ -72,7 +67,6 @@ const UnplayedGames = ({
             gamesArray={unplayedEightGames}
             title={'Åttondelsfinaler'}
             setShowModal={setShowAddGameModal}
-            setGameData={setGameData}
             seriesInfo={seriesInfo}
             startSeason={startSeason}
             endSeason={endSeason}
@@ -83,7 +77,6 @@ const UnplayedGames = ({
             gamesArray={unplayedRegularGames}
             title={'Grundseriematcher'}
             setShowModal={setShowAddGameModal}
-            setGameData={setGameData}
             seriesInfo={seriesInfo}
             startSeason={startSeason}
             endSeason={endSeason}
@@ -95,7 +88,6 @@ const UnplayedGames = ({
             gamesArray={unplayedQualificationGames}
             title={'Kvalmatcher'}
             setShowModal={setShowAddGameModal}
-            setGameData={setGameData}
             seriesInfo={seriesInfo}
             startSeason={startSeason}
             endSeason={endSeason}

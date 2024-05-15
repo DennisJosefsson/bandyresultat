@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from '@tanstack/react-router'
 
 import GameForm from './Subcomponents/GameForm'
 import { DataError } from '../utilitycomponents/Components/LoadingAndError/LoadingOrError'
 
 import FilterComponent from './Subcomponents/FilterComponent'
-import { GameObjectType } from '../types/games/games'
+
 import useGenderContext from '../../hooks/contextHooks/useGenderContext'
 import useSeasonContext from '../../hooks/contextHooks/useSeasonContext'
 import useScrollTo from '../../hooks/domHooks/useScrollTo'
@@ -23,8 +23,6 @@ const Games = () => {
   const [teamFilter, setTeamFilter] = useState<string>('')
 
   const [showAddGameModal, setShowAddGameModal] = useState<boolean>(false)
-
-  const [gameData, setGameData] = useState<GameObjectType | null>(null)
 
   const { playedGamesLength, unplayedGamesLength, error } =
     useSingleSeasonGames(seasonId, teamFilter)
@@ -45,7 +43,12 @@ const Games = () => {
       <div className="mx-auto mt-4 grid place-items-center py-5 font-inter text-sm font-bold text-foreground md:text-base">
         <p className="mx-10 text-center">
           Första säsongen för damernas högsta serie var{' '}
-          <Link to="/season/1973" className="font-bold">
+          <Link
+            to="/season/$seasonId"
+            params={{ seasonId: '1973' }}
+            search={{ tab: 'tables' }}
+            className="font-bold"
+          >
             1972/73
           </Link>
           .
@@ -63,14 +66,12 @@ const Games = () => {
           {playedGamesLength > 0 && (
             <PlayedGames
               teamFilter={teamFilter}
-              setGameData={setGameData}
               setShowAddGameModal={setShowAddGameModal}
             />
           )}
           {unplayedGamesLength > 0 && (
             <UnplayedGames
               teamFilter={teamFilter}
-              setGameData={setGameData}
               setShowAddGameModal={setShowAddGameModal}
             />
           )}
@@ -82,8 +83,6 @@ const Games = () => {
             women={women}
             season={genderSeason}
             setShowModal={setShowAddGameModal}
-            gameData={gameData}
-            setGameData={setGameData}
           />
         </>
       ) : null}

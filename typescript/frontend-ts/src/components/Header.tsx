@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from '@tanstack/react-router'
 import { Sheet, SheetTrigger, SheetContent } from '../@/components/ui/sheet'
 import { Button } from '../@/components/ui/button'
 import { Menu } from 'lucide-react'
@@ -37,7 +37,8 @@ const Header = () => {
             Sök
           </Link>
           <Link
-            to="/tables?tab=maraton&table=all"
+            to="/maraton"
+            search={{ tab: 'maraton', table: 'all' }}
             className="text-foreground transition-colors hover:text-foreground"
           >
             Maratontabeller
@@ -102,7 +103,8 @@ const Header = () => {
                 Sök
               </Link>
               <Link
-                to="/tables?tab=maraton&table=all"
+                to="/maraton"
+                search={{ tab: 'maraton', table: 'all' }}
                 className="hover:text-foreground"
                 onClick={() => (open ? setOpen(false) : setOpen(true))}
               >

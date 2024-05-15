@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getStreaks } from '../../../requests/games'
-import { useSearchParams } from 'react-router-dom'
+import { useSearch } from '@tanstack/react-router'
 import useGenderContext from '../../contextHooks/useGenderContext'
 
 type Title = {
@@ -19,8 +19,8 @@ const titles: Title = {
 const fields = ['points', 'conceded', 'scored', 'generalStats', 'streaks']
 
 export const useGetRecordData = () => {
-  const [searchParams, setSearchParams] = useSearchParams(location.search)
-  const record = searchParams.get('record')
+  const { record } = useSearch({ from: '/maraton' })
+
   const { women } = useGenderContext()
   const [params, setParams] = useState({
     record: record && fields.includes(record) ? record : 'generalStats',
@@ -44,7 +44,6 @@ export const useGetRecordData = () => {
     record,
     setParams,
     setTitle,
-    setSearchParams,
     isLoading,
     error,
     isSuccess,

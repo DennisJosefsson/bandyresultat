@@ -4,12 +4,12 @@ import useGenderContext from '@/src/hooks/contextHooks/useGenderContext'
 import useTeampreferenceContext from '@/src/hooks/contextHooks/useTeampreferenceContext'
 import useUserContext from '@/src/hooks/contextHooks/useUserContext'
 
-import { Link } from 'react-router-dom'
+import { Link } from '@tanstack/react-router'
 import EditGameButton from './EditGameButton'
 
 type GamesListItemProps = {
-  startSeason: number | null
-  endSeason: number | null
+  startSeason: number
+  endSeason: number
   game: GameObjectType
 }
 
@@ -65,16 +65,13 @@ const GamesListItem = ({
         )}
         <Button asChild size="icon" variant="ghost">
           <Link
-            to="/teams"
-            state={{
-              compObject: {
-                teamArray: [game.homeTeamId, game.awayTeamId],
-                categoryArray: categoryArray,
-                startSeason: startSeason?.toString(),
-                endSeason: endSeason?.toString(),
-                women: women,
-              },
-              origin: 'gamesList',
+            to="/teams/compare"
+            search={{
+              teamArray: [game.homeTeamId, game.awayTeamId],
+              categoryArray: categoryArray,
+              startSeason: startSeason.toString(),
+              endSeason: endSeason.toString(),
+              women: women,
             }}
           >
             H2H

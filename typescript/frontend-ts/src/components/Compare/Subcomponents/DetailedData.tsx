@@ -12,16 +12,15 @@ import {
 import AllDataTableHeader from './AllDataTableHeader'
 
 import DataTableRow from './DataTableRow'
-import { useFormContext } from 'react-hook-form'
+
+import { CompareFormState } from '../../types/teams/teams'
 type DetailedDataProps = {
   categoryData: CompareResponseObjectType['categoryData']
+  searchObject: CompareFormState
 }
 
-const DetailedData = ({ categoryData }: DetailedDataProps) => {
-  const { getValues } = useFormContext()
-
-  const compObject = getValues()
-  if (!compObject) return null
+const DetailedData = ({ categoryData, searchObject }: DetailedDataProps) => {
+  if (!searchObject) return null
   return (
     <div>
       {categoryData.map((category) => {
@@ -36,11 +35,11 @@ const DetailedData = ({ categoryData }: DetailedDataProps) => {
               <Table className="w-full table-fixed">
                 <AllDataTableHeader />
                 <TableBody>
-                  {compObject.teamArray.length > 2 &&
+                  {searchObject.teamArray.length > 2 &&
                     filterOpposition(category.teams).map((team, index) => {
                       return <DataTableRow key={index} team={team} />
                     })}
-                  {compObject.teamArray.length === 2 &&
+                  {searchObject.teamArray.length === 2 &&
                     category.teams.slice(1).map((team, index) => {
                       return <DataTableRow key={index} team={team} />
                     })}

@@ -1,91 +1,22 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom'
-import { Toaster } from '@/src/@/components/ui/toaster'
-import Home from './components/Home'
-import Header from './components/Header'
-
-import Teams from './components/Team/Teams'
-import Season from './components/Season/Season'
-import Seasons from './components/Season/Seasons'
-
-import Dashboard from './components/Dashboard/Dashboard'
-import About from './components/About/About'
-import Link from './components/Link/Link'
-import Search from './components/Search/Search'
-
-import Maraton from './components/Maraton/Maraton'
+import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { routeTree } from './routeTree.gen'
 import useUserContext from './hooks/contextHooks/useUserContext'
-import { ReactNode, Suspense } from 'react'
-import { ScrollArea } from './@/components/ui/scroll-area'
-import Loading from './components/utilitycomponents/Components/LoadingAndError/Loading'
 
-const ProtectedRoute = ({
-  user,
-  children,
-}: {
-  user: boolean
-  children: ReactNode
-}) => {
-  if (!user) {
-    return <Navigate to="/" replace />
+const router = createRouter({ routeTree, context: { user: false } })
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
   }
-
-  return children
 }
 
-const App = () => {
+function InnerApp() {
   const { user } = useUserContext()
-  return (
-    <Router>
-      <div className="flex flex-col bg-background text-foreground dark:bg-slate-950 lg:min-h-screen">
-        <Header />
-        {/* <ScrollArea className="content-container px-2"> */}
-        <main className="mb-4">
-          <Routes>
-            <Route path="/teams/:teamId" element={<Teams />} />
-            <Route path="/teams" element={<Teams />} />
-            <Route path="/season/:seasonId" element={<Season />} />
-            <Route
-              path="/seasons"
-              element={
-                <Suspense fallback={<Loading page="seasonList" />}>
-                  <Seasons />
-                </Suspense>
-              }
-            />
-            <Route path="/tables" element={<Maraton />} />
-            <Route path="/link/:linkName" element={<Link />} />
+  return <RouterProvider router={router} context={{ user }} />
+}
 
-            <Route
-              path="/search"
-              element={
-                <Suspense fallback={<Loading />}>
-                  <Search />
-                </Suspense>
-              }
-            />
-            <Route path="/search/:linkName" element={<Search />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute user={user}>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/about" element={<About />} />
-            <Route path="*" element={<Home />} />
-          </Routes>
-          <Toaster />
-        </main>
-        {/* </ScrollArea> */}
-      </div>
-    </Router>
-  )
+function App() {
+  return <InnerApp />
 }
 
 export default App

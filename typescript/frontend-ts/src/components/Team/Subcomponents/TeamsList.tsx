@@ -2,18 +2,18 @@ import useTeampreferenceContext from '../../../hooks/contextHooks/useTeamprefere
 import { FormField, FormItem, FormControl } from '@/src/@/components/ui/form'
 import { Checkbox } from '@/src/@/components/ui/checkbox'
 
-import { SetURLSearchParams } from 'react-router-dom'
 import { useGetTeamsList } from '@/src/hooks/dataHooks/teamHooks/useGetTeamsList'
 
 import { useFormContext } from 'react-hook-form'
+import { useNavigate } from '@tanstack/react-router'
 
 interface TeamsListProps {
   teamFilter: string
-  setSearchParams: SetURLSearchParams
 }
 
-const TeamsList = ({ teamFilter, setSearchParams }: TeamsListProps) => {
+const TeamsList = ({ teamFilter }: TeamsListProps) => {
   const { favTeams } = useTeampreferenceContext()
+  const navigate = useNavigate({ from: '/teams' })
   const methods = useFormContext()
 
   const { teams } = useGetTeamsList(teamFilter)
@@ -47,8 +47,10 @@ const TeamsList = ({ teamFilter, setSearchParams }: TeamsListProps) => {
                                   : 'w-32 cursor-pointer md:text-base'
                               }
                               onClick={() => {
-                                setSearchParams({
-                                  teamId: team.teamId.toString(),
+                                navigate({
+                                  search: {
+                                    teamId: team.teamId,
+                                  },
                                 })
                               }}
                             >

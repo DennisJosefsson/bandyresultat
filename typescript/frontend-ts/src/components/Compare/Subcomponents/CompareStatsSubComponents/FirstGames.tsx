@@ -1,4 +1,3 @@
-import { useFormContext } from 'react-hook-form'
 import { CompareResponseObjectType } from '../../../types/teams/compare'
 
 import {
@@ -9,14 +8,15 @@ import {
   CardTitle,
 } from '@/src/@/components/ui/card'
 import Date from '@/src/components/utilitycomponents/Components/Date'
+import { CompareFormState } from '@/src/components/types/teams/teams'
 
 type FirstGamesProps = {
   firstGames: CompareResponseObjectType['firstGames']
+  searchObject: CompareFormState
 }
 
-const FirstGames = ({ firstGames }: FirstGamesProps) => {
-  const { getValues } = useFormContext()
-  const janFirstGames = getValues('women')
+const FirstGames = ({ firstGames, searchObject }: FirstGamesProps) => {
+  const janFirstGames = searchObject['women']
     ? 'Speldatum 1 januari från säsongerna 1988/1989 och 1989/1990 gäller enbart tillsvidare, de betyder att faktiskt datum saknas.'
     : 'Obs! Speldatum 1 januari före 1931 gäller enbart tillsvidare, de betyder att faktiskt datum saknas.'
 

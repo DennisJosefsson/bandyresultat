@@ -3,10 +3,9 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { logError } from '../utilitycomponents/functions/logError'
 import ErrorFallback from '../utilitycomponents/Components/LoadingAndError/ErrorFallback'
 import TeamsComponentSwitch from './Subcomponents/TeamsComponentSwitch'
-import { useSearchParams, useLocation } from 'react-router-dom'
+import { useSearch, useLocation, useNavigate } from '@tanstack/react-router'
 import { Input } from '@/src/@/components/ui/input'
 import { teamIdFromParams } from '../types/teams/teams'
-import useGenderContext from '../../hooks/contextHooks/useGenderContext'
 
 import { Card, CardContent } from '@/src/@/components/ui/card'
 
@@ -15,35 +14,16 @@ import { ErrorState } from '../Search/Search'
 
 const Teams = () => {
   const location = useLocation()
-  const [searchParams, setSearchParams] = useSearchParams(location.search)
+  const { teamId, link } = useSearch({ from: '/teams' })
+  const navigate = useNavigate({ from: '/teams' })
 
   const [customError, setCustomError] = useState<ErrorState>({ error: false })
-  const teamId = searchParams.get('teamId')
-  const link = searchParams.get('link')
-
-  const { women, dispatch } = useGenderContext()
 
   const [tab, setTab] = useState<string>('teams')
-
-  const [stateNull, setStateNull] = useState<boolean>(false)
 
   const [teamFilter, setTeamFilter] = useState<string>('')
 
   useEffect(() => {
-    if (location.state && !stateNull) {
-      dispatch({
-        type: 'SET',
-        payload: location.state.compObject.women
-          ? location.state.compObject.women
-          : women,
-      })
-
-      setStateNull(true)
-      setTab('compare')
-    }
-    if (link) {
-      setTab('compare')
-    }
     if (teamId) {
       const parsedTeamId = teamIdFromParams.safeParse(teamId)
       if (!parsedTeamId.success) {
@@ -61,9 +41,8 @@ const Teams = () => {
   }
 
   const removeTeamIdParam = () => {
-    if (searchParams.has('teamId')) {
-      searchParams.delete('teamId')
-      setSearchParams(searchParams)
+    if (teamId) {
+      navigate({ search: { teamId: undefined } })
     }
   }
 

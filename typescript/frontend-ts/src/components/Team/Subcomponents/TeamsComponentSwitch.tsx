@@ -6,7 +6,7 @@ import Compare from '../../Compare/Compare'
 import Team from '../Team'
 
 import { useCompare } from '@/src/hooks/dataHooks/teamHooks/useCompare'
-import { useSearchParams } from 'react-router-dom'
+import { useSearch } from '@tanstack/react-router'
 import { teamIdFromParams } from '../../types/teams/teams'
 import { useState, useEffect, Dispatch, SetStateAction, Suspense } from 'react'
 import { Form } from '@/src/@/components/ui/form'
@@ -30,8 +30,8 @@ const TeamsComponentSwitch = ({
   const { methods, mutation, compareLink } = useCompare()
 
   const [parsedTeamId, setParsedTeamId] = useState<number | null>(null)
-  const [searchParams, setSearchParams] = useSearchParams(location.search)
-  const teamId = searchParams.get('teamId')
+  const { teamId } = useSearch({ from: '/teams' })
+
   useEffect(() => {
     if (teamId) {
       const parsed = teamIdFromParams.safeParse(teamId)
@@ -47,10 +47,7 @@ const TeamsComponentSwitch = ({
     case 'teams':
       pageContent = (
         <Suspense fallback={<Loading page="teamsList" />}>
-          <TeamsList
-            teamFilter={teamFilter}
-            setSearchParams={setSearchParams}
-          />
+          <TeamsList teamFilter={teamFilter} />
         </Suspense>
       )
       break
@@ -78,7 +75,7 @@ const TeamsComponentSwitch = ({
     case 'map':
       pageContent = (
         <Suspense fallback={<Loading page="seasonMap" />}>
-          <Map teamFilter={teamFilter} setSearchParams={setSearchParams} />
+          <Map teamFilter={teamFilter} />
         </Suspense>
       )
       break

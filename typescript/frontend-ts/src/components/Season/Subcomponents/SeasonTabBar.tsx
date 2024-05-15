@@ -12,13 +12,11 @@ import {
   TrophyIcon,
   WomanIcon,
 } from '../../utilitycomponents/Components/icons'
-import { SetURLSearchParams } from 'react-router-dom'
-type SeasonTabBarProps = {
-  tab: string | null
-  setSearchParams: SetURLSearchParams
-}
+import { useNavigate, useSearch } from '@tanstack/react-router'
 
-const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
+const SeasonTabBar = () => {
+  const { tab } = useSearch({ from: '/season/$seasonId' })
+  const navigate = useNavigate({ from: '/season/$seasonId' })
   const matches = useMediaQuery('(min-width: 640px)')
   const { dispatch, women } = useGenderContext()
   const seasonTabBarObject = {
@@ -46,7 +44,7 @@ const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
           <Button
             variant={tab === 'games' ? 'default' : 'outline'}
             onClick={() => {
-              setSearchParams({ tab: 'games' })
+              navigate({ search: { tab: 'games' } })
             }}
             size={matches ? 'default' : 'icon'}
           >
@@ -61,7 +59,7 @@ const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
           <Button
             variant={tab === 'tables' ? 'default' : 'outline'}
             onClick={() => {
-              setSearchParams({ tab: 'tables' })
+              navigate({ search: { tab: 'tables' } })
             }}
             size={matches ? 'default' : 'icon'}
           >
@@ -76,7 +74,7 @@ const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
           <Button
             variant={tab === 'playoff' ? 'default' : 'outline'}
             onClick={() => {
-              setSearchParams({ tab: 'playoff' })
+              navigate({ search: { tab: 'playoff' } })
             }}
             size={matches ? 'default' : 'icon'}
           >
@@ -91,7 +89,7 @@ const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
           <Button
             variant={tab === 'roundForRound' ? 'default' : 'outline'}
             onClick={() => {
-              setSearchParams({ tab: 'roundForRound' })
+              navigate({ search: { tab: 'roundForRound' } })
             }}
             size={matches ? 'default' : 'icon'}
           >
@@ -106,7 +104,7 @@ const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
           <Button
             variant={tab === 'stats' ? 'default' : 'outline'}
             onClick={() => {
-              setSearchParams({ tab: 'stats' })
+              navigate({ search: { tab: 'stats' } })
             }}
             size={matches ? 'default' : 'icon'}
           >
@@ -121,7 +119,7 @@ const SeasonTabBar = ({ tab, setSearchParams }: SeasonTabBarProps) => {
           <Button
             variant={tab === 'map' ? 'default' : 'outline'}
             onClick={() => {
-              setSearchParams({ tab: 'map' })
+              navigate({ search: { tab: 'map' } })
             }}
             size={matches ? 'default' : 'icon'}
           >

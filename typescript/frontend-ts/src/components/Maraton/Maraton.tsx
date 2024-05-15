@@ -4,18 +4,17 @@ import ErrorFallback from '../utilitycomponents/Components/LoadingAndError/Error
 
 import MaratonTabBar from './Subcomponents/MaratonTabBar.js'
 import MaratonComponentSwitch from './Subcomponents/MaratonComponentSwitch.js'
-import { useSearchParams } from 'react-router-dom'
+import { useSearch } from '@tanstack/react-router'
 import { Card, CardContent } from '@/src/@/components/ui/card.js'
 
 const Maraton = () => {
-  const [searchParams, setSearchParams] = useSearchParams(location.search)
-  const tab = searchParams.get('tab')
+  const { tab } = useSearch({ from: '/maraton' })
 
   return (
     <div className="mx-auto mt-2 flex min-h-screen flex-col px-2 font-inter text-foreground">
       <Card className="mb-2 items-center">
         <CardContent className="p-2 pt-2 md:p-6 md:pt-6">
-          <MaratonTabBar tab={tab} setSearchParams={setSearchParams} />
+          <MaratonTabBar />
         </CardContent>
       </Card>
       <Card>

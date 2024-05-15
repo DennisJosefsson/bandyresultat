@@ -2,8 +2,8 @@ import AllData from './Subcomponents/AllData'
 import DetailedData from './Subcomponents/DetailedData'
 import CompareStats from './Subcomponents/CompareStats'
 import CompareHeader from './Subcomponents/CompareHeader'
-import { UseFormReturn } from 'react-hook-form'
-import { useCompareLocationData } from '@/src/hooks/dataHooks/teamHooks/useCompare'
+
+import { useCompareResults } from '@/src/hooks/dataHooks/teamHooks/useCompare'
 import {
   Tabs,
   TabsList,
@@ -12,56 +12,40 @@ import {
 } from '@/src/@/components/ui/tabs'
 import { Card, CardContent } from '@/src/@/components/ui/card'
 import useScrollTo from '@/src/hooks/domHooks/useScrollTo'
-import { CompareFormState } from '../types/teams/teams'
-import { Dispatch, SetStateAction } from 'react'
-import { UseMutationResult } from '@tanstack/react-query'
 
-import { CompareResponseObjectType } from '../types/teams/compare'
+import { useEffect } from 'react'
 
-type ErrorState =
-  | {
-      error: true
-      message: string
-    }
-  | { error: false }
+import { useSearch } from '@tanstack/react-router'
 
-type CompareProps = {
-  mutation: UseMutationResult<
-    CompareResponseObjectType,
-    Error,
-    CompareFormState,
-    unknown
-  >
-  customError: ErrorState
-  setCustomError: Dispatch<SetStateAction<ErrorState>>
-  methods: UseFormReturn<CompareFormState>
-  compareLink: string
-}
+// type ErrorState =
+//   | {
+//       error: true
+//       message: string
+//     }
+//   | { error: false }
 
-const Compare = ({
-  methods,
-  mutation,
-  customError,
-  setCustomError,
-  compareLink,
-}: CompareProps) => {
+const Compare = () => {
+  const searchObject = useSearch({ from: '/teams/compare' })
+  console.log(searchObject)
   useScrollTo()
-
-  useCompareLocationData(setCustomError, mutation, methods)
+  const { mutation, compareLink } = useCompareResults(searchObject)
+  useEffect(() => {
+    mutation.mutate()
+  }, [])
 
   const error = mutation.error
 
-  if (customError.error) {
-    const errorArray = JSON.parse(customError.message)
+  // if (customError.error) {
+  //   const errorArray = JSON.parse(customError.message)
 
-    if (Array.isArray(errorArray)) {
-      const errorString =
-        errorArray.map((error) => error.message).join(', ') + '.'
+  //   if (Array.isArray(errorArray)) {
+  //     const errorString =
+  //       errorArray.map((error) => error.message).join(', ') + '.'
 
-      return <div>{errorString}</div>
-    }
-    return <div>{customError.message}</div>
-  }
+  //     return <div>{errorString}</div>
+  //   }
+  //   return <div>{customError.message}</div>
+  // }
 
   if (error instanceof Error) {
     if (error.message === 'nullObject') {
@@ -95,7 +79,7 @@ const Compare = ({
             length={compareData.allData.length}
             seasonNames={compareData.seasonNames}
             link={compareLink}
-            compObject={methods.getValues()}
+            searchObject={searchObject}
             compareAllGames={compareData.compareAllGames}
             origin={origin}
           />
@@ -111,12 +95,16 @@ const Compare = ({
                 <AllData
                   allData={compareData.allData}
                   sortedData={compareData.sortedData}
+                  searchObject={searchObject}
                 />
-                <DetailedData categoryData={compareData.categoryData} />
+                <DetailedData
+                  categoryData={compareData.categoryData}
+                  searchObject={searchObject}
+                />
               </TabsContent>
 
               <CompareStats
-                compObject={methods.formState}
+                searchObject={searchObject}
                 firstGames={compareData.firstGames}
                 latestGames={compareData.latestGames}
                 golds={compareData.golds}

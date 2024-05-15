@@ -9,13 +9,11 @@ import {
   WomanIcon,
   QuestionIcon,
 } from '../../utilitycomponents/Components/icons'
-import { SetURLSearchParams } from 'react-router-dom'
-type MaratonTabBarProps = {
-  tab: string | null
-  setSearchParams: SetURLSearchParams
-}
+import { useNavigate, useSearch } from '@tanstack/react-router'
 
-const MaratonTabBar = ({ tab, setSearchParams }: MaratonTabBarProps) => {
+const MaratonTabBar = () => {
+  const { tab } = useSearch({ from: '/maraton' })
+  const navigate = useNavigate({ from: '/maraton' })
   const { women, dispatch } = useGenderContext()
   const matches = useMediaQuery('(min-width: 430px)')
   const maratonTabBarObject = {
@@ -42,7 +40,7 @@ const MaratonTabBar = ({ tab, setSearchParams }: MaratonTabBarProps) => {
     ),
     help: (
       <Button
-        onClick={() => setSearchParams({ tab: 'help' })}
+        onClick={() => navigate({ search: { tab: 'help' } })}
         variant={tab === 'help' ? 'default' : 'outline'}
         size={matches ? 'default' : 'icon'}
       >
@@ -55,7 +53,7 @@ const MaratonTabBar = ({ tab, setSearchParams }: MaratonTabBarProps) => {
           <Button
             variant={tab === 'maraton' ? 'default' : 'outline'}
             onClick={() => {
-              setSearchParams({ tab: 'maraton', table: 'all' })
+              navigate({ search: { tab: 'maraton', table: 'all' } })
             }}
             size={matches ? 'default' : 'icon'}
           >
@@ -69,7 +67,7 @@ const MaratonTabBar = ({ tab, setSearchParams }: MaratonTabBarProps) => {
           <Button
             variant={tab === 'records' ? 'default' : 'outline'}
             onClick={() => {
-              setSearchParams({ tab: 'records', record: 'generalStats' })
+              navigate({ search: { tab: 'records', record: 'generalStats' } })
             }}
             size={matches ? 'default' : 'icon'}
           >
