@@ -1,6 +1,5 @@
-/json
-/scraper
-*.json
+json
+scraper
 *.csv
 TODO.md
 /typescript/backend-ts/.env
