@@ -1,12 +1,23 @@
 const Sequelize = require('sequelize')
 const { ELEPHANTSQL_URL, ELEPHANTSQL_URL_DEVELOPMENT } = require('./config')
 
+// För att det ska fungera med Aiven.io,
+// ta bort kommentarerna så att databas-urlen
+// får med sig länken till certifikatet.
+// Glöm inte att ändra till rätt host.
+
+//const path = require('node:path')
+
 let dbUrl
 let mode
 
+// const pemPath = path.join(__dirname, '/pem/ca.pem')
+
+// const caString = `&sslrootcert=${pemPath}`
+
 switch (process.env.NODE_ENV) {
   case 'development':
-    dbUrl = ELEPHANTSQL_URL_DEVELOPMENT
+    dbUrl = ELEPHANTSQL_URL_DEVELOPMENT // + caString
     mode = 'development'
     break
   default:
@@ -14,7 +25,9 @@ switch (process.env.NODE_ENV) {
     mode = 'production'
 }
 
-const sequelize = new Sequelize(dbUrl, { logging: false })
+const sequelize = new Sequelize(dbUrl, {
+  logging: false,
+})
 
 const connectToDb = async () => {
   try {
